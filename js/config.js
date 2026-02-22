@@ -1,6 +1,31 @@
 const OUT_WIDTH = 3120
 const OUT_HEIGHT = 780
 const ASPECT_RATIO = OUT_WIDTH / OUT_HEIGHT;
+const COLOR_KEYS = [
+    'bracket0',
+    'bracket1',
+    'bracket2',
+    'function',
+    'variable',
+    'operator',
+    'semicolon',
+    'number',
+    'comment',
+    'unknown'
+];
+const DEFAULT_COLORS = [
+    '#569CD6',
+    '#FFD700',
+    '#C586C0',
+    '#DCDCAA',
+    '#9CDCFE',
+    '#D4D4D4',
+    '#808080',
+    '#B5CEA8',
+    '#6A9955',
+    '#CE9178',
+    '#1e1e1e',
+]
 const editorConfig = {
     fontSize: 16,
 }
@@ -24,24 +49,13 @@ const config = {
         '—', '·', '_',
     ],
 
-    colors: {
-        bracket0: '#569CD6',
-        bracket1: '#FFD700',
-        bracket2: '#C586C0',
-        function: '#DCDCAA',
-        variable: '#9CDCFE',
-        operator: '#D4D4D4',
-        semicolon: '#808080',
-        number: '#B5CEA8',
-        comment: '#6A9955',
-        unknown: '#CE9178',
-        background: '#1e1e1e',
-    },
+    colors: Object.fromEntries(COLOR_KEYS.map((key, index) => [key, DEFAULT_COLORS[index]])),
 };
 
 export {
     ASPECT_RATIO,
     canvasConfig,
+    COLOR_KEYS,
     config,
     editorConfig,
     OUT_HEIGHT,

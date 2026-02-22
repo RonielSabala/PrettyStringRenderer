@@ -1,4 +1,5 @@
 import {
+    COLOR_KEYS,
     config
 } from "./config.js";
 'use strict';
@@ -75,10 +76,7 @@ function tog(hd) {
     hd.nextElementSibling.classList.toggle('hid');
 }
 
-// INIT
 function init() {
-    // Sync all color UI controls from config
-
     for (const [k, v] of Object.entries(config.colors)) {
         const fill = document.getElementById(`sf-${k}`);
         if (fill) {
@@ -102,20 +100,7 @@ function init() {
     document.getElementById('btn-export-theme').addEventListener('click', exportCurrentTheme);
     document.querySelectorAll('.sh').forEach(element => element.addEventListener('click', () => tog(element)));
 
-    const colorKeys = [
-        'bracket0',
-        'bracket1',
-        'bracket2',
-        'function',
-        'variable',
-        'operator',
-        'semicolon',
-        'number',
-        'comment',
-        'unknown'
-    ];
-
-    colorKeys.forEach(key => {
+    COLOR_KEYS.forEach(key => {
         const colorPicker = document.getElementById(`cp-${key}`);
         if (colorPicker) colorPicker.addEventListener('input', e => onPick(key, e.target.value));
 

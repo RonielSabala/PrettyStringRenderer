@@ -1,4 +1,5 @@
 import {
+    COLOR_KEYS,
     config
 } from "./config.js";
 
@@ -11,20 +12,7 @@ let themes = [];
 let activeThemeName = '';
 
 function _applyTheme(theme) {
-    const keys = [
-        'bracket0',
-        'bracket1',
-        'bracket2',
-        'function',
-        'variable',
-        'operator',
-        'semicolon',
-        'number',
-        'comment',
-        'unknown'
-    ];
-
-    for (const key of keys) {
+    for (const key of COLOR_KEYS) {
         if (!theme[key]) {
             continue;
         }
@@ -111,22 +99,7 @@ function exportCurrentTheme() {
         return;
     }
 
-    let colors = config.colors;
-    const theme = {
-        bracket0: colors.bracket0,
-        bracket1: colors.bracket1,
-        bracket2: colors.bracket2,
-        function: colors.function,
-        variable: colors.variable,
-        operator: colors.operator,
-        semicolon: colors.semicolon,
-        number: colors.number,
-        comment: colors.comment,
-        unknown: colors.unknown,
-        background: colors.background,
-    };
-
-    const blob = new Blob([JSON.stringify(theme, null, 2)], {
+    const blob = new Blob([JSON.stringify(config.colors, null, 2)], {
         type: 'application/json'
     });
 
@@ -137,7 +110,6 @@ function exportCurrentTheme() {
 
     URL.revokeObjectURL(anchor.href);
 }
-
 
 export {
     exportCurrentTheme,

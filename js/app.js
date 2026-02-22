@@ -280,10 +280,6 @@ function renderThemeList() {
     }
 }
 
-function exportCurrentTheme() {
-    _exportCurrentTheme()
-}
-
 // OPERATORS
 function renderOpChips() {
     const container = document.getElementById('op-chips');
@@ -423,14 +419,68 @@ function init() {
         if (hex) hex.value = v;
     }
 
+    // attach event listeners for controls (replaces inline handlers)
+    document.getElementById('btn-export').addEventListener('click', _doExport);
+    const reloadBanner = document.getElementById('reload-banner');
+    if (reloadBanner) reloadBanner.addEventListener('click', reloadLastFolder);
+    const loadThemesBtn = document.getElementById('btn-load-themes');
+    if (loadThemesBtn) loadThemesBtn.addEventListener('click', loadThemeFolder);
+    const exportThemeBtn = document.getElementById('btn-export-theme');
+    if (exportThemeBtn) exportThemeBtn.addEventListener('click', _exportCurrentTheme);
+
+    document.querySelectorAll('.sh').forEach(el => el.addEventListener('click', () => tog(el)));
+
+    const colorKeys = ['bracket0', 'bracket1', 'bracket2', 'function', 'variable', 'operator', 'semicolon', 'number', 'comment', 'unknown'];
+    colorKeys.forEach(key => {
+        const cp = document.getElementById(`cp-${key}`);
+        const hx = document.getElementById(`hx-${key}`);
+        if (cp) cp.addEventListener('input', e => onPick(key, e.target.value));
+        if (hx) hx.addEventListener('input', e => onHex(key, e.target.value));
+    });
+    const cpbg = document.getElementById('cp-background');
+    const hxbg = document.getElementById('hx-background');
+    if (cpbg) cpbg.addEventListener('input', e => onBgPick(e.target.value));
+    if (hxbg) hxbg.addEventListener('input', e => onBgHex(e.target.value));
+
+    ['c-fs', 'c-lh', 'c-ls', 'c-px', 'c-py'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', onCfg);
+    });
+
+    const ed = document.getElementById('ed');
+    if (ed) {
+        ed.scrollTop = 0;
+        ed.setSelectionRange(0, 0);
+        ed.addEventListener('input', onEdit);
+    }
+    const edfs = document.getElementById('ed-fs');
+    if (edfs) edfs.addEventListener('input', onEdFontSize);
+
+    const newOp = document.getElementById('new-op');
+    if (newOp) newOp.addEventListener('keydown', e => {
+        if (e.key === 'Enter') addOp();
+    });
+    const btnAddOp = document.getElementById('btn-add-op');
+    if (btnAddOp) btnAddOp.addEventListener('click', addOp);
+
+    ['mlopen', 'mlclose', 'mlpass', 'ilopen', 'ilclose'].forEach(gid => {
+        const btn = document.getElementById(`btn-add-${gid}`);
+        if (btn) btn.addEventListener('click', () => addBracket(gid));
+        const inp = document.getElementById(`add-${gid}`);
+        if (inp) inp.addEventListener('keydown', e => {
+            if (e.key === 'Enter') addBracket(gid);
+        });
+    });
+
     renderOpChips();
     renderBracketChips();
     renderThemeList();
 
     // Reset editor scroll to top so text starts at the top
-    const ed = document.getElementById('ed');
-    ed.scrollTop = 0;
-    ed.setSelectionRange(0, 0);
+    if (ed) {
+        ed.scrollTop = 0;
+        ed.setSelectionRange(0, 0);
+    }
 }
 
 new ResizeObserver(() => redraw()).observe(document.getElementById('cv-wrap'));

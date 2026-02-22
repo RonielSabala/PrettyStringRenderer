@@ -18,7 +18,7 @@ function buildBracketSets() {
     };
 }
 
-export function tokenize(text) {
+function tokenize(text) {
     const lines = text.split('\n');
     const result = [];
     const colML = {}; // column → current ML open-depth
@@ -192,3 +192,7 @@ export function tokenize(text) {
     }
     return result;
 }
+
+export {
+    tokenize
+};

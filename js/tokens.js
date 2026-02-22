@@ -1,4 +1,4 @@
-export const TOKENS = {
+const TOKENS = {
     BRACKET: 'b',
     OPERATOR: 'op',
     FUNCTION: 'fn',
@@ -8,4 +8,8 @@ export const TOKENS = {
     NUMBER: 'nu',
     WS: 'ws',
     UNKNOWN: 'uk',
+};
+
+export {
+    TOKENS
 };

@@ -1,7 +1,7 @@
 import {
     THEME_KEYS,
     config
-} from "./config.js";
+} from "../common/config.js";
 
 import {
     renderOpChips,

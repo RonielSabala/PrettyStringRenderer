@@ -2,7 +2,7 @@ import {
     config,
     OUT_HEIGHT,
     OUT_WIDTH
-} from "./config.js";
+} from "../common/config.js";
 import {
     render,
     tokenLines,

@@ -1,12 +1,12 @@
 import {
-    config,
-} from "./config.js";
-import {
     setColor
-} from "./render_controller.js";
+} from "../controllers/render_controller.js";
 import {
     TOKENS,
-} from "./tokens.js";
+} from "../core/tokens.js";
+import {
+    config,
+} from "./config.js";
 
 
 function onPick(key, value) {

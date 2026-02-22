@@ -1,9 +1,9 @@
 import {
+    config
+} from "../common/config.js";
+import {
     BRACKETS
 } from "./brackets.js";
-import {
-    config
-} from "./config.js";
 import {
     TOKENS
 } from "./tokens.js";

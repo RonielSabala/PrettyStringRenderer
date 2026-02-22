@@ -1,12 +1,12 @@
 import {
     THEME_KEYS,
     config
-} from "./config.js";
+} from "./common/config.js";
 'use strict';
 
 import {
     doExport,
-} from "./export_controller.js";
+} from "./controllers/export_controller.js";
 
 import {
     addBracket,
@@ -15,25 +15,25 @@ import {
     renderBracketChips,
     renderOpChips,
     updateColor,
-} from "./render_controller.js";
+} from "./controllers/render_controller.js";
 
 import {
     exportCurrentTheme,
     importThemes,
     renderThemeList
-} from "./themes_controller.js";
+} from "./controllers/themes_controller.js";
 
 import {
     onBgHex,
     onBgPick,
     onHex,
     onPick
-} from "./color_utils.js";
+} from "./common/color_utils.js";
 
 import {
     onEditorFontSize,
     onTypographyConfig
-} from "./typography_controller.js";
+} from "./controllers/typography_controller.js";
 
 (() => {
     const resizeHandle = document.getElementById('rh');

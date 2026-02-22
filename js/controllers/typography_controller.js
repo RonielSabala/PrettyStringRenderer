@@ -2,7 +2,7 @@ import {
     canvasConfig,
     config,
     editorConfig,
-} from "./config.js";
+} from "../common/config.js";
 
 import {
     redraw

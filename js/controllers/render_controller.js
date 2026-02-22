@@ -1,22 +1,22 @@
 import {
-    BRACKET_GROUPS
-} from "./brackets.js";
-import {
-    updateZoomInfo
-} from "./canvas_controller.js";
-import {
     getBracketChipColor,
     resolveColor
-} from "./color_utils.js";
+} from "../common/color_utils.js";
 import {
     ASPECT_RATIO,
     config,
     OUT_HEIGHT,
     OUT_WIDTH
-} from "./config.js";
+} from "../common/config.js";
+import {
+    BRACKET_GROUPS
+} from "../core/brackets.js";
 import {
     tokenize
-} from "./tokenizer.js";
+} from "../core/tokenizer.js";
+import {
+    updateZoomInfo
+} from "./canvas_controller.js";
 
 let tokenLines = [];
 

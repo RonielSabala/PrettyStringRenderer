@@ -1,7 +1,7 @@
 import {
     OUT_HEIGHT,
     OUT_WIDTH
-} from "./config.js";
+} from "../common/config.js";
 
 // ZOOM + PAN
 let cvZoom = 1,

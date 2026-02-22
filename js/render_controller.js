@@ -1,7 +1,11 @@
 import {
+    BRACKET_GROUPS
+} from "./brackets.js";
+import {
     updateZoomInfo
 } from "./canvas_controller.js";
 import {
+    getBracketChipColor,
     resolveColor
 } from "./color_utils.js";
 import {
@@ -13,6 +17,7 @@ import {
 import {
     tokenize
 } from "./tokenizer.js";
+
 let tokenLines = [];
 
 function _getFont(fontSize) {
@@ -77,8 +82,140 @@ function redraw() {
     updateZoomInfo();
 }
 
+function renderOpChips() {
+    const container = document.getElementById('op-chips');
+    const opColor = config.colors.operator;
+    container.innerHTML = '';
+
+    for (const op of config.operators) {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+
+        const code = document.createElement('code');
+        code.textContent = op;
+        code.style.color = opColor;
+
+        const del = document.createElement('button');
+        del.className = 'chip-x';
+        del.textContent = 'x';
+        del.title = 'Remove';
+        del.onclick = () => _removeOp(op);
+
+        chip.append(code, del);
+        container.appendChild(chip);
+    }
+}
+
+function renderBracketChips() {
+    for (const [gid, g] of Object.entries(BRACKET_GROUPS)) {
+        const container = document.getElementById(`chips-${gid}`);
+        container.innerHTML = '';
+
+        g.arr().forEach((ch, idx) => {
+            const chip = document.createElement('span');
+            chip.className = 'chip';
+
+            const code = document.createElement('code');
+            code.textContent = ch;
+            code.style.color = getBracketChipColor(idx);
+
+            const del = document.createElement('button');
+            del.className = 'chip-x';
+            del.textContent = 'x';
+            del.title = 'Remove';
+            del.onclick = () => _removeBracket(gid, ch);
+
+            chip.append(code, del);
+            container.appendChild(chip);
+        });
+    }
+}
+
+function setColor(key, value, isBg) {
+    const fill = document.getElementById(`sf-${key}`);
+    if (fill) {
+        fill.style.background = value;
+    }
+
+    const pick = document.getElementById(`cp-${key}`);
+    if (pick) {
+        pick.value = value;
+    }
+
+    const hex = document.getElementById(`hx-${key}`);
+    if (hex) {
+        hex.value = value;
+    }
+
+    if (isBg) {
+        config.colors.background = value;
+    } else {
+        config.colors[key] = value;
+        if (key === 'operator') {
+            // Refresh operator chips whenever operator color changes
+            renderOpChips();
+        }
+    }
+
+    redraw();
+}
+
+function addOp() {
+    const input = document.getElementById('new-op');
+    const value = input.value;
+
+    if (value && !config.operators.includes(value)) {
+        config.operators.push(value);
+        renderOpChips();
+        redraw();
+    }
+
+    input.value = '';
+    input.focus();
+}
+
+function addBracket(groupId) {
+    const input = document.getElementById(`add-${groupId}`);
+    const value = input.value.trim();
+    if (!value) {
+        return;
+    }
+
+    const group = BRACKET_GROUPS[groupId];
+    if (!group.arr().includes(value)) {
+        const next = [...group.arr(), value];
+        group.set(next);
+
+        renderBracketChips();
+        redraw();
+    }
+
+    input.value = '';
+    input.focus();
+}
+
+function _removeOp(op) {
+    config.operators = config.operators.filter(operator => operator !== op);
+    renderOpChips();
+    redraw();
+}
+
+function _removeBracket(gid, ch) {
+    const g = BRACKET_GROUPS[gid];
+    const next = g.arr().filter(c => c !== ch);
+
+    g.set(next);
+    renderBracketChips();
+    redraw();
+}
+
 export {
+    addBracket,
+    addOp,
     redraw,
     render,
+    renderBracketChips,
+    renderOpChips,
+    setColor,
     tokenLines
 };

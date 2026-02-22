@@ -1,253 +1,18 @@
+import {
+    BRACKETS
+} from "./brackets.js";
+import {
+    ASPECT_RATIO,
+    cfg
+} from "./config.js";
+import {
+    tokenize
+} from "./tokenizer.js";
+import {
+    T
+} from "./tokens.js";
 'use strict';
 
-const cfg = {
-    background: '#1e1e1e',
-    fontSize: 85,
-    lineHeight: 1.15,
-    letterSpacing: 0,
-    paddingX: 64,
-    paddingY: 4,
-
-    operators: [
-        '**', '++', '--',
-        '+', '-', '*', '=', '!', '<', '>', '&', '|', '^', '~', '%',
-        '—', '·', '_',
-    ],
-
-    colors: {
-        bracket0: '#569CD6',
-        bracket1: '#FFD700',
-        bracket2: '#C586C0',
-        function: '#DCDCAA',
-        variable: '#9CDCFE',
-        operator: '#D4D4D4',
-        semicolon: '#808080',
-        number: '#B5CEA8',
-        comment: '#6A9955',
-        unknown: '#CE9178',
-    },
-};
-
-const OUT_W = 3120,
-    OUT_H = 780,
-    ASPECT = OUT_W / OUT_H;
-
-// BRACKET SETS  (mutable — controlled by the Parentheses UI)
-//
-// ML = multi-line: depth persists column-by-column across rows.
-// IL = inline:     depth resets to 0 at the start of each row.
-//
-// ML_OPEN  → color at current col-depth, then col-depth++
-// ML_CLOSE → col-depth--, then color at new col-depth
-// ML_PASS  → no depth change; color = (col-depth - 1)
-//             (sits "inside" the opener above it)
-// IL_OPEN  → color at current line-depth, then line-depth++
-// IL_CLOSE → line-depth--, then color at new line-depth
-let ML_OPEN = ['/', '▏', '┌'];
-let ML_CLOSE = ['\\', '▕', '┘'];
-let ML_PASS = ['│', '┐', '└'];
-let IL_OPEN = ['(', '[', '{'];
-let IL_CLOSE = [')', ']', '}'];
-
-// Fast lookup sets derived from the above arrays
-function buildBracketSets() {
-    return {
-        open: new Set(ML_OPEN),
-        close: new Set(ML_CLOSE),
-        pass: new Set(ML_PASS),
-        ilO: new Set(IL_OPEN),
-        ilC: new Set(IL_CLOSE),
-    };
-}
-
-// TOKEN TYPES
-const T = {
-    BRACKET: 'b',
-    OPERATOR: 'op',
-    FUNCTION: 'fn',
-    VARIABLE: 'va',
-    SEMICOLON: 'sc',
-    COMMENT: 'co',
-    NUMBER: 'nu',
-    WS: 'ws',
-    UNKNOWN: 'uk',
-};
-
-// TOKENIZER
-function tokenize(text) {
-    const lines = text.split('\n');
-    const result = [];
-    const colML = {}; // column → current ML open-depth
-    const sets = buildBracketSets();
-    const sortedOps = [...cfg.operators].sort((a, b) => b.length - a.length);
-
-    for (const raw of lines) {
-        const toks = [];
-        let i = 0,
-            n = raw.length,
-            ilD = 0;
-
-        while (i < n) {
-            const ch = raw[i];
-
-            // Whitespace
-            if (ch === ' ' || ch === '\t') {
-                let j = i;
-                while (j < n && (raw[j] === ' ' || raw[j] === '\t')) j++;
-                toks.push({
-                    t: T.WS,
-                    v: raw.slice(i, j)
-                });
-                i = j;
-                continue;
-            }
-
-            // Comment: # to EOL
-            if (ch === '#') {
-                toks.push({
-                    t: T.COMMENT,
-                    v: raw.slice(i)
-                });
-                i = n;
-                continue;
-            }
-
-            // Divider ─ (U+2500) → operator
-            if (ch === '\u2500') {
-                let j = i;
-                while (j < n && raw[j] === '\u2500') j++;
-                toks.push({
-                    t: T.OPERATOR,
-                    v: raw.slice(i, j)
-                });
-                i = j;
-                continue;
-            }
-
-            // ML_OPEN
-            if (sets.open.has(ch)) {
-                const d = colML[i] ?? 0;
-                toks.push({
-                    t: T.BRACKET,
-                    v: ch,
-                    d: d % 3
-                });
-                colML[i] = d + 1;
-                i++;
-                continue;
-            }
-
-            // ML_CLOSE
-            if (sets.close.has(ch)) {
-                const d = Math.max(0, (colML[i] ?? 0) - 1);
-                colML[i] = d;
-                toks.push({
-                    t: T.BRACKET,
-                    v: ch,
-                    d: d % 3
-                });
-                i++;
-                continue;
-            }
-
-            // ML_PASS — color = (depth - 1), same as the opener above
-            if (sets.pass.has(ch)) {
-                const d = colML[i] ?? 0;
-                toks.push({
-                    t: T.BRACKET,
-                    v: ch,
-                    d: Math.max(0, d - 1) % 3
-                });
-                i++;
-                continue;
-            }
-
-            // IL_OPEN
-            if (sets.ilO.has(ch)) {
-                toks.push({
-                    t: T.BRACKET,
-                    v: ch,
-                    d: ilD % 3
-                });
-                ilD++;
-                i++;
-                continue;
-            }
-
-            // IL_CLOSE
-            if (sets.ilC.has(ch)) {
-                ilD = Math.max(0, ilD - 1);
-                toks.push({
-                    t: T.BRACKET,
-                    v: ch,
-                    d: ilD % 3
-                });
-                i++;
-                continue;
-            }
-
-            // Operators — greedy longest match
-            let hit = false;
-            for (const op of sortedOps) {
-                if (raw.startsWith(op, i)) {
-                    toks.push({
-                        t: T.OPERATOR,
-                        v: op
-                    });
-                    i += op.length;
-                    hit = true;
-                    break;
-                }
-            }
-            if (hit) continue;
-
-            // Semicolon
-            if (ch === ';') {
-                toks.push({
-                    t: T.SEMICOLON,
-                    v: ch
-                });
-                i++;
-                continue;
-            }
-
-            // Identifier → FUNCTION or VARIABLE
-            if (/[a-zA-Z]/.test(ch)) {
-                let j = i;
-                while (j < n && /[a-zA-Z0-9_]/.test(raw[j])) j++;
-                const word = raw.slice(i, j);
-                let k = j;
-                while (k < n && raw[k] === ' ') k++;
-                toks.push({
-                    t: raw[k] === '(' ? T.FUNCTION : T.VARIABLE,
-                    v: word
-                });
-                i = j;
-                continue;
-            }
-
-            // Number
-            if (/[0-9]/.test(ch)) {
-                let j = i;
-                while (j < n && /[0-9.]/.test(raw[j])) j++;
-                toks.push({
-                    t: T.NUMBER,
-                    v: raw.slice(i, j)
-                });
-                i = j;
-                continue;
-            }
-
-            toks.push({
-                t: T.UNKNOWN,
-                v: ch
-            });
-            i++;
-        }
-        result.push(toks);
-    }
-    return result;
-}
 
 // COLOR RESOLVER
 function resolveColor(tok) {
@@ -274,14 +39,13 @@ function resolveColor(tok) {
     }
 }
 
-// RENDERER  (always at OUT_W × OUT_H)
 function render(ctx, lines, W, H) {
     const fs = cfg.fontSize;
     const px0 = cfg.paddingX;
     const py0 = cfg.paddingY;
     const ls = cfg.letterSpacing;
 
-    ctx.fillStyle = cfg.background;
+    ctx.fillStyle = cfg.colors.background;
     ctx.fillRect(0, 0, W, H);
 
     ctx.font = `400 ${fs}px 'Cascadia Code','Courier New',monospace`;
@@ -320,19 +84,19 @@ function redraw() {
     const wrap = document.getElementById('cv-wrap');
 
     // Canvas always at full output resolution
-    canvas.width = OUT_W;
-    canvas.height = OUT_H;
+    canvas.width = cfg.OUT_WIDTH;
+    canvas.height = cfg.OUT_HEIGHT;
 
-    render(canvas.getContext('2d'), tokenLines, OUT_W, OUT_H);
+    render(canvas.getContext('2d'), tokenLines, cfg.OUT_WIDTH, cfg.OUT_HEIGHT);
 
     // CSS display size fits wrap, preserving aspect ratio
     const wW = wrap.clientWidth - 40;
     const wH = wrap.clientHeight - 40;
-    let dW = Math.min(wW, wH * ASPECT);
-    let dH = dW / ASPECT;
+    let dW = Math.min(wW, wH * ASPECT_RATIO);
+    let dH = dW / ASPECT_RATIO;
     if (dH > wH) {
         dH = wH;
-        dW = dH * ASPECT;
+        dW = dH * ASPECT_RATIO;
     }
     canvas.style.width = Math.max(1, Math.round(dW)) + 'px';
     canvas.style.height = Math.max(1, Math.round(dH)) + 'px';
@@ -357,7 +121,7 @@ function applyTransform() {
 
 function updateZoomInfo() {
     document.getElementById('si').textContent =
-        `${OUT_W}×${OUT_H} · ${(cvZoom * 100).toFixed(0)}%`;
+        `${cfg.OUT_WIDTH}×${cfg.OUT_HEIGHT} · ${(cvZoom * 100).toFixed(0)}%`;
 }
 
 document.getElementById('cv-wrap').addEventListener('wheel', e => {
@@ -424,8 +188,8 @@ function doExport() {
     );
     if (isNaN(mul) || mul <= 0) return;
 
-    const W = Math.round(OUT_W * mul),
-        H = Math.round(OUT_H * mul);
+    const W = Math.round(cfg.OUT_WIDTH * mul),
+        H = Math.round(cfg.OUT_HEIGHT * mul);
     const off = document.createElement('canvas');
     off.width = W;
     off.height = H;
@@ -466,7 +230,7 @@ function setColor(key, value, isBg) {
     if (hex) hex.value = value;
 
     if (isBg) {
-        cfg.background = value;
+        cfg.colors.background = value;
     } else {
         cfg.colors[key] = value;
         // Refresh operator chips whenever operator color changes
@@ -712,7 +476,7 @@ function exportCurrentTheme() {
         number: cfg.colors.number,
         comment: cfg.colors.comment,
         unknown: cfg.colors.unknown,
-        background: cfg.background,
+        background: cfg.colors.background,
     };
 
     const blob = new Blob([JSON.stringify(theme, null, 2)], {
@@ -768,33 +532,33 @@ function removeOp(op) {
 // Map group id → the mutable array it controls
 const BRACKET_GROUPS = {
     mlopen: {
-        arr: () => ML_OPEN,
+        arr: () => BRACKETS.ML_OPEN,
         set: v => {
-            ML_OPEN = v;
+            BRACKETS.ML_OPEN = v;
         }
     },
     mlclose: {
-        arr: () => ML_CLOSE,
+        arr: () => BRACKETS.ML_CLOSE,
         set: v => {
-            ML_CLOSE = v;
+            BRACKETS.ML_CLOSE = v;
         }
     },
     mlpass: {
-        arr: () => ML_PASS,
+        arr: () => BRACKETS.ML_PASS,
         set: v => {
-            ML_PASS = v;
+            BRACKETS.ML_PASS = v;
         }
     },
     ilopen: {
-        arr: () => IL_OPEN,
+        arr: () => BRACKETS.IL_OPEN,
         set: v => {
-            IL_OPEN = v;
+            BRACKETS.IL_OPEN = v;
         }
     },
     ilclose: {
-        arr: () => IL_CLOSE,
+        arr: () => BRACKETS.IL_CLOSE,
         set: v => {
-            IL_CLOSE = v;
+            BRACKETS.IL_CLOSE = v;
         }
     },
 };
@@ -890,7 +654,7 @@ function init() {
     // Sync all color UI controls from cfg
     const all = {
         ...cfg.colors,
-        background: cfg.background
+        background: cfg.colors.background
     };
     for (const [k, v] of Object.entries(all)) {
         const fill = document.getElementById(`sf-${k}`);

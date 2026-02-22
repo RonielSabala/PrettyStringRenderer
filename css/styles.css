@@ -334,7 +334,7 @@ body {
   border-color: var(--t1);
 }
 
-/* Chips (operators & brackets) ──────────────────────────── */
+/* Chips (operators & brackets) */
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -457,7 +457,7 @@ body {
   border-radius: 10px;
 }
 
-/* Resize handle ─────────────────────────────────────────── */
+/* Resize handle */
 #rh {
   height: 5px;
   flex-shrink: 0;

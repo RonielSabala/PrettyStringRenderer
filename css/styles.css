@@ -160,6 +160,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 5px 0 2px;
+  margin-top: 6px;
 }
 
 /* Row */
@@ -241,24 +242,6 @@ body {
 }
 
 /* Themes */
-#reload-banner {
-  display: none;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 8px;
-  margin-bottom: 4px;
-  background: rgba(56, 139, 253, 0.12);
-  border: 1px solid var(--acc);
-  border-radius: var(--r);
-  font-size: 11px;
-  color: var(--bhi);
-  cursor: pointer;
-}
-
-#reload-banner:hover {
-  background: rgba(56, 139, 253, 0.22);
-}
-
 .theme-list {
   display: flex;
   flex-direction: column;
@@ -546,4 +529,14 @@ body {
 #ed::-webkit-scrollbar-thumb {
   background: var(--b0);
   border-radius: 4px;
+}
+
+.theme-empty {
+  font-size: 11px;
+  color: var(--t2);
+  padding: 4px 2px;
+}
+
+#btn-export-theme {
+  margin-top: 4px;
 }

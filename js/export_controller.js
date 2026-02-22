@@ -22,7 +22,7 @@ function _askScalar() {
     return prompt(`Scale multiplier:\n  1  → ${_getScaledResolution(1)}\n  2  → ${_getScaledResolution(2)}\n  0.5 → ${_getScaledResolution(0.5)}`, '1')
 }
 
-function _doExport() {
+function doExport() {
     const scalar = parseFloat(_askScalar());
     if (isNaN(scalar) || scalar <= 0) {
         return;
@@ -65,40 +65,7 @@ function _doExport() {
     }, 'image/png');
 }
 
-function _exportCurrentTheme() {
-    const name = prompt('Theme name:', 'my-theme');
-    if (!name) {
-        return;
-    }
-
-    let colors = config.colors;
-    const theme = {
-        bracket0: colors.bracket0,
-        bracket1: colors.bracket1,
-        bracket2: colors.bracket2,
-        function: colors.function,
-        variable: colors.variable,
-        operator: colors.operator,
-        semicolon: colors.semicolon,
-        number: colors.number,
-        comment: colors.comment,
-        unknown: colors.unknown,
-        background: colors.background,
-    };
-
-    const blob = new Blob([JSON.stringify(theme, null, 2)], {
-        type: 'application/json'
-    });
-
-    const anchor = document.createElement('a');
-    anchor.href = URL.createObjectURL(blob);
-    anchor.download = name.endsWith('.json') ? name : name + '.json';
-    anchor.click();
-
-    URL.revokeObjectURL(anchor.href);
-}
 
 export {
-    _doExport,
-    _exportCurrentTheme
+    doExport
 };

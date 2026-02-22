@@ -2,8 +2,32 @@ import {
     config,
 } from "./config.js";
 import {
+    setColor
+} from "./render_controller.js";
+import {
     TOKENS,
 } from "./tokens.js";
+
+
+function onPick(key, v) {
+    setColor(key, v);
+}
+
+function onHex(key, v) {
+    if (/^#[0-9A-Fa-f]{6}$/.test(v)) setColor(key, v);
+}
+
+function onBgPick(v) {
+    setColor('background', v, true);
+}
+
+function onBgHex(v) {
+    if (/^#[0-9A-Fa-f]{6}$/.test(v)) setColor('background', v, true);
+}
+
+function getBracketChipColor(index) {
+    return config.colors[`bracket${index % 3}`];
+}
 
 function resolveColor(token) {
     const colors = config.colors;
@@ -29,11 +53,11 @@ function resolveColor(token) {
     }
 }
 
-function bracketChipColor(index) {
-    return config.colors[`bracket${index % 3}`];
-}
-
 export {
-    bracketChipColor,
+    getBracketChipColor,
+    onBgHex,
+    onBgPick,
+    onHex,
+    onPick,
     resolveColor
 };

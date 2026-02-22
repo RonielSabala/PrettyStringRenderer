@@ -5,7 +5,7 @@ import {
     config
 } from "./config.js";
 import {
-    T
+    TOKENS
 } from "./tokens.js";
 
 // Fast lookup sets derived from the above arrays
@@ -40,7 +40,7 @@ export function tokenize(text) {
                 let j = i;
                 while (j < n && (raw[j] === ' ' || raw[j] === '\t')) j++;
                 toks.push({
-                    t: T.WS,
+                    t: TOKENS.WS,
                     v: raw.slice(i, j)
                 });
                 i = j;
@@ -50,7 +50,7 @@ export function tokenize(text) {
             // Comment: # to EOL
             if (ch === '#') {
                 toks.push({
-                    t: T.COMMENT,
+                    t: TOKENS.COMMENT,
                     v: raw.slice(i)
                 });
                 i = n;
@@ -62,7 +62,7 @@ export function tokenize(text) {
                 let j = i;
                 while (j < n && raw[j] === '\u2500') j++;
                 toks.push({
-                    t: T.OPERATOR,
+                    t: TOKENS.OPERATOR,
                     v: raw.slice(i, j)
                 });
                 i = j;
@@ -73,7 +73,7 @@ export function tokenize(text) {
             if (sets.open.has(ch)) {
                 const d = colML[i] ?? 0;
                 toks.push({
-                    t: T.BRACKET,
+                    t: TOKENS.BRACKET,
                     v: ch,
                     d: d % 3
                 });
@@ -87,7 +87,7 @@ export function tokenize(text) {
                 const d = Math.max(0, (colML[i] ?? 0) - 1);
                 colML[i] = d;
                 toks.push({
-                    t: T.BRACKET,
+                    t: TOKENS.BRACKET,
                     v: ch,
                     d: d % 3
                 });
@@ -99,7 +99,7 @@ export function tokenize(text) {
             if (sets.pass.has(ch)) {
                 const d = colML[i] ?? 0;
                 toks.push({
-                    t: T.BRACKET,
+                    t: TOKENS.BRACKET,
                     v: ch,
                     d: Math.max(0, d - 1) % 3
                 });
@@ -110,7 +110,7 @@ export function tokenize(text) {
             // IL_OPEN
             if (sets.ilO.has(ch)) {
                 toks.push({
-                    t: T.BRACKET,
+                    t: TOKENS.BRACKET,
                     v: ch,
                     d: ilD % 3
                 });
@@ -123,7 +123,7 @@ export function tokenize(text) {
             if (sets.ilC.has(ch)) {
                 ilD = Math.max(0, ilD - 1);
                 toks.push({
-                    t: T.BRACKET,
+                    t: TOKENS.BRACKET,
                     v: ch,
                     d: ilD % 3
                 });
@@ -136,7 +136,7 @@ export function tokenize(text) {
             for (const op of sortedOps) {
                 if (raw.startsWith(op, i)) {
                     toks.push({
-                        t: T.OPERATOR,
+                        t: TOKENS.OPERATOR,
                         v: op
                     });
                     i += op.length;
@@ -149,7 +149,7 @@ export function tokenize(text) {
             // Semicolon
             if (ch === ';') {
                 toks.push({
-                    t: T.SEMICOLON,
+                    t: TOKENS.SEMICOLON,
                     v: ch
                 });
                 i++;
@@ -164,7 +164,7 @@ export function tokenize(text) {
                 let k = j;
                 while (k < n && raw[k] === ' ') k++;
                 toks.push({
-                    t: raw[k] === '(' ? T.FUNCTION : T.VARIABLE,
+                    t: raw[k] === '(' ? TOKENS.FUNCTION : TOKENS.VARIABLE,
                     v: word
                 });
                 i = j;
@@ -176,7 +176,7 @@ export function tokenize(text) {
                 let j = i;
                 while (j < n && /[0-9.]/.test(raw[j])) j++;
                 toks.push({
-                    t: T.NUMBER,
+                    t: TOKENS.NUMBER,
                     v: raw.slice(i, j)
                 });
                 i = j;
@@ -184,7 +184,7 @@ export function tokenize(text) {
             }
 
             toks.push({
-                t: T.UNKNOWN,
+                t: TOKENS.UNKNOWN,
                 v: ch
             });
             i++;

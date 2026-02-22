@@ -11,7 +11,7 @@ import {
     tokenize
 } from "./tokenizer.js";
 import {
-    T
+    TOKENS
 } from "./tokens.js";
 'use strict';
 
@@ -19,21 +19,21 @@ import {
 function resolveColor(token) {
     const colors = config.colors;
     switch (token.t) {
-        case T.BRACKET:
+        case TOKENS.BRACKET:
             return colors[`bracket${token.d}`];
-        case T.OPERATOR:
+        case TOKENS.OPERATOR:
             return colors.operator;
-        case T.FUNCTION:
+        case TOKENS.FUNCTION:
             return colors.function;
-        case T.VARIABLE:
+        case TOKENS.VARIABLE:
             return colors.variable;
-        case T.SEMICOLON:
+        case TOKENS.SEMICOLON:
             return colors.semicolon;
-        case T.COMMENT:
+        case TOKENS.COMMENT:
             return colors.comment;
-        case T.NUMBER:
+        case TOKENS.NUMBER:
             return colors.number;
-        case T.WS:
+        case TOKENS.WS:
             return null;
         default:
             return colors.unknown;

@@ -1,4 +1,4 @@
-export const T = {
+export const TOKENS = {
     BRACKET: 'b',
     OPERATOR: 'op',
     FUNCTION: 'fn',

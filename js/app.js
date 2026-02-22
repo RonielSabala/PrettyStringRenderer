@@ -1,6 +1,10 @@
 import {
-    BRACKETS
+    BRACKET_GROUPS
 } from "./brackets.js";
+import {
+    bracketChipColor,
+    resolveColor
+} from "./color_utils.js";
 import {
     ASPECT_RATIO,
     config,
@@ -10,12 +14,7 @@ import {
 import {
     tokenize
 } from "./tokenizer.js";
-import {
-    resolveColor
-} from "./tokens.js";
 'use strict';
-
-
 
 function render(context, lines, W, H) {
     const fs = config.fontSize;
@@ -214,8 +213,12 @@ function setColor(key, value, isBg) {
     } else {
         config.colors[key] = value;
         // Refresh operator chips whenever operator color changes
-        if (key === 'operator') renderOpChips();
+        if (key === 'operator') {
+            renderOpChips();
+        }
+
     }
+
     redraw();
 }
 
@@ -237,13 +240,31 @@ function onBgHex(v) {
 
 // Apply a full theme object — syncs all color controls and redraws
 function applyTheme(theme) {
-    const keys = ['bracket0', 'bracket1', 'bracket2', 'function', 'variable',
-        'operator', 'semicolon', 'number', 'comment', 'unknown'
+    const keys = [
+        'bracket0',
+        'bracket1',
+        'bracket2',
+        'function',
+        'variable',
+        'operator',
+        'semicolon',
+        'number',
+        'comment',
+        'unknown'
     ];
-    for (const k of keys) {
-        if (theme[k]) setColor(k, theme[k]);
+
+    for (const key of keys) {
+        if (!theme[key]) {
+            continue;
+        }
+
+        setColor(key, theme[key]);
     }
-    if (theme.background) setColor('background', theme.background, true);
+
+    if (theme.background) {
+        setColor('background', theme.background, true);
+    }
+
     // Ensure operator chips reflect the new operator color
     renderOpChips();
 }
@@ -440,23 +461,25 @@ function renderThemeList() {
     }
 }
 
-// ── Export current theme to JSON ───────────────────────────
 function exportCurrentTheme() {
     const name = prompt('Theme name:', activeThemeName || 'my-theme');
-    if (!name) return;
+    if (!name) {
+        return;
+    }
 
+    colors = config.colors;
     const theme = {
-        bracket0: config.colors.bracket0,
-        bracket1: config.colors.bracket1,
-        bracket2: config.colors.bracket2,
-        function: config.colors.function,
-        variable: config.colors.variable,
-        operator: config.colors.operator,
-        semicolon: config.colors.semicolon,
-        number: config.colors.number,
-        comment: config.colors.comment,
-        unknown: config.colors.unknown,
-        background: config.colors.background,
+        bracket0: colors.bracket0,
+        bracket1: colors.bracket1,
+        bracket2: colors.bracket2,
+        function: colors.function,
+        variable: colors.variable,
+        operator: colors.operator,
+        semicolon: colors.semicolon,
+        number: colors.number,
+        comment: colors.comment,
+        unknown: colors.unknown,
+        background: colors.background,
     };
 
     const blob = new Blob([JSON.stringify(theme, null, 2)], {
@@ -492,9 +515,9 @@ function renderOpChips() {
 
 function addOp() {
     const inp = document.getElementById('new-op');
-    const v = inp.value;
-    if (v && !config.operators.includes(v)) {
-        config.operators.push(v);
+    const value = inp.value;
+    if (value && !config.operators.includes(value)) {
+        config.operators.push(value);
         renderOpChips();
         redraw();
     }
@@ -508,46 +531,6 @@ function removeOp(op) {
     redraw();
 }
 
-// PARENTHESES
-// Map group id → the mutable array it controls
-const BRACKET_GROUPS = {
-    mlopen: {
-        arr: () => BRACKETS.ML_OPEN,
-        set: v => {
-            BRACKETS.ML_OPEN = v;
-        }
-    },
-    mlclose: {
-        arr: () => BRACKETS.ML_CLOSE,
-        set: v => {
-            BRACKETS.ML_CLOSE = v;
-        }
-    },
-    mlpass: {
-        arr: () => BRACKETS.ML_PASS,
-        set: v => {
-            BRACKETS.ML_PASS = v;
-        }
-    },
-    ilopen: {
-        arr: () => BRACKETS.IL_OPEN,
-        set: v => {
-            BRACKETS.IL_OPEN = v;
-        }
-    },
-    ilclose: {
-        arr: () => BRACKETS.IL_CLOSE,
-        set: v => {
-            BRACKETS.IL_CLOSE = v;
-        }
-    },
-};
-
-// Color for bracket chips: level 0/1/2 colors cycle through bracket colors
-function bracketChipColor(index) {
-    return config.colors[`bracket${index % 3}`];
-}
-
 function renderBracketChips() {
     for (const [gid, g] of Object.entries(BRACKET_GROUPS)) {
         const container = document.getElementById(`chips-${gid}`);
@@ -555,14 +538,17 @@ function renderBracketChips() {
         g.arr().forEach((ch, idx) => {
             const chip = document.createElement('span');
             chip.className = 'chip';
+
             const code = document.createElement('code');
             code.textContent = ch;
             code.style.color = bracketChipColor(idx);
+
             const del = document.createElement('button');
             del.className = 'chip-x';
             del.textContent = 'x';
             del.title = 'Remove';
             del.onclick = () => removeBracket(gid, ch);
+
             chip.append(code, del);
             container.appendChild(chip);
         });

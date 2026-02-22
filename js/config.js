@@ -1,12 +1,12 @@
-export const cfg = {
-    OUT_WIDTH: 3120,
-    OUT_HEIGHT: 780,
-
+const OUT_WIDTH = 3120
+const OUT_HEIGHT = 780
+const ASPECT_RATIO = OUT_WIDTH / OUT_HEIGHT;
+const config = {
     fontSize: 85,
     lineHeight: 1.15,
     letterSpacing: 0,
-    paddingX: 64,
-    paddingY: 4,
+    canvasPadX: 64,
+    canvasPadY: 4,
 
     operators: [
         '**', '++', '--',
@@ -29,4 +29,9 @@ export const cfg = {
     },
 };
 
-export const ASPECT_RATIO = cfg.OUT_WIDTH / cfg.OUT_HEIGHT;
+export {
+    ASPECT_RATIO,
+    config,
+    OUT_HEIGHT,
+    OUT_WIDTH
+};

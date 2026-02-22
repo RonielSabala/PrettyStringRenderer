@@ -2,7 +2,7 @@ import {
     BRACKETS
 } from "./brackets.js";
 import {
-    cfg
+    config
 } from "./config.js";
 import {
     T
@@ -24,7 +24,7 @@ export function tokenize(text) {
     const result = [];
     const colML = {}; // column → current ML open-depth
     const sets = buildBracketSets();
-    const sortedOps = [...cfg.operators].sort((a, b) => b.length - a.length);
+    const sortedOps = [...config.operators].sort((a, b) => b.length - a.length);
 
     for (const raw of lines) {
         const toks = [];

@@ -3,7 +3,9 @@ import {
 } from "./brackets.js";
 import {
     ASPECT_RATIO,
-    cfg
+    config,
+    OUT_HEIGHT,
+    OUT_WIDTH
 } from "./config.js";
 import {
     tokenize
@@ -14,45 +16,44 @@ import {
 'use strict';
 
 
-// COLOR RESOLVER
-function resolveColor(tok) {
-    const c = cfg.colors;
-    switch (tok.t) {
+function resolveColor(token) {
+    const colors = config.colors;
+    switch (token.t) {
         case T.BRACKET:
-            return c[`bracket${tok.d}`];
+            return colors[`bracket${token.d}`];
         case T.OPERATOR:
-            return c.operator;
+            return colors.operator;
         case T.FUNCTION:
-            return c.function;
+            return colors.function;
         case T.VARIABLE:
-            return c.variable;
+            return colors.variable;
         case T.SEMICOLON:
-            return c.semicolon;
+            return colors.semicolon;
         case T.COMMENT:
-            return c.comment;
+            return colors.comment;
         case T.NUMBER:
-            return c.number;
+            return colors.number;
         case T.WS:
             return null;
         default:
-            return c.unknown;
+            return colors.unknown;
     }
 }
 
 function render(ctx, lines, W, H) {
-    const fs = cfg.fontSize;
-    const px0 = cfg.paddingX;
-    const py0 = cfg.paddingY;
-    const ls = cfg.letterSpacing;
+    const fs = config.fontSize;
+    const px0 = config.canvasPadX;
+    const py0 = config.canvasPadY;
+    const ls = config.letterSpacing;
 
-    ctx.fillStyle = cfg.colors.background;
+    ctx.fillStyle = config.colors.background;
     ctx.fillRect(0, 0, W, H);
 
     ctx.font = `400 ${fs}px 'Cascadia Code','Courier New',monospace`;
     ctx.textBaseline = 'alphabetic';
 
     const cw = ctx.measureText('M').width + ls;
-    const lhpx = fs * cfg.lineHeight;
+    const lhpx = fs * config.lineHeight;
     const x0 = px0;
     const y0 = py0 + fs * 0.82;
 
@@ -84,10 +85,10 @@ function redraw() {
     const wrap = document.getElementById('cv-wrap');
 
     // Canvas always at full output resolution
-    canvas.width = cfg.OUT_WIDTH;
-    canvas.height = cfg.OUT_HEIGHT;
+    canvas.width = OUT_WIDTH;
+    canvas.height = OUT_HEIGHT;
 
-    render(canvas.getContext('2d'), tokenLines, cfg.OUT_WIDTH, cfg.OUT_HEIGHT);
+    render(canvas.getContext('2d'), tokenLines, OUT_WIDTH, OUT_HEIGHT);
 
     // CSS display size fits wrap, preserving aspect ratio
     const wW = wrap.clientWidth - 40;
@@ -121,7 +122,7 @@ function applyTransform() {
 
 function updateZoomInfo() {
     document.getElementById('si').textContent =
-        `${cfg.OUT_WIDTH}×${cfg.OUT_HEIGHT} · ${(cvZoom * 100).toFixed(0)}%`;
+        `${OUT_WIDTH}×${OUT_HEIGHT} · ${(cvZoom * 100).toFixed(0)}%`;
 }
 
 document.getElementById('cv-wrap').addEventListener('wheel', e => {
@@ -188,28 +189,28 @@ function doExport() {
     );
     if (isNaN(mul) || mul <= 0) return;
 
-    const W = Math.round(cfg.OUT_WIDTH * mul),
-        H = Math.round(cfg.OUT_HEIGHT * mul);
+    const W = Math.round(OUT_WIDTH * mul),
+        H = Math.round(OUT_HEIGHT * mul);
     const off = document.createElement('canvas');
     off.width = W;
     off.height = H;
 
     // Scale config measurements for the off-screen canvas
     const s = {
-        fs: cfg.fontSize,
-        ls: cfg.letterSpacing,
-        px: cfg.paddingX,
-        py: cfg.paddingY
+        fs: config.fontSize,
+        ls: config.letterSpacing,
+        px: config.canvasPadX,
+        py: config.canvasPadY
     };
-    cfg.fontSize *= mul;
-    cfg.letterSpacing *= mul;
-    cfg.paddingX *= mul;
-    cfg.paddingY *= mul;
+    config.fontSize *= mul;
+    config.letterSpacing *= mul;
+    config.canvasPadX *= mul;
+    config.canvasPadY *= mul;
     render(off.getContext('2d'), tokenLines, W, H);
-    cfg.fontSize = s.fs;
-    cfg.letterSpacing = s.ls;
-    cfg.paddingX = s.px;
-    cfg.paddingY = s.py;
+    config.fontSize = s.fs;
+    config.letterSpacing = s.ls;
+    config.canvasPadX = s.px;
+    config.canvasPadY = s.py;
 
     off.toBlob(blob => {
         const a = document.createElement('a');
@@ -230,9 +231,9 @@ function setColor(key, value, isBg) {
     if (hex) hex.value = value;
 
     if (isBg) {
-        cfg.colors.background = value;
+        config.colors.background = value;
     } else {
-        cfg.colors[key] = value;
+        config.colors[key] = value;
         // Refresh operator chips whenever operator color changes
         if (key === 'operator') renderOpChips();
     }
@@ -270,11 +271,11 @@ function applyTheme(theme) {
 
 // TYPOGRAPHY
 function onCfg() {
-    cfg.fontSize = parseFloat(document.getElementById('c-fs').value) || 85;
-    cfg.lineHeight = parseFloat(document.getElementById('c-lh').value) || 1.15;
-    cfg.letterSpacing = parseFloat(document.getElementById('c-ls').value) || 0;
-    cfg.paddingX = parseFloat(document.getElementById('c-px').value) || 64;
-    cfg.paddingY = parseFloat(document.getElementById('c-py').value) || 4;
+    config.fontSize = parseFloat(document.getElementById('c-fs').value) || 85;
+    config.lineHeight = parseFloat(document.getElementById('c-lh').value) || 1.15;
+    config.letterSpacing = parseFloat(document.getElementById('c-ls').value) || 0;
+    config.canvasPadX = parseFloat(document.getElementById('c-px').value) || 64;
+    config.canvasPadY = parseFloat(document.getElementById('c-py').value) || 4;
     redraw();
 }
 
@@ -466,17 +467,17 @@ function exportCurrentTheme() {
     if (!name) return;
 
     const theme = {
-        bracket0: cfg.colors.bracket0,
-        bracket1: cfg.colors.bracket1,
-        bracket2: cfg.colors.bracket2,
-        function: cfg.colors.function,
-        variable: cfg.colors.variable,
-        operator: cfg.colors.operator,
-        semicolon: cfg.colors.semicolon,
-        number: cfg.colors.number,
-        comment: cfg.colors.comment,
-        unknown: cfg.colors.unknown,
-        background: cfg.colors.background,
+        bracket0: config.colors.bracket0,
+        bracket1: config.colors.bracket1,
+        bracket2: config.colors.bracket2,
+        function: config.colors.function,
+        variable: config.colors.variable,
+        operator: config.colors.operator,
+        semicolon: config.colors.semicolon,
+        number: config.colors.number,
+        comment: config.colors.comment,
+        unknown: config.colors.unknown,
+        background: config.colors.background,
     };
 
     const blob = new Blob([JSON.stringify(theme, null, 2)], {
@@ -492,9 +493,9 @@ function exportCurrentTheme() {
 // OPERATORS
 function renderOpChips() {
     const container = document.getElementById('op-chips');
-    const opColor = cfg.colors.operator;
+    const opColor = config.colors.operator;
     container.innerHTML = '';
-    for (const op of cfg.operators) {
+    for (const op of config.operators) {
         const chip = document.createElement('span');
         chip.className = 'chip';
         const code = document.createElement('code');
@@ -513,8 +514,8 @@ function renderOpChips() {
 function addOp() {
     const inp = document.getElementById('new-op');
     const v = inp.value;
-    if (v && !cfg.operators.includes(v)) {
-        cfg.operators.push(v);
+    if (v && !config.operators.includes(v)) {
+        config.operators.push(v);
         renderOpChips();
         redraw();
     }
@@ -523,7 +524,7 @@ function addOp() {
 }
 
 function removeOp(op) {
-    cfg.operators = cfg.operators.filter(o => o !== op);
+    config.operators = config.operators.filter(o => o !== op);
     renderOpChips();
     redraw();
 }
@@ -565,7 +566,7 @@ const BRACKET_GROUPS = {
 
 // Color for bracket chips: level 0/1/2 colors cycle through bracket colors
 function bracketChipColor(index) {
-    return cfg.colors[`bracket${index % 3}`];
+    return config.colors[`bracket${index % 3}`];
 }
 
 function renderBracketChips() {
@@ -651,10 +652,10 @@ function tog(hd) {
 
 // INIT
 function init() {
-    // Sync all color UI controls from cfg
+    // Sync all color UI controls from config
     const all = {
-        ...cfg.colors,
-        background: cfg.colors.background
+        ...config.colors,
+        background: config.colors.background
     };
     for (const [k, v] of Object.entries(all)) {
         const fill = document.getElementById(`sf-${k}`);

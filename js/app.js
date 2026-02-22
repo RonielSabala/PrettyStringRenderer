@@ -1,5 +1,5 @@
 import {
-    COLOR_KEYS,
+    THEME_KEYS,
     config
 } from "./config.js";
 'use strict';
@@ -72,9 +72,9 @@ import {
     });
 })();
 
-function tog(hd) {
-    hd.classList.toggle('col');
-    hd.nextElementSibling.classList.toggle('hid');
+function toggleHeader(header) {
+    header.classList.toggle('col');
+    header.nextElementSibling.classList.toggle('hid');
 }
 
 function init() {
@@ -82,13 +82,12 @@ function init() {
         updateColor(key, value);
     }
 
-    // Attach event listeners for controls
     document.getElementById('btn-export').addEventListener('click', doExport);
     document.getElementById('btn-load-themes').addEventListener('click', importThemes);
     document.getElementById('btn-export-theme').addEventListener('click', exportCurrentTheme);
-    document.querySelectorAll('.sh').forEach(element => element.addEventListener('click', () => tog(element)));
+    document.querySelectorAll('.sh').forEach(element => element.addEventListener('click', () => toggleHeader(element)));
 
-    COLOR_KEYS.forEach(key => {
+    THEME_KEYS.forEach(key => {
         const colorPicker = document.getElementById(`cp-${key}`);
         if (colorPicker) colorPicker.addEventListener('input', e => onPick(key, e.target.value));
 

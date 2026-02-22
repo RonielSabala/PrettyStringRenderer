@@ -1,7 +1,7 @@
 const OUT_WIDTH = 3120
 const OUT_HEIGHT = 780
 const ASPECT_RATIO = OUT_WIDTH / OUT_HEIGHT;
-const COLOR_KEYS = [
+const THEME_KEYS = [
     'bracket0',
     'bracket1',
     'bracket2',
@@ -50,15 +50,15 @@ const config = {
         '—', '·', '_',
     ],
 
-    colors: Object.fromEntries(COLOR_KEYS.map((key, index) => [key, DEFAULT_COLORS[index]])),
+    colors: Object.fromEntries(THEME_KEYS.map((key, index) => [key, DEFAULT_COLORS[index]])),
 };
 
 export {
     ASPECT_RATIO,
     canvasConfig,
-    COLOR_KEYS,
     config,
     editorConfig,
     OUT_HEIGHT,
-    OUT_WIDTH
+    OUT_WIDTH,
+    THEME_KEYS
 };

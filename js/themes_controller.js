@@ -1,5 +1,5 @@
 import {
-    COLOR_KEYS,
+    THEME_KEYS,
     config
 } from "./config.js";
 
@@ -12,7 +12,7 @@ let themes = [];
 let activeThemeName = '';
 
 function _applyTheme(theme) {
-    for (const key of COLOR_KEYS) {
+    for (const key of THEME_KEYS) {
         if (!theme[key]) {
             continue;
         }

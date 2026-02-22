@@ -2,6 +2,9 @@ import {
     BRACKET_GROUPS
 } from "./brackets.js";
 import {
+    updateZoomInfo
+} from "./canvas_controller.js";
+import {
     bracketChipColor,
     resolveColor
 } from "./color_utils.js";
@@ -83,82 +86,7 @@ function redraw() {
     updateZoomInfo();
 }
 
-// ZOOM + PAN
-let cvZoom = 1,
-    cvPanX = 0,
-    cvPanY = 0;
-let spaceHeld = false,
-    panning = false,
-    panStartX = 0,
-    panStartY = 0;
 
-function applyTransform() {
-    document.getElementById('cv-inner').style.transform =
-        `translate(${cvPanX}px,${cvPanY}px) scale(${cvZoom})`;
-    updateZoomInfo();
-}
-
-function updateZoomInfo() {
-    document.getElementById('si').textContent =
-        `${OUT_WIDTH}x${OUT_HEIGHT} · ${(cvZoom * 100).toFixed(0)}%`;
-}
-
-document.getElementById('cv-wrap').addEventListener('wheel', e => {
-    e.preventDefault();
-    const f = e.deltaY < 0 ? 1.12 : 1 / 1.12;
-    const rect = document.getElementById('cv-wrap').getBoundingClientRect();
-    const mx = e.clientX - (rect.left + rect.width / 2);
-    const my = e.clientY - (rect.top + rect.height / 2);
-    cvPanX = mx * (1 - f) + cvPanX * f;
-    cvPanY = my * (1 - f) + cvPanY * f;
-    cvZoom = Math.max(0.05, Math.min(40, cvZoom * f));
-    applyTransform();
-}, {
-    passive: false
-});
-
-document.getElementById('cv-wrap').addEventListener('dblclick', () => {
-    cvZoom = 1;
-    cvPanX = 0;
-    cvPanY = 0;
-    applyTransform();
-});
-
-document.addEventListener('keydown', e => {
-    if (e.code === 'Space' && document.activeElement !== document.getElementById('ed')) {
-        if (!spaceHeld) {
-            spaceHeld = true;
-            document.getElementById('cv-wrap').style.cursor = 'grab';
-        }
-        e.preventDefault();
-    }
-});
-document.addEventListener('keyup', e => {
-    if (e.code === 'Space') {
-        spaceHeld = false;
-        if (!panning) document.getElementById('cv-wrap').style.cursor = '';
-    }
-});
-document.getElementById('cv-wrap').addEventListener('mousedown', e => {
-    if (spaceHeld) {
-        panning = true;
-        panStartX = e.clientX - cvPanX;
-        panStartY = e.clientY - cvPanY;
-        document.getElementById('cv-wrap').style.cursor = 'grabbing';
-        e.preventDefault();
-    }
-});
-document.addEventListener('mousemove', e => {
-    if (!panning) return;
-    cvPanX = e.clientX - panStartX;
-    cvPanY = e.clientY - panStartY;
-    applyTransform();
-});
-document.addEventListener('mouseup', () => {
-    if (!panning) return;
-    panning = false;
-    document.getElementById('cv-wrap').style.cursor = spaceHeld ? 'grab' : '';
-});
 
 // EXPORT
 function doExport() {

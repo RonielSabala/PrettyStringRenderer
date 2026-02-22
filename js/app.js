@@ -28,27 +28,11 @@ import {
     onPick
 } from "./color_utils.js";
 
-// TYPOGRAPHY
-function onCfg() {
-    config.fontSize = parseFloat(document.getElementById('c-fs').value) || 85;
-    config.lineHeight = parseFloat(document.getElementById('c-lh').value) || 1.15;
-    config.letterSpacing = parseFloat(document.getElementById('c-ls').value) || 0;
-    config.canvasPadX = parseFloat(document.getElementById('c-px').value) || 64;
-    config.canvasPadY = parseFloat(document.getElementById('c-py').value) || 4;
-    redraw();
-}
+import {
+    onEditorFontSize,
+    onTypographyConfig
+} from "./typography_controller.js";
 
-function onEdit() {
-    redraw();
-}
-
-function onEdFontSize() {
-    const sz = parseFloat(document.getElementById('ed-fs').value) || 16;
-    document.getElementById('ed').style.fontSize = sz + 'px';
-}
-
-// RESIZE HANDLE
-;
 (() => {
     const h = document.getElementById('rh');
     const p = document.getElementById('ed-panel');
@@ -142,9 +126,9 @@ function init() {
     }
 
     ['c-fs', 'c-lh', 'c-ls', 'c-px', 'c-py'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener('input', onCfg);
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('input', onTypographyConfig);
         }
     });
 
@@ -152,12 +136,12 @@ function init() {
     if (ed) {
         ed.scrollTop = 0;
         ed.setSelectionRange(0, 0);
-        ed.addEventListener('input', onEdit);
+        ed.addEventListener('input', redraw);
     }
 
     const edfs = document.getElementById('ed-fs');
     if (edfs) {
-        edfs.addEventListener('input', onEdFontSize);
+        edfs.addEventListener('input', onEditorFontSize);
     }
 
     const newOp = document.getElementById('new-op');

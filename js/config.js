@@ -1,12 +1,22 @@
 const OUT_WIDTH = 3120
 const OUT_HEIGHT = 780
 const ASPECT_RATIO = OUT_WIDTH / OUT_HEIGHT;
-const config = {
+const editorConfig = {
+    fontSize: 16,
+}
+const canvasConfig = {
     fontSize: 85,
     lineHeight: 1.15,
     letterSpacing: 0,
-    canvasPadX: 64,
-    canvasPadY: 4,
+    padX: 64,
+    padY: 4,
+}
+const config = {
+    fontSize: canvasConfig.fontSize,
+    lineHeight: canvasConfig.lineHeight,
+    letterSpacing: canvasConfig.letterSpacing,
+    canvasPadX: canvasConfig.padX,
+    canvasPadY: canvasConfig.padY,
 
     operators: [
         '**', '++', '--',
@@ -31,7 +41,9 @@ const config = {
 
 export {
     ASPECT_RATIO,
+    canvasConfig,
     config,
+    editorConfig,
     OUT_HEIGHT,
     OUT_WIDTH
 };

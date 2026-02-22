@@ -21,7 +21,7 @@ function _applyTheme(theme) {
     }
 
     if (theme.background) {
-        setColor('background', theme.background, true);
+        setColor('background', theme.background);
     }
 
     // Ensure operator chips reflect the new operator color

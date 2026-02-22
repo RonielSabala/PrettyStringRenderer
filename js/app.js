@@ -14,6 +14,7 @@ import {
     redraw,
     renderBracketChips,
     renderOpChips,
+    updateColor,
 } from "./render_controller.js";
 
 import {
@@ -77,21 +78,8 @@ function tog(hd) {
 }
 
 function init() {
-    for (const [k, v] of Object.entries(config.colors)) {
-        const fill = document.getElementById(`sf-${k}`);
-        if (fill) {
-            fill.style.background = v;
-        }
-
-        const pick = document.getElementById(`cp-${k}`);
-        if (pick) {
-            pick.value = v;
-        }
-
-        const hex = document.getElementById(`hx-${k}`);
-        if (hex) {
-            hex.value = v;
-        }
+    for (const [key, value] of Object.entries(config.colors)) {
+        updateColor(key, value);
     }
 
     // Attach event listeners for controls

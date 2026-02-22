@@ -11,7 +11,8 @@ const COLOR_KEYS = [
     'semicolon',
     'number',
     'comment',
-    'unknown'
+    'unknown',
+    'background',
 ];
 const DEFAULT_COLORS = [
     '#569CD6',

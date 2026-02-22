@@ -9,20 +9,20 @@ import {
 } from "./tokens.js";
 
 
-function onPick(key, v) {
-    setColor(key, v);
+function onPick(key, value) {
+    setColor(key, value);
 }
 
-function onHex(key, v) {
-    if (/^#[0-9A-Fa-f]{6}$/.test(v)) setColor(key, v);
+function onHex(key, value) {
+    if (/^#[0-9A-Fa-f]{6}$/.test(value)) setColor(key, value);
 }
 
-function onBgPick(v) {
-    setColor('background', v, true);
+function onBgPick(value) {
+    setColor('background', value);
 }
 
-function onBgHex(v) {
-    if (/^#[0-9A-Fa-f]{6}$/.test(v)) setColor('background', v, true);
+function onBgHex(value) {
+    if (/^#[0-9A-Fa-f]{6}$/.test(value)) setColor('background', value);
 }
 
 function getBracketChipColor(index) {

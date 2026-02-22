@@ -21,7 +21,7 @@ import {
 let tokenLines = [];
 
 function _getFont(fontSize) {
-    return `400 ${fontSize}px 'Cascadia Code', 'Courier New', monospace`;
+    return `400 ${fontSize}px 'Cascadia Code'`;
 }
 
 function render(context, lines, W, H) {
@@ -131,7 +131,7 @@ function renderBracketChips() {
     }
 }
 
-function setColor(key, value, isBg) {
+function updateColor(key, value) {
     const fill = document.getElementById(`sf-${key}`);
     if (fill) {
         fill.style.background = value;
@@ -146,13 +146,16 @@ function setColor(key, value, isBg) {
     if (hex) {
         hex.value = value;
     }
+}
 
-    if (isBg) {
+function setColor(key, value) {
+    updateColor(key, value);
+
+    if (key === 'background') {
         config.colors.background = value;
     } else {
         config.colors[key] = value;
         if (key === 'operator') {
-            // Refresh operator chips whenever operator color changes
             renderOpChips();
         }
     }
@@ -217,5 +220,6 @@ export {
     renderBracketChips,
     renderOpChips,
     setColor,
-    tokenLines
+    tokenLines,
+    updateColor
 };

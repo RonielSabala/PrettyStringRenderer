@@ -34,34 +34,42 @@ import {
 } from "./typography_controller.js";
 
 (() => {
-    const h = document.getElementById('rh');
-    const p = document.getElementById('ed-panel');
+    const resizeHandle = document.getElementById('rh');
+    const editorPanel = document.getElementById('ed-panel');
     let drag = false,
         sy = 0,
         sh = 0;
-    h.addEventListener('mousedown', e => {
+
+    resizeHandle.addEventListener('mousedown', event => {
         drag = true;
-        sy = e.clientY;
-        sh = p.offsetHeight;
-        h.classList.add('drag');
+        sy = event.clientY;
+        sh = editorPanel.offsetHeight;
+        resizeHandle.classList.add('drag');
         document.body.style.userSelect = 'none';
-        e.preventDefault();
+        event.preventDefault();
     });
-    document.addEventListener('mousemove', e => {
-        if (!drag) return;
-        const newH = Math.max(55, Math.min(window.innerHeight * .8, sh + (sy - e.clientY)));
-        p.style.height = newH + 'px';
+
+    document.addEventListener('mousemove', event => {
+        if (!drag) {
+            return;
+        }
+
+        const newHeight = Math.max(55, Math.min(window.innerHeight * .8, sh + (sy - event.clientY)));
+        editorPanel.style.height = newHeight + 'px';
         redraw();
     });
+
     document.addEventListener('mouseup', () => {
-        if (!drag) return;
+        if (!drag) {
+            return;
+        }
+
         drag = false;
-        h.classList.remove('drag');
+        resizeHandle.classList.remove('drag');
         document.body.style.userSelect = '';
     });
 })();
 
-// SECTION TOGGLE
 function tog(hd) {
     hd.classList.toggle('col');
     hd.nextElementSibling.classList.toggle('hid');
@@ -92,7 +100,7 @@ function init() {
     document.getElementById('btn-export').addEventListener('click', doExport);
     document.getElementById('btn-load-themes').addEventListener('click', importThemes);
     document.getElementById('btn-export-theme').addEventListener('click', exportCurrentTheme);
-    document.querySelectorAll('.sh').forEach(el => el.addEventListener('click', () => tog(el)));
+    document.querySelectorAll('.sh').forEach(element => element.addEventListener('click', () => tog(element)));
 
     const colorKeys = [
         'bracket0',
@@ -108,21 +116,21 @@ function init() {
     ];
 
     colorKeys.forEach(key => {
-        const cp = document.getElementById(`cp-${key}`);
-        if (cp) cp.addEventListener('input', e => onPick(key, e.target.value));
+        const colorPicker = document.getElementById(`cp-${key}`);
+        if (colorPicker) colorPicker.addEventListener('input', e => onPick(key, e.target.value));
 
-        const hx = document.getElementById(`hx-${key}`);
-        if (hx) hx.addEventListener('input', e => onHex(key, e.target.value));
+        const hexInput = document.getElementById(`hx-${key}`);
+        if (hexInput) hexInput.addEventListener('input', e => onHex(key, e.target.value));
     });
 
-    const cpbg = document.getElementById('cp-background');
-    if (cpbg) {
-        cpbg.addEventListener('input', e => onBgPick(e.target.value));
+    const colorPickerBg = document.getElementById('cp-background');
+    if (colorPickerBg) {
+        colorPickerBg.addEventListener('input', e => onBgPick(e.target.value));
     }
 
-    const hxbg = document.getElementById('hx-background');
-    if (hxbg) {
-        hxbg.addEventListener('input', e => onBgHex(e.target.value));
+    const hexInputBg = document.getElementById('hx-background');
+    if (hexInputBg) {
+        hexInputBg.addEventListener('input', e => onBgHex(e.target.value));
     }
 
     ['c-fs', 'c-lh', 'c-ls', 'c-px', 'c-py'].forEach(id => {
@@ -132,16 +140,16 @@ function init() {
         }
     });
 
-    const ed = document.getElementById('ed');
-    if (ed) {
-        ed.scrollTop = 0;
-        ed.setSelectionRange(0, 0);
-        ed.addEventListener('input', redraw);
+    const editor = document.getElementById('ed');
+    if (editor) {
+        editor.scrollTop = 0;
+        editor.setSelectionRange(0, 0);
+        editor.addEventListener('input', redraw);
     }
 
-    const edfs = document.getElementById('ed-fs');
-    if (edfs) {
-        edfs.addEventListener('input', onEditorFontSize);
+    const editorFontSize = document.getElementById('ed-fs');
+    if (editorFontSize) {
+        editorFontSize.addEventListener('input', onEditorFontSize);
     }
 
     const newOp = document.getElementById('new-op');
@@ -175,9 +183,9 @@ function init() {
     renderThemeList();
 
     // Reset editor scroll to top so text starts at the top
-    if (ed) {
-        ed.scrollTop = 0;
-        ed.setSelectionRange(0, 0);
+    if (editor) {
+        editor.scrollTop = 0;
+        editor.setSelectionRange(0, 0);
     }
 }
 

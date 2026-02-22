@@ -8,7 +8,6 @@ import {
     TOKENS
 } from "./tokens.js";
 
-// Fast lookup sets derived from the above arrays
 function buildBracketSets() {
     return {
         open: new Set(BRACKETS.ML_OPEN),

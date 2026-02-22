@@ -11,48 +11,25 @@ import {
     tokenize
 } from "./tokenizer.js";
 import {
-    TOKENS
+    resolveColor
 } from "./tokens.js";
 'use strict';
 
 
-function resolveColor(token) {
-    const colors = config.colors;
-    switch (token.t) {
-        case TOKENS.BRACKET:
-            return colors[`bracket${token.d}`];
-        case TOKENS.OPERATOR:
-            return colors.operator;
-        case TOKENS.FUNCTION:
-            return colors.function;
-        case TOKENS.VARIABLE:
-            return colors.variable;
-        case TOKENS.SEMICOLON:
-            return colors.semicolon;
-        case TOKENS.COMMENT:
-            return colors.comment;
-        case TOKENS.NUMBER:
-            return colors.number;
-        case TOKENS.WS:
-            return null;
-        default:
-            return colors.unknown;
-    }
-}
 
-function render(ctx, lines, W, H) {
+function render(context, lines, W, H) {
     const fs = config.fontSize;
     const px0 = config.canvasPadX;
     const py0 = config.canvasPadY;
     const ls = config.letterSpacing;
 
-    ctx.fillStyle = config.colors.background;
-    ctx.fillRect(0, 0, W, H);
+    context.fillStyle = config.colors.background;
+    context.fillRect(0, 0, W, H);
 
-    ctx.font = `400 ${fs}px 'Cascadia Code','Courier New',monospace`;
-    ctx.textBaseline = 'alphabetic';
+    context.font = `400 ${fs}px 'Cascadia Code','Courier New',monospace`;
+    context.textBaseline = 'alphabetic';
 
-    const cw = ctx.measureText('M').width + ls;
+    const cw = context.measureText('M').width + ls;
     const lhpx = fs * config.lineHeight;
     const x0 = px0;
     const y0 = py0 + fs * 0.82;
@@ -60,17 +37,19 @@ function render(ctx, lines, W, H) {
     for (let row = 0; row < lines.length; row++) {
         let col = 0;
         const cy = y0 + row * lhpx;
-        for (const tok of lines[row]) {
-            const cl = resolveColor(tok);
-            if (!cl) {
-                col += tok.v.length;
+        for (const token of lines[row]) {
+            const tokenColor = resolveColor(token);
+            if (!tokenColor) {
+                col += token.v.length;
                 continue;
             }
-            ctx.fillStyle = cl;
-            for (let c = 0; c < tok.v.length; c++) {
-                ctx.fillText(tok.v[c], x0 + (col + c) * cw, cy);
+
+            context.fillStyle = tokenColor;
+            for (let c = 0; c < token.v.length; c++) {
+                context.fillText(token.v[c], x0 + (col + c) * cw, cy);
             }
-            col += tok.v.length;
+
+            col += token.v.length;
         }
     }
 }
@@ -122,7 +101,7 @@ function applyTransform() {
 
 function updateZoomInfo() {
     document.getElementById('si').textContent =
-        `${OUT_WIDTH}×${OUT_HEIGHT} · ${(cvZoom * 100).toFixed(0)}%`;
+        `${OUT_WIDTH}x${OUT_HEIGHT} · ${(cvZoom * 100).toFixed(0)}%`;
 }
 
 document.getElementById('cv-wrap').addEventListener('wheel', e => {
@@ -185,7 +164,7 @@ document.addEventListener('mouseup', () => {
 // EXPORT
 function doExport() {
     const mul = parseFloat(
-        prompt('Scale multiplier:\n  1  → 3120×780\n  2  → 6240×1560\n  0.5 → 1560×390', '1')
+        prompt('Scale multiplier:\n  1  → 3120x780\n  2  → 6240x1560\n  0.5 → 1560x390', '1')
     );
     if (isNaN(mul) || mul <= 0) return;
 
@@ -503,7 +482,7 @@ function renderOpChips() {
         code.style.color = opColor; // inline — always reflects current theme
         const del = document.createElement('button');
         del.className = 'chip-x';
-        del.textContent = '×';
+        del.textContent = 'x';
         del.title = 'Remove';
         del.onclick = () => removeOp(op);
         chip.append(code, del);
@@ -581,7 +560,7 @@ function renderBracketChips() {
             code.style.color = bracketChipColor(idx);
             const del = document.createElement('button');
             del.className = 'chip-x';
-            del.textContent = '×';
+            del.textContent = 'x';
             del.title = 'Remove';
             del.onclick = () => removeBracket(gid, ch);
             chip.append(code, del);

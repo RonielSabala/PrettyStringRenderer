@@ -1,8 +1,5 @@
 'use strict';
 
-// ═══════════════════════════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════════════════════════
 const cfg = {
     background: '#1e1e1e',
     fontSize: 85,
@@ -35,7 +32,6 @@ const OUT_W = 3120,
     OUT_H = 780,
     ASPECT = OUT_W / OUT_H;
 
-// ═══════════════════════════════════════════════════════════
 // BRACKET SETS  (mutable — controlled by the Parentheses UI)
 //
 // ML = multi-line: depth persists column-by-column across rows.
@@ -47,7 +43,6 @@ const OUT_W = 3120,
 //             (sits "inside" the opener above it)
 // IL_OPEN  → color at current line-depth, then line-depth++
 // IL_CLOSE → line-depth--, then color at new line-depth
-// ═══════════════════════════════════════════════════════════
 let ML_OPEN = ['/', '▏', '┌'];
 let ML_CLOSE = ['\\', '▕', '┘'];
 let ML_PASS = ['│', '┐', '└'];
@@ -65,9 +60,7 @@ function buildBracketSets() {
     };
 }
 
-// ═══════════════════════════════════════════════════════════
 // TOKEN TYPES
-// ═══════════════════════════════════════════════════════════
 const T = {
     BRACKET: 'b',
     OPERATOR: 'op',
@@ -80,9 +73,7 @@ const T = {
     UNKNOWN: 'uk',
 };
 
-// ═══════════════════════════════════════════════════════════
 // TOKENIZER
-// ═══════════════════════════════════════════════════════════
 function tokenize(text) {
     const lines = text.split('\n');
     const result = [];
@@ -258,9 +249,7 @@ function tokenize(text) {
     return result;
 }
 
-// ═══════════════════════════════════════════════════════════
 // COLOR RESOLVER
-// ═══════════════════════════════════════════════════════════
 function resolveColor(tok) {
     const c = cfg.colors;
     switch (tok.t) {
@@ -285,9 +274,7 @@ function resolveColor(tok) {
     }
 }
 
-// ═══════════════════════════════════════════════════════════
 // RENDERER  (always at OUT_W × OUT_H)
-// ═══════════════════════════════════════════════════════════
 function render(ctx, lines, W, H) {
     const fs = cfg.fontSize;
     const px0 = cfg.paddingX;
@@ -323,9 +310,7 @@ function render(ctx, lines, W, H) {
     }
 }
 
-// ═══════════════════════════════════════════════════════════
 // PREVIEW
-// ═══════════════════════════════════════════════════════════
 let tokenLines = [];
 
 function redraw() {
@@ -355,9 +340,7 @@ function redraw() {
     updateZoomInfo();
 }
 
-// ═══════════════════════════════════════════════════════════
 // ZOOM + PAN
-// ═══════════════════════════════════════════════════════════
 let cvZoom = 1,
     cvPanX = 0,
     cvPanY = 0;
@@ -434,9 +417,7 @@ document.addEventListener('mouseup', () => {
     document.getElementById('cv-wrap').style.cursor = spaceHeld ? 'grab' : '';
 });
 
-// ═══════════════════════════════════════════════════════════
 // EXPORT
-// ═══════════════════════════════════════════════════════════
 function doExport() {
     const mul = parseFloat(
         prompt('Scale multiplier:\n  1  → 3120×780\n  2  → 6240×1560\n  0.5 → 1560×390', '1')
@@ -475,9 +456,7 @@ function doExport() {
     }, 'image/png');
 }
 
-// ═══════════════════════════════════════════════════════════
 // COLOR CONTROLS
-// ═══════════════════════════════════════════════════════════
 function setColor(key, value, isBg) {
     const fill = document.getElementById(`sf-${key}`);
     const pick = document.getElementById(`cp-${key}`);
@@ -525,9 +504,7 @@ function applyTheme(theme) {
     renderOpChips();
 }
 
-// ═══════════════════════════════════════════════════════════
 // TYPOGRAPHY
-// ═══════════════════════════════════════════════════════════
 function onCfg() {
     cfg.fontSize = parseFloat(document.getElementById('c-fs').value) || 85;
     cfg.lineHeight = parseFloat(document.getElementById('c-lh').value) || 1.15;
@@ -546,9 +523,7 @@ function onEdFontSize() {
     document.getElementById('ed').style.fontSize = sz + 'px';
 }
 
-// ═══════════════════════════════════════════════════════════
-// THEMES  — loaded exclusively from JSON files
-// ═══════════════════════════════════════════════════════════
+// THEMES
 let themes = [];
 let activeThemeName = '';
 let storedDirHandle = null; // persisted via IndexedDB
@@ -750,9 +725,7 @@ function exportCurrentTheme() {
     URL.revokeObjectURL(a.href);
 }
 
-// ═══════════════════════════════════════════════════════════
 // OPERATORS
-// ═══════════════════════════════════════════════════════════
 function renderOpChips() {
     const container = document.getElementById('op-chips');
     const opColor = cfg.colors.operator;
@@ -791,9 +764,7 @@ function removeOp(op) {
     redraw();
 }
 
-// ═══════════════════════════════════════════════════════════
 // PARENTHESES
-// ═══════════════════════════════════════════════════════════
 // Map group id → the mutable array it controls
 const BRACKET_GROUPS = {
     mlopen: {
@@ -878,9 +849,7 @@ function removeBracket(gid, ch) {
     redraw();
 }
 
-// ═══════════════════════════════════════════════════════════
 // RESIZE HANDLE
-// ═══════════════════════════════════════════════════════════
 ;
 (() => {
     const h = document.getElementById('rh');
@@ -910,17 +879,13 @@ function removeBracket(gid, ch) {
     });
 })();
 
-// ═══════════════════════════════════════════════════════════
 // SECTION TOGGLE
-// ═══════════════════════════════════════════════════════════
 function tog(hd) {
     hd.classList.toggle('col');
     hd.nextElementSibling.classList.toggle('hid');
 }
 
-// ═══════════════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════════════
 function init() {
     // Sync all color UI controls from cfg
     const all = {

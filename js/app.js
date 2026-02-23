@@ -41,8 +41,21 @@ import {
     onPadYConfig
 } from './controllers/typography_controller.js';
 
+const btnExport = document.getElementById('btn-export');
+const btnLoadThemes = document.getElementById('btn-load-themes')
+const btnExportTheme = document.getElementById('btn-export-theme');
+
+const typographyFontSizeElement = document.getElementById('c-fs');
+const typographyLineHeightElement = document.getElementById('c-lh');
+const typographyLetterSpacingElement = document.getElementById('c-ls');
+const typographyPadXElement = document.getElementById('c-px');
+const typographyPadYElement = document.getElementById('c-py');
+
 const editorElement = document.getElementById('ed');
 const canvasWrapElement = document.getElementById('canvas-wrap');
+
+const editorFontSizeElement = document.getElementById('ed-fs');
+const editorResizeHandleElement = document.getElementById('rh');
 
 // Sidebar section collapse
 function toggleSection(element) {
@@ -52,18 +65,9 @@ function toggleSection(element) {
 
 function init() {
     // Button listeners
-    document.getElementById('btn-export').addEventListener(
-        'click',
-        exportCanvas
-    );
-    document.getElementById('btn-load-themes').addEventListener(
-        'click',
-        loadThemes
-    );
-    document.getElementById('btn-export-theme').addEventListener(
-        'click',
-        exportCurrentTheme
-    );
+    btnExport.addEventListener('click', exportCanvas);
+    btnLoadThemes.addEventListener('click', loadThemes);
+    btnExportTheme.addEventListener('click', exportCurrentTheme);
 
     // Section collapse
     document.querySelectorAll('.sh').forEach(
@@ -77,22 +81,22 @@ function init() {
 
     // Color pickers + hex inputs
     for (const themeKey of THEME_KEYS) {
-        document.getElementById(`cp-${themeKey}`)?.addEventListener(
+        document.getElementById(`cp-${themeKey}`).addEventListener(
             'input',
             event => onPick(themeKey, event.target.value)
         );
-        document.getElementById(`hx-${themeKey}`)?.addEventListener(
+        document.getElementById(`hx-${themeKey}`).addEventListener(
             'input',
             event => onHex(themeKey, event.target.value)
         );
     }
 
     // Typography inputs
-    document.getElementById('c-fs')?.addEventListener('input', onFontSizeConfig);
-    document.getElementById('c-lh')?.addEventListener('input', onLineHeightConfig);
-    document.getElementById('c-ls')?.addEventListener('input', onLetterSpacingConfig);
-    document.getElementById('c-px')?.addEventListener('input', onPadXConfig);
-    document.getElementById('c-py')?.addEventListener('input', onPadYConfig);
+    typographyFontSizeElement.addEventListener('input', onFontSizeConfig);
+    typographyLineHeightElement.addEventListener('input', onLineHeightConfig);
+    typographyLetterSpacingElement.addEventListener('input', onLetterSpacingConfig);
+    typographyPadXElement.addEventListener('input', onPadXConfig);
+    typographyPadYElement.addEventListener('input', onPadYConfig);
 
     // Editor
     editorElement.addEventListener('input', redraw);
@@ -100,8 +104,8 @@ function init() {
     editorElement.setSelectionRange(0, 0);
 
     // Editor listeners
-    document.getElementById('ed-fs')?.addEventListener('input', onEditorFontSize);
-    document.getElementById('rh')?.addEventListener('mousedown', onResize);
+    editorFontSizeElement.addEventListener('input', onEditorFontSize);
+    editorResizeHandleElement.addEventListener('mousedown', onResize);
     document.addEventListener('mouseup', onEditorMouseUp);
     document.addEventListener('mousemove', onEditorMouseMove);
 

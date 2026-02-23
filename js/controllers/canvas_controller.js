@@ -19,10 +19,10 @@ let panStartY = 0;
 let rafScheduled = false;
 let onZoomChangeCallback = null;
 
-const canvasWrapElement = document.getElementById('canvas-wrap');
-const canvasInnerElement = document.getElementById('canvas-inner');
 const statusElement = document.getElementById('si');
 const editorElement = document.getElementById('ed');
+const canvasWrapElement = document.getElementById('canvas-wrap');
+const canvasInnerElement = document.getElementById('canvas-inner');
 
 function getCanvasZoom() {
     return canvasZoom;

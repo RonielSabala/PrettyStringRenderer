@@ -24,6 +24,10 @@ const _QUALITY_REDRAW_DEBOUNCE_MS = 120;
 let _currentPixelScale = 1;
 let _qualityRedrawTimer = null;
 
+const editorElement = document.getElementById('ed');
+const canvasElement = document.getElementById('canvas');
+const canvasWrapElement = document.getElementById('canvas-wrap');
+
 function getTokenLines() {
     return _tokenLines;
 }
@@ -85,11 +89,10 @@ function _computePixelScale(canvasZoom) {
 function _renderAtScale(pixelScale) {
     _currentPixelScale = pixelScale;
 
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvasElement.getContext('2d');
 
-    canvas.width = OUT_WIDTH * pixelScale;
-    canvas.height = OUT_HEIGHT * pixelScale;
+    canvasElement.width = OUT_WIDTH * pixelScale;
+    canvasElement.height = OUT_HEIGHT * pixelScale;
 
     ctx.scale(pixelScale, pixelScale);
     render(ctx, _tokenLines, OUT_WIDTH, OUT_HEIGHT);
@@ -97,7 +100,9 @@ function _renderAtScale(pixelScale) {
 
 function _scheduleQualityRedraw(canvasZoom) {
     const neededPixelScale = _computePixelScale(canvasZoom);
-    if (neededPixelScale === _currentPixelScale) return;
+    if (neededPixelScale === _currentPixelScale) {
+        return;
+    }
 
     clearTimeout(_qualityRedrawTimer);
     _qualityRedrawTimer = setTimeout(() => {
@@ -106,19 +111,16 @@ function _scheduleQualityRedraw(canvasZoom) {
 }
 
 function redraw() {
-    _tokenLines = tokenize(document.getElementById('ed').value);
-
-    const canvas = document.getElementById('canvas');
-    const wrap = document.getElementById('canvas-wrap');
+    _tokenLines = tokenize(editorElement.value);
 
     const pixelScale = _computePixelScale(getCanvasZoom());
     _renderAtScale(pixelScale);
 
-    canvas.style.width = _getNormalizedDimension(OUT_WIDTH);
-    canvas.style.height = _getNormalizedDimension(OUT_HEIGHT);
+    canvasElement.style.width = _getNormalizedDimension(OUT_WIDTH);
+    canvasElement.style.height = _getNormalizedDimension(OUT_HEIGHT);
 
-    const availableWidth = wrap.clientWidth - _MARGIN_OFFSET;
-    const availableHeight = wrap.clientHeight - _MARGIN_OFFSET;
+    const availableWidth = canvasWrapElement.clientWidth - _MARGIN_OFFSET;
+    const availableHeight = canvasWrapElement.clientHeight - _MARGIN_OFFSET;
 
     let displayWidth = Math.min(availableWidth, availableHeight * ASPECT_RATIO);
     let displayHeight = displayWidth / ASPECT_RATIO;
@@ -128,8 +130,8 @@ function redraw() {
         displayWidth = displayHeight * ASPECT_RATIO;
     }
 
-    canvas.style.width = _getNormalizedDimension(displayWidth);
-    canvas.style.height = _getNormalizedDimension(displayHeight);
+    canvasElement.style.width = _getNormalizedDimension(displayWidth);
+    canvasElement.style.height = _getNormalizedDimension(displayHeight);
 
     updateZoomInfo();
 }

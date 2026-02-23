@@ -9,8 +9,8 @@ import {
 let themes = [];
 let activeThemeName = '';
 
-const themeList = document.getElementById('theme-list');
-const emptyTheme = document.getElementById('theme-empty');
+const themeListElement = document.getElementById('theme-list');
+const emptyThemeElement = document.getElementById('theme-empty');
 
 function _onApplyTheme(theme) {
     activeThemeName = theme._name;
@@ -26,11 +26,11 @@ function _onApplyTheme(theme) {
 }
 
 function renderThemeList() {
-    themeList.innerHTML = '';
+    themeListElement.innerHTML = '';
 
     if (themes.length === 0) {
-        if (emptyTheme) {
-            themeList.appendChild(emptyTheme);
+        if (emptyThemeElement) {
+            themeListElement.appendChild(emptyThemeElement);
         }
 
         return;
@@ -51,7 +51,7 @@ function renderThemeList() {
         themeItem.append(themeName, themeDot);
         themeItem.addEventListener('click', () => _onApplyTheme(theme));
 
-        themeList.appendChild(themeItem);
+        themeListElement.appendChild(themeItem);
     }
 }
 

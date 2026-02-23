@@ -2,8 +2,12 @@ import {
     resolveTokenColor
 } from '../common/color_utils.js';
 import {
-    ASPECT_RATIO,
+    CANVAS_ASPECT_RATIO,
+    CANVAS_AVAILABLE_MARGIN_OFFSET_PX,
     CANVAS_HEIGHT,
+    CANVAS_MAX_PIXEL_SCALE,
+    CANVAS_MIN_PIXEL_SCALE,
+    CANVAS_QUALITY_REDRAW_DEBOUNCE_MS,
     CANVAS_WIDTH,
     config
 } from '../common/config.js';
@@ -17,9 +21,6 @@ import {
 } from './canvas_controller.js';
 
 let _tokenLines = [];
-const _MARGIN_OFFSET = 40;
-const _MAX_PIXEL_SCALE = 4;
-const _QUALITY_REDRAW_DEBOUNCE_MS = 120;
 
 let _currentPixelScale = 1;
 let _qualityRedrawTimer = null;
@@ -83,7 +84,7 @@ function _getNormalizedDimension(dimension) {
 
 function _computePixelScale(canvasZoom) {
     const deviceAwareZoom = canvasZoom * window.devicePixelRatio;
-    return Math.min(_MAX_PIXEL_SCALE, Math.max(1, Math.ceil(deviceAwareZoom)));
+    return Math.min(CANVAS_MAX_PIXEL_SCALE, Math.max(CANVAS_MIN_PIXEL_SCALE, Math.ceil(deviceAwareZoom)));
 }
 
 function _renderAtScale(pixelScale) {
@@ -107,7 +108,7 @@ function _scheduleQualityRedraw(canvasZoom) {
     clearTimeout(_qualityRedrawTimer);
     _qualityRedrawTimer = setTimeout(() => {
         _renderAtScale(_computePixelScale(getCanvasZoom()));
-    }, _QUALITY_REDRAW_DEBOUNCE_MS);
+    }, CANVAS_QUALITY_REDRAW_DEBOUNCE_MS);
 }
 
 function redraw() {
@@ -119,15 +120,15 @@ function redraw() {
     canvasElement.style.width = _getNormalizedDimension(CANVAS_WIDTH);
     canvasElement.style.height = _getNormalizedDimension(CANVAS_HEIGHT);
 
-    const availableWidth = canvasWrapElement.clientWidth - _MARGIN_OFFSET;
-    const availableHeight = canvasWrapElement.clientHeight - _MARGIN_OFFSET;
+    const availableWidth = canvasWrapElement.clientWidth - CANVAS_AVAILABLE_MARGIN_OFFSET_PX;
+    const availableHeight = canvasWrapElement.clientHeight - CANVAS_AVAILABLE_MARGIN_OFFSET_PX;
 
-    let displayWidth = Math.min(availableWidth, availableHeight * ASPECT_RATIO);
-    let displayHeight = displayWidth / ASPECT_RATIO;
+    let displayWidth = Math.min(availableWidth, availableHeight * CANVAS_ASPECT_RATIO);
+    let displayHeight = displayWidth / CANVAS_ASPECT_RATIO;
 
     if (displayHeight > availableHeight) {
         displayHeight = availableHeight;
-        displayWidth = displayHeight * ASPECT_RATIO;
+        displayWidth = displayHeight * CANVAS_ASPECT_RATIO;
     }
 
     canvasElement.style.width = _getNormalizedDimension(displayWidth);

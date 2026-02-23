@@ -49,7 +49,8 @@ function render(ctx, lines, width, height) {
             const tokenWidth = tokenValue.length;
             const tokenColor = resolveTokenColor(token);
 
-            if (!tokenColor) {
+            // Ignore whitespace
+            if (tokenColor === null) {
                 col += tokenWidth;
                 continue;
             }

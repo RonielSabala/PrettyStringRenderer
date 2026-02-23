@@ -1,39 +1,30 @@
 import {
     setColor
-} from "../controllers/render_controller.js";
+} from '../controllers/render_controller.js';
 import {
-    TOKENS,
-} from "../core/tokens.js";
+    TOKENS
+} from '../core/tokens.js';
 import {
-    config,
-} from "./config.js";
-
+    config
+} from './config.js';
 
 function onPick(key, value) {
     setColor(key, value);
 }
 
 function onHex(key, value) {
-    if (/^#[0-9A-Fa-f]{6}$/.test(value)) setColor(key, value);
+    if (!(/^#[0-9A-Fa-f]{6}$/.test(value))) {
+        return;
+    }
+
+    setColor(key, value);
 }
 
-function onBgPick(value) {
-    setColor('background', value);
-}
-
-function onBgHex(value) {
-    if (/^#[0-9A-Fa-f]{6}$/.test(value)) setColor('background', value);
-}
-
-function getBracketChipColor(index) {
-    return config.colors[`bracket${index % 3}`];
-}
-
-function resolveColor(token) {
+function resolveTokenColor(token) {
     const colors = config.colors;
-    switch (token.t) {
+    switch (token.token) {
         case TOKENS.BRACKET:
-            return colors[`bracket${token.d}`];
+            return colors[`bracket${token.bracketDepth}`];
         case TOKENS.OPERATOR:
             return colors.operator;
         case TOKENS.FUNCTION:
@@ -54,10 +45,7 @@ function resolveColor(token) {
 }
 
 export {
-    getBracketChipColor,
-    onBgHex,
-    onBgPick,
     onHex,
     onPick,
-    resolveColor
+    resolveTokenColor
 };

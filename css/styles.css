@@ -317,83 +317,6 @@ body {
   border-color: var(--t1);
 }
 
-/* Chips (operators & brackets) */
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  padding: 2px 0 5px;
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  background: var(--card);
-  border: 1px solid var(--b0);
-  border-radius: 4px;
-  padding: 1px 3px 1px 7px;
-}
-
-.chip code {
-  font-family: var(--mono);
-  font-size: 12.5px;
-}
-
-.chip-x {
-  background: none;
-  border: none;
-  color: var(--t2);
-  cursor: pointer;
-  padding: 0 2px;
-  font-size: 14px;
-  line-height: 1;
-  font-family: sans-serif;
-}
-
-.chip-x:hover {
-  color: var(--red);
-}
-
-.addrow {
-  display: flex;
-  gap: 6px;
-  padding-top: 3px;
-}
-
-.addrow input[type="text"] {
-  width: 52px;
-  background: var(--card);
-  border: 1px solid var(--b0);
-  color: var(--t0);
-  font-family: var(--mono);
-  font-size: 13px;
-  padding: 3px 6px;
-  border-radius: var(--r);
-  text-align: center;
-}
-
-.addrow input[type="text"]:focus {
-  outline: none;
-  border-color: var(--bhi);
-}
-
-.btnadd {
-  padding: 3px 10px;
-  border-radius: var(--r);
-  font-family: var(--mono);
-  font-size: 11.5px;
-  cursor: pointer;
-  border: 1px solid var(--b0);
-  background: var(--card);
-  color: var(--t1);
-  transition: color 0.1s;
-}
-
-.btnadd:hover {
-  color: var(--t0);
-}
-
 /* Main ─*/
 #mn {
   grid-area: mn;
@@ -403,7 +326,7 @@ body {
   background: var(--bg);
 }
 
-#cv-wrap {
+#canvas-wrap {
   flex: 1;
   overflow: hidden;
   position: relative;
@@ -413,7 +336,7 @@ body {
   justify-content: center;
 }
 
-#cv-inner {
+#canvas-inner {
   transform-origin: center center;
   display: inline-block;
   box-shadow:
@@ -425,19 +348,6 @@ body {
   display: block;
   image-rendering: pixelated;
   image-rendering: -webkit-optimize-contrast;
-}
-
-#zoom-hint {
-  position: absolute;
-  bottom: 10px;
-  right: 14px;
-  font-size: 10.5px;
-  color: var(--t2);
-  pointer-events: none;
-  user-select: none;
-  background: rgba(13, 17, 23, 0.78);
-  padding: 2px 9px;
-  border-radius: 10px;
 }
 
 /* Resize handle */
@@ -531,7 +441,7 @@ body {
   border-radius: 4px;
 }
 
-.theme-empty {
+#theme-empty {
   font-size: 11px;
   color: var(--t2);
   padding: 4px 2px;

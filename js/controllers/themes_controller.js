@@ -1,15 +1,16 @@
 import {
-    THEME_KEYS,
-    config
-} from "../common/config.js";
-
+    config,
+    THEME_KEYS
+} from '../common/config.js';
 import {
-    renderOpChips,
-    setColor,
-} from "./render_controller.js";
+    setColor
+} from './render_controller.js';
 
 let themes = [];
 let activeThemeName = '';
+
+const themeList = document.getElementById('theme-list');
+const emptyTheme = document.getElementById('theme-empty');
 
 function _applyTheme(theme) {
     for (const key of THEME_KEYS) {
@@ -19,83 +20,80 @@ function _applyTheme(theme) {
 
         setColor(key, theme[key]);
     }
-
-    if (theme.background) {
-        setColor('background', theme.background);
-    }
-
-    // Ensure operator chips reflect the new operator color
-    renderOpChips();
 }
 
 function renderThemeList() {
-    const list = document.getElementById('theme-list');
-    const empty = document.getElementById('theme-empty');
-    list.innerHTML = '';
+    themeList.innerHTML = '';
 
     if (themes.length === 0) {
-        if (empty) {
-            list.appendChild(empty);
+        if (emptyTheme) {
+            themeList.appendChild(emptyTheme);
         }
 
         return;
     }
 
     for (const theme of themes) {
-        const item = document.createElement('div');
-        item.className = 'theme-item' + (theme._name === activeThemeName ? ' active' : '');
+        const themeItem = document.createElement('div');
+        const themeName = document.createElement('span');
+        const themeDot = document.createElement('div');
 
-        const name = document.createElement('span');
-        name.className = 'theme-name';
-        name.textContent = theme._name;
+        themeItem.className = 'theme-item' + (theme._name === activeThemeName ? ' active' : '');
+        themeName.className = 'theme-name';
+        themeDot.className = 'theme-dot';
 
-        const dot = document.createElement('div');
-        dot.className = 'theme-dot';
-        dot.style.background = theme.background || '#1e1e1e';
+        themeName.textContent = theme._name;
+        themeDot.style.background = theme.background;
 
-        item.append(name, dot);
-        item.addEventListener('click', () => {
+        themeItem.append(themeName, themeDot);
+        themeItem.addEventListener('click', () => {
             activeThemeName = theme._name;
             _applyTheme(theme);
             renderThemeList();
         });
 
-        list.appendChild(item);
+        themeList.appendChild(themeItem);
     }
 }
 
-async function importThemes() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.multiple = true;
-    input.accept = '.json';
+function _appendTheme(theme, themeName) {
+    theme._name = themeName;
 
-    input.addEventListener('change', async () => {
-        for (const file of input.files) {
+    const i = themes.findIndex(theme => theme._name === themeName);
+    if (i === -1) {
+        themes.push(theme);
+        return;
+    }
+
+    themes[i] = theme;
+}
+
+async function loadThemes() {
+    const inputElement = document.createElement('input');
+    inputElement.type = 'file';
+    inputElement.accept = '.json';
+    inputElement.multiple = true;
+
+    inputElement.addEventListener('change', async () => {
+        for (const file of inputElement.files) {
             try {
-                const json = JSON.parse(await file.text());
-                json._name = file.name.replace(/\.json$/i, '');
-
-                const idx = themes.findIndex(x => x._name === json._name);
-                if (idx >= 0) {
-                    themes[idx] = json;
-                } else {
-                    themes.push(json);
-                }
+                const theme = JSON.parse(await file.text());
+                const themeName = file.name.replace(/\.json$/i, '');
+                _appendTheme(theme, themeName);
             } catch (e) {
-                console.warn('Skipping', file.name, e);
+                console.warn(`Skipping "${file.name}":`, e);
             }
         }
 
         renderThemeList();
     });
 
-    input.click();
+    inputElement.click();
 }
 
 function exportCurrentTheme() {
-    const name = prompt('Theme name:', activeThemeName || 'my-theme');
-    if (!name) {
+    const filename = prompt('Theme name:', activeThemeName || 'my-theme');
+    if (!filename) {
         return;
     }
 
@@ -103,17 +101,16 @@ function exportCurrentTheme() {
         type: 'application/json'
     });
 
-    const anchor = document.createElement('a');
-    anchor.href = URL.createObjectURL(blob);
-    anchor.download = name.endsWith('.json') ? name : name + '.json';
-    anchor.click();
-
-    URL.revokeObjectURL(anchor.href);
+    const anchorElement = document.createElement('a');
+    anchorElement.href = URL.createObjectURL(blob);
+    anchorElement.download = filename.endsWith('.json') ? filename : `${filename}.json`;
+    anchorElement.click();
+    URL.revokeObjectURL(anchorElement.href);
 }
 
 export {
     exportCurrentTheme,
-    importThemes,
+    loadThemes,
     renderThemeList,
     themes
 };

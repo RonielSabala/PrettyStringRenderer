@@ -1,63 +1,53 @@
-const OUT_WIDTH = 3120
-const OUT_HEIGHT = 780
+const OUT_WIDTH = 3120;
+const OUT_HEIGHT = 780;
 const ASPECT_RATIO = OUT_WIDTH / OUT_HEIGHT;
-const THEME_KEYS = [
-    'bracket0',
-    'bracket1',
-    'bracket2',
-    'function',
-    'variable',
-    'operator',
-    'semicolon',
-    'number',
-    'comment',
-    'unknown',
-    'background',
-];
-const DEFAULT_COLORS = [
-    '#569CD6',
-    '#FFD700',
-    '#C586C0',
-    '#DCDCAA',
-    '#9CDCFE',
-    '#D4D4D4',
-    '#808080',
-    '#B5CEA8',
-    '#6A9955',
-    '#CE9178',
-    '#1e1e1e',
-]
-const editorConfig = {
-    fontSize: 16,
-}
-const canvasConfig = {
+
+const DEFAULT_THEME = {
+    bracket0: '#569CD6',
+    bracket1: '#FFD700',
+    bracket2: '#C586C0',
+    function: '#DCDCAA',
+    variable: '#9CDCFE',
+    operator: '#D4D4D4',
+    semicolon: '#808080',
+    number: '#B5CEA8',
+    comment: '#6A9955',
+    unknown: '#CE9178',
+    background: '#1e1e1e',
+};
+
+const THEME_KEYS = Object.keys(DEFAULT_THEME);
+
+const CANVAS_DEFAULTS = {
     fontSize: 85,
     lineHeight: 1.15,
     letterSpacing: 0,
     padX: 64,
     padY: 4,
-}
+};
+
+const EDITOR_DEFAULTS = {
+    fontSize: 16,
+};
+
+// Mutable runtime config consumed by the renderer
 const config = {
-    fontSize: canvasConfig.fontSize,
-    lineHeight: canvasConfig.lineHeight,
-    letterSpacing: canvasConfig.letterSpacing,
-    canvasPadX: canvasConfig.padX,
-    canvasPadY: canvasConfig.padY,
-
-    operators: [
-        '**', '++', '--',
-        '+', '-', '*', '=', '!', '<', '>', '&', '|', '^', '~', '%',
-        '—', '·', '_',
-    ],
-
-    colors: Object.fromEntries(THEME_KEYS.map((key, index) => [key, DEFAULT_COLORS[index]])),
+    fontSize: CANVAS_DEFAULTS.fontSize,
+    lineHeight: CANVAS_DEFAULTS.lineHeight,
+    letterSpacing: CANVAS_DEFAULTS.letterSpacing,
+    padX: CANVAS_DEFAULTS.padX,
+    padY: CANVAS_DEFAULTS.padY,
+    colors: {
+        ...DEFAULT_THEME
+    },
 };
 
 export {
     ASPECT_RATIO,
-    canvasConfig,
+    CANVAS_DEFAULTS,
     config,
-    editorConfig,
+    DEFAULT_THEME,
+    EDITOR_DEFAULTS,
     OUT_HEIGHT,
     OUT_WIDTH,
     THEME_KEYS

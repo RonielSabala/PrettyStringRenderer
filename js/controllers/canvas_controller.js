@@ -1,70 +1,77 @@
 import {
     OUT_HEIGHT,
     OUT_WIDTH
-} from "../common/config.js";
+} from '../common/config.js';
 
-// ZOOM + PAN
-let cvZoom = 1,
-    cvPanX = 0,
-    cvPanY = 0;
+const MIN_ZOOM = 0.1;
+const MAX_ZOOM = 10;
+const ZOOM_FACTOR = 1.12;
 
-let spaceHeld = false,
-    panning = false,
-    panStartX = 0,
-    panStartY = 0;
+let canvasZoom = 1;
+let canvasPanX = 0;
+let canvasPanY = 0;
+
+let spaceHeld = false;
+let panning = false;
+let panStartX = 0;
+let panStartY = 0;
+
+const canvasWrap = document.getElementById('canvas-wrap');
+const canvasInner = document.getElementById('canvas-inner');
+const statusEl = document.getElementById('si');
+const editor = document.getElementById('ed');
 
 function updateZoomInfo() {
-    let newValue = `${OUT_WIDTH}x${OUT_HEIGHT} · ${(cvZoom * 100).toFixed(0)}%`;
-    document.getElementById('si').textContent = newValue;
+    statusEl.textContent = `${OUT_WIDTH}x${OUT_HEIGHT} · ${(canvasZoom * 100).toFixed(0)}%`;
 }
 
 function applyTransform() {
-    let newValue = `translate(${cvPanX}px,${cvPanY}px) scale(${cvZoom})`;
-    document.getElementById('cv-inner').style.transform = newValue;
+    canvasInner.style.transform = `translate(${canvasPanX}px,${canvasPanY}px) scale(${canvasZoom})`;
     updateZoomInfo();
 }
 
-document.getElementById('cv-wrap').addEventListener('wheel', e => {
-    e.preventDefault();
+// Zoom
+canvasWrap.addEventListener('wheel', event => {
+    event.preventDefault();
 
-    const f = e.deltaY < 0 ? 1.12 : 1 / 1.12;
-    const rect = document.getElementById('cv-wrap').getBoundingClientRect();
-    const mx = e.clientX - (rect.left + rect.width / 2);
-    const my = e.clientY - (rect.top + rect.height / 2);
+    const rect = canvasWrap.getBoundingClientRect();
+    const mx = event.clientX - (rect.left + rect.width / 2);
+    const my = event.clientY - (rect.top + rect.height / 2);
 
-    cvPanX = mx * (1 - f) + cvPanX * f;
-    cvPanY = my * (1 - f) + cvPanY * f;
-    cvZoom = Math.max(0.05, Math.min(40, cvZoom * f));
+    const factor = event.deltaY < 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
+
+    canvasPanX = mx * (1 - factor) + canvasPanX * factor;
+    canvasPanY = my * (1 - factor) + canvasPanY * factor;
+    canvasZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, canvasZoom * factor));;
 
     applyTransform();
 }, {
     passive: false
 });
 
-
 // Reset zoom
-document.getElementById('cv-wrap').addEventListener('dblclick', () => {
-    cvZoom = 1;
-    cvPanX = 0;
-    cvPanY = 0;
+canvasWrap.addEventListener('dblclick', () => {
+    canvasZoom = 1;
+    canvasPanX = 0;
+    canvasPanY = 0;
     applyTransform();
 });
 
-// Start pan
+// Pan
+
 document.addEventListener('keydown', event => {
-    if (event.code !== 'Space' || document.activeElement === document.getElementById('ed')) {
+    if (event.code !== 'Space' || document.activeElement === editor) {
         return;
     }
 
     if (!spaceHeld) {
         spaceHeld = true;
-        document.getElementById('cv-wrap').style.cursor = 'grab';
+        canvasWrap.style.cursor = 'grab';
     }
 
     event.preventDefault();
 });
 
-// End pan
 document.addEventListener('keyup', event => {
     if (event.code !== 'Space') {
         return;
@@ -75,39 +82,38 @@ document.addEventListener('keyup', event => {
         return;
     }
 
-    document.getElementById('cv-wrap').style.cursor = '';
+    canvasWrap.style.cursor = '';
 });
 
-// Start grabbing action
-document.getElementById('cv-wrap').addEventListener('mousedown', event => {
+canvasWrap.addEventListener('mousedown', event => {
     if (!spaceHeld) {
         return;
     }
 
     panning = true;
-    panStartX = event.clientX - cvPanX;
-    panStartY = event.clientY - cvPanY;
-
-    document.getElementById('cv-wrap').style.cursor = 'grabbing';
+    panStartX = event.clientX - canvasPanX;
+    panStartY = event.clientY - canvasPanY;
+    canvasWrap.style.cursor = 'grabbing';
     event.preventDefault();
 });
 
-// Grabbing action
 document.addEventListener('mousemove', event => {
     if (!panning) {
         return;
     }
 
-    cvPanX = event.clientX - panStartX;
-    cvPanY = event.clientY - panStartY;
+    canvasPanX = event.clientX - panStartX;
+    canvasPanY = event.clientY - panStartY;
     applyTransform();
 });
 
-// End grabbing action
 document.addEventListener('mouseup', () => {
-    if (!panning) return;
+    if (!panning) {
+        return;
+    }
+
     panning = false;
-    document.getElementById('cv-wrap').style.cursor = spaceHeld ? 'grab' : '';
+    canvasWrap.style.cursor = spaceHeld ? 'grab' : '';
 });
 
 export {

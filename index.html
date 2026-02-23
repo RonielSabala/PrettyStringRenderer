@@ -28,19 +28,18 @@
             <div>
                 <div class="sh">Themes<span class="chv">▾</span></div>
                 <div class="sbody">
-                    <div class="theme-list" id="theme-list">
-                        <div id="theme-empty">No themes loaded.
-                        </div>
+                    <div id="theme-list">
+                        <div id="theme-empty">No themes loaded.</div>
                     </div>
-                    <button id="btn-load-themes" class="theme-btn">⊕ Import themes</button>
-                    <button id="btn-export-theme" class="theme-btn">↓ Export theme</button>
+                    <button id="btn-load-themes" class="theme-btn">Load themes</button>
+                    <button id="btn-export-theme" class="theme-btn">Export theme</button>
                 </div>
             </div>
             <div class="sep"></div>
 
-            <!-- THEME BRACKET COLORS -->
+            <!-- BRACKET COLORS -->
             <div>
-                <div class="sh">Theme Bracket Colors<span class="chv">▾</span></div>
+                <div class="sh">Bracket Colors<span class="chv">▾</span></div>
                 <div class="sbody">
                     <div class="row"><label>Level 1</label>
                         <div class="sw">
@@ -64,9 +63,9 @@
             </div>
             <div class="sep"></div>
 
-            <!-- THEME SYNTAX COLORS -->
+            <!-- SYNTAX COLORS -->
             <div>
-                <div class="sh">Theme Syntax Colors<span class="chv">▾</span></div>
+                <div class="sh">Syntax Colors<span class="chv">▾</span></div>
                 <div class="sbody">
                     <div class="row"><label>Function</label>
                         <div class="sw">
@@ -86,7 +85,7 @@
                         </div>
                         <input class="hx" id="hx-operator" maxlength="7" />
                     </div>
-                    <div class="row"><label>Semicolon ;</label>
+                    <div class="row"><label>Semicolon</label>
                         <div class="sw">
                             <div class="swf" id="sf-semicolon"></div><input type="color" id="cp-semicolon" />
                         </div>
@@ -98,7 +97,7 @@
                         </div>
                         <input class="hx" id="hx-number" maxlength="7" />
                     </div>
-                    <div class="row"><label>Comment #</label>
+                    <div class="row"><label>Comment (#)</label>
                         <div class="sw">
                             <div class="swf" id="sf-comment"></div><input type="color" id="cp-comment" />
                         </div>
@@ -114,9 +113,9 @@
             </div>
             <div class="sep"></div>
 
-            <!-- THEME CANVAS -->
+            <!-- CANVAS -->
             <div>
-                <div class="sh">Theme Canvas<span class="chv">▾</span></div>
+                <div class="sh">Canvas<span class="chv">▾</span></div>
                 <div class="sbody">
                     <div class="row"><label>Background</label>
                         <div class="sw">
@@ -149,67 +148,14 @@
                     </div>
                 </div>
             </div>
-            <div class="sep"></div>
-
-            <!-- PARENTHESES -->
-            <div>
-                <div class="sh">Parentheses<span class="chv">▾</span></div>
-                <div class="sbody">
-                    <div class="glabel">ML Open (increments depth)</div>
-                    <div class="chips" id="chips-mlopen"></div>
-                    <div class="addrow">
-                        <input type="text" id="add-mlopen" maxlength="4" placeholder="chr" />
-                        <button id="btn-add-mlopen" class="btnadd">Add</button>
-                    </div>
-                    <div class="glabel">ML Close (decrements depth)</div>
-                    <div class="chips" id="chips-mlclose"></div>
-                    <div class="addrow">
-                        <input type="text" id="add-mlclose" maxlength="4" placeholder="chr" />
-                        <button id="btn-add-mlclose" class="btnadd">Add</button>
-                    </div>
-                    <div class="glabel">ML Pass (inherits depth)</div>
-                    <div class="chips" id="chips-mlpass"></div>
-                    <div class="addrow">
-                        <input type="text" id="add-mlpass" maxlength="4" placeholder="chr" />
-                        <button id="btn-add-mlpass" class="btnadd">Add</button>
-                    </div>
-                    <div class="glabel">IL Open (per-line, increments)</div>
-                    <div class="chips" id="chips-ilopen"></div>
-                    <div class="addrow">
-                        <input type="text" id="add-ilopen" maxlength="4" placeholder="chr" />
-                        <button id="btn-add-ilopen" class="btnadd">Add</button>
-                    </div>
-                    <div class="glabel">IL Close (per-line, decrements)</div>
-                    <div class="chips" id="chips-ilclose"></div>
-                    <div class="addrow">
-                        <input type="text" id="add-ilclose" maxlength="4" placeholder="chr" />
-                        <button id="btn-add-ilclose" class="btnadd">Add</button>
-                    </div>
-                </div>
-            </div>
-            <div class="sep"></div>
-
-            <!-- OPERATORS -->
-            <div>
-                <div class="sh">Operators<span class="chv">▾</span></div>
-                <div class="sbody">
-                    <div class="chips" id="op-chips"></div>
-                    <div class="addrow">
-                        <input type="text" id="new-op" placeholder="op" maxlength="6" />
-                        <button id="btn-add-op" class="btnadd">Add</button>
-                    </div>
-                </div>
-            </div>
-
         </aside>
 
         <!-- Main -->
         <main id="mn">
-            <div id="cv-wrap">
-                <div id="cv-inner">
+            <div id="canvas-wrap">
+                <div id="canvas-inner">
                     <canvas id="canvas"></canvas>
                 </div>
-                <div id="zoom-hint">scroll → zoom · space+drag → pan · dblclick → reset</div>
             </div>
             <div id="rh"></div>
             <div id="ed-panel">

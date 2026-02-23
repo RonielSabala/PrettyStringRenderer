@@ -1,29 +1,59 @@
 import {
-    canvasConfig,
-    config,
-    editorConfig,
-} from "../common/config.js";
-
+    CANVAS_DEFAULTS,
+    EDITOR_DEFAULTS,
+    config
+} from '../common/config.js';
 import {
     redraw
-} from "./render_controller.js";
+} from './render_controller.js';
 
-function onTypographyConfig() {
-    config.fontSize = parseFloat(document.getElementById('c-fs').value) || canvasConfig.fontSize;
-    config.lineHeight = parseFloat(document.getElementById('c-lh').value) || canvasConfig.lineHeight;
-    config.letterSpacing = parseFloat(document.getElementById('c-ls').value) || canvasConfig.letterSpacing;
-    config.canvasPadX = parseFloat(document.getElementById('c-px').value) || canvasConfig.canvasPadX;
-    config.canvasPadY = parseFloat(document.getElementById('c-py').value) || canvasConfig.canvasPadY;
+function _parseNumber(htmlElement, fallback) {
+    const number = parseFloat(htmlElement.value);
+    return isNaN(number) ? fallback : number;
+}
+
+function onFontSizeConfig() {
+    const fontSizeElement = document.getElementById('c-fs');
+    config.fontSize = _parseNumber(fontSizeElement, CANVAS_DEFAULTS.fontSize);
+    redraw();
+}
+
+function onLineHeightConfig() {
+    const lineHeightElement = document.getElementById('c-lh');
+    config.lineHeight = _parseNumber(lineHeightElement, CANVAS_DEFAULTS.lineHeight);
+    redraw();
+}
+
+function onLetterSpacingConfig() {
+    const letterSpacingElement = document.getElementById('c-ls');
+    config.letterSpacing = _parseNumber(letterSpacingElement, CANVAS_DEFAULTS.letterSpacing);
+    redraw();
+}
+
+function onPadXConfig() {
+    const padXElement = document.getElementById('c-px');
+    config.padX = _parseNumber(padXElement, CANVAS_DEFAULTS.padX);
+    redraw();
+}
+
+function onPadYConfig() {
+    const padYElement = document.getElementById('c-py');
+    config.padY = _parseNumber(padYElement, CANVAS_DEFAULTS.padY);
     redraw();
 }
 
 function onEditorFontSize() {
-    const value = document.getElementById('ed-fs').value;
-    const size = parseFloat(value) || editorConfig.fontSize;
-    document.getElementById('ed').style.fontSize = size + 'px';
+    const editorElement = document.getElementById('ed');
+    const editorFontSizeElement = document.getElementById('ed-fs');
+    const newFontSize = _parseNumber(editorFontSizeElement, EDITOR_DEFAULTS.fontSize);
+    editorElement.style.fontSize = `${newFontSize}px`;
 }
 
 export {
     onEditorFontSize,
-    onTypographyConfig
+    onFontSizeConfig,
+    onLetterSpacingConfig,
+    onLineHeightConfig,
+    onPadXConfig,
+    onPadYConfig
 };

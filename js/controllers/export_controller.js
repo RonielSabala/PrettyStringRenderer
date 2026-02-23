@@ -2,70 +2,78 @@ import {
     config,
     OUT_HEIGHT,
     OUT_WIDTH
-} from "../common/config.js";
+} from '../common/config.js';
 import {
-    render,
-    tokenLines,
-} from "./render_controller.js";
+    getTokenLines,
+    render
+} from './render_controller.js';
 
-function _buildImageFilename(width, height) {
-    return `pretty-string-${width}x${height}.png`;
+function _createResolution(width, height) {
+    return `${width}x${height}`;
 }
 
-function _getScaledResolution(scalar) {
-    let width = scalar * OUT_WIDTH;
-    let height = scalar * OUT_HEIGHT;
-    return `${width}x${height}`
+function _createFilename(width, height) {
+    return `pretty-string-${_createResolution(width, height)}.png`;
 }
 
-function _askScalar() {
-    return prompt(`Scale multiplier:\n  1  → ${_getScaledResolution(1)}\n  2  → ${_getScaledResolution(2)}\n  0.5 → ${_getScaledResolution(0.5)}`, '1')
+function _describeResolution(scalar) {
+    const width = Math.round(scalar * OUT_WIDTH);
+    const height = Math.round(scalar * OUT_HEIGHT);
+    return _createResolution(width, height)
 }
 
-function doExport() {
-    const scalar = parseFloat(_askScalar());
+function _promptScalar() {
+    return prompt(
+        `Scale multiplier:\n` +
+        `  1   → ${_describeResolution(1)}\n` +
+        `  2   → ${_describeResolution(2)}\n` +
+        `  0.5 → ${_describeResolution(0.5)}`,
+        '1'
+    );
+}
+
+function exportCanvas() {
+    const scalar = parseFloat(_promptScalar());
     if (isNaN(scalar) || scalar <= 0) {
         return;
     }
 
-    const WIDTH = Math.round(OUT_WIDTH * scalar);
-    const HEIGHT = Math.round(OUT_HEIGHT * scalar);
+    const exportWidth = Math.round(OUT_WIDTH * scalar);
+    const exportHeight = Math.round(OUT_HEIGHT * scalar);
 
-    const off = document.createElement('canvas');
-    off.width = WIDTH;
-    off.height = HEIGHT;
+    const offscreen = document.createElement('canvas');
+    offscreen.width = exportWidth;
+    offscreen.height = exportHeight;
 
-    // Scale config measurements for the off-screen canvas
-    const prevConfigValues = {
+    const temp = {
         fontSize: config.fontSize,
         letterSpacing: config.letterSpacing,
-        canvasPadX: config.canvasPadX,
-        canvasPadY: config.canvasPadY
+        padX: config.padX,
+        padY: config.padY,
     };
 
     config.fontSize *= scalar;
     config.letterSpacing *= scalar;
-    config.canvasPadX *= scalar;
-    config.canvasPadY *= scalar;
+    config.padX *= scalar;
+    config.padY *= scalar;
 
-    render(off.getContext('2d'), tokenLines, WIDTH, HEIGHT);
+    render(offscreen.getContext('2d'), getTokenLines(), exportWidth, exportHeight);
 
-    config.fontSize = prevConfigValues.fontSize;
-    config.letterSpacing = prevConfigValues.letterSpacing;
-    config.canvasPadX = prevConfigValues.canvasPadX;
-    config.canvasPadY = prevConfigValues.canvasPadY;
+    // Restore config
+    config.fontSize = temp.fontSize;
+    config.letterSpacing = temp.letterSpacing;
+    config.padX = temp.padX;
+    config.padY = temp.padY;
 
-    off.toBlob(blob => {
+    offscreen.toBlob(blob => {
         const anchor = document.createElement('a');
         anchor.href = URL.createObjectURL(blob);
-        anchor.download = _buildImageFilename(WIDTH, HEIGHT);
+        anchor.download = _createFilename(exportWidth, exportHeight);
         anchor.click();
-
         URL.revokeObjectURL(anchor.href);
     }, 'image/png');
 }
 
-
 export {
-    doExport
+    exportCanvas
 };

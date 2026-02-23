@@ -12,7 +12,8 @@ let activeThemeName = '';
 const themeList = document.getElementById('theme-list');
 const emptyTheme = document.getElementById('theme-empty');
 
-function _applyTheme(theme) {
+function _onApplyTheme(theme) {
+    activeThemeName = theme._name;
     for (const key of THEME_KEYS) {
         if (!theme[key]) {
             continue;
@@ -20,6 +21,8 @@ function _applyTheme(theme) {
 
         setColor(key, theme[key]);
     }
+
+    renderThemeList();
 }
 
 function renderThemeList() {
@@ -46,11 +49,7 @@ function renderThemeList() {
         themeDot.style.background = theme.background;
 
         themeItem.append(themeName, themeDot);
-        themeItem.addEventListener('click', () => {
-            activeThemeName = theme._name;
-            _applyTheme(theme);
-            renderThemeList();
-        });
+        themeItem.addEventListener('click', () => _onApplyTheme(theme));
 
         themeList.appendChild(themeItem);
     }
@@ -68,26 +67,26 @@ function _appendTheme(theme, themeName) {
     themes[i] = theme;
 }
 
+async function _onLoadThemes(files) {
+    for (const file of files) {
+        try {
+            const theme = JSON.parse(await file.text());
+            const themeName = file.name.replace(/\.json$/i, '');
+            _appendTheme(theme, themeName);
+        } catch (e) {
+            console.warn(`Skipping "${file.name}":`, e);
+        }
+    }
+
+    renderThemeList();
+}
+
 async function loadThemes() {
     const inputElement = document.createElement('input');
     inputElement.type = 'file';
     inputElement.accept = '.json';
     inputElement.multiple = true;
-
-    inputElement.addEventListener('change', async () => {
-        for (const file of inputElement.files) {
-            try {
-                const theme = JSON.parse(await file.text());
-                const themeName = file.name.replace(/\.json$/i, '');
-                _appendTheme(theme, themeName);
-            } catch (e) {
-                console.warn(`Skipping "${file.name}":`, e);
-            }
-        }
-
-        renderThemeList();
-    });
-
+    inputElement.addEventListener('change', () => _onLoadThemes(inputElement.files));
     inputElement.click();
 }
 

@@ -4,8 +4,8 @@ import {
 } from '../common/config.js';
 
 const MIN_ZOOM = 0.1;
-const MAX_ZOOM = 10;
-const ZOOM_FACTOR = 1.12;
+const MAX_ZOOM = 8;
+const ZOOM_FACTOR = 1.15;
 
 let canvasZoom = 1;
 let canvasPanX = 0;
@@ -16,25 +16,26 @@ let panning = false;
 let panStartX = 0;
 let panStartY = 0;
 
-const canvasWrap = document.getElementById('canvas-wrap');
-const canvasInner = document.getElementById('canvas-inner');
-const statusEl = document.getElementById('si');
-const editor = document.getElementById('ed');
+const canvasWrapElement = document.getElementById('canvas-wrap');
+const canvasInnerElement = document.getElementById('canvas-inner');
+const statusElement = document.getElementById('si');
+const editorElement = document.getElementById('ed');
 
 function updateZoomInfo() {
-    statusEl.textContent = `${OUT_WIDTH}x${OUT_HEIGHT} · ${(canvasZoom * 100).toFixed(0)}%`;
+    statusElement.textContent = `${OUT_WIDTH}x${OUT_HEIGHT} · ${(canvasZoom * 100).toFixed(0)}%`;
 }
 
-function applyTransform() {
-    canvasInner.style.transform = `translate(${canvasPanX}px,${canvasPanY}px) scale(${canvasZoom})`;
+function _applyTransform() {
+    canvasInnerElement.style.transform = `translate(${canvasPanX}px,${canvasPanY}px) scale(${canvasZoom})`;
     updateZoomInfo();
 }
 
 // Zoom
-canvasWrap.addEventListener('wheel', event => {
+
+function onZoom(event) {
     event.preventDefault();
 
-    const rect = canvasWrap.getBoundingClientRect();
+    const rect = canvasWrapElement.getBoundingClientRect();
     const mx = event.clientX - (rect.left + rect.width / 2);
     const my = event.clientY - (rect.top + rect.height / 2);
 
@@ -44,35 +45,32 @@ canvasWrap.addEventListener('wheel', event => {
     canvasPanY = my * (1 - factor) + canvasPanY * factor;
     canvasZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, canvasZoom * factor));;
 
-    applyTransform();
-}, {
-    passive: false
-});
+    _applyTransform();
+}
 
-// Reset zoom
-canvasWrap.addEventListener('dblclick', () => {
+function onZoomReset(event) {
     canvasZoom = 1;
     canvasPanX = 0;
     canvasPanY = 0;
-    applyTransform();
-});
+    _applyTransform();
+}
 
 // Pan
 
-document.addEventListener('keydown', event => {
-    if (event.code !== 'Space' || document.activeElement === editor) {
+function onSpace(event) {
+    if (event.code !== 'Space' || document.activeElement === editorElement) {
         return;
     }
 
     if (!spaceHeld) {
         spaceHeld = true;
-        canvasWrap.style.cursor = 'grab';
+        canvasWrapElement.style.cursor = 'grab';
     }
 
     event.preventDefault();
-});
+}
 
-document.addEventListener('keyup', event => {
+function onSpaceRelease(event) {
     if (event.code !== 'Space') {
         return;
     }
@@ -82,10 +80,10 @@ document.addEventListener('keyup', event => {
         return;
     }
 
-    canvasWrap.style.cursor = '';
-});
+    canvasWrapElement.style.cursor = '';
+}
 
-canvasWrap.addEventListener('mousedown', event => {
+function onPanning(event) {
     if (!spaceHeld) {
         return;
     }
@@ -93,29 +91,36 @@ canvasWrap.addEventListener('mousedown', event => {
     panning = true;
     panStartX = event.clientX - canvasPanX;
     panStartY = event.clientY - canvasPanY;
-    canvasWrap.style.cursor = 'grabbing';
+    canvasWrapElement.style.cursor = 'grabbing';
     event.preventDefault();
-});
+}
 
-document.addEventListener('mousemove', event => {
+function onPanningMove(event) {
     if (!panning) {
         return;
     }
 
     canvasPanX = event.clientX - panStartX;
     canvasPanY = event.clientY - panStartY;
-    applyTransform();
-});
+    _applyTransform();
+}
 
-document.addEventListener('mouseup', () => {
+function onPanningRelease() {
     if (!panning) {
         return;
     }
 
     panning = false;
-    canvasWrap.style.cursor = spaceHeld ? 'grab' : '';
-});
+    canvasWrapElement.style.cursor = spaceHeld ? 'grab' : '';
+}
 
 export {
+    onPanning,
+    onPanningMove,
+    onPanningRelease,
+    onSpace,
+    onSpaceRelease,
+    onZoom,
+    onZoomReset,
     updateZoomInfo
 };

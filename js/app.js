@@ -7,6 +7,15 @@ import {
     config
 } from './common/config.js';
 import {
+    onPanning,
+    onPanningMove,
+    onPanningRelease,
+    onSpace,
+    onSpaceRelease,
+    onZoom,
+    onZoomReset
+} from "./controllers/canvas_controller.js";
+import {
     onEditorMouseMove,
     onEditorMouseUp,
     onResize
@@ -31,6 +40,9 @@ import {
     onPadXConfig,
     onPadYConfig
 } from './controllers/typography_controller.js';
+
+const editorElement = document.getElementById('ed');
+const canvasWrapElement = document.getElementById('canvas-wrap');
 
 // Sidebar section collapse
 function toggleSection(element) {
@@ -83,10 +95,9 @@ function init() {
     document.getElementById('c-py')?.addEventListener('input', onPadYConfig);
 
     // Editor
-    const editor = document.getElementById('ed');
-    editor.addEventListener('input', redraw);
-    editor.scrollTop = 0;
-    editor.setSelectionRange(0, 0);
+    editorElement.addEventListener('input', redraw);
+    editorElement.scrollTop = 0;
+    editorElement.setSelectionRange(0, 0);
 
     // Editor listeners
     document.getElementById('ed-fs')?.addEventListener('input', onEditorFontSize);
@@ -94,12 +105,19 @@ function init() {
     document.addEventListener('mouseup', onEditorMouseUp);
     document.addEventListener('mousemove', onEditorMouseMove);
 
+    // Canvas listeners
+    canvasWrapElement.addEventListener('wheel', onZoom, {
+        passive: false
+    });
+    canvasWrapElement.addEventListener('dblclick', onZoomReset);
+    canvasWrapElement.addEventListener('mousedown', onPanning);
+    document.addEventListener('keydown', onSpace);
+    document.addEventListener('keyup', onSpaceRelease);
+    document.addEventListener('mousemove', onPanningMove);
+    document.addEventListener('mouseup', onPanningRelease);
+
     renderThemeList();
 }
-
-// Boot
-const canvasWrap = document.getElementById('canvas-wrap');
-new ResizeObserver(() => redraw()).observe(canvasWrap);
 
 document.fonts.ready.then(() => {
     init();

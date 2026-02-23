@@ -11,11 +11,18 @@ import {
     tokenize
 } from '../core/tokenizer.js';
 import {
+    getCanvasZoom,
+    setZoomChangeCallback,
     updateZoomInfo
 } from './canvas_controller.js';
 
 let _tokenLines = [];
 const _MARGIN_OFFSET = 40;
+const _MAX_PIXEL_SCALE = 4;
+const _QUALITY_REDRAW_DEBOUNCE_MS = 120;
+
+let _currentPixelScale = 1;
+let _qualityRedrawTimer = null;
 
 function getTokenLines() {
     return _tokenLines;
@@ -49,7 +56,6 @@ function render(ctx, lines, width, height) {
             const tokenWidth = tokenValue.length;
             const tokenColor = resolveTokenColor(token);
 
-            // Ignore whitespace
             if (tokenColor === null) {
                 col += tokenWidth;
                 continue;
@@ -59,7 +65,6 @@ function render(ctx, lines, width, height) {
             for (let charCount = 0; charCount < tokenWidth; charCount++) {
                 const char = tokenValue[charCount];
                 const cx = x0 + (col + charCount) * charWidth;
-
                 ctx.fillText(char, cx, cy);
             }
 
@@ -72,18 +77,45 @@ function _getNormalizedDimension(dimension) {
     return Math.max(1, Math.round(dimension)) + 'px';
 }
 
+function _computePixelScale(canvasZoom) {
+    const deviceAwareZoom = canvasZoom * window.devicePixelRatio;
+    return Math.min(_MAX_PIXEL_SCALE, Math.max(1, Math.ceil(deviceAwareZoom)));
+}
+
+function _renderAtScale(pixelScale) {
+    _currentPixelScale = pixelScale;
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = OUT_WIDTH * pixelScale;
+    canvas.height = OUT_HEIGHT * pixelScale;
+
+    ctx.scale(pixelScale, pixelScale);
+    render(ctx, _tokenLines, OUT_WIDTH, OUT_HEIGHT);
+}
+
+function _scheduleQualityRedraw(canvasZoom) {
+    const neededPixelScale = _computePixelScale(canvasZoom);
+    if (neededPixelScale === _currentPixelScale) return;
+
+    clearTimeout(_qualityRedrawTimer);
+    _qualityRedrawTimer = setTimeout(() => {
+        _renderAtScale(_computePixelScale(getCanvasZoom()));
+    }, _QUALITY_REDRAW_DEBOUNCE_MS);
+}
+
 function redraw() {
     _tokenLines = tokenize(document.getElementById('ed').value);
 
     const canvas = document.getElementById('canvas');
     const wrap = document.getElementById('canvas-wrap');
 
-    canvas.width = OUT_WIDTH;
-    canvas.height = OUT_HEIGHT;
+    const pixelScale = _computePixelScale(getCanvasZoom());
+    _renderAtScale(pixelScale);
 
-    render(canvas.getContext('2d'), _tokenLines, OUT_WIDTH, OUT_HEIGHT);
-
-    // Scale canvas CSS size to fit the viewport while preserving aspect ratio
+    canvas.style.width = _getNormalizedDimension(OUT_WIDTH);
+    canvas.style.height = _getNormalizedDimension(OUT_HEIGHT);
 
     const availableWidth = wrap.clientWidth - _MARGIN_OFFSET;
     const availableHeight = wrap.clientHeight - _MARGIN_OFFSET;
@@ -98,8 +130,11 @@ function redraw() {
 
     canvas.style.width = _getNormalizedDimension(displayWidth);
     canvas.style.height = _getNormalizedDimension(displayHeight);
+
     updateZoomInfo();
 }
+
+setZoomChangeCallback(_scheduleQualityRedraw);
 
 // Color controls
 

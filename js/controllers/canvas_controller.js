@@ -3,7 +3,7 @@ import {
     OUT_WIDTH
 } from '../common/config.js';
 
-const MIN_ZOOM = 0.1;
+const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 8;
 const ZOOM_FACTOR = 1.15;
 
@@ -16,10 +16,21 @@ let panning = false;
 let panStartX = 0;
 let panStartY = 0;
 
+let rafScheduled = false;
+let onZoomChangeCallback = null;
+
 const canvasWrapElement = document.getElementById('canvas-wrap');
 const canvasInnerElement = document.getElementById('canvas-inner');
 const statusElement = document.getElementById('si');
 const editorElement = document.getElementById('ed');
+
+function getCanvasZoom() {
+    return canvasZoom;
+}
+
+function setZoomChangeCallback(callback) {
+    onZoomChangeCallback = callback;
+}
 
 function updateZoomInfo() {
     statusElement.textContent = `${OUT_WIDTH}x${OUT_HEIGHT} · ${(canvasZoom * 100).toFixed(0)}%`;
@@ -28,6 +39,16 @@ function updateZoomInfo() {
 function _applyTransform() {
     canvasInnerElement.style.transform = `translate(${canvasPanX}px,${canvasPanY}px) scale(${canvasZoom})`;
     updateZoomInfo();
+    rafScheduled = false;
+}
+
+function _scheduleTransform() {
+    if (rafScheduled) {
+        return;
+    }
+
+    rafScheduled = true;
+    requestAnimationFrame(_applyTransform);
 }
 
 // Zoom
@@ -36,23 +57,33 @@ function onZoom(event) {
     event.preventDefault();
 
     const rect = canvasWrapElement.getBoundingClientRect();
-    const mx = event.clientX - (rect.left + rect.width / 2);
-    const my = event.clientY - (rect.top + rect.height / 2);
+    const pivotX = event.clientX - (rect.left + rect.width / 2);
+    const pivotY = event.clientY - (rect.top + rect.height / 2);
 
-    const factor = event.deltaY < 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
+    const zoomFactor = event.deltaY < 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
+    const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, canvasZoom * zoomFactor));
+    const appliedFactor = newZoom / canvasZoom;
 
-    canvasPanX = mx * (1 - factor) + canvasPanX * factor;
-    canvasPanY = my * (1 - factor) + canvasPanY * factor;
-    canvasZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, canvasZoom * factor));;
+    canvasPanX = pivotX * (1 - appliedFactor) + canvasPanX * appliedFactor;
+    canvasPanY = pivotY * (1 - appliedFactor) + canvasPanY * appliedFactor;
+    canvasZoom = newZoom;
 
-    _applyTransform();
+    _scheduleTransform();
+
+    if (onZoomChangeCallback) {
+        onZoomChangeCallback(canvasZoom);
+    }
 }
 
 function onZoomReset(event) {
     canvasZoom = 1;
     canvasPanX = 0;
     canvasPanY = 0;
-    _applyTransform();
+    _scheduleTransform();
+
+    if (onZoomChangeCallback) {
+        onZoomChangeCallback(canvasZoom);
+    }
 }
 
 // Pan
@@ -102,7 +133,7 @@ function onPanningMove(event) {
 
     canvasPanX = event.clientX - panStartX;
     canvasPanY = event.clientY - panStartY;
-    _applyTransform();
+    _scheduleTransform();
 }
 
 function onPanningRelease() {
@@ -115,6 +146,7 @@ function onPanningRelease() {
 }
 
 export {
+    getCanvasZoom,
     onPanning,
     onPanningMove,
     onPanningRelease,
@@ -122,5 +154,6 @@ export {
     onSpaceRelease,
     onZoom,
     onZoomReset,
+    setZoomChangeCallback,
     updateZoomInfo
 };

@@ -346,7 +346,6 @@ body {
 
 #canvas {
   display: block;
-  image-rendering: pixelated;
 }
 
 /* Resize handle */

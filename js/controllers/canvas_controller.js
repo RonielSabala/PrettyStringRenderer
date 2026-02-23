@@ -3,8 +3,8 @@ import {
     OUT_WIDTH
 } from '../common/config.js';
 
-const MIN_ZOOM = 0.5;
-const MAX_ZOOM = 8;
+const MIN_ZOOM = 0.4;
+const MAX_ZOOM = 10;
 const ZOOM_FACTOR = 1.15;
 
 let canvasZoom = 1;
@@ -23,6 +23,12 @@ const statusElement = document.getElementById('si');
 const editorElement = document.getElementById('ed');
 const canvasWrapElement = document.getElementById('canvas-wrap');
 const canvasInnerElement = document.getElementById('canvas-inner');
+
+const Cursor = Object.freeze({
+    DEFAULT: '',
+    GRAB: 'grab',
+    GRABBING: 'grabbing'
+});
 
 function getCanvasZoom() {
     return canvasZoom;
@@ -95,7 +101,7 @@ function onSpace(event) {
 
     if (!spaceHeld) {
         spaceHeld = true;
-        canvasWrapElement.style.cursor = 'grab';
+        canvasWrapElement.style.cursor = Cursor.GRAB;
     }
 
     event.preventDefault();
@@ -111,7 +117,7 @@ function onSpaceRelease(event) {
         return;
     }
 
-    canvasWrapElement.style.cursor = '';
+    canvasWrapElement.style.cursor = Cursor.DEFAULT;
 }
 
 function onPanning(event) {
@@ -122,7 +128,7 @@ function onPanning(event) {
     panning = true;
     panStartX = event.clientX - canvasPanX;
     panStartY = event.clientY - canvasPanY;
-    canvasWrapElement.style.cursor = 'grabbing';
+    canvasWrapElement.style.cursor = Cursor.GRABBING;
     event.preventDefault();
 }
 
@@ -142,7 +148,7 @@ function onPanningRelease() {
     }
 
     panning = false;
-    canvasWrapElement.style.cursor = spaceHeld ? 'grab' : '';
+    canvasWrapElement.style.cursor = spaceHeld ? Cursor.GRAB : Cursor.DEFAULT;
 }
 
 export {

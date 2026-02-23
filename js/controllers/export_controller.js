@@ -1,7 +1,7 @@
 import {
-    config,
-    OUT_HEIGHT,
-    OUT_WIDTH
+    CANVAS_HEIGHT,
+    CANVAS_WIDTH,
+    config
 } from '../common/config.js';
 import {
     getTokenLines,
@@ -17,8 +17,8 @@ function _createFilename(width, height) {
 }
 
 function _describeResolution(scalar) {
-    const width = Math.round(scalar * OUT_WIDTH);
-    const height = Math.round(scalar * OUT_HEIGHT);
+    const width = Math.round(scalar * CANVAS_WIDTH);
+    const height = Math.round(scalar * CANVAS_HEIGHT);
     return _createResolution(width, height);
 }
 
@@ -76,8 +76,8 @@ async function exportCanvas() {
         return;
     }
 
-    const exportWidth = Math.round(OUT_WIDTH * scalar);
-    const exportHeight = Math.round(OUT_HEIGHT * scalar);
+    const exportWidth = Math.round(CANVAS_WIDTH * scalar);
+    const exportHeight = Math.round(CANVAS_HEIGHT * scalar);
 
     await document.fonts.ready;
 

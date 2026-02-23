@@ -1,6 +1,6 @@
-const OUT_WIDTH = 3120;
-const OUT_HEIGHT = 780;
-const ASPECT_RATIO = OUT_WIDTH / OUT_HEIGHT;
+const CANVAS_WIDTH = 3120;
+const CANVAS_HEIGHT = 780;
+const ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
 
 const DEFAULT_THEME = {
     bracket0: '#569CD6',
@@ -45,10 +45,10 @@ const config = {
 export {
     ASPECT_RATIO,
     CANVAS_DEFAULTS,
+    CANVAS_HEIGHT,
+    CANVAS_WIDTH,
     config,
     DEFAULT_THEME,
     EDITOR_DEFAULTS,
-    OUT_HEIGHT,
-    OUT_WIDTH,
     THEME_KEYS
 };

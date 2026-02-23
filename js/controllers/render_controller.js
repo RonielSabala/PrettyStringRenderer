@@ -3,9 +3,9 @@ import {
 } from '../common/color_utils.js';
 import {
     ASPECT_RATIO,
-    config,
-    OUT_HEIGHT,
-    OUT_WIDTH
+    CANVAS_HEIGHT,
+    CANVAS_WIDTH,
+    config
 } from '../common/config.js';
 import {
     tokenize
@@ -91,11 +91,11 @@ function _renderAtScale(pixelScale) {
 
     const ctx = canvasElement.getContext('2d');
 
-    canvasElement.width = OUT_WIDTH * pixelScale;
-    canvasElement.height = OUT_HEIGHT * pixelScale;
+    canvasElement.width = CANVAS_WIDTH * pixelScale;
+    canvasElement.height = CANVAS_HEIGHT * pixelScale;
 
     ctx.scale(pixelScale, pixelScale);
-    render(ctx, _tokenLines, OUT_WIDTH, OUT_HEIGHT);
+    render(ctx, _tokenLines, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
 function _scheduleQualityRedraw(canvasZoom) {
@@ -116,8 +116,8 @@ function redraw() {
     const pixelScale = _computePixelScale(getCanvasZoom());
     _renderAtScale(pixelScale);
 
-    canvasElement.style.width = _getNormalizedDimension(OUT_WIDTH);
-    canvasElement.style.height = _getNormalizedDimension(OUT_HEIGHT);
+    canvasElement.style.width = _getNormalizedDimension(CANVAS_WIDTH);
+    canvasElement.style.height = _getNormalizedDimension(CANVAS_HEIGHT);
 
     const availableWidth = canvasWrapElement.clientWidth - _MARGIN_OFFSET;
     const availableHeight = canvasWrapElement.clientHeight - _MARGIN_OFFSET;

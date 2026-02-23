@@ -1,6 +1,6 @@
 import {
-    OUT_HEIGHT,
-    OUT_WIDTH
+    CANVAS_HEIGHT,
+    CANVAS_WIDTH
 } from '../common/config.js';
 
 const MIN_ZOOM = 0.4;
@@ -39,7 +39,7 @@ function setZoomChangeCallback(callback) {
 }
 
 function updateZoomInfo() {
-    statusElement.textContent = `${OUT_WIDTH}x${OUT_HEIGHT} · ${(canvasZoom * 100).toFixed(0)}%`;
+    statusElement.textContent = `${CANVAS_WIDTH}x${CANVAS_HEIGHT} · ${(canvasZoom * 100).toFixed(0)}%`;
 }
 
 function _applyTransform() {

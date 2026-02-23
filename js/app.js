@@ -123,7 +123,7 @@ function init() {
     renderThemeList();
 }
 
-document.fonts.ready.then(() => {
+await document.fonts.ready.then(() => {
     init();
     redraw();
 });

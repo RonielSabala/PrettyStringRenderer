@@ -19,7 +19,7 @@ function _createFilename(width, height) {
 function _describeResolution(scalar) {
     const width = Math.round(scalar * OUT_WIDTH);
     const height = Math.round(scalar * OUT_HEIGHT);
-    return _createResolution(width, height)
+    return _createResolution(width, height);
 }
 
 function _promptScalar() {
@@ -32,8 +32,46 @@ function _promptScalar() {
     );
 }
 
-function exportCanvas() {
-    const scalar = parseFloat(_promptScalar());
+function _scaleConfig() {
+    return {
+        fontSize: config.fontSize,
+        letterSpacing: config.letterSpacing,
+        padX: config.padX,
+        padY: config.padY,
+    };
+}
+
+function _applyScaledConfig(scalar) {
+    const snapshot = _scaleConfig();
+    config.fontSize *= scalar;
+    config.letterSpacing *= scalar;
+    config.padX *= scalar;
+    config.padY *= scalar;
+    return snapshot;
+}
+
+function _restoreConfig(snapshot) {
+    config.fontSize = snapshot.fontSize;
+    config.letterSpacing = snapshot.letterSpacing;
+    config.padX = snapshot.padX;
+    config.padY = snapshot.padY;
+}
+
+function _downloadBlob(blob, filename) {
+    const anchor = document.createElement('a');
+    anchor.href = URL.createObjectURL(blob);
+    anchor.download = filename;
+    anchor.click();
+    URL.revokeObjectURL(anchor.href);
+}
+
+async function exportCanvas() {
+    const rawInput = _promptScalar();
+    if (rawInput === null) {
+        return;
+    }
+
+    const scalar = parseFloat(rawInput);
     if (isNaN(scalar) || scalar <= 0) {
         return;
     }
@@ -41,36 +79,18 @@ function exportCanvas() {
     const exportWidth = Math.round(OUT_WIDTH * scalar);
     const exportHeight = Math.round(OUT_HEIGHT * scalar);
 
+    await document.fonts.ready;
+
     const offscreen = document.createElement('canvas');
     offscreen.width = exportWidth;
     offscreen.height = exportHeight;
 
-    const temp = {
-        fontSize: config.fontSize,
-        letterSpacing: config.letterSpacing,
-        padX: config.padX,
-        padY: config.padY,
-    };
-
-    config.fontSize *= scalar;
-    config.letterSpacing *= scalar;
-    config.padX *= scalar;
-    config.padY *= scalar;
-
+    const snapshot = _applyScaledConfig(scalar);
     render(offscreen.getContext('2d'), getTokenLines(), exportWidth, exportHeight);
-
-    // Restore config
-    config.fontSize = temp.fontSize;
-    config.letterSpacing = temp.letterSpacing;
-    config.padX = temp.padX;
-    config.padY = temp.padY;
+    _restoreConfig(snapshot);
 
     offscreen.toBlob(blob => {
-        const anchor = document.createElement('a');
-        anchor.href = URL.createObjectURL(blob);
-        anchor.download = _createFilename(exportWidth, exportHeight);
-        anchor.click();
-        URL.revokeObjectURL(anchor.href);
+        _downloadBlob(blob, _createFilename(exportWidth, exportHeight));
     }, 'image/png');
 }
 

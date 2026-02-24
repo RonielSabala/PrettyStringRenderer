@@ -1,11 +1,11 @@
 import {
     CANVAS_HEIGHT,
-    CANVAS_WIDTH
+    CANVAS_MAX_ZOOM,
+    CANVAS_MIN_ZOOM,
+    CANVAS_PAN_SCROLL_SPEED,
+    CANVAS_WIDTH,
+    CANVAS_ZOOM_FACTOR,
 } from '../common/config.js';
-
-const MIN_ZOOM = 0.4;
-const MAX_ZOOM = 10;
-const ZOOM_FACTOR = 1.15;
 
 let canvasZoom = 1;
 let canvasPanX = 0;
@@ -68,15 +68,13 @@ function _onZoomChange() {
     onZoomChangeCallback(canvasZoom);
 }
 
-function onZoom(event) {
-    event.preventDefault();
-
+function _applyZoom(event) {
     const rect = canvasWrapElement.getBoundingClientRect();
     const pivotX = event.clientX - (rect.left + rect.width / 2);
     const pivotY = event.clientY - (rect.top + rect.height / 2);
 
-    const zoomFactor = event.deltaY < 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
-    const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, canvasZoom * zoomFactor));
+    const zoomFactor = event.deltaY < 0 ? CANVAS_ZOOM_FACTOR : 1 / CANVAS_ZOOM_FACTOR;
+    const newZoom = Math.max(CANVAS_MIN_ZOOM, Math.min(CANVAS_MAX_ZOOM, canvasZoom * zoomFactor));
     const appliedFactor = newZoom / canvasZoom;
 
     canvasPanX = pivotX * (1 - appliedFactor) + canvasPanX * appliedFactor;
@@ -84,6 +82,24 @@ function onZoom(event) {
     canvasZoom = newZoom;
 
     _onZoomChange();
+}
+
+function _applyScrollPan(deltaX, deltaY) {
+    canvasPanX -= deltaX * CANVAS_PAN_SCROLL_SPEED;
+    canvasPanY -= deltaY * CANVAS_PAN_SCROLL_SPEED;
+    _scheduleTransform();
+}
+
+function onZoom(event) {
+    event.preventDefault();
+
+    if (event.altKey) {
+        _applyZoom(event);
+    } else if (event.ctrlKey) {
+        _applyScrollPan(event.deltaY, 0);
+    } else {
+        _applyScrollPan(0, event.deltaY);
+    }
 }
 
 function onZoomReset(event) {

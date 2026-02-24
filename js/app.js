@@ -20,6 +20,7 @@ import {
 import {
     onEditorMouseMove,
     onEditorMouseUp,
+    onEscape,
     onResize
 } from "./controllers/editor_controller.js";
 import {
@@ -130,6 +131,7 @@ function initListeners() {
     editorResizeHandleElement.addEventListener('mousedown', onResize);
     document.addEventListener('mouseup', onEditorMouseUp);
     document.addEventListener('mousemove', onEditorMouseMove);
+    document.addEventListener('keydown', onEscape)
 
     // Canvas
     canvasWrapElement.addEventListener('wheel', onZoom, {

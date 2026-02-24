@@ -1,7 +1,13 @@
-// Canvas constants
+// Display constants
 const CANVAS_WIDTH = 3120;
 const CANVAS_HEIGHT = 780;
 const CANVAS_ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
+
+// Movements constants
+const CANVAS_MIN_ZOOM = 0.4;
+const CANVAS_MAX_ZOOM = 10;
+const CANVAS_ZOOM_FACTOR = 1.15;
+const CANVAS_PAN_SCROLL_SPEED = 0.5;
 
 // Render constants
 const CANVAS_MIN_PIXEL_SCALE = 1;
@@ -9,7 +15,7 @@ const CANVAS_MAX_PIXEL_SCALE = 4;
 const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
 const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
 
-// UI config defaults
+// UI input defaults
 
 const CANVAS_DEFAULTS = {
     fontSize: {
@@ -97,9 +103,13 @@ export {
     CANVAS_DEFAULTS,
     CANVAS_HEIGHT,
     CANVAS_MAX_PIXEL_SCALE,
+    CANVAS_MAX_ZOOM,
     CANVAS_MIN_PIXEL_SCALE,
+    CANVAS_MIN_ZOOM,
+    CANVAS_PAN_SCROLL_SPEED,
     CANVAS_QUALITY_REDRAW_DEBOUNCE_MS,
     CANVAS_WIDTH,
+    CANVAS_ZOOM_FACTOR,
     config,
     DEFAULT_THEME,
     EDITOR_DEFAULTS,

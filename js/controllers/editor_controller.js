@@ -4,6 +4,7 @@ import {
 
 const resizeHandleElement = document.getElementById('resize-handle');
 const editorPanelElement = document.getElementById('editor-panel');
+const canvasWrapElement = document.getElementById('canvas-wrap');
 
 let dragging = false;
 let startY = 0;
@@ -38,8 +39,19 @@ function onEditorMouseUp() {
     document.body.style.userSelect = '';
 }
 
+function onEscape(event) {
+    if (event.code !== 'Escape') {
+        return;
+    }
+
+    console.log("HI")
+    event.preventDefault();
+    canvasWrapElement.focus();
+}
+
 export {
     onEditorMouseMove,
     onEditorMouseUp,
+    onEscape,
     onResize
 };

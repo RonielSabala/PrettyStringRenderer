@@ -1,4 +1,4 @@
-export const OPERATORS = Object.freeze([
+const OPERATORS = Object.freeze([
     '=',
     // Arithmetic operators
     '+',
@@ -11,6 +11,8 @@ export const OPERATORS = Object.freeze([
     '--',
     // Logical operators
     '!',
+    '&&',
+    '||',
     // Comparison operators
     '==',
     '===',

@@ -60,28 +60,34 @@ const editorResizeHandleElement = document.getElementById('resize-handle');
 
 const canvasWrapElement = document.getElementById('canvas-wrap');
 
-// Typography elements
-typographyFontSizeElement.value = CANVAS_DEFAULTS.fontSize;
-typographyLineHeightElement.value = CANVAS_DEFAULTS.lineHeight;
-typographyLetterSpacingElement.value = CANVAS_DEFAULTS.letterSpacing;
-typographyPadXElement.value = CANVAS_DEFAULTS.padX;
-typographyPadYElement.value = CANVAS_DEFAULTS.padY;
+function initNumberInput(element, dataContainer) {
+    element.value = dataContainer.value;
+    element.min = dataContainer.min;
+    element.max = dataContainer.max;
+    element.step = dataContainer?.step ?? 1;
+}
 
-// Editor
-editorFontSizeElement.value = EDITOR_DEFAULTS.fontSize;
-editorElement.scrollTop = 0;
-editorElement.setSelectionRange(0, 0);
-editorElement.innerHTML = EDITOR_DEFAULTS.text;
-editorElement.style.fontSize = `${EDITOR_DEFAULTS.fontSize}px`;
-editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
-editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
-editorElement.style.padding = `${EDITOR_DEFAULTS.padX}px ${EDITOR_DEFAULTS.padY}px`;
-
-// Sidebar section collapse
 function toggleSection(element) {
     element.classList.toggle('collapsed');
     element.nextElementSibling.classList.toggle('hidden');
 }
+
+// Typography elements
+initNumberInput(typographyFontSizeElement, CANVAS_DEFAULTS.fontSize)
+initNumberInput(typographyLineHeightElement, CANVAS_DEFAULTS.lineHeight)
+initNumberInput(typographyLetterSpacingElement, CANVAS_DEFAULTS.letterSpacing)
+initNumberInput(typographyPadXElement, CANVAS_DEFAULTS.padX)
+initNumberInput(typographyPadYElement, CANVAS_DEFAULTS.padY)
+
+// Editor
+initNumberInput(editorFontSizeElement, EDITOR_DEFAULTS.fontSize)
+editorElement.scrollTop = 0;
+editorElement.setSelectionRange(0, 0);
+editorElement.innerHTML = EDITOR_DEFAULTS.content;
+editorElement.style.fontSize = `${EDITOR_DEFAULTS.fontSize.value}px`;
+editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
+editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
+editorElement.style.padding = `${EDITOR_DEFAULTS.padX}px ${EDITOR_DEFAULTS.padY}px`;
 
 function initListeners() {
     // Buttons

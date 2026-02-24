@@ -4,9 +4,6 @@ import {
 import {
     TOKENS
 } from '../core/tokens.js';
-import {
-    config
-} from './config.js';
 
 export function onPick(themeKey, themeValue) {
     setColor(themeKey, themeValue);
@@ -20,25 +17,26 @@ export function onHex(themeKey, themeValue) {
     setColor(themeKey, themeValue);
 }
 
-export function resolveTokenColor(token) {
-    const colors = config.colors;
-    switch (token.token) {
-        case TOKENS.BRACKET:
-            return colors[`bracket${token.bracketDepth}`];
-        case TOKENS.OPERATOR:
-            return colors.operator;
-        case TOKENS.FUNCTION:
-            return colors.function;
-        case TOKENS.VARIABLE:
-            return colors.variable;
-        case TOKENS.SEMICOLON:
-            return colors.semicolon;
+export function resolveBracketColor(colors, bracketDepth) {
+    return colors[`bracket${bracketDepth % 3}`]
+}
+
+export function resolveTokenColor(colors, token) {
+    switch (token) {
+        case TOKENS.WHITE_SPACE:
+            return null;
         case TOKENS.COMMENT:
             return colors.comment;
         case TOKENS.NUMBER:
-            return colors.number;
-        case TOKENS.WS:
-            return null;
+            return colors.number
+        case TOKENS.OPERATOR:
+            return colors.operator;
+        case TOKENS.VARIABLE:
+            return colors.variable;
+        case TOKENS.FUNCTION:
+            return colors.function;
+        case TOKENS.SEMICOLON:
+            return colors.semicolon;
         default:
             return colors.unknown;
     }

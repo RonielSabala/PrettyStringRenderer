@@ -1,7 +1,4 @@
 import {
-    resolveTokenColor
-} from '../common/color_utils.js';
-import {
     CANVAS_ASPECT_RATIO,
     CANVAS_AVAILABLE_MARGIN_OFFSET_PX,
     CANVAS_HEIGHT,
@@ -62,8 +59,8 @@ function render(ctx, lines, width, height) {
 
         for (const token of lines[row]) {
             const tokenValue = token.value;
+            const tokenColor = token.color;
             const tokenWidth = tokenValue.length;
-            const tokenColor = resolveTokenColor(token);
 
             if (tokenColor === null) {
                 col += tokenWidth;

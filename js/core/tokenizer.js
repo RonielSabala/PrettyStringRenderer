@@ -1,4 +1,11 @@
 import {
+    resolveBracketColor,
+    resolveTokenColor
+} from "../common/color_utils.js";
+import {
+    config
+} from "../common/config.js";
+import {
     BRACKET_SETS
 } from "./brackets.js";
 import {
@@ -8,12 +15,97 @@ import {
     TOKENS
 } from "./tokens.js";
 
-export function tokenize(text) {
+function _isWhiteSpace(char) {
+    return char === ' ' || char === '\t';
+}
+
+function _isComment(char) {
+    return char === '#';
+}
+
+function _isSemicolon(char) {
+    return char === ';';
+}
+
+function _isDivision(char) {
+    return char === '\u2500';
+}
+
+function _getOperator(line, i) {
+    for (const op of SORTED_OPS) {
+        if (line.startsWith(op, i)) {
+            return op;
+        }
+    }
+
+    return null;
+}
+
+function _isAlphabetic(char) {
+    return /[a-zA-Z]/.test(char);
+}
+
+function _isDigit(char) {
+    return /[0-9]/.test(char);
+}
+
+function _isNumeric(char) {
+    return _isDigit(char) || char === '.';
+}
+
+function _isIdentifier(char) {
+    return _isAlphabetic(char) || _isDigit(char) || char === '_';
+}
+
+function _greedySearch(line, startIndex, charValidator) {
+    const lineWidth = line.length;
+
+    let i = startIndex;
+    while (i < lineWidth && charValidator(line[i])) {
+        i++
+    };
+
+    return i;
+}
+
+class Tokens {
+    constructor() {
+        this.tokens = [];
+        this.colors = config.colors;
+    }
+
+    clear() {
+        this.tokens = [];
+    }
+
+    _push(value, color) {
+        this.tokens.push({
+            value: value,
+            color: color
+        });
+    }
+
+    append(word, token) {
+        this._push(word, resolveTokenColor(this.colors, token));
+    }
+
+    appendBracket(word, bracketDepth) {
+        this._push(word, resolveBracketColor(this.colors, bracketDepth));
+    }
+
+    greedyAppend(line, i, charValidator, token) {
+        const j = _greedySearch(line, i, charValidator);
+        this.append(line.slice(i, j), token)
+        return j;
+    }
+}
+
+function tokenize(text) {
     const result = [];
     const colML = {};
+    const tokens = new Tokens();
 
     for (const line of text.split('\n')) {
-        const tokens = [];
         let i = 0;
         let ilD = 0;
         let lineWidth = line.length;
@@ -21,58 +113,59 @@ export function tokenize(text) {
         while (i < lineWidth) {
             const char = line[i];
 
-            // Whitespace
-            if (char === ' ' || char === '\t') {
-                let j = i;
-                while (j < lineWidth && (line[j] === ' ' || line[j] === '\t')) {
-                    j++;
-                }
+            if (_isComment(char)) {
+                tokens.append(line.slice(i), TOKENS.COMMENT)
+                break;
+            }
 
-                tokens.push({
-                    token: TOKENS.WS,
-                    value: line.slice(i, j)
-                });
-
-                i = j;
+            if (_isSemicolon(char)) {
+                tokens.append(char, TOKENS.SEMICOLON)
+                i++;
                 continue;
             }
 
-            // Comment: # to EOL
-            if (char === '#') {
-                tokens.push({
-                    token: TOKENS.COMMENT,
-                    value: line.slice(i)
-                });
-
-                i = lineWidth;
+            if (_isDivision(char)) {
+                i = tokens.greedyAppend(line, i, _isDivision, TOKENS.OPERATOR);
                 continue;
             }
 
-            // Divider ─ (U+2500) → operator
-            if (char === '\u2500') {
-                let j = i;
-                while (j < lineWidth && line[j] === '\u2500') {
-                    j++;
+            if (_isWhiteSpace(char)) {
+                i = tokens.greedyAppend(line, i, _isWhiteSpace, TOKENS.WHITE_SPACE);
+                continue;
+            }
+
+            if (_isDigit(char)) {
+                i = tokens.greedyAppend(line, i, _isNumeric, TOKENS.NUMBER);
+                continue;
+            }
+
+            // Operator
+
+            const op = _getOperator(line, i);
+            if (op !== null) {
+                tokens.append(op, TOKENS.OPERATOR)
+                i += op.length;
+                continue;
+            }
+
+            // Identifier (function or variable)
+            if (_isAlphabetic(char)) {
+                const j = _greedySearch(line, i, _isIdentifier);
+                const k = _greedySearch(line, j, _isWhiteSpace);
+                tokens.append(line.slice(i, j), line[k] === '(' ? TOKENS.FUNCTION : TOKENS.VARIABLE)
+
+                if (k > j) {
+                    tokens.append(line.slice(j, k), TOKENS.WHITE_SPACE);
                 }
 
-                tokens.push({
-                    token: TOKENS.OPERATOR,
-                    value: line.slice(i, j)
-                });
-
-                i = j;
+                i = k;
                 continue;
             }
 
             // ML_OPEN
             if (BRACKET_SETS.open.has(char)) {
                 const bracketDepth = colML[i] ?? 0;
-                tokens.push({
-                    token: TOKENS.BRACKET,
-                    value: char,
-                    bracketDepth: bracketDepth % 3
-                });
-
+                tokens.appendBracket(char, bracketDepth)
                 colML[i] = bracketDepth + 1;
                 i++;
                 continue;
@@ -82,37 +175,22 @@ export function tokenize(text) {
             if (BRACKET_SETS.close.has(char)) {
                 const bracketDepth = Math.max(0, (colML[i] ?? 0) - 1);
                 colML[i] = bracketDepth;
-                tokens.push({
-                    token: TOKENS.BRACKET,
-                    value: char,
-                    bracketDepth: bracketDepth % 3
-                });
-
+                tokens.appendBracket(char, bracketDepth)
                 i++;
                 continue;
             }
 
-            // ML_PASS — color = (bracketDepth - 1), same as the opener above
+            // ML_PASS
             if (BRACKET_SETS.pass.has(char)) {
-                const bracketDepth = colML[i] ?? 0;
-                tokens.push({
-                    token: TOKENS.BRACKET,
-                    value: char,
-                    bracketDepth: Math.max(0, bracketDepth - 1) % 3
-                });
-
+                const bracketDepth = Math.max(0, (colML[i] ?? 0) - 1);
+                tokens.appendBracket(char, bracketDepth)
                 i++;
                 continue;
             }
 
             // IL_OPEN
             if (BRACKET_SETS.ilO.has(char)) {
-                tokens.push({
-                    token: TOKENS.BRACKET,
-                    value: char,
-                    bracketDepth: ilD % 3
-                });
-
+                tokens.appendBracket(char, ilD)
                 ilD++;
                 i++;
                 continue;
@@ -121,94 +199,22 @@ export function tokenize(text) {
             // IL_CLOSE
             if (BRACKET_SETS.ilC.has(char)) {
                 ilD = Math.max(0, ilD - 1);
-                tokens.push({
-                    token: TOKENS.BRACKET,
-                    value: char,
-                    bracketDepth: ilD % 3
-                });
-
+                tokens.appendBracket(char, ilD)
                 i++;
                 continue;
             }
 
-            // Operators — greedy longest match
-            let hit = false;
-            for (const op of SORTED_OPS) {
-                if (line.startsWith(op, i)) {
-                    tokens.push({
-                        token: TOKENS.OPERATOR,
-                        value: op
-                    });
-
-                    i += op.length;
-                    hit = true;
-                    break;
-                }
-            }
-
-            if (hit) {
-                continue;
-            }
-
-            // Semicolon
-            if (char === ';') {
-                tokens.push({
-                    token: TOKENS.SEMICOLON,
-                    value: char
-                });
-
-                i++;
-                continue;
-            }
-
-            // Identifier → FUNCTION or VARIABLE
-            if (/[a-zA-Z]/.test(char)) {
-                let j = i;
-                while (j < lineWidth && /[a-zA-Z0-9_]/.test(line[j])) {
-                    j++;
-                }
-
-                const word = line.slice(i, j);
-                let k = j;
-                while (k < lineWidth && line[k] === ' ') {
-                    k++;
-                }
-
-                tokens.push({
-                    token: line[k] === '(' ? TOKENS.FUNCTION : TOKENS.VARIABLE,
-                    value: word
-                });
-
-                i = j;
-                continue;
-            }
-
-            // Number
-            if (/[0-9]/.test(char)) {
-                let j = i;
-                while (j < lineWidth && /[0-9.]/.test(line[j])) {
-                    j++
-                };
-
-                tokens.push({
-                    token: TOKENS.NUMBER,
-                    value: line.slice(i, j)
-                });
-
-                i = j;
-                continue;
-            }
-
-            tokens.push({
-                token: TOKENS.UNKNOWN,
-                value: char
-            });
-
+            tokens.append(char, TOKENS.UNKNOWN)
             i++;
         }
 
-        result.push(tokens);
+        result.push(tokens.tokens);
+        tokens.clear()
     }
 
     return result;
 }
+
+export {
+    tokenize
+};

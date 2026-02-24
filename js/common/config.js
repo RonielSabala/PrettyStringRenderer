@@ -7,7 +7,7 @@ const CANVAS_ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
 const CANVAS_MIN_PIXEL_SCALE = 1;
 const CANVAS_MAX_PIXEL_SCALE = 4;
 const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
-const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 100;
+const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
 
 // UI config defaults
 
@@ -20,7 +20,19 @@ const CANVAS_DEFAULTS = {
 };
 
 const EDITOR_DEFAULTS = {
+    text: String.raw`                                       /        /      *B2 \\
+                                       ▏        \(en())    /▕
+                                       ▏/ dev; \            ▕
+                                       ▏▏ ──── ▕            ▕
+                                       \\ solv /            /
+/           —**r_(on)ie[l] + saba(la) \
+▏/       _ \                          ▕
+\\((_)++)  /                          /`,
     fontSize: 16,
+    lineHeight: "auto",
+    letterSpacing: "auto",
+    padX: 10,
+    padY: 10,
 };
 
 // UI theme defaults

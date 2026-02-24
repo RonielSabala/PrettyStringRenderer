@@ -3,6 +3,8 @@ import {
     onPick
 } from './common/color_utils.js';
 import {
+    CANVAS_DEFAULTS,
+    EDITOR_DEFAULTS,
     THEME_KEYS,
     config
 } from './common/config.js';
@@ -29,8 +31,7 @@ import {
 } from './controllers/render_controller.js';
 import {
     exportCurrentTheme,
-    loadThemes,
-    renderThemeList
+    loadThemes
 } from './controllers/themes_controller.js';
 import {
     onEditorFontSize,
@@ -40,6 +41,8 @@ import {
     onPadXConfig,
     onPadYConfig
 } from './controllers/typography_controller.js';
+
+// App elements
 
 const btnExport = document.getElementById('btn-export');
 const btnLoadThemes = document.getElementById('btn-load-themes')
@@ -52,10 +55,27 @@ const typographyPadXElement = document.getElementById('c-px');
 const typographyPadYElement = document.getElementById('c-py');
 
 const editorElement = document.getElementById('ed');
-const canvasWrapElement = document.getElementById('canvas-wrap');
-
 const editorFontSizeElement = document.getElementById('ed-fs');
 const editorResizeHandleElement = document.getElementById('rh');
+
+const canvasWrapElement = document.getElementById('canvas-wrap');
+
+// Typography elements
+typographyFontSizeElement.value = CANVAS_DEFAULTS.fontSize;
+typographyLineHeightElement.value = CANVAS_DEFAULTS.lineHeight;
+typographyLetterSpacingElement.value = CANVAS_DEFAULTS.letterSpacing;
+typographyPadXElement.value = CANVAS_DEFAULTS.padX;
+typographyPadYElement.value = CANVAS_DEFAULTS.padY;
+
+// Editor
+editorFontSizeElement.value = EDITOR_DEFAULTS.fontSize;
+editorElement.scrollTop = 0;
+editorElement.setSelectionRange(0, 0);
+editorElement.innerHTML = EDITOR_DEFAULTS.text;
+editorElement.style.fontSize = `${EDITOR_DEFAULTS.fontSize}px`;
+editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
+editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
+editorElement.style.padding = `${EDITOR_DEFAULTS.padX}px ${EDITOR_DEFAULTS.padY}px`;
 
 // Sidebar section collapse
 function toggleSection(element) {
@@ -63,13 +83,13 @@ function toggleSection(element) {
     element.nextElementSibling.classList.toggle('hid');
 }
 
-function init() {
-    // Button listeners
+function initListeners() {
+    // Buttons
     btnExport.addEventListener('click', exportCanvas);
     btnLoadThemes.addEventListener('click', loadThemes);
     btnExportTheme.addEventListener('click', exportCurrentTheme);
 
-    // Section collapse
+    // Collapse sections
     document.querySelectorAll('.sh').forEach(
         element => element.addEventListener('click', () => toggleSection(element))
     );
@@ -79,7 +99,7 @@ function init() {
         updateColor(ThemeKey, ThemeValue);
     }
 
-    // Color pickers + hex inputs
+    // Color pickers + hex
     for (const themeKey of THEME_KEYS) {
         document.getElementById(`cp-${themeKey}`).addEventListener(
             'input',
@@ -91,7 +111,7 @@ function init() {
         );
     }
 
-    // Typography inputs
+    // Typography
     typographyFontSizeElement.addEventListener('input', onFontSizeConfig);
     typographyLineHeightElement.addEventListener('input', onLineHeightConfig);
     typographyLetterSpacingElement.addEventListener('input', onLetterSpacingConfig);
@@ -100,16 +120,12 @@ function init() {
 
     // Editor
     editorElement.addEventListener('input', redraw);
-    editorElement.scrollTop = 0;
-    editorElement.setSelectionRange(0, 0);
-
-    // Editor listeners
     editorFontSizeElement.addEventListener('input', onEditorFontSize);
     editorResizeHandleElement.addEventListener('mousedown', onResize);
     document.addEventListener('mouseup', onEditorMouseUp);
     document.addEventListener('mousemove', onEditorMouseMove);
 
-    // Canvas listeners
+    // Canvas
     canvasWrapElement.addEventListener('wheel', onZoom, {
         passive: false
     });
@@ -119,11 +135,9 @@ function init() {
     document.addEventListener('keyup', onSpaceRelease);
     document.addEventListener('mousemove', onPanningMove);
     document.addEventListener('mouseup', onPanningRelease);
-
-    renderThemeList();
 }
 
 await document.fonts.ready.then(() => {
-    init();
+    initListeners();
     redraw();
 });

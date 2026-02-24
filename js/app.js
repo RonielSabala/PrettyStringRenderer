@@ -69,22 +69,24 @@ function toggleSection(element) {
     element.nextElementSibling.classList.toggle('hidden');
 }
 
-// Typography elements
-initNumberInput(typographyFontSizeElement, CANVAS_DEFAULTS.fontSize)
-initNumberInput(typographyLineHeightElement, CANVAS_DEFAULTS.lineHeight)
-initNumberInput(typographyLetterSpacingElement, CANVAS_DEFAULTS.letterSpacing)
-initNumberInput(typographyPadXElement, CANVAS_DEFAULTS.padX)
-initNumberInput(typographyPadYElement, CANVAS_DEFAULTS.padY)
+function initElements() {
+    // Typography elements
+    initNumberInput(typographyFontSizeElement, CANVAS_DEFAULTS.fontSize)
+    initNumberInput(typographyLineHeightElement, CANVAS_DEFAULTS.lineHeight)
+    initNumberInput(typographyLetterSpacingElement, CANVAS_DEFAULTS.letterSpacing)
+    initNumberInput(typographyPadXElement, CANVAS_DEFAULTS.padX)
+    initNumberInput(typographyPadYElement, CANVAS_DEFAULTS.padY)
 
-// Editor
-initNumberInput(editorFontSizeElement, EDITOR_DEFAULTS.fontSize)
-editorElement.scrollTop = 0;
-editorElement.setSelectionRange(0, 0);
-editorElement.innerHTML = EDITOR_DEFAULTS.content;
-editorElement.style.fontSize = `${EDITOR_DEFAULTS.fontSize.value}px`;
-editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
-editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
-editorElement.style.padding = `${EDITOR_DEFAULTS.padX}px ${EDITOR_DEFAULTS.padY}px`;
+    // Editor
+    initNumberInput(editorFontSizeElement, EDITOR_DEFAULTS.fontSize)
+    editorElement.scrollTop = 0;
+    editorElement.setSelectionRange(0, 0);
+    editorElement.innerHTML = EDITOR_DEFAULTS.content;
+    editorElement.style.fontSize = `${EDITOR_DEFAULTS.fontSize.value}px`;
+    editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
+    editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
+    editorElement.style.padding = `${EDITOR_DEFAULTS.padX}px ${EDITOR_DEFAULTS.padY}px`;
+}
 
 function initListeners() {
     // Buttons
@@ -142,6 +144,7 @@ function initListeners() {
 }
 
 await document.fonts.ready.then(() => {
+    initElements();
     initListeners();
     redraw();
 });

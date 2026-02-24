@@ -27,7 +27,7 @@ const OPERATORS = Object.freeze([
     // Pretty string operators
     '—', // Minus
     '·', // Multiplication
-    '_', // Division
+    '─', // Division
 ]);
 
 export const SORTED_OPS = Object.freeze([...OPERATORS].sort((a, b) => b.length - a.length));

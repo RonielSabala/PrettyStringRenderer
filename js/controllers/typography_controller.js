@@ -21,41 +21,32 @@ function _parseNumber(htmlElement, fallback) {
     return isNaN(number) ? fallback.value : number;
 }
 
-function onFontSizeConfig() {
+export function onFontSizeConfig() {
     config.fontSize = _parseNumber(typographyFontSizeElement, CANVAS_DEFAULTS.fontSize);
     redraw();
 }
 
-function onLineHeightConfig() {
+export function onLineHeightConfig() {
     config.lineHeight = _parseNumber(typographyLineHeightElement, CANVAS_DEFAULTS.lineHeight);
     redraw();
 }
 
-function onLetterSpacingConfig() {
+export function onLetterSpacingConfig() {
     config.letterSpacing = _parseNumber(typographyLetterSpacingElement, CANVAS_DEFAULTS.letterSpacing);
     redraw();
 }
 
-function onPadXConfig() {
+export function onPadXConfig() {
     config.padX = _parseNumber(typographyPadXElement, CANVAS_DEFAULTS.padX);
     redraw();
 }
 
-function onPadYConfig() {
+export function onPadYConfig() {
     config.padY = _parseNumber(typographyPadYElement, CANVAS_DEFAULTS.padY);
     redraw();
 }
 
-function onEditorFontSize() {
+export function onEditorFontSize() {
     const newFontSize = _parseNumber(editorFontSizeElement, EDITOR_DEFAULTS.fontSize);
     editorElement.style.fontSize = `${newFontSize}px`;
 }
-
-export {
-    onEditorFontSize,
-    onFontSizeConfig,
-    onLetterSpacingConfig,
-    onLineHeightConfig,
-    onPadXConfig,
-    onPadYConfig
-};

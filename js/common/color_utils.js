@@ -8,11 +8,11 @@ import {
     config
 } from './config.js';
 
-function onPick(themeKey, themeValue) {
+export function onPick(themeKey, themeValue) {
     setColor(themeKey, themeValue);
 }
 
-function onHex(themeKey, themeValue) {
+export function onHex(themeKey, themeValue) {
     if (!(/^#[0-9A-Fa-f]{6}$/.test(themeValue))) {
         return;
     }
@@ -20,7 +20,7 @@ function onHex(themeKey, themeValue) {
     setColor(themeKey, themeValue);
 }
 
-function resolveTokenColor(token) {
+export function resolveTokenColor(token) {
     const colors = config.colors;
     switch (token.token) {
         case TOKENS.BRACKET:
@@ -43,9 +43,3 @@ function resolveTokenColor(token) {
             return colors.unknown;
     }
 }
-
-export {
-    onHex,
-    onPick,
-    resolveTokenColor
-};

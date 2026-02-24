@@ -395,6 +395,7 @@ body {
   overflow: auto;
   tab-size: 2;
   caret-color: #58a6ff;
+  caret-shape: block;
 }
 
 #editor:focus {

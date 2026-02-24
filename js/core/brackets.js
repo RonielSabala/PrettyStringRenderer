@@ -1,14 +1,14 @@
 // IL = inline
 // ML = multi-line
-const BRACKETS = {
+export const BRACKETS = Object.freeze({
     IL_OPEN: ['(', '[', '{'],
     IL_CLOSE: [')', ']', '}'],
     ML_OPEN: ['/', '▏', '┌'],
     ML_CLOSE: ['\\', '▕', '┘'],
     ML_PASS: ['│', '┐', '└'],
-};
+});
 
-const BRACKET_GROUPS = {
+export const BRACKET_GROUPS = Object.freeze({
     mlopen: {
         arr: () => BRACKETS.ML_OPEN,
         set: value => {
@@ -39,18 +39,12 @@ const BRACKET_GROUPS = {
             BRACKETS.IL_CLOSE = value;
         }
     },
-};
+});
 
-const BRACKET_SETS = {
+export const BRACKET_SETS = Object.freeze({
     open: new Set(BRACKETS.ML_OPEN),
     close: new Set(BRACKETS.ML_CLOSE),
     pass: new Set(BRACKETS.ML_PASS),
     ilO: new Set(BRACKETS.IL_OPEN),
     ilC: new Set(BRACKETS.IL_CLOSE),
-};
-
-export {
-    BRACKET_GROUPS,
-    BRACKET_SETS,
-    BRACKETS
-};
+});

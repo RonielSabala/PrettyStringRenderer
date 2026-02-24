@@ -1,23 +1,23 @@
 // Display constants
-const CANVAS_WIDTH = 3120;
-const CANVAS_HEIGHT = 780;
-const CANVAS_ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
+export const CANVAS_WIDTH = 3120;
+export const CANVAS_HEIGHT = 780;
+export const CANVAS_ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
 
 // Movements constants
-const CANVAS_MIN_ZOOM = 0.4;
-const CANVAS_MAX_ZOOM = 10;
-const CANVAS_ZOOM_FACTOR = 1.15;
-const CANVAS_PAN_SCROLL_SPEED = 0.5;
+export const CANVAS_MIN_ZOOM = 0.4;
+export const CANVAS_MAX_ZOOM = 10;
+export const CANVAS_ZOOM_FACTOR = 1.15;
+export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 
 // Render constants
-const CANVAS_MIN_PIXEL_SCALE = 1;
-const CANVAS_MAX_PIXEL_SCALE = 4;
-const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
-const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
+export const CANVAS_MIN_PIXEL_SCALE = 1;
+export const CANVAS_MAX_PIXEL_SCALE = 4;
+export const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
+export const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
 
 // UI input defaults
 
-const CANVAS_DEFAULTS = {
+export const CANVAS_DEFAULTS = {
     fontSize: {
         value: 85,
         min: 5,
@@ -47,7 +47,7 @@ const CANVAS_DEFAULTS = {
     },
 };
 
-const EDITOR_DEFAULTS = {
+export const EDITOR_DEFAULTS = {
     content: String.raw`                                       /        /      *B2 \\
                                        ▏        \(en())    /▕
                                        ▏/ dev; \            ▕
@@ -69,7 +69,7 @@ const EDITOR_DEFAULTS = {
 
 // UI theme defaults
 
-const DEFAULT_THEME = {
+export const DEFAULT_THEME = {
     bracket0: '#569CD6',
     bracket1: '#FFD700',
     bracket2: '#C586C0',
@@ -83,10 +83,10 @@ const DEFAULT_THEME = {
     background: '#1e1e1e',
 };
 
-const THEME_KEYS = Object.keys(DEFAULT_THEME);
+export const THEME_KEYS = Object.keys(DEFAULT_THEME);
 
 // Mutable runtime config consumed by the renderer
-const config = {
+export const config = {
     fontSize: CANVAS_DEFAULTS.fontSize.value,
     lineHeight: CANVAS_DEFAULTS.lineHeight.value,
     letterSpacing: CANVAS_DEFAULTS.letterSpacing.value,
@@ -95,23 +95,4 @@ const config = {
     colors: {
         ...DEFAULT_THEME
     },
-};
-
-export {
-    CANVAS_ASPECT_RATIO,
-    CANVAS_AVAILABLE_MARGIN_OFFSET_PX,
-    CANVAS_DEFAULTS,
-    CANVAS_HEIGHT,
-    CANVAS_MAX_PIXEL_SCALE,
-    CANVAS_MAX_ZOOM,
-    CANVAS_MIN_PIXEL_SCALE,
-    CANVAS_MIN_ZOOM,
-    CANVAS_PAN_SCROLL_SPEED,
-    CANVAS_QUALITY_REDRAW_DEBOUNCE_MS,
-    CANVAS_WIDTH,
-    CANVAS_ZOOM_FACTOR,
-    config,
-    DEFAULT_THEME,
-    EDITOR_DEFAULTS,
-    THEME_KEYS
 };

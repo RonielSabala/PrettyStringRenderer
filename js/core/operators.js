@@ -1,4 +1,4 @@
-const OPERATORS = [
+export const OPERATORS = Object.freeze([
     '=',
     // Arithmetic operators
     '+',
@@ -26,11 +26,6 @@ const OPERATORS = [
     '—', // Minus
     '·', // Multiplication
     '_', // Division
-];
+]);
 
-const SORTED_OPS = [...OPERATORS].sort((a, b) => b.length - a.length);
-
-export {
-    OPERATORS,
-    SORTED_OPS
-};
+export const SORTED_OPS = Object.freeze([...OPERATORS].sort((a, b) => b.length - a.length));

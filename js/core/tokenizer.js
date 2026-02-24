@@ -8,8 +8,7 @@ import {
     TOKENS
 } from "./tokens.js";
 
-
-function tokenize(text) {
+export function tokenize(text) {
     const result = [];
     const colML = {};
 
@@ -213,7 +212,3 @@ function tokenize(text) {
 
     return result;
 }
-
-export {
-    tokenize
-};

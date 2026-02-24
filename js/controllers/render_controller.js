@@ -14,7 +14,10 @@ import {
 import {
     canvasElement,
     canvasWrapElement,
-    editorElement
+    editorElement,
+    getColorPickerElement,
+    getHexInputElement,
+    getSwatchFillElement
 } from '../common/elements.js';
 import {
     tokenize
@@ -141,9 +144,9 @@ setZoomChangeCallback(_scheduleQualityRedraw);
 // Color controls
 
 function updateColor(themeKey, themeValue) {
-    document.getElementById(`swatch-fill-${themeKey}`).style.background = themeValue;
-    document.getElementById(`color-picker-${themeKey}`).value = themeValue;
-    document.getElementById(`hex-input-${themeKey}`).value = themeValue;
+    getSwatchFillElement(themeKey).style.background = themeValue;
+    getColorPickerElement(themeKey).value = themeValue;
+    getHexInputElement(themeKey).value = themeValue;
 }
 
 function setColor(themeKey, themeValue) {

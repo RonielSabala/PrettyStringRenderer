@@ -16,6 +16,8 @@ import {
     editorElement,
     editorFontSizeElement,
     editorResizeHandleElement,
+    getColorPickerElement,
+    getHexInputElement,
     typographyFontSizeElement,
     typographyLetterSpacingElement,
     typographyLineHeightElement,
@@ -106,11 +108,11 @@ function initListeners() {
 
     // Color pickers + hex
     for (const themeKey of THEME_KEYS) {
-        document.getElementById(`color-picker-${themeKey}`).addEventListener(
+        getColorPickerElement(themeKey).addEventListener(
             'input',
             event => onPick(themeKey, event.target.value)
         );
-        document.getElementById(`hex-input-${themeKey}`).addEventListener(
+        getHexInputElement(themeKey).addEventListener(
             'input',
             event => onHex(themeKey, event.target.value)
         );

@@ -25,3 +25,17 @@ export const editorElement = document.getElementById('editor');
 export const canvasWrapElement = document.getElementById('canvas-wrap');
 export const canvasInnerElement = document.getElementById('canvas-inner');
 export const canvasElement = document.getElementById('canvas');
+
+// Color input getters
+
+export function getSwatchFillElement(themeKey) {
+    return document.getElementById(`swatch-fill-${themeKey}`);
+}
+
+export function getColorPickerElement(themeKey) {
+    return document.getElementById(`color-picker-${themeKey}`);
+}
+
+export function getHexInputElement(themeKey) {
+    return document.getElementById(`hex-input-${themeKey}`);
+}

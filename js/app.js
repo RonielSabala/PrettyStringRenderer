@@ -9,6 +9,20 @@ import {
     config
 } from './common/config.js';
 import {
+    btnExport,
+    btnExportTheme,
+    btnLoadThemes,
+    canvasWrapElement,
+    editorElement,
+    editorFontSizeElement,
+    editorResizeHandleElement,
+    typographyFontSizeElement,
+    typographyLetterSpacingElement,
+    typographyLineHeightElement,
+    typographyPadXElement,
+    typographyPadYElement
+} from './common/elements.js';
+import {
     onPanning,
     onPanningMove,
     onPanningRelease,
@@ -42,24 +56,6 @@ import {
     onPadXConfig,
     onPadYConfig
 } from './controllers/typography_controller.js';
-
-// App elements
-
-const btnExport = document.getElementById('btn-export');
-const btnLoadThemes = document.getElementById('btn-load-themes')
-const btnExportTheme = document.getElementById('btn-export-theme');
-
-const typographyFontSizeElement = document.getElementById('typography-font-size');
-const typographyLineHeightElement = document.getElementById('typography-line-height');
-const typographyLetterSpacingElement = document.getElementById('typography-letter-spacing');
-const typographyPadXElement = document.getElementById('typography-pad-x');
-const typographyPadYElement = document.getElementById('typography-pad-y');
-
-const editorElement = document.getElementById('editor');
-const editorFontSizeElement = document.getElementById('editor-font-size');
-const editorResizeHandleElement = document.getElementById('resize-handle');
-
-const canvasWrapElement = document.getElementById('canvas-wrap');
 
 function initNumberInput(element, dataContainer) {
     element.value = dataContainer.value;

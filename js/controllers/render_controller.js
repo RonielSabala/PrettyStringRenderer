@@ -12,6 +12,11 @@ import {
     config
 } from '../common/config.js';
 import {
+    canvasElement,
+    canvasWrapElement,
+    editorElement
+} from '../common/elements.js';
+import {
     tokenize
 } from '../core/tokenizer.js';
 import {
@@ -24,10 +29,6 @@ let _tokenLines = [];
 
 let _currentPixelScale = 1;
 let _qualityRedrawTimer = null;
-
-const editorElement = document.getElementById('editor');
-const canvasElement = document.getElementById('canvas');
-const canvasWrapElement = document.getElementById('canvas-wrap');
 
 function getTokenLines() {
     return _tokenLines;

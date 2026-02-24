@@ -3,14 +3,15 @@ import {
     THEME_KEYS
 } from '../common/config.js';
 import {
+    emptyThemeElement,
+    themeListElement
+} from '../common/elements.js';
+import {
     setColor
 } from './render_controller.js';
 
 let themes = [];
 let activeThemeName = '';
-
-const themeListElement = document.getElementById('theme-list');
-const emptyThemeElement = document.getElementById('theme-empty');
 
 function _onApplyTheme(theme) {
     activeThemeName = theme._name;

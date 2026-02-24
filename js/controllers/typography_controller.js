@@ -4,17 +4,17 @@ import {
     config
 } from '../common/config.js';
 import {
+    editorElement,
+    editorFontSizeElement,
+    typographyFontSizeElement,
+    typographyLetterSpacingElement,
+    typographyLineHeightElement,
+    typographyPadXElement,
+    typographyPadYElement
+} from '../common/elements.js';
+import {
     redraw
 } from './render_controller.js';
-
-const fontSizeElement = document.getElementById('typography-font-size');
-const lineHeightElement = document.getElementById('typography-line-height');
-const letterSpacingElement = document.getElementById('typography-letter-spacing');
-const padXElement = document.getElementById('typography-pad-x');
-const padYElement = document.getElementById('typography-pad-y');
-
-const editorElement = document.getElementById('editor');
-const editorFontSizeElement = document.getElementById('editor-font-size');
 
 function _parseNumber(htmlElement, fallback) {
     const number = parseFloat(htmlElement.value);
@@ -22,27 +22,27 @@ function _parseNumber(htmlElement, fallback) {
 }
 
 function onFontSizeConfig() {
-    config.fontSize = _parseNumber(fontSizeElement, CANVAS_DEFAULTS.fontSize);
+    config.fontSize = _parseNumber(typographyFontSizeElement, CANVAS_DEFAULTS.fontSize);
     redraw();
 }
 
 function onLineHeightConfig() {
-    config.lineHeight = _parseNumber(lineHeightElement, CANVAS_DEFAULTS.lineHeight);
+    config.lineHeight = _parseNumber(typographyLineHeightElement, CANVAS_DEFAULTS.lineHeight);
     redraw();
 }
 
 function onLetterSpacingConfig() {
-    config.letterSpacing = _parseNumber(letterSpacingElement, CANVAS_DEFAULTS.letterSpacing);
+    config.letterSpacing = _parseNumber(typographyLetterSpacingElement, CANVAS_DEFAULTS.letterSpacing);
     redraw();
 }
 
 function onPadXConfig() {
-    config.padX = _parseNumber(padXElement, CANVAS_DEFAULTS.padX);
+    config.padX = _parseNumber(typographyPadXElement, CANVAS_DEFAULTS.padX);
     redraw();
 }
 
 function onPadYConfig() {
-    config.padY = _parseNumber(padYElement, CANVAS_DEFAULTS.padY);
+    config.padY = _parseNumber(typographyPadYElement, CANVAS_DEFAULTS.padY);
     redraw();
 }
 

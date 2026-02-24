@@ -6,6 +6,12 @@ import {
     CANVAS_WIDTH,
     CANVAS_ZOOM_FACTOR,
 } from '../common/config.js';
+import {
+    canvasInnerElement,
+    canvasWrapElement,
+    editorElement,
+    editorStatusElement
+} from '../common/elements.js';
 
 let canvasZoom = 1;
 let canvasPanX = 0;
@@ -18,11 +24,6 @@ let panStartY = 0;
 
 let rafScheduled = false;
 let onZoomChangeCallback = null;
-
-const editorElement = document.getElementById('editor');
-const editorStatusElement = document.getElementById('editor-status');
-const canvasWrapElement = document.getElementById('canvas-wrap');
-const canvasInnerElement = document.getElementById('canvas-inner');
 
 const Cursor = Object.freeze({
     DEFAULT: '',

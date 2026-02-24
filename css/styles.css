@@ -329,7 +329,7 @@ body {
   display: block;
 }
 
-#resize-handle {
+#editor-resize-handle {
   height: 5px;
   flex-shrink: 0;
   cursor: row-resize;
@@ -337,8 +337,8 @@ body {
   transition: background 0.15s;
 }
 
-#resize-handle:hover,
-#resize-handle.drag {
+#editor-resize-handle:hover,
+#editor-resize-handle.drag {
   background: var(--acc);
 }
 

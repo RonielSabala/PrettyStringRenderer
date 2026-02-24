@@ -1,10 +1,11 @@
 import {
+    canvasWrapElement,
+    editorPanelElement,
+    editorResizeHandleElement
+} from '../common/elements.js';
+import {
     redraw
 } from "./render_controller.js";
-
-const resizeHandleElement = document.getElementById('resize-handle');
-const editorPanelElement = document.getElementById('editor-panel');
-const canvasWrapElement = document.getElementById('canvas-wrap');
 
 let dragging = false;
 let startY = 0;
@@ -14,7 +15,7 @@ function onResize(event) {
     dragging = true;
     startY = event.clientY;
     startHeight = editorPanelElement.offsetHeight;
-    resizeHandleElement.classList.add('drag');
+    editorResizeHandleElement.classList.add('drag');
     document.body.style.userSelect = 'none';
     event.preventDefault();
 }
@@ -35,7 +36,7 @@ function onEditorMouseUp() {
     }
 
     dragging = false;
-    resizeHandleElement.classList.remove('drag');
+    editorResizeHandleElement.classList.remove('drag');
     document.body.style.userSelect = '';
 }
 

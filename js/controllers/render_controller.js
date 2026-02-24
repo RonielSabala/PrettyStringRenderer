@@ -87,7 +87,8 @@ function _computePixelScale(canvasZoom) {
     return Math.min(CANVAS_MAX_PIXEL_SCALE, Math.max(CANVAS_MIN_PIXEL_SCALE, Math.ceil(deviceAwareZoom)));
 }
 
-function _renderAtScale(pixelScale) {
+function _renderAtScale() {
+    const pixelScale = _computePixelScale(getCanvasZoom());
     _currentPixelScale = pixelScale;
 
     const ctx = canvasElement.getContext('2d');
@@ -106,16 +107,13 @@ function _scheduleQualityRedraw(canvasZoom) {
     }
 
     clearTimeout(_qualityRedrawTimer);
-    _qualityRedrawTimer = setTimeout(() => {
-        _renderAtScale(_computePixelScale(getCanvasZoom()));
-    }, CANVAS_QUALITY_REDRAW_DEBOUNCE_MS);
+    _qualityRedrawTimer = setTimeout(_renderAtScale, CANVAS_QUALITY_REDRAW_DEBOUNCE_MS);
 }
 
 function redraw() {
     _tokenLines = tokenize(editorElement.value);
 
-    const pixelScale = _computePixelScale(getCanvasZoom());
-    _renderAtScale(pixelScale);
+    _renderAtScale();
 
     canvasElement.style.width = _getNormalizedDimension(CANVAS_WIDTH);
     canvasElement.style.height = _getNormalizedDimension(CANVAS_HEIGHT);

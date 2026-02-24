@@ -59,6 +59,15 @@ function _scheduleTransform() {
 
 // Zoom
 
+function _onZoomChange() {
+    _scheduleTransform();
+    if (onZoomChangeCallback === null) {
+        return;
+    }
+
+    onZoomChangeCallback(canvasZoom);
+}
+
 function onZoom(event) {
     event.preventDefault();
 
@@ -74,22 +83,14 @@ function onZoom(event) {
     canvasPanY = pivotY * (1 - appliedFactor) + canvasPanY * appliedFactor;
     canvasZoom = newZoom;
 
-    _scheduleTransform();
-
-    if (onZoomChangeCallback) {
-        onZoomChangeCallback(canvasZoom);
-    }
+    _onZoomChange();
 }
 
 function onZoomReset(event) {
     canvasZoom = 1;
     canvasPanX = 0;
     canvasPanY = 0;
-    _scheduleTransform();
-
-    if (onZoomChangeCallback) {
-        onZoomChangeCallback(canvasZoom);
-    }
+    _onZoomChange();
 }
 
 // Pan

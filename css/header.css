@@ -1,0 +1,37 @@
+.header-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--t0);
+}
+
+.header-title-separator {
+  flex: 1;
+}
+
+.badge {
+  font-size: 10.5px;
+  color: var(--t1);
+  background: var(--accd);
+  border: 1px solid var(--b0);
+  padding: 2px 9px;
+  border-radius: 20px;
+}
+
+#btn-export {
+  padding: 5px 15px;
+  border-radius: var(--r);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--acc);
+  background: var(--accd);
+  color: var(--t0);
+  transition: background 0.12s;
+}
+
+#btn-export:hover {
+  background: var(--acc);
+  color: #fff;
+}

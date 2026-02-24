@@ -1,0 +1,84 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0d1117;
+  --panel: #161b22;
+  --card: #21262d;
+  --b0: #30363d;
+  --bhi: #58a6ff;
+  --t0: #e6edf3;
+  --t1: #8b949e;
+  --t2: #484f58;
+  --acc: #388bfd;
+  --accd: rgba(56, 139, 253, 0.2);
+  --red: #f85149;
+  --grn: #3fb950;
+  --r: 5px;
+  --mono: "Cascadia Code";
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--t0);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#app {
+  display: grid;
+  grid-template-columns: 276px 1fr;
+  grid-template-rows: 44px 1fr;
+  grid-template-areas: "app-header app-header" "app-sidebar app-work-area";
+  height: 100vh;
+}
+
+/* Header */
+
+#app-header {
+  grid-area: app-header;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--b0);
+}
+
+/* Sidebar */
+
+#app-sidebar {
+  grid-area: app-sidebar;
+  background: var(--panel);
+  border-right: 1px solid var(--b0);
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+#app-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+#app-sidebar::-webkit-scrollbar-thumb {
+  background: var(--b0);
+  border-radius: 4px;
+}
+
+/* Work area */
+
+#app-work-area {
+  grid-area: app-work-area;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+}

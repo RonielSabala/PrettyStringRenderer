@@ -1,0 +1,86 @@
+#editor-resize-handle {
+  height: 5px;
+  flex-shrink: 0;
+  cursor: row-resize;
+  background: var(--b0);
+  transition: background 0.15s;
+}
+
+#editor-resize-handle:hover,
+#editor-resize-handle.drag {
+  background: var(--acc);
+}
+
+#editor-panel {
+  height: 210px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#editor-tabs {
+  display: flex;
+  align-items: center;
+  background: var(--panel);
+  border-top: 1px solid var(--b0);
+  height: 32px;
+  flex-shrink: 0;
+  padding: 0 10px;
+  gap: 12px;
+}
+
+.tab {
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--t0);
+  border-top: 2px solid var(--acc);
+}
+
+.editor-font {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--t1);
+}
+
+#editor-status {
+  font-size: 10.5px;
+  color: var(--t2);
+  margin-left: auto;
+}
+
+#editor {
+  flex: 1;
+  background: #0d1117;
+  border: none;
+  color: #e6edf3;
+  font-family: var(--mono);
+  resize: none;
+  white-space: pre;
+  overflow: auto;
+  tab-size: 2;
+  caret-color: #58a6ff;
+  caret-shape: block;
+}
+
+#editor:focus {
+  outline: none;
+}
+
+#editor::selection {
+  background: rgba(56, 139, 253, 0.3);
+}
+
+#editor::-webkit-scrollbar {
+  height: 4px;
+  width: 6px;
+}
+
+#editor::-webkit-scrollbar-thumb {
+  background: var(--b0);
+  border-radius: 4px;
+}

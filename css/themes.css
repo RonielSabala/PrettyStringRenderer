@@ -1,0 +1,84 @@
+.theme-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 2px 0 5px;
+}
+
+#theme-empty {
+  font-size: 11px;
+  color: var(--t2);
+  padding: 4px 2px;
+}
+
+.theme-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card);
+  border: 1px solid var(--b0);
+  border-radius: var(--r);
+  padding: 5px 9px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--t1);
+  transition:
+    border-color 0.1s,
+    color 0.1s;
+  gap: 8px;
+}
+
+.theme-item:hover {
+  border-color: var(--bhi);
+  color: var(--t0);
+}
+
+.theme-item.active {
+  border-color: var(--acc);
+  color: var(--t0);
+  background: var(--accd);
+}
+
+.theme-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.theme-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  padding: 5px 10px;
+  border-radius: var(--r);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  cursor: pointer;
+  border: 1px dashed var(--b0);
+  background: transparent;
+  color: var(--t1);
+  transition:
+    color 0.1s,
+    border-color 0.1s;
+  width: 100%;
+  justify-content: center;
+}
+
+.theme-btn:hover {
+  color: var(--t0);
+  border-color: var(--t1);
+}
+
+#btn-export-theme {
+  margin-top: 4px;
+}

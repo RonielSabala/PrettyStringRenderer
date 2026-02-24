@@ -14,12 +14,13 @@ const emptyThemeElement = document.getElementById('theme-empty');
 
 function _onApplyTheme(theme) {
     activeThemeName = theme._name;
-    for (const key of THEME_KEYS) {
-        if (!theme[key]) {
+    for (const themeKey of THEME_KEYS) {
+        const themeValue = theme[themeKey];
+        if (themeValue === null) {
             continue;
         }
 
-        setColor(key, theme[key]);
+        setColor(themeKey, themeValue);
     }
 
     renderThemeList();

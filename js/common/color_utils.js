@@ -8,16 +8,16 @@ import {
     config
 } from './config.js';
 
-function onPick(key, value) {
-    setColor(key, value);
+function onPick(themeKey, themeValue) {
+    setColor(themeKey, themeValue);
 }
 
-function onHex(key, value) {
-    if (!(/^#[0-9A-Fa-f]{6}$/.test(value))) {
+function onHex(themeKey, themeValue) {
+    if (!(/^#[0-9A-Fa-f]{6}$/.test(themeValue))) {
         return;
     }
 
-    setColor(key, value);
+    setColor(themeKey, themeValue);
 }
 
 function resolveTokenColor(token) {

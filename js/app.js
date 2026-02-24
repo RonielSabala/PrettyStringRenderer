@@ -48,15 +48,15 @@ const btnExport = document.getElementById('btn-export');
 const btnLoadThemes = document.getElementById('btn-load-themes')
 const btnExportTheme = document.getElementById('btn-export-theme');
 
-const typographyFontSizeElement = document.getElementById('c-fs');
-const typographyLineHeightElement = document.getElementById('c-lh');
-const typographyLetterSpacingElement = document.getElementById('c-ls');
-const typographyPadXElement = document.getElementById('c-px');
-const typographyPadYElement = document.getElementById('c-py');
+const typographyFontSizeElement = document.getElementById('typography-font-size');
+const typographyLineHeightElement = document.getElementById('typography-line-height');
+const typographyLetterSpacingElement = document.getElementById('typography-letter-spacing');
+const typographyPadXElement = document.getElementById('typography-pad-x');
+const typographyPadYElement = document.getElementById('typography-pad-y');
 
-const editorElement = document.getElementById('ed');
-const editorFontSizeElement = document.getElementById('ed-fs');
-const editorResizeHandleElement = document.getElementById('rh');
+const editorElement = document.getElementById('editor');
+const editorFontSizeElement = document.getElementById('editor-font-size');
+const editorResizeHandleElement = document.getElementById('resize-handle');
 
 const canvasWrapElement = document.getElementById('canvas-wrap');
 
@@ -79,8 +79,8 @@ editorElement.style.padding = `${EDITOR_DEFAULTS.padX}px ${EDITOR_DEFAULTS.padY}
 
 // Sidebar section collapse
 function toggleSection(element) {
-    element.classList.toggle('col');
-    element.nextElementSibling.classList.toggle('hid');
+    element.classList.toggle('collapsed');
+    element.nextElementSibling.classList.toggle('hidden');
 }
 
 function initListeners() {
@@ -90,7 +90,7 @@ function initListeners() {
     btnExportTheme.addEventListener('click', exportCurrentTheme);
 
     // Collapse sections
-    document.querySelectorAll('.sh').forEach(
+    document.querySelectorAll('.section-header').forEach(
         element => element.addEventListener('click', () => toggleSection(element))
     );
 
@@ -101,11 +101,11 @@ function initListeners() {
 
     // Color pickers + hex
     for (const themeKey of THEME_KEYS) {
-        document.getElementById(`cp-${themeKey}`).addEventListener(
+        document.getElementById(`color-picker-${themeKey}`).addEventListener(
             'input',
             event => onPick(themeKey, event.target.value)
         );
-        document.getElementById(`hx-${themeKey}`).addEventListener(
+        document.getElementById(`hex-input-${themeKey}`).addEventListener(
             'input',
             event => onHex(themeKey, event.target.value)
         );

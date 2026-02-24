@@ -2,8 +2,8 @@ import {
     redraw
 } from "./render_controller.js";
 
-const resizeHandleElement = document.getElementById('rh');
-const editorPanelElement = document.getElementById('ed-panel');
+const resizeHandleElement = document.getElementById('resize-handle');
+const editorPanelElement = document.getElementById('editor-panel');
 
 let dragging = false;
 let startY = 0;

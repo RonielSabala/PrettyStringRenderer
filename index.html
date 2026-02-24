@@ -5,29 +5,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Pretty String Renderer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:wght@400&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
     <div id="app">
         <!-- Header -->
-        <header id="hd">
-            <span class="logo">Pretty String Renderer</span>
-            <div class="sp"></div>
+        <header id="app-header">
+            <span class="app-title">Pretty String Renderer</span>
+            <div class="app-title-separator"></div>
             <div class="badge">3120 x 780 · 4:1</div>
             <button id="btn-export">↓ Export</button>
         </header>
 
         <!-- Sidebar -->
-        <aside id="sb">
-
-            <!-- THEMES -->
+        <aside id="app-sidebar">
+            <!-- Themes -->
             <div>
-                <div class="sh">Themes<span class="chv">▾</span></div>
-                <div class="sbody">
+                <div class="section-header">Themes<span class="accordion-control">▾</span></div>
+                <div class="section-body">
                     <div id="theme-list">
                         <div id="theme-empty">No themes loaded.</div>
                     </div>
@@ -35,139 +31,163 @@
                     <button id="btn-export-theme" class="theme-btn">Export theme</button>
                 </div>
             </div>
-            <div class="sep"></div>
 
-            <!-- BRACKET COLORS -->
+            <div class="section-separator"></div>
+
+            <!-- Bracket Colors -->
             <div>
-                <div class="sh">Bracket Colors<span class="chv">▾</span></div>
-                <div class="sbody">
+                <div class="section-header">Bracket Colors<span class="accordion-control">▾</span></div>
+                <div class="section-body">
                     <div class="row"><label>Level 1</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-bracket0"></div><input type="color" id="cp-bracket0" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-bracket0"></div><input type="color"
+                                id="color-picker-bracket0" />
                         </div>
-                        <input class="hx" id="hx-bracket0" maxlength="7" />
+                        <input class="hex-input" id="hex-input-bracket0" maxlength="7" />
                     </div>
                     <div class="row"><label>Level 2</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-bracket1"></div><input type="color" id="cp-bracket1" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-bracket1"></div><input type="color"
+                                id="color-picker-bracket1" />
                         </div>
-                        <input class="hx" id="hx-bracket1" maxlength="7" />
+                        <input class="hex-input" id="hex-input-bracket1" maxlength="7" />
                     </div>
                     <div class="row"><label>Level 3</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-bracket2"></div><input type="color" id="cp-bracket2" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-bracket2"></div><input type="color"
+                                id="color-picker-bracket2" />
                         </div>
-                        <input class="hx" id="hx-bracket2" maxlength="7" />
+                        <input class="hex-input" id="hex-input-bracket2" maxlength="7" />
                     </div>
                 </div>
             </div>
-            <div class="sep"></div>
 
-            <!-- SYNTAX COLORS -->
+            <div class="section-separator"></div>
+
+            <!-- Syntax Colors -->
             <div>
-                <div class="sh">Syntax Colors<span class="chv">▾</span></div>
-                <div class="sbody">
+                <div class="section-header">Syntax Colors<span class="accordion-control">▾</span></div>
+                <div class="section-body">
                     <div class="row"><label>Function</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-function"></div><input type="color" id="cp-function" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-function"></div><input type="color"
+                                id="color-picker-function" />
                         </div>
-                        <input class="hx" id="hx-function" maxlength="7" />
+                        <input class="hex-input" id="hex-input-function" maxlength="7" />
                     </div>
                     <div class="row"><label>Variable</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-variable"></div><input type="color" id="cp-variable" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-variable"></div><input type="color"
+                                id="color-picker-variable" />
                         </div>
-                        <input class="hx" id="hx-variable" maxlength="7" />
+                        <input class="hex-input" id="hex-input-variable" maxlength="7" />
                     </div>
                     <div class="row"><label>Operator</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-operator"></div><input type="color" id="cp-operator" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-operator"></div><input type="color"
+                                id="color-picker-operator" />
                         </div>
-                        <input class="hx" id="hx-operator" maxlength="7" />
+                        <input class="hex-input" id="hex-input-operator" maxlength="7" />
                     </div>
                     <div class="row"><label>Semicolon</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-semicolon"></div><input type="color" id="cp-semicolon" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-semicolon"></div><input type="color"
+                                id="color-picker-semicolon" />
                         </div>
-                        <input class="hx" id="hx-semicolon" maxlength="7" />
+                        <input class="hex-input" id="hex-input-semicolon" maxlength="7" />
                     </div>
                     <div class="row"><label>Number</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-number"></div><input type="color" id="cp-number" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-number"></div><input type="color"
+                                id="color-picker-number" />
                         </div>
-                        <input class="hx" id="hx-number" maxlength="7" />
+                        <input class="hex-input" id="hex-input-number" maxlength="7" />
                     </div>
                     <div class="row"><label>Comment (#)</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-comment"></div><input type="color" id="cp-comment" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-comment"></div><input type="color"
+                                id="color-picker-comment" />
                         </div>
-                        <input class="hx" id="hx-comment" maxlength="7" />
+                        <input class="hex-input" id="hex-input-comment" maxlength="7" />
                     </div>
                     <div class="row"><label>Unknown</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-unknown"></div><input type="color" id="cp-unknown" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-unknown"></div><input type="color"
+                                id="color-picker-unknown" />
                         </div>
-                        <input class="hx" id="hx-unknown" maxlength="7" />
+                        <input class="hex-input" id="hex-input-unknown" maxlength="7" />
                     </div>
                 </div>
             </div>
-            <div class="sep"></div>
 
-            <!-- CANVAS -->
+            <div class="section-separator"></div>
+
+            <!-- Canvas colors -->
             <div>
-                <div class="sh">Canvas<span class="chv">▾</span></div>
-                <div class="sbody">
+                <div class="section-header">Canvas colors<span class="accordion-control">▾</span></div>
+                <div class="section-body">
                     <div class="row"><label>Background</label>
-                        <div class="sw">
-                            <div class="swf" id="sf-background"></div><input type="color" id="cp-background" />
+                        <div class="swatch">
+                            <div class="swatch-fill" id="swatch-fill-background"></div><input type="color"
+                                id="color-picker-background" />
                         </div>
-                        <input class="hx" id="hx-background" maxlength="7" />
+                        <input class="hex-input" id="hex-input-background" maxlength="7" />
                     </div>
                 </div>
             </div>
-            <div class="sep"></div>
 
-            <!-- TYPOGRAPHY -->
+            <div class="section-separator"></div>
+
+            <!-- Typography -->
             <div>
-                <div class="sh">Typography<span class="chv">▾</span></div>
-                <div class="sbody">
+                <div class="section-header">Typography<span class="accordion-control">▾</span></div>
+                <div class="section-body">
                     <div class="row"><label>Font size (px)</label>
-                        <input class="ni" type="number" id="c-fs" min="6" max="300" />
+                        <input class="number-input" type="number" id="typography-font-size" min="6" max="300" />
                     </div>
                     <div class="row"><label>Line height</label>
-                        <input class="ni" type="number" id="c-lh" min="0.8" max="4" step="0.01" />
+                        <input class="number-input" type="number" id="typography-line-height" min="0.8" max="4"
+                            step="0.01" />
                     </div>
                     <div class="row"><label>Letter spacing</label>
-                        <input class="ni" type="number" id="c-ls" min="-10" max="50" step="0.5" />
+                        <input class="number-input" type="number" id="typography-letter-spacing" min="-10" max="50"
+                            step="0.5" />
                     </div>
                     <div class="row"><label>Padding X (px)</label>
-                        <input class="ni" type="number" id="c-px" min="0" max="400" />
+                        <input class="number-input" type="number" id="typography-pad-x" min="0" max="400" />
                     </div>
                     <div class="row"><label>Padding Y (px)</label>
-                        <input class="ni" type="number" id="c-py" min="0" max="400" />
+                        <input class="number-input" type="number" id="typography-pad-y" min="0" max="400" />
                     </div>
                 </div>
             </div>
         </aside>
 
-        <!-- Main -->
-        <main id="mn">
+        <!-- Work area -->
+        <main id="app-work-area">
+            <!-- Canvas -->
             <div id="canvas-wrap">
                 <div id="canvas-inner">
                     <canvas id="canvas"></canvas>
                 </div>
             </div>
-            <div id="rh"></div>
-            <div id="ed-panel">
-                <div id="ed-tabs">
+
+            <!-- Resize handle -->
+            <div id="resize-handle"></div>
+
+            <!-- Editor area -->
+            <div id="editor-panel">
+                <div id="editor-tabs">
                     <div class="tab">Editor</div>
-                    <div class="edfont">
+                    <div class="editor-font">
                         <span>Font size (px)</span>
-                        <input class="ni" type="number" id="ed-fs" min="8" max="36" />
+                        <input class="number-input" type="number" id="editor-font-size" min="8" max="36" />
                     </div>
-                    <span id="si"></span>
+                    <span id="editor-status"></span>
                 </div>
-                <textarea id="ed" spellcheck="false"></textarea>
+
+                <!-- Editor -->
+                <textarea id="editor" spellcheck="false"></textarea>
             </div>
         </main>
     </div>

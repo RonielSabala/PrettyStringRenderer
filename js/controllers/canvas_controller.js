@@ -19,8 +19,8 @@ let panStartY = 0;
 let rafScheduled = false;
 let onZoomChangeCallback = null;
 
-const statusElement = document.getElementById('si');
-const editorElement = document.getElementById('ed');
+const editorElement = document.getElementById('editor');
+const editorStatusElement = document.getElementById('editor-status');
 const canvasWrapElement = document.getElementById('canvas-wrap');
 const canvasInnerElement = document.getElementById('canvas-inner');
 
@@ -39,7 +39,7 @@ function setZoomChangeCallback(callback) {
 }
 
 function updateZoomInfo() {
-    statusElement.textContent = `${CANVAS_WIDTH}x${CANVAS_HEIGHT} · ${(canvasZoom * 100).toFixed(0)}%`;
+    editorStatusElement.textContent = `${CANVAS_WIDTH}x${CANVAS_HEIGHT} · ${(canvasZoom * 100).toFixed(0)}%`;
 }
 
 function _applyTransform() {

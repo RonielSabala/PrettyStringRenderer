@@ -25,7 +25,7 @@ let _tokenLines = [];
 let _currentPixelScale = 1;
 let _qualityRedrawTimer = null;
 
-const editorElement = document.getElementById('ed');
+const editorElement = document.getElementById('editor');
 const canvasElement = document.getElementById('canvas');
 const canvasWrapElement = document.getElementById('canvas-wrap');
 
@@ -139,27 +139,15 @@ setZoomChangeCallback(_scheduleQualityRedraw);
 
 // Color controls
 
-function updateColor(key, value) {
-    const fill = document.getElementById(`sf-${key}`);
-    const pick = document.getElementById(`cp-${key}`);
-    const hex = document.getElementById(`hx-${key}`);
-
-    if (fill) {
-        fill.style.background = value;
-    }
-
-    if (pick) {
-        pick.value = value;
-    }
-
-    if (hex) {
-        hex.value = value;
-    }
+function updateColor(themeKey, themeValue) {
+    document.getElementById(`swatch-fill-${themeKey}`).style.background = themeValue;
+    document.getElementById(`color-picker-${themeKey}`).value = themeValue;
+    document.getElementById(`hex-input-${themeKey}`).value = themeValue;
 }
 
-function setColor(key, value) {
-    config.colors[key] = value;
-    updateColor(key, value);
+function setColor(themeKey, themeValue) {
+    config.colors[themeKey] = themeValue;
+    updateColor(themeKey, themeValue);
     redraw();
 }
 

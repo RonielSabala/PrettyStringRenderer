@@ -7,14 +7,14 @@ import {
     redraw
 } from './render_controller.js';
 
-const fontSizeElement = document.getElementById('c-fs');
-const lineHeightElement = document.getElementById('c-lh');
-const letterSpacingElement = document.getElementById('c-ls');
-const padXElement = document.getElementById('c-px');
-const padYElement = document.getElementById('c-py');
+const fontSizeElement = document.getElementById('typography-font-size');
+const lineHeightElement = document.getElementById('typography-line-height');
+const letterSpacingElement = document.getElementById('typography-letter-spacing');
+const padXElement = document.getElementById('typography-pad-x');
+const padYElement = document.getElementById('typography-pad-y');
 
-const editorElement = document.getElementById('ed');
-const editorFontSizeElement = document.getElementById('ed-fs');
+const editorElement = document.getElementById('editor');
+const editorFontSizeElement = document.getElementById('editor-font-size');
 
 function _parseNumber(htmlElement, fallback) {
     const number = parseFloat(htmlElement.value);

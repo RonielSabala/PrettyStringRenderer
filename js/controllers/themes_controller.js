@@ -13,7 +13,15 @@ import {
 let themes = [];
 let activeThemeName = '';
 
-function _onApplyTheme(theme) {
+function _getUrlFromObject(object) {
+    const blob = new Blob([JSON.stringify(object, null, 2)], {
+        type: 'application/json'
+    });
+
+    return URL.createObjectURL(blob);
+}
+
+function _applyTheme(theme) {
     activeThemeName = theme._name;
     for (const themeKey of THEME_KEYS) {
         const themeValue = theme[themeKey];
@@ -25,6 +33,12 @@ function _onApplyTheme(theme) {
     }
 
     renderThemeList();
+}
+
+function _showThemeOnNewWindow(theme) {
+    const url = _getUrlFromObject(theme);
+    window.open(url, "_blank");
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function renderThemeList() {
@@ -51,16 +65,17 @@ function renderThemeList() {
         themeDot.style.background = theme.background;
 
         themeItem.append(themeName, themeDot);
-        themeItem.addEventListener('click', () => _onApplyTheme(theme));
+        themeItem.addEventListener('click', () => _applyTheme(theme));
+        themeItem.addEventListener('dblclick', () => _showThemeOnNewWindow(theme));
 
         themeListElement.appendChild(themeItem);
     }
 }
 
-function _appendTheme(theme, themeName) {
+function _mergeTheme(theme, themeName) {
     theme._name = themeName;
 
-    const i = themes.findIndex(theme => theme._name === themeName);
+    const i = themes.findIndex(t => t._name === themeName);
     if (i === -1) {
         themes.push(theme);
         return;
@@ -74,13 +89,19 @@ async function _onLoadThemes(files) {
         try {
             const theme = JSON.parse(await file.text());
             const themeName = file.name.replace(/\.json$/i, '');
-            _appendTheme(theme, themeName);
+            _mergeTheme(theme, themeName);
         } catch (e) {
-            console.warn(`Skipping "${file.name}":`, e);
+            console.warn(`
+            Skipping "${file.name}": `, e);
         }
     }
 
-    renderThemeList();
+    if (themes.length === 0) {
+        renderThemeList();
+        return;
+    }
+
+    _applyTheme(themes.at(-1));
 }
 
 async function loadThemes() {
@@ -98,15 +119,11 @@ function exportCurrentTheme() {
         return;
     }
 
-    const blob = new Blob([JSON.stringify(config.colors, null, 2)], {
-        type: 'application/json'
-    });
-
     const anchorElement = document.createElement('a');
-    anchorElement.href = URL.createObjectURL(blob);
+    anchorElement.href = _getUrlFromObject(config.colors);
     anchorElement.download = filename.endsWith('.json') ? filename : `${filename}.json`;
     anchorElement.click();
-    URL.revokeObjectURL(anchorElement.href);
+    setTimeout(() => URL.revokeObjectURL(anchorElement.href), 1000);
 }
 
 export {

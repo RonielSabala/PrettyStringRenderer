@@ -1,43 +1,41 @@
-export const INLINE_BRACKETS = Object.freeze(['()', '[]', '{}']);
+export const INLINE_PAIRS = Object.freeze(['()', '[]', '{}']);
+
 export const MULTILINE_BRACKETS = Object.freeze([{
-        // Round brackets
-        lTop: '/',
-        lMid: '▏',
-        lBot: '\\',
-        rTop: '\\',
-        rMid: '▕',
-        rBot: '/'
+        type: 'round',
+        left: {
+            top: '/',
+            mid: '▏',
+            bottom: '\\'
+        },
+        right: {
+            top: '\\',
+            mid: '▕',
+            bottom: '/'
+        }
     },
-    { // Square brackets
-        lTop: '┌',
-        lMid: '│',
-        lBot: '└',
-        rTop: '┐',
-        rMid: '│',
-        rBot: '┘'
+    {
+        type: 'square',
+        left: {
+            top: '┌',
+            mid: '│',
+            bottom: '└'
+        },
+        right: {
+            top: '┐',
+            mid: '│',
+            bottom: '┘'
+        }
     }
 ]);
 
-function _buildBracketSets() {
-    // Inline opening and closing sets
-    const inlineOpen = new Set();
-    const inlineClose = new Set();
+function buildBracketSets() {
+    const inlineOpen = new Set(INLINE_PAIRS.map(p => p[0]));
+    const inlineClose = new Set(INLINE_PAIRS.map(p => p[1]));
 
-    for (const pair of INLINE_BRACKETS) {
-        inlineOpen.add(pair[0]);
-        inlineClose.add(pair[1]);
-    }
-
-    // All multiline bracket characters
     const multilineAll = new Set();
-
-    for (const bracket of MULTILINE_BRACKETS) {
-        multilineAll.add(bracket.lTop);
-        multilineAll.add(bracket.lMid);
-        multilineAll.add(bracket.lBot);
-        multilineAll.add(bracket.rTop);
-        multilineAll.add(bracket.rMid);
-        multilineAll.add(bracket.rBot);
+    for (const b of MULTILINE_BRACKETS) {
+        Object.values(b.left).forEach(char => multilineAll.add(char));
+        Object.values(b.right).forEach(char => multilineAll.add(char));
     }
 
     return {
@@ -47,4 +45,4 @@ function _buildBracketSets() {
     };
 }
 
-export const BRACKET_SETS = Object.freeze(_buildBracketSets());
+export const BRACKET_SETS = Object.freeze(buildBracketSets());

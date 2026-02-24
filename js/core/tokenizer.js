@@ -16,258 +16,259 @@ import {
     TOKENS
 } from "./tokens.js";
 
-function _isWhiteSpace(char) {
-    return char === ' ' || char === '\t';
-}
+// Character predicates
+const isDigit = (char) => /[0-9]/.test(char);
+const isNumeric = (char) => /[0-9.]/.test(char);
+const isIdentifierStart = (char) => /[a-zA-Z_]/.test(char);
+const isIdentifierPart = (char) => /[a-zA-Z0-9_]/.test(char);
+const isSpace = (char) => char === ' ' || char === '\t';
 
-function _isComment(char) {
-    return char === '#';
-}
-
-function _isSemicolon(char) {
-    return char === ';';
-}
-
-function _startLikeNumber(char) {
-    return /[0-9]/.test(char);
-}
-
-function _isNumeric(char) {
-    return /[0-9.]/.test(char);
-}
-
-function _startLikeIdentifier(char) {
-    return /[a-zA-Z_]/.test(char);
-}
-
-function _isIdentifier(char) {
-    return /[a-zA-Z0-9_]/.test(char);
-}
-
-function _searchOperator(line, i) {
-    for (const op of SORTED_OPS) {
-        if (line.startsWith(op, i)) {
-            return op;
-        }
+class BracketAnalyzer {
+    constructor(lines) {
+        this.lines = lines;
+        this.height = lines.length;
+        this.foundBrackets = this._mapMultilineBrackets();
+        this._calculateNestingDepth();
     }
 
-    return null;
-}
+    _mapMultilineBrackets() {
+        const brackets = [];
 
-function _greedySearch(line, i, charValidator) {
-    let j = i;
-    while (j < line.length && charValidator(line[j])) {
-        j++;
-    }
+        for (let y = 0; y < this.height; y++) {
+            const line = this.lines[y];
+            const lineWidth = line.length;
 
-    return j;
-}
+            for (let x = 0; x < lineWidth; x++) {
+                const char = line[x];
 
-class Tokens {
-    constructor() {
-        this.tokens = [];
-        this.colors = config.colors;
-    }
-
-    clear() {
-        this.tokens = [];
-    }
-
-    _push(value, color) {
-        this.tokens.push({
-            value,
-            color
-        });
-    }
-
-    append(word, token) {
-        this._push(word, resolveTokenColor(this.colors, token));
-    }
-
-    appendBracket(word, bracketDepth) {
-        this._push(word, resolveBracketColor(this.colors, bracketDepth));
-    }
-
-    greedyAppend(line, i, charValidator, token) {
-        const j = _greedySearch(line, i, charValidator);
-        this.append(line.slice(i, j), token);
-        return j;
-    }
-}
-
-/**
- * Scan the entire text to map the boxes of the multiline parentheses.
- */
-function buildBracketDepthMap(lines) {
-    const brackets = [];
-    const maxHeight = lines.length;
-
-    for (let y = 0; y < maxHeight; y++) {
-        for (let x = 0; x < lines[y].length; x++) {
-            const char = lines[y][x];
-
-            for (const t of MULTILINE_BRACKETS) {
-                if (char === t.lTop) {
-                    let yEnd = -1;
-                    if (y + 1 < maxHeight && lines[y + 1][x] === t.lBot) yEnd = y + 1;
-                    else {
-                        let curY = y + 1;
-                        while (curY < maxHeight && lines[curY][x] === t.lMid) curY++;
-                        if (curY < maxHeight && lines[curY][x] === t.lBot) yEnd = curY;
+                for (const bracket of MULTILINE_BRACKETS) {
+                    if (char !== bracket.left.top) {
+                        continue;
                     }
 
-                    if (yEnd !== -1) {
-                        for (let x2 = x + 1; x2 < lines[y].length; x2++) {
-                            if (lines[y][x2] === t.rTop) {
-                                let validRight = (yEnd === y + 1) ?
-                                    lines[yEnd][x2] === t.rBot :
-                                    (lines[yEnd][x2] === t.rBot);
-
-                                if (validRight) {
-                                    brackets.push({
-                                        x1: x,
-                                        x2: x2,
-                                        y1: y,
-                                        y2: yEnd
-                                    });
-                                    break;
-                                }
-                            }
-                        }
+                    const yEnd = this._findLeftArmEnd(x, y + 1, bracket.left);
+                    if (yEnd === -1) {
+                        continue;
                     }
+
+                    const xEnd = this._findRightArmMatch(x + 1, y, yEnd, bracket.right);
+                    if (xEnd === -1) {
+                        continue;
+                    }
+
+                    brackets.push({
+                        x1: x,
+                        y1: y,
+                        x2: xEnd,
+                        y2: yEnd
+                    });
                 }
             }
         }
+
+        return brackets;
     }
 
-    // Calculate each bracket depth
-    brackets.forEach(b => {
-        b.depth = brackets.reduce((acc, other) => {
-            if (other !== b && b.x1 > other.x1 && b.x2 < other.x2 && b.y1 >= other.y1 && b.y2 <= other.y2) {
-                return acc + 1;
+    _findLeftArmEnd(x, yStart, leftBracket) {
+        if (yStart < this.height && this.lines[yStart][x] === leftBracket.bottom) {
+            return yStart;
+        }
+
+        let currentY = yStart;
+        while (currentY < this.height && this.lines[currentY][x] === leftBracket.mid) {
+            currentY++;
+        }
+
+        return (currentY < this.height && this.lines[currentY][x] === leftBracket.bottom) ? currentY : -1;
+    }
+
+    _findRightArmMatch(xStart, yTop, yBottom, rightBracket) {
+        const topRow = this.lines[yTop];
+        const bottomRow = this.lines[yBottom];
+        const topRowWidth = topRow.length;
+
+        for (let x = xStart; x < topRowWidth; x++) {
+            if (topRow[x] === rightBracket.top && bottomRow[x] === rightBracket.bottom) {
+                return x;
             }
-            return acc;
-        }, 0);
-    });
-
-    const boundaryMap = new Map();
-    brackets.forEach(b => {
-        for (let row = b.y1; row <= b.y2; row++) {
-            boundaryMap.set(`${row},${b.x1}`, b.depth);
-            boundaryMap.set(`${row},${b.x2}`, b.depth);
         }
-    });
 
-    return {
-        getBoundaryDepth: (y, x) => boundaryMap.get(`${y},${x}`),
-        getContainmentCount: (y, x) => {
+        return -1;
+    }
 
-            return brackets.reduce((acc, b) => {
-                if (x > b.x1 && x < b.x2 && y >= b.y1 && y <= b.y2) return acc + 1;
-                return acc;
+    _calculateNestingDepth() {
+        this.foundBrackets.forEach(bracket => {
+            bracket.depth = this.foundBrackets.reduce((acc, other) => {
+                const isInside = (
+                    other !== bracket &&
+                    bracket.x1 > other.x1 &&
+                    bracket.x2 < other.x2 &&
+                    bracket.y1 >= other.y1 &&
+                    bracket.y2 <= other.y2
+                );
+
+                return isInside ? acc + 1 : acc;
             }, 0);
-        }
-    };
+        });
+    }
+
+    getBoundaryDepth(y, x) {
+        const bracket = this.foundBrackets.find(bracket =>
+            (x === bracket.x1 || x === bracket.x2) &&
+            y >= bracket.y1 &&
+            y <= bracket.y2
+        );
+
+        return bracket?.depth;
+    }
+
+    getContainmentDepth(y, x) {
+        return this.foundBrackets.reduce((acc, bracket) => {
+            const isContained = (
+                x > bracket.x1 &&
+                x < bracket.x2 &&
+                y >= bracket.y1 &&
+                y <= bracket.y2
+            );
+
+            return isContained ? acc + 1 : acc;
+        }, 0);
+    }
 }
 
-function tokenize(text) {
-    const result = [];
+class TokenResult {
+    constructor() {
+        this.list = [];
+        this.colors = config.colors;
+    }
+
+    add(value, type) {
+        this.list.push({
+            value,
+            color: resolveTokenColor(this.colors, type)
+        });
+    }
+
+    addBracket(char, depth) {
+        this.list.push({
+            value: char,
+            color: resolveBracketColor(this.colors, depth)
+        });
+    }
+
+    consume(line, start, predicate, type) {
+        let end = start;
+        const lineWidth = line.length;
+        while (end < lineWidth && predicate(line[end])) {
+            end++;
+        }
+
+        this.add(line.slice(start, end), type);
+        return end;
+    }
+}
+
+export function tokenize(text) {
     const lines = text.split('\n');
-    const depthUtils = buildBracketDepthMap(lines);
-    const tokens = new Tokens();
+    const analyzer = new BracketAnalyzer(lines);
+    const result = [];
 
-    for (let y = 0; y < lines.length; y++) {
-        let i = 0;
-        const line = lines[y];
-        let inlineStackDepth = 0;
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const lineWidth = line.length;
 
-        while (i < line.length) {
-            const char = line[i];
+        let j = 0;
+        let inlineDepth = 0;
+        const tokens = new TokenResult();
 
-            // Multiline brackets
-            const boundaryDepth = depthUtils.getBoundaryDepth(y, i);
+        while (j < lineWidth) {
+            const char = line[j];
+
+            // Multiline Brackets
+            const boundaryDepth = analyzer.getBoundaryDepth(i, j);
             if (boundaryDepth !== undefined) {
-                tokens.appendBracket(char, boundaryDepth);
-                i++;
+                tokens.addBracket(char, boundaryDepth);
+                j++;
                 continue;
             }
 
-            const baseDepth = depthUtils.getContainmentCount(y, i);
+            const baseDepth = analyzer.getContainmentDepth(i, j);
 
             // Comments
-            if (_isComment(char)) {
-                tokens.append(line.slice(i), TOKENS.COMMENT);
+            if (char === '#') {
+                tokens.add(line.slice(j), TOKENS.COMMENT);
                 break;
             }
 
-            // Inline brackets
+            // Inline Brackets
 
             if (BRACKET_SETS.inlineOpen.has(char)) {
-                tokens.appendBracket(char, baseDepth + inlineStackDepth);
-                inlineStackDepth++;
-                i++;
+                tokens.addBracket(char, baseDepth + inlineDepth++);
+                j++;
                 continue;
             }
 
             if (BRACKET_SETS.inlineClose.has(char)) {
-                inlineStackDepth = Math.max(0, inlineStackDepth - 1);
-                tokens.appendBracket(char, baseDepth + inlineStackDepth);
-                i++;
+                inlineDepth = Math.max(0, inlineDepth - 1);
+                tokens.addBracket(char, baseDepth + inlineDepth);
+                j++;
                 continue;
             }
 
-            // Whitespaces
-            if (_isWhiteSpace(char)) {
-                i = tokens.greedyAppend(line, i, _isWhiteSpace, TOKENS.WHITE_SPACE);
+            // Identifiers
+            if (isIdentifierStart(char)) {
+                let pivot1 = j;
+                while (pivot1 < line.length && isIdentifierPart(line[pivot1])) {
+                    pivot1++;
+                }
+
+                const word = line.slice(j, pivot1);
+
+                // Look ahead for function call
+                let pivot2 = pivot1;
+                while (pivot2 < line.length && isSpace(line[pivot2])) {
+                    pivot2++;
+                }
+
+                const isFunction = pivot2 < line.length && line[pivot2] === '(';
+                tokens.add(word, isFunction ? TOKENS.FUNCTION : TOKENS.VARIABLE);
+
+                j = pivot1;
                 continue;
             }
 
-            // Numbers
-            if (_startLikeNumber(char)) {
-                i = tokens.greedyAppend(line, i, _isNumeric, TOKENS.NUMBER);
+            // Static Tokens
+
+            if (isSpace(char)) {
+                j = tokens.consume(line, j, isSpace, TOKENS.WHITE_SPACE);
                 continue;
             }
 
-            // Semicolons
-            if (_isSemicolon(char)) {
-                tokens.append(char, TOKENS.SEMICOLON);
-                i++;
+            if (isDigit(char)) {
+                j = tokens.consume(line, j, isNumeric, TOKENS.NUMBER);
+                continue;
+            }
+
+            if (char === ';') {
+                tokens.add(char, TOKENS.SEMICOLON);
+                j++;
                 continue;
             }
 
             // Operators
-            const op = _searchOperator(line, i);
-            if (op !== null) {
-                tokens.append(op, TOKENS.OPERATOR);
-                i += op.length;
+            const operator = SORTED_OPS.find(op => line.startsWith(op, j));
+            if (operator) {
+                tokens.add(operator, TOKENS.OPERATOR);
+                j += operator.length;
                 continue;
             }
 
-            // Identifiers (variables and functions)
-            if (_startLikeIdentifier(char)) {
-                const j = _greedySearch(line, i, _isIdentifier);
-                const k = _greedySearch(line, j, _isWhiteSpace);
-                tokens.append(line.slice(i, j), line[k] === '(' ? TOKENS.FUNCTION : TOKENS.VARIABLE);
-                if (k > j) {
-                    tokens.append(line.slice(j, k), TOKENS.WHITE_SPACE);
-                }
-
-                i = k;
-                continue;
-            }
-
-            // Unknown token
-            tokens.append(char, TOKENS.UNKNOWN);
-            i++;
+            tokens.add(char, TOKENS.UNKNOWN);
+            j++;
         }
 
-        result.push(tokens.tokens);
-        tokens.clear();
+        result.push(tokens.list);
     }
 
     return result;
 }
-
-export {
-    tokenize
-};

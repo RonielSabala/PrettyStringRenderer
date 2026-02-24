@@ -196,8 +196,14 @@ export function tokenize(text) {
 
             // Comments
             if (char === '#') {
-                tokens.add(line.slice(j), TOKENS.COMMENT);
-                break;
+                let end = j + 1;
+                while (end < line.length && !BRACKET_SETS.multilineAll.has(line[end])) {
+                    end++;
+                }
+
+                tokens.add(line.slice(j, end), TOKENS.COMMENT);
+                j = end;
+                continue;
             }
 
             // Inline Brackets

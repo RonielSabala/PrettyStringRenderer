@@ -1,0 +1,13 @@
+{
+  "bracket0": "#f47067",
+  "bracket1": "#d29922",
+  "bracket2": "#58a6ff",
+  "function": "#d2a8ff",
+  "variable": "#ffa657",
+  "operator": "#ff7b72",
+  "semicolon": "#c9d1d9",
+  "number": "#79c0ff",
+  "comment": "#8b949e",
+  "unknown": "#7ee787",
+  "background": "#0d1117"
+}

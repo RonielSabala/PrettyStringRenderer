@@ -11,7 +11,7 @@ export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 
 // Render constants
 export const CANVAS_MIN_PIXEL_SCALE = 1;
-export const CANVAS_MAX_PIXEL_SCALE = 4;
+export const CANVAS_MAX_PIXEL_SCALE = 5;
 export const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
 export const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
 export const CANVAS_ASCENT_OFFSET_PX = 8;

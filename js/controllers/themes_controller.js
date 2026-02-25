@@ -33,6 +33,22 @@ function _applyTheme(theme) {
     }
 
     renderThemeList();
+    themeListElement.querySelector('.theme-item.active')?.focus();
+}
+
+function _applyThemeOnArrow(event, index) {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') {
+        return;
+    }
+
+    event.preventDefault();
+    if (event.key === 'ArrowUp') {
+        _applyTheme(themes.at(index - 1));
+    }
+
+    if (event.key === 'ArrowDown') {
+        _applyTheme(themes.at((index + 1) % themes.length))
+    };
 }
 
 function _showThemeOnNewWindow(theme) {
@@ -52,12 +68,13 @@ function renderThemeList() {
         return;
     }
 
-    for (const theme of themes) {
+    themes.forEach((theme, index) => {
         const themeItem = document.createElement('div');
         const themeName = document.createElement('span');
         const themeDot = document.createElement('div');
 
         themeItem.className = 'theme-item' + (theme._name === activeThemeName ? ' active' : '');
+        themeItem.tabIndex = 0;
         themeName.className = 'theme-name';
         themeDot.className = 'theme-dot';
 
@@ -67,9 +84,10 @@ function renderThemeList() {
         themeItem.append(themeName, themeDot);
         themeItem.addEventListener('click', () => _applyTheme(theme));
         themeItem.addEventListener('dblclick', () => _showThemeOnNewWindow(theme));
+        themeItem.addEventListener('keydown', (event) => _applyThemeOnArrow(event, index));
 
         themeListElement.appendChild(themeItem);
-    }
+    });
 }
 
 function _mergeTheme(theme, themeName) {

@@ -14,6 +14,7 @@ export const CANVAS_MIN_PIXEL_SCALE = 1;
 export const CANVAS_MAX_PIXEL_SCALE = 4;
 export const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
 export const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
+export const CANVAS_ASCENT_OFFSET_PX = 8;
 
 // UI input defaults
 
@@ -50,7 +51,7 @@ export const CANVAS_DEFAULTS = {
 export const EDITOR_DEFAULTS = {
     content: String.raw`                                       /        /      *B2 \\
                                        ▏        \(en())    /▕
-                                       ▏/ dev; \            ▕
+              # Software Developer     ▏/ dev; \            ▕
                                        ▏▏ ──── ▕            ▕
                                        \\ solv /            /
 /           —**r_(on)ie[l] + saba(la) \

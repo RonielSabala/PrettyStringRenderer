@@ -1,4 +1,5 @@
 import {
+    CANVAS_ASCENT_OFFSET_PX,
     CANVAS_ASPECT_RATIO,
     CANVAS_AVAILABLE_MARGIN_OFFSET_PX,
     CANVAS_HEIGHT,
@@ -45,13 +46,13 @@ function render(ctx, lines, width, height) {
     ctx.fillRect(0, 0, width, height);
 
     ctx.font = _getFont(config.fontSize);
-    ctx.textBaseline = 'alphabetic';
 
+    const ascent = ctx.measureText('M').actualBoundingBoxAscent + CANVAS_ASCENT_OFFSET_PX;
     const charWidth = ctx.measureText('M').width + config.letterSpacing;
     const lineHeight = config.fontSize * config.lineHeight;
 
     const x0 = config.padX;
-    const y0 = config.padY + config.fontSize * 0.82;
+    const y0 = config.padY + ascent;
 
     for (let row = 0; row < lines.length; row++) {
         let col = 0;

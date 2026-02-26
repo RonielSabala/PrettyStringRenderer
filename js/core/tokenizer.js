@@ -31,8 +31,13 @@ class BracketAnalyzer {
         this._calculateNestingDepth();
     }
 
+    _match(x, y, char) {
+        return y < this.height && this.lines[y][x] === char;
+    }
+
     _mapMultilineBrackets() {
         const brackets = [];
+        const stacks = new Map();
 
         for (let y = 0; y < this.height; y++) {
             const line = this.lines[y];
@@ -41,25 +46,44 @@ class BracketAnalyzer {
             for (let x = 0; x < lineWidth; x++) {
                 const char = line[x];
 
-                for (const bracket of MULTILINE_BRACKETS) {
-                    if (char !== bracket.left.top) {
+                for (let i = 0; i < MULTILINE_BRACKETS.length; i++) {
+                    const bracket = MULTILINE_BRACKETS[i];
+                    const isLeft = char === bracket.left.top;
+                    const isRight = char === bracket.right.top;
+
+                    if (!isLeft && !isRight) {
                         continue;
                     }
 
-                    const yEnd = this._findLeftArmEnd(x, y + 1, bracket.left);
-                    if (yEnd === -1) {
+                    let yEnd = y + 1;
+                    let part = isLeft ? bracket.left : bracket.right;
+                    while (this._match(x, yEnd, part.mid)) {
+                        yEnd++;
+                    }
+
+                    if (!this._match(x, yEnd, part.bottom)) {
                         continue;
                     }
 
-                    const xEnd = this._findRightArmMatch(x + 1, y, yEnd, bracket.right);
-                    if (xEnd === -1) {
+                    const key = `${y}-${yEnd}-${i}`;
+                    if (isLeft) {
+                        if (!stacks.has(key)) {
+                            stacks.set(key, []);
+                        }
+
+                        stacks.get(key).push(x);
+                        continue;
+                    }
+
+                    const stack = stacks.get(key);
+                    if (!stack || stack.length == 0) {
                         continue;
                     }
 
                     brackets.push({
-                        x1: x,
+                        x1: stack.pop(),
                         y1: y,
-                        x2: xEnd,
+                        x2: x,
                         y2: yEnd
                     });
                 }
@@ -67,33 +91,6 @@ class BracketAnalyzer {
         }
 
         return brackets;
-    }
-
-    _findLeftArmEnd(x, yStart, leftBracket) {
-        if (yStart < this.height && this.lines[yStart][x] === leftBracket.bottom) {
-            return yStart;
-        }
-
-        let currentY = yStart;
-        while (currentY < this.height && this.lines[currentY][x] === leftBracket.mid) {
-            currentY++;
-        }
-
-        return (currentY < this.height && this.lines[currentY][x] === leftBracket.bottom) ? currentY : -1;
-    }
-
-    _findRightArmMatch(xStart, yTop, yBottom, rightBracket) {
-        const topRow = this.lines[yTop];
-        const bottomRow = this.lines[yBottom];
-        const topRowWidth = topRow.length;
-
-        for (let x = xStart; x < topRowWidth; x++) {
-            if (topRow[x] === rightBracket.top && bottomRow[x] === rightBracket.bottom) {
-                return x;
-            }
-        }
-
-        return -1;
     }
 
     _calculateNestingDepth() {

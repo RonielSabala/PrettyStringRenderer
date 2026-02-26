@@ -1,7 +1,7 @@
 export const INLINE_PAIRS = Object.freeze(['()', '[]', '{}']);
 
 export const MULTILINE_BRACKETS = Object.freeze([{
-        type: 'round',
+        // Round brackets
         left: {
             top: '/',
             mid: '▏',
@@ -14,7 +14,7 @@ export const MULTILINE_BRACKETS = Object.freeze([{
         }
     },
     {
-        type: 'square',
+        // Square brackets
         left: {
             top: '┌',
             mid: '│',

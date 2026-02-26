@@ -6,7 +6,7 @@
   "variable": "#ffffff",
   "operator": "#f92672",
   "semicolon": "#ffffff",
-  "number": "#ffffff",
+  "number": "#ae81f1",
   "comment": "#464741",
   "unknown": "#CE9178",
   "background": "#272822"

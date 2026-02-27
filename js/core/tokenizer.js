@@ -46,8 +46,8 @@ class BracketAnalyzer {
             for (let x = 0; x < lineWidth; x++) {
                 const char = line[x];
 
-                for (let i = 0; i < MULTILINE_BRACKETS.length; i++) {
-                    const bracket = MULTILINE_BRACKETS[i];
+                for (let bracketIdx = 0; bracketIdx < MULTILINE_BRACKETS.length; bracketIdx++) {
+                    const bracket = MULTILINE_BRACKETS[bracketIdx];
                     const isLeft = char === bracket.left.top;
                     const isRight = char === bracket.right.top;
 
@@ -65,7 +65,7 @@ class BracketAnalyzer {
                         continue;
                     }
 
-                    const key = `${y}-${yEnd}-${i}`;
+                    const key = `${y}-${yEnd}-${bracketIdx}`;
                     if (isLeft) {
                         if (!stacks.has(key)) {
                             stacks.set(key, []);

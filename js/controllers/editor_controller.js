@@ -1,8 +1,12 @@
 import {
+    EDITOR_DEFAULTS
+} from '../common/config.js';
+import {
     canvasWrapElement,
     editorElement,
+    editorFontSizeElement,
     editorPanelElement,
-    editorResizeHandleElement
+    editorResizeHandleElement,
 } from '../common/elements.js';
 import {
     parseNumber

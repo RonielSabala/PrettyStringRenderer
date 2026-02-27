@@ -1,4 +1,7 @@
 import {
+    setColor
+} from '../common/color_utils.js';
+import {
     config,
     THEME_KEYS
 } from '../common/config.js';
@@ -7,11 +10,11 @@ import {
     themeListElement
 } from '../common/elements.js';
 import {
-    setColor
+    redraw,
 } from './render_controller.js';
 
-let themes = [];
-let activeThemeName = '';
+let _themes = [];
+let _activeThemeName = '';
 
 function _getUrlFromObject(object) {
     const blob = new Blob([JSON.stringify(object, null, 2)], {
@@ -22,7 +25,7 @@ function _getUrlFromObject(object) {
 }
 
 function _applyTheme(theme) {
-    activeThemeName = theme._name;
+    _activeThemeName = theme._name;
     for (const themeKey of THEME_KEYS) {
         const themeValue = theme[themeKey];
         if (themeValue === null) {
@@ -32,7 +35,8 @@ function _applyTheme(theme) {
         setColor(themeKey, themeValue);
     }
 
-    renderThemeList();
+    redraw();
+    renderHtmlThemeList();
     themeListElement.querySelector('.theme-item.active')?.focus();
 }
 
@@ -43,11 +47,11 @@ function _applyThemeOnArrow(event, index) {
 
     event.preventDefault();
     if (event.key === 'ArrowUp') {
-        _applyTheme(themes.at(index - 1));
+        _applyTheme(_themes.at(index - 1));
     }
 
     if (event.key === 'ArrowDown') {
-        _applyTheme(themes.at((index + 1) % themes.length))
+        _applyTheme(_themes.at((index + 1) % _themes.length))
     };
 }
 
@@ -57,10 +61,10 @@ function _showThemeOnNewWindow(theme) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function renderThemeList() {
+function renderHtmlThemeList() {
     themeListElement.innerHTML = '';
 
-    if (themes.length === 0) {
+    if (_themes.length === 0) {
         if (emptyThemeElement) {
             themeListElement.appendChild(emptyThemeElement);
         }
@@ -68,16 +72,16 @@ function renderThemeList() {
         return;
     }
 
-    themes.forEach((theme, index) => {
+    _themes.forEach((theme, index) => {
         const themeItem = document.createElement('div');
         const themeName = document.createElement('span');
         const themeDot = document.createElement('div');
 
-        themeItem.className = 'theme-item' + (theme._name === activeThemeName ? ' active' : '');
-        themeItem.tabIndex = 0;
+        themeItem.className = 'theme-item' + (theme._name === _activeThemeName ? ' active' : '');
         themeName.className = 'theme-name';
         themeDot.className = 'theme-dot';
 
+        themeItem.tabIndex = 0;
         themeName.textContent = theme._name;
         themeDot.style.background = theme.background;
 
@@ -93,13 +97,13 @@ function renderThemeList() {
 function _mergeTheme(theme, themeName) {
     theme._name = themeName;
 
-    const i = themes.findIndex(t => t._name === themeName);
+    const i = _themes.findIndex(t => t._name === themeName);
     if (i === -1) {
-        themes.push(theme);
+        _themes.push(theme);
         return;
     }
 
-    themes[i] = theme;
+    _themes[i] = theme;
 }
 
 async function _onLoadThemes(files) {
@@ -114,12 +118,12 @@ async function _onLoadThemes(files) {
         }
     }
 
-    if (themes.length === 0) {
-        renderThemeList();
+    if (_themes.length === 0) {
+        renderHtmlThemeList();
         return;
     }
 
-    _applyTheme(themes.at(-1));
+    _applyTheme(_themes.at(-1));
 }
 
 async function loadThemes() {
@@ -132,7 +136,7 @@ async function loadThemes() {
 }
 
 function exportCurrentTheme() {
-    const filename = prompt('Theme name:', activeThemeName || 'my-theme');
+    const filename = prompt('Theme name:', _activeThemeName || 'my-theme');
     if (!filename) {
         return;
     }
@@ -146,7 +150,5 @@ function exportCurrentTheme() {
 
 export {
     exportCurrentTheme,
-    loadThemes,
-    renderThemeList,
-    themes
+    loadThemes
 };

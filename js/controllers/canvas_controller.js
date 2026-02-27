@@ -38,7 +38,7 @@ function setZoomChangeCallback(callback) {
     onZoomChangeCallback = callback;
 }
 
-function updateZoomInfo() {
+function _updateZoomInfo() {
     const width = CANVAS_DEFAULTS.width
     const height = CANVAS_DEFAULTS.height
     const zoom = (canvasZoom * 100).toFixed(0);
@@ -46,9 +46,9 @@ function updateZoomInfo() {
 }
 
 function _applyTransform() {
-    canvasInnerElement.style.transform = `translate(${canvasPanX}px,${canvasPanY}px) scale(${canvasZoom})`;
-    updateZoomInfo();
     rafScheduled = false;
+    canvasInnerElement.style.transform = `translate(${canvasPanX}px,${canvasPanY}px) scale(${canvasZoom})`;
+    _updateZoomInfo();
 }
 
 function _scheduleTransform() {
@@ -180,6 +180,5 @@ export {
     onSpaceRelease,
     onZoom,
     onZoomReset,
-    setZoomChangeCallback,
-    updateZoomInfo
+    setZoomChangeCallback
 };

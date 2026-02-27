@@ -1,6 +1,7 @@
 import {
     onHex,
-    onPick
+    onPick,
+    updateColor
 } from './common/color_utils.js';
 import {
     CANVAS_DEFAULTS,
@@ -31,7 +32,7 @@ import {
     onSpace,
     onSpaceRelease,
     onZoom,
-    onZoomReset
+    onZoomReset,
 } from "./controllers/canvas_controller.js";
 import {
     onEditorFontSize,
@@ -44,9 +45,6 @@ import {
 import {
     exportCanvas
 } from './controllers/export_controller.js';
-import {
-    updateColor
-} from './controllers/render_controller.js';
 import {
     exportCurrentTheme,
     loadThemes

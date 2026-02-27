@@ -9,16 +9,11 @@ import {
 } from '../common/config.js';
 import {
     canvasElement,
-    canvasWrapElement,
-    getColorPickerElement,
-    getHexInputElement,
-    getSwatchFillElement
+    canvasWrapElement
 } from '../common/elements.js';
-
 import {
     getCanvasZoom,
-    setZoomChangeCallback,
-    updateZoomInfo
+    setZoomChangeCallback
 } from './canvas_controller.js';
 
 let _tokenizedLines = [];
@@ -32,25 +27,25 @@ function setTokenizedLines(lines) {
 
 // Renderer
 
-function _getFont(size) {
+function _getCanvasFont(size) {
     return `400 ${size}px 'Cascadia Code'`;
 }
 
 function render(ctx, width, height) {
+    const fontSize = config.fontSize;
+    const lineHeight = fontSize * config.lineHeight;
+    const totalLines = _tokenizedLines.length;
+
     ctx.fillStyle = config.colors.background;
     ctx.fillRect(0, 0, width, height);
-
-    const fontSize = config.fontSize;
-    ctx.font = _getFont(fontSize);
+    ctx.font = _getCanvasFont(fontSize);
 
     const ascent = ctx.measureText('M').actualBoundingBoxAscent;
     const charWidth = ctx.measureText('M').width + config.letterSpacing;
-    const lineHeight = fontSize * config.lineHeight;
 
     const x0 = config.padX;
     const y0 = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_FACTOR);
 
-    const totalLines = _tokenizedLines.length;
     for (let row = 0; row < totalLines; row++) {
         let col = 0;
         const charY = y0 + row * lineHeight;
@@ -66,9 +61,9 @@ function render(ctx, width, height) {
             }
 
             ctx.fillStyle = tokenColor;
-            for (let i = 0; i < tokenWidth; i++) {
-                const char = tokenValue[i];
-                const charX = x0 + (col + i) * charWidth;
+            for (let charIdx = 0; charIdx < tokenWidth; charIdx++) {
+                const char = tokenValue[charIdx];
+                const charX = x0 + (col + charIdx) * charWidth;
 
                 ctx.fillText(char, charX, charY);
             }
@@ -134,30 +129,12 @@ function redraw() {
 
     canvasElement.style.width = _getNormalizedDimension(displayWidth);
     canvasElement.style.height = _getNormalizedDimension(displayHeight);
-
-    updateZoomInfo();
 }
 
 setZoomChangeCallback(_scheduleQualityRedraw);
 
-// Color controls
-
-function updateColor(themeKey, themeValue) {
-    getSwatchFillElement(themeKey).style.background = themeValue;
-    getColorPickerElement(themeKey).value = themeValue;
-    getHexInputElement(themeKey).value = themeValue;
-}
-
-function setColor(themeKey, themeValue) {
-    config.colors[themeKey] = themeValue;
-    updateColor(themeKey, themeValue);
-    redraw();
-}
-
 export {
     redraw,
     render,
-    setColor,
-    setTokenizedLines,
-    updateColor
+    setTokenizedLines
 };

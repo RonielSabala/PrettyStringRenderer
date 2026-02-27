@@ -20,6 +20,7 @@ let _tokenizedLines = [];
 
 let _currentPixelScale = 1;
 let _qualityRedrawTimer = null;
+
 let _lastCanvasWidth = 0;
 let _lastCanvasHeight = 0;
 const _ctx = canvasElement.getContext('2d');

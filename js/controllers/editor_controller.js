@@ -12,12 +12,14 @@ import {
     parseNumber
 } from '../common/parse_utils.js';
 import {
-    tokenize
+    IncrementalTokenizer
 } from '../core/tokenizer.js';
 import {
     redraw,
     setTokenizedLines
 } from "./render_controller.js";
+
+const _tokenizer = new IncrementalTokenizer();
 
 let startY = 0;
 let startHeight = 0;
@@ -36,7 +38,7 @@ export function onResize(event) {
 }
 
 export function onEditorInput() {
-    const tokenizedLines = tokenize(editorElement.value);
+    const tokenizedLines = _tokenizer.update(editorElement.value);
     setTokenizedLines(tokenizedLines);
     redraw();
 }

@@ -122,9 +122,6 @@ function redraw() {
     const height = CANVAS_DEFAULTS.height;
     const aspectRatio = width / height;
 
-    canvasElement.style.width = _getNormalizedDimension(width);
-    canvasElement.style.height = _getNormalizedDimension(height);
-
     const availableWidth = canvasWrapElement.clientWidth - CANVAS_AVAILABLE_MARGIN_OFFSET_PX;
     const availableHeight = canvasWrapElement.clientHeight - CANVAS_AVAILABLE_MARGIN_OFFSET_PX;
 

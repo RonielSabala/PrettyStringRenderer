@@ -38,11 +38,12 @@ export function onHex(themeKey, themeValue) {
     redraw();
 }
 
-export function resolveBracketColor(colors, bracketDepth) {
-    return colors[`bracket${bracketDepth % 3}`]
+export function resolveBracketColor(bracketDepth) {
+    return config.colors[`bracket${bracketDepth % 3}`]
 }
 
-export function resolveTokenColor(colors, token) {
+export function resolveTokenColor(token) {
+    const colors = config.colors;
     switch (token) {
         case TOKENS.WHITE_SPACE:
             return null;

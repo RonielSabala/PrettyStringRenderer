@@ -52,7 +52,7 @@ function render(ctx, width, height) {
 
         for (const token of _tokenizedLines[row]) {
             const tokenValue = token.value;
-            const tokenColor = token.color;
+            const tokenColor = token.getColor();
             const tokenWidth = tokenValue.length;
 
             if (tokenColor === null) {

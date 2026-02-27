@@ -3,9 +3,6 @@ import {
     resolveTokenColor
 } from "../common/color_utils.js";
 import {
-    config
-} from "../common/config.js";
-import {
     BRACKET_SETS,
     MULTILINE_BRACKETS
 } from "./brackets.js";
@@ -133,24 +130,32 @@ class BracketAnalyzer {
     }
 }
 
+class Token {
+    #type;
+    #bracketDepth = null;
+
+    constructor(string, type, bracketDepth = null) {
+        this.value = string;
+        this.#type = type;
+        this.#bracketDepth = bracketDepth;
+    }
+
+    getColor() {
+        return this.#type === null ? resolveBracketColor(this.#bracketDepth) : resolveTokenColor(this.#type)
+    }
+}
+
 class TokenResult {
     constructor() {
         this.list = [];
-        this.colors = config.colors;
     }
 
-    add(value, type) {
-        this.list.push({
-            value,
-            color: resolveTokenColor(this.colors, type)
-        });
+    add(string, type) {
+        this.list.push(new Token(string, type));
     }
 
     addBracket(char, depth) {
-        this.list.push({
-            value: char,
-            color: resolveBracketColor(this.colors, depth)
-        });
+        this.list.push(new Token(char, null, depth));
     }
 
     consume(line, start, predicate, type) {

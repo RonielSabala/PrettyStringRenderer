@@ -1,26 +1,48 @@
 import {
     canvasWrapElement,
+    editorElement,
     editorPanelElement,
     editorResizeHandleElement
 } from '../common/elements.js';
 import {
-    redraw
+    parseNumber
+} from '../common/parse_utils.js';
+import {
+    tokenize
+} from '../core/tokenizer.js';
+import {
+    redraw,
+    setTokenizedLines
 } from "./render_controller.js";
 
-let dragging = false;
 let startY = 0;
 let startHeight = 0;
+let dragging = false;
 
-function onResize(event) {
+export function onResize(event) {
     dragging = true;
+
     startY = event.clientY;
     startHeight = editorPanelElement.offsetHeight;
+
     editorResizeHandleElement.classList.add('drag');
     document.body.style.userSelect = 'none';
+
     event.preventDefault();
 }
 
-function onEditorMouseMove(event) {
+export function onEditorInput() {
+    const tokenizedLines = tokenize(editorElement.value);
+    setTokenizedLines(tokenizedLines);
+    redraw();
+}
+
+export function onEditorFontSize() {
+    const newFontSize = parseNumber(editorFontSizeElement, EDITOR_DEFAULTS.fontSize);
+    editorElement.style.fontSize = `${newFontSize}px`;
+}
+
+export function onEditorMouseMove(event) {
     if (!dragging) {
         return;
     }
@@ -30,7 +52,7 @@ function onEditorMouseMove(event) {
     redraw();
 }
 
-function onEditorMouseUp() {
+export function onEditorMouseUp() {
     if (!dragging) {
         return;
     }
@@ -40,19 +62,11 @@ function onEditorMouseUp() {
     document.body.style.userSelect = '';
 }
 
-function onEscape(event) {
+export function onEscape(event) {
     if (event.code !== 'Escape') {
         return;
     }
 
-    console.log("HI")
     event.preventDefault();
     canvasWrapElement.focus();
 }
-
-export {
-    onEditorMouseMove,
-    onEditorMouseUp,
-    onEscape,
-    onResize
-};

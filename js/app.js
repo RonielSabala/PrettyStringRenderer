@@ -34,6 +34,8 @@ import {
     onZoomReset
 } from "./controllers/canvas_controller.js";
 import {
+    onEditorFontSize,
+    onEditorInput,
     onEditorMouseMove,
     onEditorMouseUp,
     onEscape,
@@ -43,7 +45,6 @@ import {
     exportCanvas
 } from './controllers/export_controller.js';
 import {
-    redraw,
     updateColor
 } from './controllers/render_controller.js';
 import {
@@ -51,7 +52,6 @@ import {
     loadThemes
 } from './controllers/themes_controller.js';
 import {
-    onEditorFontSize,
     onFontSizeConfig,
     onLetterSpacingConfig,
     onLineHeightConfig,
@@ -126,7 +126,7 @@ function initListeners() {
     typographyPadYElement.addEventListener('input', onPadYConfig);
 
     // Editor
-    editorElement.addEventListener('input', redraw);
+    editorElement.addEventListener('input', onEditorInput);
     editorFontSizeElement.addEventListener('input', onEditorFontSize);
     editorResizeHandleElement.addEventListener('mousedown', onResize);
     document.addEventListener('mouseup', onEditorMouseUp);
@@ -148,5 +148,5 @@ function initListeners() {
 await document.fonts.ready.then(() => {
     initElements();
     initListeners();
-    redraw();
+    onEditorInput();
 });

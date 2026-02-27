@@ -10,27 +10,24 @@ import {
 import {
     canvasElement,
     canvasWrapElement,
-    editorElement,
     getColorPickerElement,
     getHexInputElement,
     getSwatchFillElement
 } from '../common/elements.js';
-import {
-    tokenize
-} from '../core/tokenizer.js';
+
 import {
     getCanvasZoom,
     setZoomChangeCallback,
     updateZoomInfo
 } from './canvas_controller.js';
 
-let _tokenLines = [];
+let _tokenizedLines = [];
 
 let _currentPixelScale = 1;
 let _qualityRedrawTimer = null;
 
-function getTokenLines() {
-    return _tokenLines;
+function setTokenizedLines(lines) {
+    _tokenizedLines = lines;
 }
 
 // Renderer
@@ -39,14 +36,11 @@ function _getFont(size) {
     return `400 ${size}px 'Cascadia Code'`;
 }
 
-function render(ctx, lines, width, height) {
-    const totalLines = lines.length;
-
-    const fontSize = config.fontSize;
-
+function render(ctx, width, height) {
     ctx.fillStyle = config.colors.background;
     ctx.fillRect(0, 0, width, height);
 
+    const fontSize = config.fontSize;
     ctx.font = _getFont(fontSize);
 
     const ascent = ctx.measureText('M').actualBoundingBoxAscent;
@@ -56,11 +50,12 @@ function render(ctx, lines, width, height) {
     const x0 = config.padX;
     const y0 = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_FACTOR);
 
+    const totalLines = _tokenizedLines.length;
     for (let row = 0; row < totalLines; row++) {
         let col = 0;
-        const cy = y0 + row * lineHeight;
+        const charY = y0 + row * lineHeight;
 
-        for (const token of lines[row]) {
+        for (const token of _tokenizedLines[row]) {
             const tokenValue = token.value;
             const tokenColor = token.color;
             const tokenWidth = tokenValue.length;
@@ -71,10 +66,11 @@ function render(ctx, lines, width, height) {
             }
 
             ctx.fillStyle = tokenColor;
-            for (let charCount = 0; charCount < tokenWidth; charCount++) {
-                const char = tokenValue[charCount];
-                const cx = x0 + (col + charCount) * charWidth;
-                ctx.fillText(char, cx, cy);
+            for (let i = 0; i < tokenWidth; i++) {
+                const char = tokenValue[i];
+                const charX = x0 + (col + i) * charWidth;
+
+                ctx.fillText(char, charX, charY);
             }
 
             col += tokenWidth;
@@ -94,15 +90,15 @@ function _computePixelScale(canvasZoom) {
 function _renderAtScale() {
     const width = CANVAS_DEFAULTS.width;
     const height = CANVAS_DEFAULTS.height;
-    const ctx = canvasElement.getContext('2d');
     const pixelScale = _computePixelScale(getCanvasZoom());
+    const ctx = canvasElement.getContext('2d');
 
     _currentPixelScale = pixelScale;
     canvasElement.width = pixelScale * width;
     canvasElement.height = pixelScale * height;
 
     ctx.scale(pixelScale, pixelScale);
-    render(ctx, _tokenLines, width, height);
+    render(ctx, width, height);
 }
 
 function _scheduleQualityRedraw(canvasZoom) {
@@ -116,7 +112,6 @@ function _scheduleQualityRedraw(canvasZoom) {
 }
 
 function redraw() {
-    _tokenLines = tokenize(editorElement.value);
     _renderAtScale();
 
     const width = CANVAS_DEFAULTS.width;
@@ -160,9 +155,9 @@ function setColor(themeKey, themeValue) {
 }
 
 export {
-    getTokenLines,
     redraw,
     render,
     setColor,
+    setTokenizedLines,
     updateColor
 };

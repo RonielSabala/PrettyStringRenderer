@@ -3,7 +3,6 @@ import {
     config
 } from '../common/config.js';
 import {
-    getTokenLines,
     render
 } from './render_controller.js';
 
@@ -85,7 +84,7 @@ async function exportCanvas() {
     offscreen.height = exportHeight;
 
     const snapshot = _applyScaledConfig(scalar);
-    render(offscreen.getContext('2d'), getTokenLines(), exportWidth, exportHeight);
+    render(offscreen.getContext('2d'), exportWidth, exportHeight);
     _restoreConfig(snapshot);
 
     offscreen.toBlob(blob => {

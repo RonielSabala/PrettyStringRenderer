@@ -20,6 +20,9 @@ let _tokenizedLines = [];
 
 let _currentPixelScale = 1;
 let _qualityRedrawTimer = null;
+let _lastCanvasWidth = 0;
+let _lastCanvasHeight = 0;
+const _ctx = canvasElement.getContext('2d');
 
 function setTokenizedLines(lines) {
     _tokenizedLines = lines;
@@ -86,14 +89,20 @@ function _renderAtScale() {
     const width = CANVAS_DEFAULTS.width;
     const height = CANVAS_DEFAULTS.height;
     const pixelScale = _computePixelScale(getCanvasZoom());
-    const ctx = canvasElement.getContext('2d');
+
+    const bufferWidth = pixelScale * width;
+    const bufferHeight = pixelScale * height;
+
+    if (bufferWidth !== _lastCanvasWidth || bufferHeight !== _lastCanvasHeight) {
+        canvasElement.width = bufferWidth;
+        canvasElement.height = bufferHeight;
+        _lastCanvasWidth = bufferWidth;
+        _lastCanvasHeight = bufferHeight;
+    }
 
     _currentPixelScale = pixelScale;
-    canvasElement.width = pixelScale * width;
-    canvasElement.height = pixelScale * height;
-
-    ctx.scale(pixelScale, pixelScale);
-    render(ctx, width, height);
+    _ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
+    render(_ctx, width, height);
 }
 
 function _scheduleQualityRedraw(canvasZoom) {

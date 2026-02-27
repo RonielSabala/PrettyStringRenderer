@@ -1,6 +1,5 @@
 import {
-    CANVAS_HEIGHT,
-    CANVAS_WIDTH,
+    CANVAS_DEFAULTS,
     config
 } from '../common/config.js';
 import {
@@ -17,8 +16,8 @@ function _createFilename(width, height) {
 }
 
 function _describeResolution(scalar) {
-    const width = Math.round(scalar * CANVAS_WIDTH);
-    const height = Math.round(scalar * CANVAS_HEIGHT);
+    const width = Math.round(scalar * CANVAS_DEFAULTS.width);
+    const height = Math.round(scalar * CANVAS_DEFAULTS.height);
     return _createResolution(width, height);
 }
 
@@ -76,8 +75,8 @@ async function exportCanvas() {
         return;
     }
 
-    const exportWidth = Math.round(CANVAS_WIDTH * scalar);
-    const exportHeight = Math.round(CANVAS_HEIGHT * scalar);
+    const exportWidth = Math.round(scalar * CANVAS_DEFAULTS.width);
+    const exportHeight = Math.round(scalar * CANVAS_DEFAULTS.height);
 
     await document.fonts.ready;
 

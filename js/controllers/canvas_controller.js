@@ -1,10 +1,9 @@
 import {
-    CANVAS_HEIGHT,
+    CANVAS_DEFAULTS,
     CANVAS_MAX_ZOOM,
     CANVAS_MIN_ZOOM,
     CANVAS_PAN_SCROLL_SPEED,
-    CANVAS_WIDTH,
-    CANVAS_ZOOM_FACTOR,
+    CANVAS_ZOOM_FACTOR
 } from '../common/config.js';
 import {
     canvasInnerElement,
@@ -40,7 +39,10 @@ function setZoomChangeCallback(callback) {
 }
 
 function updateZoomInfo() {
-    editorStatusElement.textContent = `${CANVAS_WIDTH}x${CANVAS_HEIGHT} · ${(canvasZoom * 100).toFixed(0)}%`;
+    const width = CANVAS_DEFAULTS.width
+    const height = CANVAS_DEFAULTS.height
+    const zoom = (canvasZoom * 100).toFixed(0);
+    editorStatusElement.textContent = `${width}x${height} · ${zoom}%`;
 }
 
 function _applyTransform() {

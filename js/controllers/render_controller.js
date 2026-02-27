@@ -1,12 +1,10 @@
 import {
     CANVAS_ASCENT_FACTOR,
-    CANVAS_ASPECT_RATIO,
     CANVAS_AVAILABLE_MARGIN_OFFSET_PX,
-    CANVAS_HEIGHT,
+    CANVAS_DEFAULTS,
     CANVAS_MAX_PIXEL_SCALE,
     CANVAS_MIN_PIXEL_SCALE,
     CANVAS_QUALITY_REDRAW_DEBOUNCE_MS,
-    CANVAS_WIDTH,
     config
 } from '../common/config.js';
 import {
@@ -42,10 +40,13 @@ function _getFont(size) {
 }
 
 function render(ctx, lines, width, height) {
+    const totalLines = lines.length;
+
+    const fontSize = config.fontSize;
+
     ctx.fillStyle = config.colors.background;
     ctx.fillRect(0, 0, width, height);
 
-    const fontSize = config.fontSize;
     ctx.font = _getFont(fontSize);
 
     const ascent = ctx.measureText('M').actualBoundingBoxAscent;
@@ -55,7 +56,7 @@ function render(ctx, lines, width, height) {
     const x0 = config.padX;
     const y0 = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_FACTOR);
 
-    for (let row = 0; row < lines.length; row++) {
+    for (let row = 0; row < totalLines; row++) {
         let col = 0;
         const cy = y0 + row * lineHeight;
 
@@ -91,16 +92,17 @@ function _computePixelScale(canvasZoom) {
 }
 
 function _renderAtScale() {
-    const pixelScale = _computePixelScale(getCanvasZoom());
-    _currentPixelScale = pixelScale;
-
+    const width = CANVAS_DEFAULTS.width;
+    const height = CANVAS_DEFAULTS.height;
     const ctx = canvasElement.getContext('2d');
+    const pixelScale = _computePixelScale(getCanvasZoom());
 
-    canvasElement.width = CANVAS_WIDTH * pixelScale;
-    canvasElement.height = CANVAS_HEIGHT * pixelScale;
+    _currentPixelScale = pixelScale;
+    canvasElement.width = pixelScale * width;
+    canvasElement.height = pixelScale * height;
 
     ctx.scale(pixelScale, pixelScale);
-    render(ctx, _tokenLines, CANVAS_WIDTH, CANVAS_HEIGHT);
+    render(ctx, _tokenLines, width, height);
 }
 
 function _scheduleQualityRedraw(canvasZoom) {
@@ -115,21 +117,24 @@ function _scheduleQualityRedraw(canvasZoom) {
 
 function redraw() {
     _tokenLines = tokenize(editorElement.value);
-
     _renderAtScale();
 
-    canvasElement.style.width = _getNormalizedDimension(CANVAS_WIDTH);
-    canvasElement.style.height = _getNormalizedDimension(CANVAS_HEIGHT);
+    const width = CANVAS_DEFAULTS.width;
+    const height = CANVAS_DEFAULTS.height;
+    const aspectRatio = width / height;
+
+    canvasElement.style.width = _getNormalizedDimension(width);
+    canvasElement.style.height = _getNormalizedDimension(height);
 
     const availableWidth = canvasWrapElement.clientWidth - CANVAS_AVAILABLE_MARGIN_OFFSET_PX;
     const availableHeight = canvasWrapElement.clientHeight - CANVAS_AVAILABLE_MARGIN_OFFSET_PX;
 
-    let displayWidth = Math.min(availableWidth, availableHeight * CANVAS_ASPECT_RATIO);
-    let displayHeight = displayWidth / CANVAS_ASPECT_RATIO;
+    let displayWidth = Math.min(availableWidth, availableHeight * aspectRatio);
+    let displayHeight = displayWidth / aspectRatio;
 
     if (displayHeight > availableHeight) {
         displayHeight = availableHeight;
-        displayWidth = displayHeight * CANVAS_ASPECT_RATIO;
+        displayWidth = displayHeight * aspectRatio;
     }
 
     canvasElement.style.width = _getNormalizedDimension(displayWidth);

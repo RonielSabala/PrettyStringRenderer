@@ -1,8 +1,3 @@
-// Display constants
-export const CANVAS_WIDTH = 3120;
-export const CANVAS_HEIGHT = 780;
-export const CANVAS_ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
-
 // Movements constants
 export const CANVAS_MIN_ZOOM = 0.3;
 export const CANVAS_MAX_ZOOM = 10;
@@ -16,9 +11,11 @@ export const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
 export const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
 export const CANVAS_ASCENT_FACTOR = 9 / 100; // With fontSize=100 it needs 9 extra pixels so padY at 0 is perfect
 
-// UI input defaults
+// UI defaults
 
 export const CANVAS_DEFAULTS = {
+    width: 3120,
+    height: 780,
     fontSize: {
         value: 85,
         min: 5,

@@ -3,7 +3,7 @@ import {
     calculateNestingDepth
 } from "./brackets.js";
 import {
-    SORTED_OPS
+    OPERATORS
 } from "./operators.js";
 import {
     isCommentPart,
@@ -194,7 +194,7 @@ export class IncrementalTokenizer {
             }
 
             // Operators
-            const operator = SORTED_OPS.find(op => line.startsWith(op, i));
+            const operator = OPERATORS.find(op => line.startsWith(op, i));
             if (operator) {
                 tokens.add(operator, TOKENS.OPERATOR);
                 i += operator.length;

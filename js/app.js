@@ -138,9 +138,10 @@ function initListeners() {
         passive: false
     });
     canvasWrapElement.addEventListener('dblclick', onZoomReset);
-    canvasWrapElement.addEventListener('mousedown', onPanning);
+    canvasWrapElement.addEventListener('contextmenu', (event) => event.preventDefault());
     document.addEventListener('keydown', onSpace);
     document.addEventListener('keyup', onSpaceRelease);
+    canvasWrapElement.addEventListener('mousedown', onPanning);
     document.addEventListener('mousemove', onPanningMove);
     document.addEventListener('mouseup', onPanningRelease);
 }

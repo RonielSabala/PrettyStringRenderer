@@ -141,7 +141,7 @@ function onSpaceRelease(event) {
 }
 
 function onPanning(event) {
-    if (!spaceHeld) {
+    if (!spaceHeld && event.button !== 2) {
         return;
     }
 

@@ -1,7 +1,4 @@
 import {
-    redraw
-} from '../controllers/render_controller.js';
-import {
     TOKENS
 } from '../core/tokens.js';
 import {
@@ -22,20 +19,6 @@ export function updateColor(themeKey, themeValue) {
 export function setColor(themeKey, themeValue) {
     config.colors[themeKey] = themeValue;
     updateColor(themeKey, themeValue);
-}
-
-export function onPick(themeKey, themeValue) {
-    setColor(themeKey, themeValue);
-    redraw();
-}
-
-export function onHex(themeKey, themeValue) {
-    if (!(/^#[0-9A-Fa-f]{6}$/.test(themeValue))) {
-        return;
-    }
-
-    setColor(themeKey, themeValue);
-    redraw();
 }
 
 export function resolveBracketColor(bracketDepth) {

@@ -1,6 +1,4 @@
 import {
-    onHex,
-    onPick,
     updateColor
 } from './common/color_utils.js';
 import {
@@ -34,6 +32,10 @@ import {
     onZoom,
     onZoomReset,
 } from "./controllers/canvas_controller.js";
+import {
+    onHex,
+    onPick,
+} from './controllers/color_controller.js';
 import {
     onEditorFontSize,
     onEditorInput,

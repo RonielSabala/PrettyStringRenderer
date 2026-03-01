@@ -1,107 +1,30 @@
 import {
-    resolveBracketColor,
-    resolveTokenColor
-} from "../common/color_utils.js";
-import {
     BRACKET_SETS,
-    MULTILINE_BRACKETS
+    calculateNestingDepth
 } from "./brackets.js";
 import {
     SORTED_OPS
 } from "./operators.js";
 import {
-    TOKENS
+    isCommentPart,
+    isDigit,
+    isIdentifierPart,
+    isIdentifierStart,
+    isNumeric,
+    isSpace,
+} from './predicates.js';
+import {
+    TOKENS,
+    TokenResult,
 } from "./tokens.js";
 
-// Character predicates
-const isDigit = (char) => /[0-9]/.test(char);
-const isNumeric = (char) => /[0-9.]/.test(char);
-const isIdentifierStart = (char) => /[a-zA-Z_]/.test(char);
-const isIdentifierPart = (char) => /[a-zA-Z0-9_]/.test(char);
-const isSpace = (char) => char === ' ' || char === '\t';
-
-class BracketAnalysis {
-    static _match(lines, x, y, char) {
-        return y < lines.length && lines[y][x] === char;
+function _consumeLine(line, i, maxIndex, predicate) {
+    let j = i;
+    while (j < maxIndex && predicate(line[j])) {
+        j++;
     }
 
-    static _mapMultilineBrackets(lines) {
-        const brackets = [];
-        const stacks = new Map();
-        const height = lines.length;
-
-        for (let y = 0; y < height; y++) {
-            const line = lines[y];
-            const lineWidth = line.length;
-
-            for (let x = 0; x < lineWidth; x++) {
-                const char = line[x];
-
-                for (let bracketIdx = 0; bracketIdx < MULTILINE_BRACKETS.length; bracketIdx++) {
-                    const bracket = MULTILINE_BRACKETS[bracketIdx];
-                    const isLeft = char === bracket.left.top;
-                    const isRight = char === bracket.right.top;
-
-                    if (!isLeft && !isRight) {
-                        continue;
-                    }
-
-                    let yEnd = y + 1;
-                    const part = isLeft ? bracket.left : bracket.right;
-                    while (this._match(lines, x, yEnd, part.mid)) {
-                        yEnd++;
-                    }
-
-                    if (!this._match(lines, x, yEnd, part.bottom)) {
-                        continue;
-                    }
-
-                    const key = `${y}-${yEnd}-${bracketIdx}`;
-                    if (isLeft) {
-                        if (!stacks.has(key)) {
-                            stacks.set(key, []);
-                        }
-
-                        stacks.get(key).push(x);
-                        continue;
-                    }
-
-                    const stack = stacks.get(key);
-                    if (!stack || stack.length === 0) {
-                        continue;
-                    }
-
-                    brackets.push({
-                        x1: stack.pop(),
-                        y1: y,
-                        x2: x,
-                        y2: yEnd
-                    });
-                }
-            }
-        }
-
-        return brackets;
-    }
-
-    static calculateNestingDepth(lines) {
-        const foundBrackets = this._mapMultilineBrackets(lines);
-        foundBrackets.forEach(bracket => {
-            bracket.depth = foundBrackets.reduce((acc, other) => {
-                const isInside = (
-                    other !== bracket &&
-                    bracket.x1 > other.x1 &&
-                    bracket.x2 < other.x2 &&
-                    bracket.y1 >= other.y1 &&
-                    bracket.y2 <= other.y2
-                );
-
-                return isInside ? acc + 1 : acc;
-            }, 0);
-        });
-
-        return foundBrackets;
-    }
+    return j;
 }
 
 class LineAnalysis {
@@ -124,7 +47,7 @@ class LineAnalysis {
     }
 
     static generateAnalysisMap(lines) {
-        const foundBrackets = BracketAnalysis.calculateNestingDepth(lines);
+        const foundBrackets = calculateNestingDepth(lines);
         const foundBracketsCount = foundBrackets.length;
 
         return lines.map((line, y) => {
@@ -159,47 +82,6 @@ class LineAnalysis {
         });
     }
 }
-
-class Token {
-    #type;
-    #bracketDepth = null;
-
-    constructor(string, type, bracketDepth = null) {
-        this.value = string;
-        this.#type = type;
-        this.#bracketDepth = bracketDepth;
-    }
-
-    getColor() {
-        return this.#type === null ? resolveBracketColor(this.#bracketDepth) : resolveTokenColor(this.#type);
-    }
-}
-
-class TokenResult {
-    constructor() {
-        this.list = [];
-    }
-
-    add(string, type) {
-        this.list.push(new Token(string, type));
-    }
-
-    addBracket(char, depth) {
-        this.list.push(new Token(char, null, depth));
-    }
-
-    consume(line, start, predicate, type) {
-        let end = start;
-        const lineWidth = line.length;
-        while (end < lineWidth && predicate(line[end])) {
-            end++;
-        }
-
-        this.add(line.slice(start, end), type);
-        return end;
-    }
-}
-
 
 export class IncrementalTokenizer {
     constructor() {
@@ -238,32 +120,32 @@ export class IncrementalTokenizer {
     }
 
     _tokenizeLine(line, lineAnalysis) {
-        let j = 0;
+        let i = 0;
         let inlineDepth = 0;
+        const lineWidth = line.length;
         const tokens = new TokenResult();
 
-        const lineWidth = line.length;
-        while (j < lineWidth) {
-            const char = line[j];
+        const addTokens = (predicate, tokenType) => {
+            const k = _consumeLine(line, i, lineWidth, predicate);
+            tokens.add(line.slice(i, k), tokenType);
+            i = k;
+        }
 
-            const boundaryDepth = lineAnalysis.boundaryDepths[j];
+        while (i < lineWidth) {
+            const char = line[i];
+
+            const boundaryDepth = lineAnalysis.boundaryDepths[i];
             if (boundaryDepth !== undefined) {
                 tokens.addBracket(char, boundaryDepth);
-                j++;
+                i++;
                 continue;
             }
 
-            const baseDepth = lineAnalysis.containmentDepths[j];
+            const baseDepth = lineAnalysis.containmentDepths[i];
 
             // Comments
             if (char === '#') {
-                let end = j + 1;
-                while (end < line.length && !BRACKET_SETS.multilineAll.has(line[end])) {
-                    end++;
-                }
-
-                tokens.add(line.slice(j, end), TOKENS.COMMENT);
-                j = end;
+                addTokens(isCommentPart, TOKENS.COMMENT)
                 continue;
             }
 
@@ -271,67 +153,56 @@ export class IncrementalTokenizer {
 
             if (BRACKET_SETS.inlineOpen.has(char)) {
                 tokens.addBracket(char, baseDepth + inlineDepth++);
-                j++;
+                i++;
                 continue;
             }
 
             if (BRACKET_SETS.inlineClose.has(char)) {
                 inlineDepth = Math.max(0, inlineDepth - 1);
                 tokens.addBracket(char, baseDepth + inlineDepth);
-                j++;
+                i++;
                 continue;
             }
 
             // Identifiers
             if (isIdentifierStart(char)) {
-                let pivot1 = j;
-                while (pivot1 < line.length && isIdentifierPart(line[pivot1])) {
-                    pivot1++;
-                }
+                const j = _consumeLine(line, i, lineWidth, isIdentifierPart);
+                const k = _consumeLine(line, j, lineWidth, isSpace);
+                const isFunction = k < lineWidth && line[k] === '(';
 
-                const word = line.slice(j, pivot1);
-
-                // Look ahead for function call
-                let pivot2 = pivot1;
-                while (pivot2 < line.length && isSpace(line[pivot2])) {
-                    pivot2++;
-                }
-
-                const isFunction = pivot2 < line.length && line[pivot2] === '(';
-                tokens.add(word, isFunction ? TOKENS.FUNCTION : TOKENS.VARIABLE);
-
-                j = pivot1;
+                tokens.add(line.slice(i, j), isFunction ? TOKENS.FUNCTION : TOKENS.VARIABLE);
+                i = j;
                 continue;
             }
 
             // Static Tokens
 
             if (isSpace(char)) {
-                j = tokens.consume(line, j, isSpace, TOKENS.WHITE_SPACE);
+                addTokens(isSpace, TOKENS.WHITE_SPACE)
                 continue;
             }
 
             if (isDigit(char)) {
-                j = tokens.consume(line, j, isNumeric, TOKENS.NUMBER);
+                addTokens(isNumeric, TOKENS.NUMBER)
                 continue;
             }
 
             if (char === ';') {
                 tokens.add(char, TOKENS.SEMICOLON);
-                j++;
+                i++;
                 continue;
             }
 
             // Operators
-            const operator = SORTED_OPS.find(op => line.startsWith(op, j));
+            const operator = SORTED_OPS.find(op => line.startsWith(op, i));
             if (operator) {
                 tokens.add(operator, TOKENS.OPERATOR);
-                j += operator.length;
+                i += operator.length;
                 continue;
             }
 
             tokens.add(char, TOKENS.UNKNOWN);
-            j++;
+            i++;
         }
 
         return tokens.list;

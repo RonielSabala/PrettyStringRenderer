@@ -1,5 +1,5 @@
 export const KEYS = Object.freeze({
-    T: 'KeyT',
+    TAB: 'Tab',
     SPACE: 'Space',
     ESCAPE: 'Escape',
     ARROW_UP: 'ArrowUp',

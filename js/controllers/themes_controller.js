@@ -162,7 +162,7 @@ export function exportCurrentTheme() {
 }
 
 export function onThemesFocus(event) {
-    if (event.code !== KEYS.T) {
+    if (event.code !== KEYS.TAB) {
         return;
     }
 

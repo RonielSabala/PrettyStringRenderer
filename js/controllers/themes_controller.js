@@ -11,6 +11,9 @@ import {
     themeListElement
 } from '../common/elements.js';
 import {
+    EVENTS
+} from '../common/events.js';
+import {
     KEYS
 } from '../common/keys.js';
 import {
@@ -94,9 +97,9 @@ function _renderHtmlThemeList() {
         themeDot.style.background = theme.background;
 
         themeItem.append(themeName, themeDot);
-        themeItem.addEventListener('click', () => _applyTheme(theme));
-        themeItem.addEventListener('dblclick', () => _showThemeOnNewWindow(theme));
-        themeItem.addEventListener('keydown', (event) => _applyThemeOnArrow(event, index));
+        themeItem.addEventListener(EVENTS.CLICK, () => _applyTheme(theme));
+        themeItem.addEventListener(EVENTS.DBL_CLICK, () => _showThemeOnNewWindow(theme));
+        themeItem.addEventListener(EVENTS.KEY_DOWN, (event) => _applyThemeOnArrow(event, index));
 
         themeListElement.appendChild(themeItem);
     });
@@ -139,7 +142,7 @@ export async function loadThemes() {
     inputElement.type = 'file';
     inputElement.accept = '.json';
     inputElement.multiple = true;
-    inputElement.addEventListener('change', () => _onLoadThemes(inputElement.files));
+    inputElement.addEventListener(EVENTS.CHANGE, () => _onLoadThemes(inputElement.files));
     inputElement.click();
 }
 

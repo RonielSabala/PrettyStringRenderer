@@ -24,6 +24,9 @@ import {
     typographyPadYElement
 } from './common/elements.js';
 import {
+    EVENTS
+} from './common/events.js';
+import {
     onPanning,
     onPanningMove,
     onPanningRelease,
@@ -93,13 +96,13 @@ function initElements() {
 
 function initListeners() {
     // Buttons
-    btnExport.addEventListener('click', exportCanvas);
-    btnLoadThemes.addEventListener('click', loadThemes);
-    btnExportTheme.addEventListener('click', exportCurrentTheme);
+    btnExport.addEventListener(EVENTS.CLICK, exportCanvas);
+    btnLoadThemes.addEventListener(EVENTS.CLICK, loadThemes);
+    btnExportTheme.addEventListener(EVENTS.CLICK, exportCurrentTheme);
 
     // Collapse sections
     document.querySelectorAll('.section-header').forEach(
-        element => element.addEventListener('click', () => toggleSection(element))
+        element => element.addEventListener(EVENTS.CLICK, () => toggleSection(element))
     );
 
     // Apply default theme
@@ -107,46 +110,46 @@ function initListeners() {
         updateColor(ThemeKey, ThemeValue);
     }
 
-    document.addEventListener('keydown', onThemesFocus)
+    document.addEventListener(EVENTS.KEY_DOWN, onThemesFocus)
 
     // Color pickers + hex
     for (const themeKey of THEME_KEYS) {
         getColorPickerElement(themeKey).addEventListener(
-            'input',
+            EVENTS.INPUT,
             event => onPick(themeKey, event.target.value)
         );
         getHexInputElement(themeKey).addEventListener(
-            'input',
+            EVENTS.INPUT,
             event => onHex(themeKey, event.target.value)
         );
     }
 
     // Typography
-    typographyFontSizeElement.addEventListener('input', onFontSizeConfig);
-    typographyLineHeightElement.addEventListener('input', onLineHeightConfig);
-    typographyLetterSpacingElement.addEventListener('input', onLetterSpacingConfig);
-    typographyPadXElement.addEventListener('input', onPadXConfig);
-    typographyPadYElement.addEventListener('input', onPadYConfig);
+    typographyFontSizeElement.addEventListener(EVENTS.INPUT, onFontSizeConfig);
+    typographyLineHeightElement.addEventListener(EVENTS.INPUT, onLineHeightConfig);
+    typographyLetterSpacingElement.addEventListener(EVENTS.INPUT, onLetterSpacingConfig);
+    typographyPadXElement.addEventListener(EVENTS.INPUT, onPadXConfig);
+    typographyPadYElement.addEventListener(EVENTS.INPUT, onPadYConfig);
 
     // Editor
-    editorElement.addEventListener('input', onEditorInput);
-    editorFontSizeElement.addEventListener('input', onEditorFontSize);
-    editorResizeHandleElement.addEventListener('mousedown', onResize);
-    document.addEventListener('mouseup', onEditorMouseUp);
-    document.addEventListener('mousemove', onEditorMouseMove);
-    document.addEventListener('keydown', onCanvasFocus)
+    editorElement.addEventListener(EVENTS.INPUT, onEditorInput);
+    editorFontSizeElement.addEventListener(EVENTS.INPUT, onEditorFontSize);
+    editorResizeHandleElement.addEventListener(EVENTS.MOUSE_DOWN, onResize);
+    document.addEventListener(EVENTS.MOUSE_UP, onEditorMouseUp);
+    document.addEventListener(EVENTS.MOUSE_MOVE, onEditorMouseMove);
+    document.addEventListener(EVENTS.KEY_DOWN, onCanvasFocus)
 
     // Canvas
-    canvasWrapElement.addEventListener('wheel', onZoom, {
+    canvasWrapElement.addEventListener(EVENTS.WHEEL, onZoom, {
         passive: false
     });
-    canvasWrapElement.addEventListener('dblclick', onZoomReset);
-    canvasWrapElement.addEventListener('contextmenu', (event) => event.preventDefault());
-    document.addEventListener('keydown', onSpace);
-    document.addEventListener('keyup', onSpaceRelease);
-    canvasWrapElement.addEventListener('mousedown', onPanning);
-    document.addEventListener('mousemove', onPanningMove);
-    document.addEventListener('mouseup', onPanningRelease);
+    canvasWrapElement.addEventListener(EVENTS.DBL_CLICK, onZoomReset);
+    canvasWrapElement.addEventListener(EVENTS.CONTEXT_MENU, (event) => event.preventDefault());
+    document.addEventListener(EVENTS.KEY_DOWN, onSpace);
+    document.addEventListener(EVENTS.KEY_UP, onSpaceRelease);
+    canvasWrapElement.addEventListener(EVENTS.MOUSE_DOWN, onPanning);
+    document.addEventListener(EVENTS.MOUSE_MOVE, onPanningMove);
+    document.addEventListener(EVENTS.MOUSE_UP, onPanningRelease);
 }
 
 await document.fonts.ready.then(() => {

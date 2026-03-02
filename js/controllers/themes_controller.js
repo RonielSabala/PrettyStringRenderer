@@ -26,16 +26,18 @@ import {
 let _themes = [];
 let _activeThemeName = '';
 
-function _getUrlFromObject(object) {
-    const blob = new Blob([JSON.stringify(object, null, 2)], {
-        type: 'application/json'
-    });
+const ACTIVE_THEME_CSS = `.${CSS.THEME_ITEM}.${CSS.THEME_ITEM_ACTIVE}`;
+const BLOB_TYPE = {
+    type: 'application/json'
+};
 
+function _getUrlFromObject(object) {
+    const blob = new Blob([JSON.stringify(object, null, 2)], BLOB_TYPE);
     return URL.createObjectURL(blob);
 }
 
 function _focusActiveTheme() {
-    themeListElement.querySelector(`.${CSS.THEME_ITEM}.${CSS.THEME_ITEM_ACTIVE}`)?.focus();
+    themeListElement.querySelector(ACTIVE_THEME_CSS)?.focus();
 }
 
 function _applyTheme(theme) {
@@ -127,8 +129,7 @@ async function _onLoadThemes(files) {
             const themeName = file.name.replace(/\.json$/i, '');
             _mergeTheme(theme, themeName);
         } catch (e) {
-            console.warn(`
-            Skipping "${file.name}": `, e);
+            console.warn(`Skipping "${file.name}": `, e);
         }
     }
 

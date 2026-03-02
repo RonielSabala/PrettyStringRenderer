@@ -78,7 +78,7 @@ function render(ctx, width, height) {
 }
 
 function _getNormalizedDimension(dimension) {
-    return Math.max(1, Math.round(dimension)) + 'px';
+    return `${Math.max(1, Math.round(dimension))}px`;
 }
 
 function _computePixelScale(canvasZoom) {

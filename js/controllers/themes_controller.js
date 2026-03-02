@@ -11,6 +11,9 @@ import {
     themeListElement
 } from '../common/elements.js';
 import {
+    KEYS
+} from '../common/keys.js';
+import {
     redraw,
 } from './render_controller.js';
 
@@ -46,16 +49,16 @@ function _applyTheme(theme) {
 }
 
 function _applyThemeOnArrow(event, index) {
-    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') {
+    if (event.code !== KEYS.ARROW_UP && event.code !== KEYS.ARROW_DOWN) {
         return;
     }
 
     event.preventDefault();
-    if (event.key === 'ArrowUp') {
+    if (event.code === KEYS.ARROW_UP) {
         _applyTheme(_themes.at(index - 1));
     }
 
-    if (event.key === 'ArrowDown') {
+    if (event.code === KEYS.ARROW_DOWN) {
         _applyTheme(_themes.at((index + 1) % _themes.length))
     };
 }
@@ -154,7 +157,7 @@ export function exportCurrentTheme() {
 }
 
 export function onThemesFocus(event) {
-    if (event.code !== 'KeyT') {
+    if (event.code !== KEYS.T) {
         return;
     }
 

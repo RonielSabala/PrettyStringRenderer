@@ -11,6 +11,9 @@ import {
     editorElement,
     editorStatusElement
 } from '../common/elements.js';
+import {
+    KEYS
+} from '../common/keys.js';
 
 let canvasZoom = 1;
 let canvasPanX = 0;
@@ -115,20 +118,21 @@ function onZoomReset(event) {
 // Pan
 
 function onSpace(event) {
-    if (event.code !== 'Space' || document.activeElement === editorElement) {
+    if (event.code !== KEYS.SPACE || document.activeElement === editorElement) {
         return;
     }
+
+    event.preventDefault();
 
     if (!spaceHeld) {
         spaceHeld = true;
         canvasWrapElement.style.cursor = Cursor.GRAB;
     }
 
-    event.preventDefault();
 }
 
 function onSpaceRelease(event) {
-    if (event.code !== 'Space') {
+    if (event.code !== KEYS.SPACE) {
         return;
     }
 
@@ -145,11 +149,12 @@ function onPanning(event) {
         return;
     }
 
+    event.preventDefault();
+
     panning = true;
     panStartX = event.clientX - canvasPanX;
     panStartY = event.clientY - canvasPanY;
     canvasWrapElement.style.cursor = Cursor.GRABBING;
-    event.preventDefault();
 }
 
 function onPanningMove(event) {

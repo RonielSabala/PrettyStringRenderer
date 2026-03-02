@@ -9,6 +9,9 @@ import {
     editorResizeHandleElement,
 } from '../common/elements.js';
 import {
+    KEYS
+} from '../common/keys.js';
+import {
     parseNumber
 } from '../common/parse_utils.js';
 import {
@@ -26,15 +29,15 @@ let startHeight = 0;
 let dragging = false;
 
 export function onResize(event) {
-    dragging = true;
+    event.preventDefault();
 
+    dragging = true;
     startY = event.clientY;
     startHeight = editorPanelElement.offsetHeight;
 
     editorResizeHandleElement.classList.add('drag');
     document.body.style.userSelect = 'none';
 
-    event.preventDefault();
 }
 
 export function onEditorInput() {
@@ -69,7 +72,7 @@ export function onEditorMouseUp() {
 }
 
 export function onCanvasFocus(event) {
-    if (event.code !== 'Escape') {
+    if (event.code !== KEYS.ESCAPE) {
         return;
     }
 

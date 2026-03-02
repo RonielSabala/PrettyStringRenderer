@@ -2,6 +2,10 @@ import {
     EDITOR_DEFAULTS
 } from '../common/config.js';
 import {
+    CSS,
+    CSS_USER_SELECT
+} from '../common/css_classes.js';
+import {
     canvasWrapElement,
     editorElement,
     editorFontSizeElement,
@@ -35,9 +39,8 @@ export function onResize(event) {
     startY = event.clientY;
     startHeight = editorPanelElement.offsetHeight;
 
-    editorResizeHandleElement.classList.add('drag');
-    document.body.style.userSelect = 'none';
-
+    document.body.style.userSelect = CSS_USER_SELECT.NONE;
+    editorResizeHandleElement.classList.add(CSS.DRAG);
 }
 
 export function onEditorInput() {
@@ -67,8 +70,8 @@ export function onEditorMouseUp() {
     }
 
     dragging = false;
-    editorResizeHandleElement.classList.remove('drag');
-    document.body.style.userSelect = '';
+    document.body.style.userSelect = CSS_USER_SELECT.AUTO;
+    editorResizeHandleElement.classList.remove(CSS.DRAG);
 }
 
 export function onCanvasFocus(event) {

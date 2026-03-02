@@ -5,6 +5,9 @@ import {
     CANVAS_ZOOM_FACTOR
 } from '../common/config.js';
 import {
+    CSS_CURSORS
+} from '../common/css_classes.js';
+import {
     canvasInnerElement,
     canvasWrapElement,
     editorElement,
@@ -28,12 +31,6 @@ let panStartY = 0;
 
 let rafScheduled = false;
 let onZoomChangeCallback = null;
-
-const Cursor = Object.freeze({
-    DEFAULT: '',
-    GRAB: 'grab',
-    GRABBING: 'grabbing'
-});
 
 function getCanvasZoom() {
     return canvasZoom;
@@ -121,7 +118,7 @@ function onSpace(event) {
 
     if (!spaceHeld) {
         spaceHeld = true;
-        canvasWrapElement.style.cursor = Cursor.GRAB;
+        canvasWrapElement.style.cursor = CSS_CURSORS.GRAB;
     }
 
 }
@@ -136,7 +133,7 @@ function onSpaceRelease(event) {
         return;
     }
 
-    canvasWrapElement.style.cursor = Cursor.DEFAULT;
+    canvasWrapElement.style.cursor = CSS_CURSORS.DEFAULT;
 }
 
 function onPanning(event) {
@@ -149,7 +146,7 @@ function onPanning(event) {
     panning = true;
     panStartX = event.clientX - canvasPanX;
     panStartY = event.clientY - canvasPanY;
-    canvasWrapElement.style.cursor = Cursor.GRABBING;
+    canvasWrapElement.style.cursor = CSS_CURSORS.GRABBING;
 }
 
 function onPanningMove(event) {
@@ -168,7 +165,7 @@ function onPanningRelease() {
     }
 
     panning = false;
-    canvasWrapElement.style.cursor = spaceHeld ? Cursor.GRAB : Cursor.DEFAULT;
+    canvasWrapElement.style.cursor = spaceHeld ? CSS_CURSORS.GRAB : CSS_CURSORS.DEFAULT;
 }
 
 export {

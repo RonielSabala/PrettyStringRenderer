@@ -14,6 +14,9 @@ import {
     canvasWrapElement
 } from '../common/elements.js';
 import {
+    toPx
+} from '../common/resolution_utils.js';
+import {
     getCanvasZoom,
     setZoomChangeCallback
 } from './canvas_controller.js';
@@ -35,7 +38,7 @@ function setTokenizedLines(lines) {
 // Renderer
 
 function _getCanvasFont(size) {
-    return `400 ${size}px 'Cascadia Code'`;
+    return `400 ${toPx(size)} 'Cascadia Code'`;
 }
 
 function render(ctx, width, height) {
@@ -82,7 +85,7 @@ function render(ctx, width, height) {
 }
 
 function _getNormalizedDimension(dimension) {
-    return `${Math.max(1, Math.round(dimension))}px`;
+    return toPx(Math.max(1, Math.round(dimension)));
 }
 
 function _computePixelScale(canvasZoom) {

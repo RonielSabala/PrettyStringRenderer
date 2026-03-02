@@ -2,6 +2,10 @@ import {
     CANVAS_DEFAULTS
 } from './config.js';
 
+export function toPx(amount) {
+    return `${amount}px`;
+}
+
 export function createResolution(width, height) {
     return `${width}x${height}`;
 }

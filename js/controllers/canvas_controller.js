@@ -17,7 +17,8 @@ import {
     KEYS
 } from '../common/keys.js';
 import {
-    describeResolution
+    describeResolution,
+    toPx
 } from '../common/resolution_utils.js';
 
 let canvasZoom = 1;
@@ -42,7 +43,7 @@ function setZoomChangeCallback(callback) {
 
 function _applyTransform() {
     rafScheduled = false;
-    canvasInnerElement.style.transform = `translate(${canvasPanX}px,${canvasPanY}px) scale(${canvasZoom})`;
+    canvasInnerElement.style.transform = `translate(${toPx(canvasPanX)},${toPx(canvasPanY)}) scale(${canvasZoom})`;
     editorStatusElement.textContent = `${describeResolution()} · ${(canvasZoom * 100).toFixed(0)}%`;
 }
 

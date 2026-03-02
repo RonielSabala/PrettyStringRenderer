@@ -19,6 +19,9 @@ import {
     parseNumber
 } from '../common/parse_utils.js';
 import {
+    toPx
+} from '../common/resolution_utils.js';
+import {
     IncrementalTokenizer
 } from '../core/tokenizer.js';
 import {
@@ -51,7 +54,7 @@ export function onEditorInput() {
 
 export function onEditorFontSize() {
     const newFontSize = parseNumber(editorFontSizeElement, EDITOR_DEFAULTS.fontSize);
-    editorElement.style.fontSize = `${newFontSize}px`;
+    editorElement.style.fontSize = toPx(newFontSize);
 }
 
 export function onEditorMouseMove(event) {
@@ -60,7 +63,7 @@ export function onEditorMouseMove(event) {
     }
 
     const newHeight = Math.max(55, Math.min(window.innerHeight * 0.8, startHeight + (startY - event.clientY)));
-    editorPanelElement.style.height = `${newHeight}px`;
+    editorPanelElement.style.height = toPx(newHeight);
     redraw();
 }
 

@@ -31,7 +31,8 @@ import {
     EVENTS
 } from './common/events.js';
 import {
-    describeResolution
+    describeResolution,
+    toPx
 } from './common/resolution_utils.js';
 import {
     onPanning,
@@ -98,10 +99,10 @@ function initElements() {
     editorElement.scrollTop = 0;
     editorElement.setSelectionRange(0, 0);
     editorElement.innerHTML = EDITOR_DEFAULTS.content;
-    editorElement.style.fontSize = `${EDITOR_DEFAULTS.fontSize.value}px`;
+    editorElement.style.fontSize = toPx(EDITOR_DEFAULTS.fontSize.value);
     editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
     editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
-    editorElement.style.padding = `${EDITOR_DEFAULTS.padX}px ${EDITOR_DEFAULTS.padY}px`;
+    editorElement.style.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
 }
 
 function initListeners() {

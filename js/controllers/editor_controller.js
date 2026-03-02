@@ -20,7 +20,7 @@ import {
 import {
     redraw,
     setTokenizedLines
-} from "./render_controller.js";
+} from './render_controller.js';
 
 const _tokenizer = new IncrementalTokenizer();
 

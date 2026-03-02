@@ -1,7 +1,7 @@
 import {
     BRACKET_SETS,
     calculateNestingDepth
-} from "./brackets.js";
+} from './brackets.js';
 import {
     isCommentPart,
     isCommentStart,
@@ -16,7 +16,7 @@ import {
 import {
     TOKENS,
     TokenResult,
-} from "./tokens.js";
+} from './tokens.js';
 
 function _consumeLine(line, i, maxIndex, predicate) {
     let j = i;

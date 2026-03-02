@@ -62,8 +62,8 @@ export const EDITOR_DEFAULTS = {
         min: 8,
         max: 36,
     },
-    lineHeight: "auto",
-    letterSpacing: "auto",
+    lineHeight: 'auto',
+    letterSpacing: 'auto',
     padX: 10,
     padY: 10,
 };

@@ -71,7 +71,7 @@ function _applyThemeOnArrow(event, index) {
 
 function _showThemeOnNewWindow(theme) {
     const url = _getUrlFromObject(theme);
-    window.open(url, "_blank");
+    window.open(url, '_blank');
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 

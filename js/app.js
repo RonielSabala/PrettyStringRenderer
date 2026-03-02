@@ -37,7 +37,7 @@ import {
     onSpaceRelease,
     onZoom,
     onZoomReset,
-} from "./controllers/canvas_controller.js";
+} from './controllers/canvas_controller.js';
 import {
     onHex,
     onPick,
@@ -49,7 +49,7 @@ import {
     onEditorMouseMove,
     onEditorMouseUp,
     onResize
-} from "./controllers/editor_controller.js";
+} from './controllers/editor_controller.js';
 import {
     exportCanvas
 } from './controllers/export_controller.js';

@@ -5,26 +5,27 @@ export const CANVAS_ZOOM_FACTOR = 1.15;
 export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 
 // Render constants
+export const CANVAS_CONTEXT_TYPE = '2d';
 export const CANVAS_MIN_PIXEL_SCALE = 1;
 export const CANVAS_MAX_PIXEL_SCALE = 5;
 export const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
 export const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
-export const CANVAS_ASCENT_FACTOR = 9 / 100; // With fontSize=100 it needs 9 extra pixels so padY at 0 is perfect
+export const CANVAS_ASCENT_FACTOR = 9 / 100; // fontSize=100 needs 9 extra pixels so that padY=0 is congruent
 
-// Themes constants
+// Theme constants
 export const THEMES_EXTENSION = '.json';
 export const DEFAULT_EXPORT_THEME_NAME = 'my-theme';
-export const THEMES_BLOB_TYPE = {
+export const THEME_BLOB_TYPE = {
     type: 'application/json'
 };
 
-// Images constants
+// Image constants
 export const PROMPT_MESSAGE = 'Scale multiplier:';
 export const PROMPT_SCALARS = [1, 2, 3];
 export const DEFAULT_EXPORT_SCALAR = 1;
 export const IMAGES_EXTENSION = '.png';
 export const DEFAULT_EXPORT_IMAGE_NAME = 'pretty-string';
-export const IMAGES_BLOB_TYPE = {
+export const IMAGE_BLOB_TYPE = {
     type: 'image/png'
 };
 
@@ -86,7 +87,7 @@ export const EDITOR_DEFAULTS = {
     padY: 10,
 };
 
-// UI theme defaults
+// Default pre-loaded UI theme
 
 export const DEFAULT_THEME = {
     bracket0: '#569CD6',
@@ -104,7 +105,7 @@ export const DEFAULT_THEME = {
 
 export const THEME_KEYS = Object.keys(DEFAULT_THEME);
 
-// Mutable runtime config consumed by the renderer
+// Mutable runtime config
 export const config = {
     fontSize: CANVAS_DEFAULTS.fontSize.value,
     lineHeight: CANVAS_DEFAULTS.lineHeight.value,

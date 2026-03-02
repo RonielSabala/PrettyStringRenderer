@@ -1,9 +1,10 @@
 import {
+    CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
     config,
     DEFAULT_EXPORT_IMAGE_NAME,
     DEFAULT_EXPORT_SCALAR,
-    IMAGES_BLOB_TYPE,
+    IMAGE_BLOB_TYPE,
     IMAGES_EXTENSION,
     PROMPT_MESSAGE,
     PROMPT_SCALARS,
@@ -83,12 +84,12 @@ async function exportCanvas() {
     offscreen.height = exportHeight;
 
     const snapshot = _applyScaledConfig(scalar);
-    render(offscreen.getContext('2d'), exportWidth, exportHeight);
+    render(offscreen.getContext(CANVAS_CONTEXT_TYPE), exportWidth, exportHeight);
     _restoreConfig(snapshot);
 
     offscreen.toBlob(blob => {
         _downloadBlob(blob, _createFilename(exportWidth, exportHeight));
-    }, IMAGES_BLOB_TYPE);
+    }, IMAGE_BLOB_TYPE);
 }
 
 export {

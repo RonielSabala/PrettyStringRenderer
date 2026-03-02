@@ -1,6 +1,7 @@
 import {
     CANVAS_ASCENT_FACTOR,
     CANVAS_AVAILABLE_MARGIN_OFFSET_PX,
+    CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
     CANVAS_MAX_PIXEL_SCALE,
     CANVAS_MIN_PIXEL_SCALE,
@@ -23,7 +24,7 @@ let _qualityRedrawTimer = null;
 
 let _lastCanvasWidth = 0;
 let _lastCanvasHeight = 0;
-const _ctx = canvasElement.getContext('2d');
+const _ctx = canvasElement.getContext(CANVAS_CONTEXT_TYPE);
 
 function setTokenizedLines(lines) {
     _tokenizedLines = lines;

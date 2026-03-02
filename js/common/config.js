@@ -5,13 +5,15 @@ export const CANVAS_ZOOM_FACTOR = 1.15;
 export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 
 // Render constants
-export const CANVAS_CONTEXT_TYPE = '2d';
+export const CANVAS_FONT = 'Cascadia Code';
+export const CANVAS_FONT_WEIGHT = 400;
 export const CANVAS_FONT_REFERENCE_GLYPH = 'M';
+export const CANVAS_ASCENT_FACTOR = 9 / 100; // fontSize=100 needs 9 extra pixels so that padY=0 is congruent
+export const CANVAS_CONTEXT_TYPE = '2d';
 export const CANVAS_MIN_PIXEL_SCALE = 1;
 export const CANVAS_MAX_PIXEL_SCALE = 5;
 export const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
 export const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
-export const CANVAS_ASCENT_FACTOR = 9 / 100; // fontSize=100 needs 9 extra pixels so that padY=0 is congruent
 
 // Theme constants
 export const THEMES_EXTENSION = '.json';

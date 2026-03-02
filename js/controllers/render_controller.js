@@ -3,7 +3,9 @@ import {
     CANVAS_AVAILABLE_MARGIN_OFFSET_PX,
     CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
+    CANVAS_FONT,
     CANVAS_FONT_REFERENCE_GLYPH,
+    CANVAS_FONT_WEIGHT,
     CANVAS_MAX_PIXEL_SCALE,
     CANVAS_MIN_PIXEL_SCALE,
     CANVAS_QUALITY_REDRAW_DEBOUNCE_MS,
@@ -38,7 +40,7 @@ function setTokenizedLines(lines) {
 // Renderer
 
 function _getCanvasFont(size) {
-    return `400 ${toPx(size)} 'Cascadia Code'`;
+    return `${CANVAS_FONT_WEIGHT} ${toPx(size)} '${CANVAS_FONT}'`;
 }
 
 function render(ctx, width, height) {

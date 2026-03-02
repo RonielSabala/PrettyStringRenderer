@@ -5,6 +5,7 @@ import {
     config,
     DEFAULT_EXPORT_THEME_NAME,
     THEME_KEYS,
+    THEMES_BLOB_TYPE,
     THEMES_EXTENSION
 } from '../common/config.js';
 import {
@@ -26,14 +27,10 @@ import {
 
 let _themes = [];
 let _activeThemeName = '';
-
 const ACTIVE_THEME_CSS = `.${CSS.THEME_ITEM}.${CSS.THEME_ITEM_ACTIVE}`;
-const BLOB_TYPE = {
-    type: 'application/json'
-};
 
 function _getUrlFromObject(object) {
-    const blob = new Blob([JSON.stringify(object, null, 2)], BLOB_TYPE);
+    const blob = new Blob([JSON.stringify(object, null, 2)], THEMES_BLOB_TYPE);
     return URL.createObjectURL(blob);
 }
 

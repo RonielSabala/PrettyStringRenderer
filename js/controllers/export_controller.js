@@ -2,6 +2,7 @@ import {
     CANVAS_DEFAULTS,
     config,
     DEFAULT_EXPORT_SCALAR,
+    IMAGES_BLOB_TYPE,
     PROMPT_MESSAGE,
     PROMPT_SCALARS,
 } from '../common/config.js';
@@ -91,7 +92,7 @@ async function exportCanvas() {
 
     offscreen.toBlob(blob => {
         _downloadBlob(blob, _createFilename(exportWidth, exportHeight));
-    }, 'image/png');
+    }, IMAGES_BLOB_TYPE);
 }
 
 export {

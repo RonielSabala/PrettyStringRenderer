@@ -68,7 +68,7 @@ export function onEditorMouseUp() {
     document.body.style.userSelect = '';
 }
 
-export function onEscape(event) {
+export function onCanvasFocus(event) {
     if (event.code !== 'Escape') {
         return;
     }

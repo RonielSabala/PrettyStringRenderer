@@ -3,6 +3,7 @@ import {
 } from '../common/color_utils.js';
 import {
     config,
+    DEFAULT_EXPORT_THEME_NAME,
     THEME_KEYS
 } from '../common/config.js';
 import {
@@ -24,6 +25,10 @@ function _getUrlFromObject(object) {
     return URL.createObjectURL(blob);
 }
 
+function _focusActiveTheme() {
+    themeListElement.querySelector('.theme-item.active')?.focus();
+}
+
 function _applyTheme(theme) {
     _activeThemeName = theme._name;
     for (const themeKey of THEME_KEYS) {
@@ -36,8 +41,8 @@ function _applyTheme(theme) {
     }
 
     redraw();
-    renderHtmlThemeList();
-    themeListElement.querySelector('.theme-item.active')?.focus();
+    _renderHtmlThemeList();
+    _focusActiveTheme();
 }
 
 function _applyThemeOnArrow(event, index) {
@@ -61,7 +66,7 @@ function _showThemeOnNewWindow(theme) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function renderHtmlThemeList() {
+function _renderHtmlThemeList() {
     themeListElement.innerHTML = '';
 
     if (_themes.length === 0) {
@@ -119,14 +124,14 @@ async function _onLoadThemes(files) {
     }
 
     if (_themes.length === 0) {
-        renderHtmlThemeList();
+        _renderHtmlThemeList();
         return;
     }
 
     _applyTheme(_themes.at(-1));
 }
 
-async function loadThemes() {
+export async function loadThemes() {
     const inputElement = document.createElement('input');
     inputElement.type = 'file';
     inputElement.accept = '.json';
@@ -135,8 +140,8 @@ async function loadThemes() {
     inputElement.click();
 }
 
-function exportCurrentTheme() {
-    const filename = prompt('Theme name:', _activeThemeName || 'my-theme');
+export function exportCurrentTheme() {
+    const filename = prompt('Theme name:', _activeThemeName || DEFAULT_EXPORT_THEME_NAME);
     if (!filename) {
         return;
     }
@@ -148,7 +153,11 @@ function exportCurrentTheme() {
     setTimeout(() => URL.revokeObjectURL(anchorElement.href), 1000);
 }
 
-export {
-    exportCurrentTheme,
-    loadThemes
-};
+export function onThemesFocus(event) {
+    if (event.code !== 'KeyT') {
+        return;
+    }
+
+    event.preventDefault();
+    _focusActiveTheme();
+}

@@ -37,11 +37,11 @@ import {
     onPick,
 } from './controllers/color_controller.js';
 import {
+    onCanvasFocus,
     onEditorFontSize,
     onEditorInput,
     onEditorMouseMove,
     onEditorMouseUp,
-    onEscape,
     onResize
 } from "./controllers/editor_controller.js";
 import {
@@ -49,7 +49,8 @@ import {
 } from './controllers/export_controller.js';
 import {
     exportCurrentTheme,
-    loadThemes
+    loadThemes,
+    onThemesFocus
 } from './controllers/themes_controller.js';
 import {
     onFontSizeConfig,
@@ -106,6 +107,8 @@ function initListeners() {
         updateColor(ThemeKey, ThemeValue);
     }
 
+    document.addEventListener('keydown', onThemesFocus)
+
     // Color pickers + hex
     for (const themeKey of THEME_KEYS) {
         getColorPickerElement(themeKey).addEventListener(
@@ -131,7 +134,7 @@ function initListeners() {
     editorResizeHandleElement.addEventListener('mousedown', onResize);
     document.addEventListener('mouseup', onEditorMouseUp);
     document.addEventListener('mousemove', onEditorMouseMove);
-    document.addEventListener('keydown', onEscape)
+    document.addEventListener('keydown', onCanvasFocus)
 
     // Canvas
     canvasWrapElement.addEventListener('wheel', onZoom, {

@@ -4,7 +4,8 @@ import {
 import {
     config,
     DEFAULT_EXPORT_THEME_NAME,
-    THEME_KEYS
+    THEME_KEYS,
+    THEMES_EXTENSION
 } from '../common/config.js';
 import {
     CSS
@@ -126,7 +127,7 @@ async function _onLoadThemes(files) {
     for (const file of files) {
         try {
             const theme = JSON.parse(await file.text());
-            const themeName = file.name.replace(/\.json$/i, '');
+            const themeName = file.name.replace(new RegExp(`${THEMES_EXTENSION}$`, 'i'), '');
             _mergeTheme(theme, themeName);
         } catch (e) {
             console.warn(`Skipping "${file.name}": `, e);
@@ -144,7 +145,7 @@ async function _onLoadThemes(files) {
 export async function loadThemes() {
     const inputElement = document.createElement('input');
     inputElement.type = 'file';
-    inputElement.accept = '.json';
+    inputElement.accept = THEMES_EXTENSION;
     inputElement.multiple = true;
     inputElement.addEventListener(EVENTS.CHANGE, () => _onLoadThemes(inputElement.files));
     inputElement.click();
@@ -158,7 +159,7 @@ export function exportCurrentTheme() {
 
     const anchorElement = document.createElement('a');
     anchorElement.href = _getUrlFromObject(config.colors);
-    anchorElement.download = filename.endsWith('.json') ? filename : `${filename}.json`;
+    anchorElement.download = filename.endsWith(THEMES_EXTENSION) ? filename : `${filename}${THEMES_EXTENSION}`;
     anchorElement.click();
     setTimeout(() => URL.revokeObjectURL(anchorElement.href), 1000);
 }

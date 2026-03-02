@@ -7,6 +7,9 @@ import {
     THEME_KEYS
 } from '../common/config.js';
 import {
+    CSS
+} from '../common/css_classes.js';
+import {
     emptyThemeElement,
     themeListElement
 } from '../common/elements.js';
@@ -32,7 +35,7 @@ function _getUrlFromObject(object) {
 }
 
 function _focusActiveTheme() {
-    themeListElement.querySelector('.theme-item.active')?.focus();
+    themeListElement.querySelector(`.${CSS.THEME_ITEM}.${CSS.THEME_ITEM_ACTIVE}`)?.focus();
 }
 
 function _applyTheme(theme) {
@@ -88,9 +91,9 @@ function _renderHtmlThemeList() {
         const themeName = document.createElement('span');
         const themeDot = document.createElement('div');
 
-        themeItem.className = 'theme-item' + (theme._name === _activeThemeName ? ' active' : '');
-        themeName.className = 'theme-name';
-        themeDot.className = 'theme-dot';
+        themeItem.className = CSS.THEME_ITEM + (theme._name === _activeThemeName ? ` ${CSS.THEME_ITEM_ACTIVE}` : '');
+        themeName.className = CSS.THEME_NAME;
+        themeDot.className = CSS.THEME_DOT;
 
         themeItem.tabIndex = 0;
         themeName.textContent = theme._name;

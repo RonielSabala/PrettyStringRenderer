@@ -15,7 +15,7 @@
   color: var(--t0);
 }
 
-.section-header.collapsed .accordion-control {
+.section-header.header-collapsed .accordion-control {
   transform: rotate(-90deg);
 }
 
@@ -30,7 +30,7 @@
   padding: 3px 12px 9px;
 }
 
-.section-body.hidden {
+.section-body.body-hidden {
   display: none;
 }
 

@@ -8,6 +8,9 @@ import {
     config
 } from './common/config.js';
 import {
+    CSS
+} from './common/css_classes.js';
+import {
     btnExport,
     btnExportTheme,
     btnLoadThemes,
@@ -71,8 +74,8 @@ function initNumberInput(element, dataContainer) {
 }
 
 function toggleSection(element) {
-    element.classList.toggle('collapsed');
-    element.nextElementSibling.classList.toggle('hidden');
+    element.classList.toggle(CSS.COLLAPSED_HEADER);
+    element.nextElementSibling.classList.toggle(CSS.HIDDEN_BODY);
 }
 
 function initElements() {
@@ -101,7 +104,7 @@ function initListeners() {
     btnExportTheme.addEventListener(EVENTS.CLICK, exportCurrentTheme);
 
     // Collapse sections
-    document.querySelectorAll('.section-header').forEach(
+    document.querySelectorAll(`.${CSS.SECTION_HEADER}`).forEach(
         element => element.addEventListener(EVENTS.CLICK, () => toggleSection(element))
     );
 

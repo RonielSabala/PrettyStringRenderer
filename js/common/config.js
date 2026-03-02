@@ -1,10 +1,12 @@
-// Movements constants
+export const LINE_BREAK = '\n';
+
+// Canvas movement constants
 export const CANVAS_MIN_ZOOM = 0.3;
 export const CANVAS_MAX_ZOOM = 10;
 export const CANVAS_ZOOM_FACTOR = 1.15;
 export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 
-// Render constants
+// Canvas renderer constants
 export const CANVAS_FONT = 'Cascadia Code';
 export const CANVAS_FONT_WEIGHT = 400;
 export const CANVAS_FONT_REFERENCE_GLYPH = 'M';
@@ -16,18 +18,20 @@ export const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
 export const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
 
 // Theme constants
+export const EXPORT_THEME_PROMPT_MESSAGE = 'Theme name:';
+export const DEFAULT_EXPORT_THEME_FILENAME = 'my-theme';
 export const THEMES_EXTENSION = '.json';
-export const DEFAULT_EXPORT_THEME_NAME = 'my-theme';
+export const THEMES_FILE_TYPE = 'file';
 export const THEME_BLOB_TYPE = {
     type: 'application/json'
 };
 
 // Image constants
-export const PROMPT_MESSAGE = 'Scale multiplier:';
-export const PROMPT_SCALARS = [1, 2, 3];
+export const EXPORT_IMAGE_PROMPT_MESSAGE = 'Scale multiplier:';
+export const EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES = [1, 2, 0.5];
 export const DEFAULT_EXPORT_SCALAR = 1;
+export const DEFAULT_EXPORT_IMAGE_FILENAME = 'pretty-string';
 export const IMAGES_EXTENSION = '.png';
-export const DEFAULT_EXPORT_IMAGE_NAME = 'pretty-string';
 export const IMAGE_BLOB_TYPE = {
     type: 'image/png'
 };

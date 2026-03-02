@@ -3,10 +3,12 @@ import {
 } from '../common/color_utils.js';
 import {
     config,
-    DEFAULT_EXPORT_THEME_NAME,
+    DEFAULT_EXPORT_THEME_FILENAME,
+    EXPORT_THEME_PROMPT_MESSAGE,
     THEME_BLOB_TYPE,
     THEME_KEYS,
-    THEMES_EXTENSION
+    THEMES_EXTENSION,
+    THEMES_FILE_TYPE
 } from '../common/config.js';
 import {
     CSS
@@ -122,13 +124,9 @@ function _mergeTheme(theme, themeName) {
 
 async function _onLoadThemes(files) {
     for (const file of files) {
-        try {
-            const theme = JSON.parse(await file.text());
-            const themeName = file.name.replace(new RegExp(`${THEMES_EXTENSION}$`, 'i'), '');
-            _mergeTheme(theme, themeName);
-        } catch (e) {
-            console.warn(`Skipping "${file.name}": `, e);
-        }
+        const theme = JSON.parse(await file.text());
+        const themeName = file.name.replace(new RegExp(`${THEMES_EXTENSION}$`, 'i'), '');
+        _mergeTheme(theme, themeName);
     }
 
     if (_themes.length === 0) {
@@ -141,7 +139,7 @@ async function _onLoadThemes(files) {
 
 export async function loadThemes() {
     const inputElement = document.createElement('input');
-    inputElement.type = 'file';
+    inputElement.type = THEMES_FILE_TYPE;
     inputElement.accept = THEMES_EXTENSION;
     inputElement.multiple = true;
     inputElement.addEventListener(EVENTS.CHANGE, () => _onLoadThemes(inputElement.files));
@@ -149,7 +147,7 @@ export async function loadThemes() {
 }
 
 export function exportCurrentTheme() {
-    const filename = prompt('Theme name:', _activeThemeName || DEFAULT_EXPORT_THEME_NAME);
+    const filename = prompt(EXPORT_THEME_PROMPT_MESSAGE, _activeThemeName || DEFAULT_EXPORT_THEME_FILENAME);
     if (!filename) {
         return;
     }

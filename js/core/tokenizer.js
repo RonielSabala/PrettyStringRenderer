@@ -1,4 +1,7 @@
 import {
+    LINE_BREAK
+} from '../common/config.js';
+import {
     BRACKET_SETS,
     calculateNestingDepth
 } from './brackets.js';
@@ -6,6 +9,7 @@ import {
     isCommentPart,
     isCommentStart,
     isDigit,
+    isFunctionStart,
     isIdentifierPart,
     isIdentifierStart,
     isNumeric,
@@ -92,7 +96,7 @@ export class IncrementalTokenizer {
 
     update(text) {
         const result = [];
-        const newLines = text.split('\n');
+        const newLines = text.split(LINE_BREAK);
         const newLineAnalysis = LineAnalysis.generateAnalysisMap(newLines);
 
         const height = newLines.length;
@@ -152,7 +156,7 @@ export class IncrementalTokenizer {
             } else if (isIdentifierStart(char)) {
                 const j = _consumeLine(line, i, lineWidth, isIdentifierPart);
                 const k = _consumeLine(line, j, lineWidth, isSpace);
-                const isFunction = k < lineWidth && line[k] === '(';
+                const isFunction = k < lineWidth && isFunctionStart(line[k]);
 
                 tokens.add(line.slice(i, j), isFunction ? TOKENS.FUNCTION : TOKENS.VARIABLE);
                 i = j;

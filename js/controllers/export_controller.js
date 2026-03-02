@@ -2,12 +2,13 @@ import {
     CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
     config,
-    DEFAULT_EXPORT_IMAGE_NAME,
+    DEFAULT_EXPORT_IMAGE_FILENAME,
     DEFAULT_EXPORT_SCALAR,
+    EXPORT_IMAGE_PROMPT_MESSAGE,
+    EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES,
     IMAGE_BLOB_TYPE,
     IMAGES_EXTENSION,
-    PROMPT_MESSAGE,
-    PROMPT_SCALARS,
+    LINE_BREAK,
 } from '../common/config.js';
 import {
     createResolution,
@@ -17,13 +18,14 @@ import {
     render
 } from './render_controller.js';
 
-const _DEFAULT_PROMPT_MESSAGE = `${PROMPT_MESSAGE}
-${PROMPT_SCALARS
+const _DEFAULT_PROMPT_MESSAGE = `${EXPORT_IMAGE_PROMPT_MESSAGE}
+${EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES
   .map(scalar => `    ${scalar} -> ${describeResolution(scalar)}`)
-  .join("\n")}`;
+  .join(LINE_BREAK)
+}`;
 
 function _createFilename(width, height) {
-    return `${DEFAULT_EXPORT_IMAGE_NAME}-${createResolution(width, height)}${IMAGES_EXTENSION}`;
+    return `${DEFAULT_EXPORT_IMAGE_FILENAME}-${createResolution(width, height)}${IMAGES_EXTENSION}`;
 }
 
 function _askScalar() {

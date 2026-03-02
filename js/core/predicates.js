@@ -17,6 +17,8 @@ export const isIdentifierStart = (char) => /[a-zA-Z_]/.test(char);
 
 export const isIdentifierPart = (char) => /[a-zA-Z0-9_]/.test(char);
 
+export const isFunctionStart = (char) => char === '(';
+
 export const isCommentStart = (char) => char === '#';
 
 export const isCommentPart = (char) => !BRACKET_SETS.multilineAll.has(char);

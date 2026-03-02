@@ -19,6 +19,6 @@ export const CSS_CURSORS = Object.freeze({
 });
 
 export const CSS_USER_SELECT = Object.freeze({
-    NONE: 'none',
     AUTO: '',
+    NONE: 'none',
 });

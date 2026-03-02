@@ -3,15 +3,15 @@ import {
     calculateNestingDepth
 } from "./brackets.js";
 import {
-    OPERATORS
-} from "./operators.js";
-import {
     isCommentPart,
+    isCommentStart,
     isDigit,
     isIdentifierPart,
     isIdentifierStart,
     isNumeric,
-    isSpace,
+    isOperator,
+    isSemicolon,
+    isSpace
 } from './predicates.js';
 import {
     TOKENS,
@@ -126,83 +126,56 @@ export class IncrementalTokenizer {
         const tokens = new TokenResult();
 
         const addTokens = (predicate, tokenType) => {
-            const k = _consumeLine(line, i, lineWidth, predicate);
-            tokens.add(line.slice(i, k), tokenType);
-            i = k;
+            const j = _consumeLine(line, i, lineWidth, predicate);
+            tokens.add(line.slice(i, j), tokenType);
+            i = j;
         }
 
         while (i < lineWidth) {
             const char = line[i];
-
+            const baseDepth = lineAnalysis.containmentDepths[i];
             const boundaryDepth = lineAnalysis.boundaryDepths[i];
+
             if (boundaryDepth !== undefined) {
                 tokens.addBracket(char, boundaryDepth);
                 i++;
-                continue;
-            }
 
-            const baseDepth = lineAnalysis.containmentDepths[i];
-
-            // Comments
-            if (char === '#') {
-                addTokens(isCommentPart, TOKENS.COMMENT)
-                continue;
-            }
-
-            // Inline Brackets
-
-            if (BRACKET_SETS.inlineOpen.has(char)) {
+            } else if (BRACKET_SETS.inlineOpen.has(char)) {
                 tokens.addBracket(char, baseDepth + inlineDepth++);
                 i++;
-                continue;
-            }
 
-            if (BRACKET_SETS.inlineClose.has(char)) {
+            } else if (BRACKET_SETS.inlineClose.has(char)) {
                 inlineDepth = Math.max(0, inlineDepth - 1);
                 tokens.addBracket(char, baseDepth + inlineDepth);
                 i++;
-                continue;
-            }
 
-            // Identifiers
-            if (isIdentifierStart(char)) {
+            } else if (isIdentifierStart(char)) {
                 const j = _consumeLine(line, i, lineWidth, isIdentifierPart);
                 const k = _consumeLine(line, j, lineWidth, isSpace);
                 const isFunction = k < lineWidth && line[k] === '(';
 
                 tokens.add(line.slice(i, j), isFunction ? TOKENS.FUNCTION : TOKENS.VARIABLE);
                 i = j;
-                continue;
-            }
 
-            // Static Tokens
+            } else if (isCommentStart(char)) {
+                addTokens(isCommentPart, TOKENS.COMMENT)
 
-            if (isSpace(char)) {
+            } else if (isSpace(char)) {
                 addTokens(isSpace, TOKENS.WHITE_SPACE)
-                continue;
-            }
 
-            if (isDigit(char)) {
+            } else if (isDigit(char)) {
                 addTokens(isNumeric, TOKENS.NUMBER)
-                continue;
-            }
 
-            if (char === ';') {
-                tokens.add(char, TOKENS.SEMICOLON);
+            } else if (isOperator(char)) {
+                addTokens(isOperator, TOKENS.OPERATOR)
+
+            } else if (isSemicolon(char)) {
+                addTokens(isSemicolon, TOKENS.SEMICOLON)
+
+            } else {
+                tokens.add(char, TOKENS.UNKNOWN);
                 i++;
-                continue;
             }
-
-            // Operators
-            const operator = OPERATORS.find(op => line.startsWith(op, i));
-            if (operator) {
-                tokens.add(operator, TOKENS.OPERATOR);
-                i += operator.length;
-                continue;
-            }
-
-            tokens.add(char, TOKENS.UNKNOWN);
-            i++;
         }
 
         return tokens.list;

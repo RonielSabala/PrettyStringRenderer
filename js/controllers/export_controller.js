@@ -1,32 +1,28 @@
 import {
     CANVAS_DEFAULTS,
     config,
+    DEFAULT_EXPORT_IMAGE_NAME,
     DEFAULT_EXPORT_SCALAR,
     IMAGES_BLOB_TYPE,
+    IMAGES_EXTENSION,
     PROMPT_MESSAGE,
     PROMPT_SCALARS,
 } from '../common/config.js';
+import {
+    createResolution,
+    describeResolution
+} from '../common/resolution_utils.js';
 import {
     render
 } from './render_controller.js';
 
 const _DEFAULT_PROMPT_MESSAGE = `${PROMPT_MESSAGE}
 ${PROMPT_SCALARS
-  .map(scalar => `    ${scalar} -> ${_describeResolution(scalar)}`)
+  .map(scalar => `    ${scalar} -> ${describeResolution(scalar)}`)
   .join("\n")}`;
 
-function _createResolution(width, height) {
-    return `${width}x${height}`;
-}
-
 function _createFilename(width, height) {
-    return `pretty-string-${_createResolution(width, height)}.png`;
-}
-
-function _describeResolution(scalar) {
-    const width = Math.round(scalar * CANVAS_DEFAULTS.width);
-    const height = Math.round(scalar * CANVAS_DEFAULTS.height);
-    return _createResolution(width, height);
+    return `${DEFAULT_EXPORT_IMAGE_NAME}-${createResolution(width, height)}${IMAGES_EXTENSION}`;
 }
 
 function _askScalar() {

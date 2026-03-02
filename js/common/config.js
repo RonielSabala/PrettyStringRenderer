@@ -18,18 +18,25 @@ export const THEMES_BLOB_TYPE = {
     type: 'application/json'
 };
 
+// Images constants
 export const PROMPT_MESSAGE = 'Scale multiplier:';
 export const PROMPT_SCALARS = [1, 2, 3];
 export const DEFAULT_EXPORT_SCALAR = 1;
+export const IMAGES_EXTENSION = '.png';
+export const DEFAULT_EXPORT_IMAGE_NAME = 'pretty-string';
 export const IMAGES_BLOB_TYPE = {
     type: 'image/png'
 };
 
 // UI defaults
 
+const width = 3120;
+const height = 780;
+
 export const CANVAS_DEFAULTS = {
-    width: 3120,
-    height: 780,
+    width,
+    height,
+    aspectRatio: width / height,
     fontSize: {
         value: 85,
         min: 5,

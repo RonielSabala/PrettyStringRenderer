@@ -20,6 +20,7 @@ import {
     editorResizeHandleElement,
     getColorPickerElement,
     getHexInputElement,
+    headerBadgeElement,
     typographyFontSizeElement,
     typographyLetterSpacingElement,
     typographyLineHeightElement,
@@ -30,13 +31,16 @@ import {
     EVENTS
 } from './common/events.js';
 import {
+    describeResolution
+} from './common/resolution_utils.js';
+import {
     onPanning,
     onPanningMove,
     onPanningRelease,
     onSpace,
     onSpaceRelease,
     onZoom,
-    onZoomReset,
+    onZoomReset
 } from './controllers/canvas_controller.js';
 import {
     onHex,
@@ -79,7 +83,10 @@ function toggleSection(element) {
 }
 
 function initElements() {
-    // Typography elements
+    // Header
+    headerBadgeElement.textContent = `${describeResolution()} · ${CANVAS_DEFAULTS.aspectRatio}:1`;
+
+    // Typography
     initNumberInput(typographyFontSizeElement, CANVAS_DEFAULTS.fontSize)
     initNumberInput(typographyLineHeightElement, CANVAS_DEFAULTS.lineHeight)
     initNumberInput(typographyLetterSpacingElement, CANVAS_DEFAULTS.letterSpacing)

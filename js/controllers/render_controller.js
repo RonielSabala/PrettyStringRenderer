@@ -119,10 +119,7 @@ function _scheduleQualityRedraw(canvasZoom) {
 function redraw() {
     _renderAtScale();
 
-    const width = CANVAS_DEFAULTS.width;
-    const height = CANVAS_DEFAULTS.height;
-    const aspectRatio = width / height;
-
+    const aspectRatio = CANVAS_DEFAULTS.aspectRatio;
     const availableWidth = canvasWrapElement.clientWidth - CANVAS_AVAILABLE_MARGIN_OFFSET_PX;
     const availableHeight = canvasWrapElement.clientHeight - CANVAS_AVAILABLE_MARGIN_OFFSET_PX;
 

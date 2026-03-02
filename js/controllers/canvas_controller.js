@@ -1,5 +1,4 @@
 import {
-    CANVAS_DEFAULTS,
     CANVAS_MAX_ZOOM,
     CANVAS_MIN_ZOOM,
     CANVAS_PAN_SCROLL_SPEED,
@@ -14,6 +13,9 @@ import {
 import {
     KEYS
 } from '../common/keys.js';
+import {
+    describeResolution
+} from '../common/resolution_utils.js';
 
 let canvasZoom = 1;
 let canvasPanX = 0;
@@ -41,17 +43,10 @@ function setZoomChangeCallback(callback) {
     onZoomChangeCallback = callback;
 }
 
-function _updateZoomInfo() {
-    const width = CANVAS_DEFAULTS.width
-    const height = CANVAS_DEFAULTS.height
-    const zoom = (canvasZoom * 100).toFixed(0);
-    editorStatusElement.textContent = `${width}x${height} · ${zoom}%`;
-}
-
 function _applyTransform() {
     rafScheduled = false;
     canvasInnerElement.style.transform = `translate(${canvasPanX}px,${canvasPanY}px) scale(${canvasZoom})`;
-    _updateZoomInfo();
+    editorStatusElement.textContent = `${describeResolution()} · ${(canvasZoom * 100).toFixed(0)}%`;
 }
 
 function _scheduleTransform() {

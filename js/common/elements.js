@@ -1,5 +1,6 @@
 // Header section
 export const btnExport = document.getElementById('btn-export');
+export const headerBadgeElement = document.getElementById('header-badge');
 
 // Theme section
 export const btnLoadThemes = document.getElementById('btn-load-themes')

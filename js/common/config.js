@@ -11,9 +11,14 @@ export const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
 export const CANVAS_AVAILABLE_MARGIN_OFFSET_PX = 50;
 export const CANVAS_ASCENT_FACTOR = 9 / 100; // With fontSize=100 it needs 9 extra pixels so padY at 0 is perfect
 
-// Export constants
+// Themes constants
+
 export const THEMES_EXTENSION = '.json';
 export const DEFAULT_EXPORT_THEME_NAME = 'my-theme';
+
+export const PROMPT_MESSAGE = 'Scale multiplier:';
+export const PROMPT_SCALARS = [1, 2, 3];
+export const DEFAULT_EXPORT_SCALAR = 1;
 
 // UI defaults
 

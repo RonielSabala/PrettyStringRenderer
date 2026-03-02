@@ -1,10 +1,18 @@
 import {
     CANVAS_DEFAULTS,
-    config
+    config,
+    DEFAULT_EXPORT_SCALAR,
+    PROMPT_MESSAGE,
+    PROMPT_SCALARS,
 } from '../common/config.js';
 import {
     render
 } from './render_controller.js';
+
+const _DEFAULT_PROMPT_MESSAGE = `${PROMPT_MESSAGE}
+${PROMPT_SCALARS
+  .map(scalar => `    ${scalar} -> ${_describeResolution(scalar)}`)
+  .join("\n")}`;
 
 function _createResolution(width, height) {
     return `${width}x${height}`;
@@ -20,14 +28,8 @@ function _describeResolution(scalar) {
     return _createResolution(width, height);
 }
 
-function _promptScalar() {
-    return prompt(
-        `Scale multiplier:\n` +
-        `  1   → ${_describeResolution(1)}\n` +
-        `  2   → ${_describeResolution(2)}\n` +
-        `  0.5 → ${_describeResolution(0.5)}`,
-        '1'
-    );
+function _askScalar() {
+    return prompt(_DEFAULT_PROMPT_MESSAGE, DEFAULT_EXPORT_SCALAR);
 }
 
 function _scaleConfig() {
@@ -64,7 +66,7 @@ function _downloadBlob(blob, filename) {
 }
 
 async function exportCanvas() {
-    const rawInput = _promptScalar();
+    const rawInput = _askScalar();
     if (rawInput === null) {
         return;
     }

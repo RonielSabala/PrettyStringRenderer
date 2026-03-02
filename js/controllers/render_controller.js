@@ -3,6 +3,7 @@ import {
     CANVAS_AVAILABLE_MARGIN_OFFSET_PX,
     CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
+    CANVAS_FONT_REFERENCE_GLYPH,
     CANVAS_MAX_PIXEL_SCALE,
     CANVAS_MIN_PIXEL_SCALE,
     CANVAS_QUALITY_REDRAW_DEBOUNCE_MS,
@@ -24,6 +25,7 @@ let _qualityRedrawTimer = null;
 
 let _lastCanvasWidth = 0;
 let _lastCanvasHeight = 0;
+
 const _ctx = canvasElement.getContext(CANVAS_CONTEXT_TYPE);
 
 function setTokenizedLines(lines) {
@@ -45,8 +47,9 @@ function render(ctx, width, height) {
     ctx.fillRect(0, 0, width, height);
     ctx.font = _getCanvasFont(fontSize);
 
-    const ascent = ctx.measureText('M').actualBoundingBoxAscent;
-    const charWidth = ctx.measureText('M').width + config.letterSpacing;
+    const textMetrics = ctx.measureText(CANVAS_FONT_REFERENCE_GLYPH);
+    const ascent = textMetrics.actualBoundingBoxAscent;
+    const charWidth = textMetrics.width + config.letterSpacing;
 
     const x0 = config.padX;
     const y0 = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_FACTOR);

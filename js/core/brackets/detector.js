@@ -1,6 +1,6 @@
 import {
     MULTILINE_BRACKETS
-} from "./brackets.js";
+} from "./data.js";
 
 function _match(lines, x, y, char) {
     return y < lines.length && lines[y][x] === char;

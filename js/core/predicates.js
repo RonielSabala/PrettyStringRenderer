@@ -1,6 +1,6 @@
 import {
     BRACKET_SETS
-} from './brackets.js';
+} from './brackets/data.js';
 import {
     OPERATORS_SET
 } from './operators.js';

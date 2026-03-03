@@ -2,14 +2,14 @@ import {
     LINE_BREAK
 } from '../common/config.js';
 import {
-    findBracketsWithDepth
-} from './bracket_detector.js';
-import {
     BRACKET_SETS,
-} from './brackets.js';
+} from './brackets/data.js';
+import {
+    findBracketsWithDepth
+} from './brackets/detector.js';
 import {
     getLineAnalysis
-} from './line_analysis.js';
+} from './brackets/line_analysis.js';
 import {
     isCommentPart,
     isCommentStart,

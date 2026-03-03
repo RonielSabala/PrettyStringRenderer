@@ -15,16 +15,18 @@ export function render(ctx, width, height) {
     const config = state.config;
     const fontSize = config.fontSize;
     const lineHeight = fontSize * config.lineHeight;
+    const letterSpacing = config.letterSpacing;
     const tokenizedLines = state.tokenizer.tokenizedLines;
     const totalLines = tokenizedLines.length;
 
+    ctx.font = `${CANVAS_FONT_WEIGHT} ${toPx(fontSize)} '${CANVAS_FONT}'`;
+    ctx.letterSpacing = toPx(letterSpacing);
     ctx.fillStyle = state.colors.background;
     ctx.fillRect(0, 0, width, height);
-    ctx.font = `${CANVAS_FONT_WEIGHT} ${toPx(fontSize)} '${CANVAS_FONT}'`;
 
     const textMetrics = ctx.measureText(CANVAS_FONT_REFERENCE_GLYPH);
     const ascent = textMetrics.actualBoundingBoxAscent;
-    const charWidth = textMetrics.width + config.letterSpacing;
+    const charWidth = textMetrics.width + letterSpacing;
 
     const x0 = config.padX;
     const y0 = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_CORRECTION);
@@ -36,22 +38,13 @@ export function render(ctx, width, height) {
         for (const token of tokenizedLines[row]) {
             const tokenValue = token.value;
             const tokenColor = token.getColor();
-            const tokenWidth = tokenValue.length;
 
-            if (tokenColor === null) {
-                col += tokenWidth;
-                continue;
+            if (tokenColor !== null) {
+                ctx.fillStyle = tokenColor;
+                ctx.fillText(tokenValue, x0 + col * charWidth, charY);
             }
 
-            ctx.fillStyle = tokenColor;
-            for (let charIdx = 0; charIdx < tokenWidth; charIdx++) {
-                const char = tokenValue[charIdx];
-                const charX = x0 + (col + charIdx) * charWidth;
-
-                ctx.fillText(char, charX, charY);
-            }
-
-            col += tokenWidth;
+            col += tokenValue.length;
         }
     }
 }

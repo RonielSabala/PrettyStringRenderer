@@ -41,6 +41,9 @@ import {
     state
 } from './common/store.js';
 import {
+    redraw
+} from './controllers/canvas_buffer.js';
+import {
     onPanning,
     onPanningMove,
     onPanningRelease,
@@ -134,6 +137,7 @@ function initListeners() {
     document.addEventListener(EVENTS.KEY_DOWN, onEscapeToCanvas)
 
     // Canvas
+    new ResizeObserver(redraw).observe(canvasWrapElement);
     canvasWrapElement.addEventListener(EVENTS.WHEEL, onZoom, {
         passive: false
     });

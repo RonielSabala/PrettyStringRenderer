@@ -3,7 +3,7 @@ import {
 } from '../common/color_utils.js';
 import {
     redraw
-} from './render_controller.js';
+} from './canvas_buffer.js';
 
 export function onPick(themeKey, themeValue) {
     setColor(themeKey, themeValue);

@@ -25,7 +25,9 @@ import {
     IncrementalTokenizer
 } from '../core/tokenizer.js';
 import {
-    redraw,
+    redraw
+} from './canvas_buffer.js';
+import {
     setTokenizedLines
 } from './render_controller.js';
 

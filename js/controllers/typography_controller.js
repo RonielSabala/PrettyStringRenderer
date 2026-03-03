@@ -14,7 +14,7 @@ import {
 } from '../common/parse_utils.js';
 import {
     redraw
-} from './render_controller.js';
+} from './canvas_buffer.js';
 
 export function onFontSizeConfig() {
     config.fontSize = parseNumber(typographyFontSizeElement.value, CANVAS_DEFAULTS.fontSize.value);

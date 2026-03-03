@@ -25,7 +25,7 @@ import {
 } from '../common/keys.js';
 import {
     redraw,
-} from './render_controller.js';
+} from './canvas_buffer.js';
 
 let _themes = [];
 let _activeThemeName = '';

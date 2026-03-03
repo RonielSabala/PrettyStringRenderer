@@ -52,7 +52,7 @@ function _applyTheme(theme) {
     }
 
     redraw();
-    _renderHtmlThemeList();
+    _renderThemeList();
     _focusActiveTheme();
 }
 
@@ -77,7 +77,7 @@ function _showThemeOnNewWindow(theme) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function _renderHtmlThemeList() {
+function _renderThemeList() {
     themeListElement.innerHTML = '';
 
     if (_themes.length === 0) {
@@ -91,17 +91,17 @@ function _renderHtmlThemeList() {
     _themes.forEach((theme, index) => {
         const themeItem = document.createElement('div');
         const themeName = document.createElement('span');
-        const themePreview = document.createElement('div');
+        const themeSwatch = document.createElement('div');
 
         themeItem.className = CSS.THEME_ITEM + (theme._name === _activeThemeName ? ` ${CSS.THEME_ITEM_ACTIVE}` : '');
         themeName.className = CSS.THEME_NAME;
-        themePreview.className = CSS.THEME_PREVIEW;
+        themeSwatch.className = CSS.THEME_SWATCH;
 
         themeItem.tabIndex = 0;
         themeName.textContent = theme._name;
-        themePreview.style.background = theme.background;
+        themeSwatch.style.background = theme.background;
 
-        themeItem.append(themeName, themePreview);
+        themeItem.append(themeName, themeSwatch);
         themeItem.addEventListener(EVENTS.CLICK, () => _applyTheme(theme));
         themeItem.addEventListener(EVENTS.DBL_CLICK, () => _showThemeOnNewWindow(theme));
         themeItem.addEventListener(EVENTS.KEY_DOWN, (event) => _applyThemeOnArrow(event, index));
@@ -130,7 +130,7 @@ async function _onLoadThemes(files) {
     }
 
     if (_themes.length === 0) {
-        _renderHtmlThemeList();
+        _renderThemeList();
         return;
     }
 

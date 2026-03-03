@@ -1,6 +1,5 @@
 import {
-    CANVAS_ASCENT_FACTOR,
-    CANVAS_AVAILABLE_MARGIN_OFFSET_PX,
+    CANVAS_ASCENT_CORRECTION,
     CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
     CANVAS_FONT,
@@ -9,6 +8,7 @@ import {
     CANVAS_MAX_PIXEL_SCALE,
     CANVAS_MIN_PIXEL_SCALE,
     CANVAS_QUALITY_REDRAW_DEBOUNCE_MS,
+    CANVAS_VIEWPORT_PADDING_PX,
     config
 } from '../common/config.js';
 import {
@@ -57,7 +57,7 @@ function render(ctx, width, height) {
     const charWidth = textMetrics.width + config.letterSpacing;
 
     const x0 = config.padX;
-    const y0 = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_FACTOR);
+    const y0 = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_CORRECTION);
 
     for (let row = 0; row < totalLines; row++) {
         let col = 0;
@@ -129,8 +129,8 @@ function redraw() {
     _renderAtScale();
 
     const aspectRatio = CANVAS_DEFAULTS.aspectRatio;
-    const availableWidth = canvasWrapElement.clientWidth - CANVAS_AVAILABLE_MARGIN_OFFSET_PX;
-    const availableHeight = canvasWrapElement.clientHeight - CANVAS_AVAILABLE_MARGIN_OFFSET_PX;
+    const availableWidth = canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX;
+    const availableHeight = canvasWrapElement.clientHeight - CANVAS_VIEWPORT_PADDING_PX;
 
     let displayWidth = Math.min(availableWidth, availableHeight * aspectRatio);
     let displayHeight = displayWidth / aspectRatio;

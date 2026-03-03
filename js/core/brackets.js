@@ -51,7 +51,7 @@ function _match(lines, x, y, char) {
     return y < lines.length && lines[y][x] === char;
 }
 
-function _mapMultilineBrackets(lines) {
+function _detectMultilineBrackets(lines) {
     const brackets = [];
     const stacks = new Map();
     const height = lines.length;
@@ -110,8 +110,8 @@ function _mapMultilineBrackets(lines) {
     return brackets;
 }
 
-export function calculateNestingDepth(lines) {
-    const foundBrackets = _mapMultilineBrackets(lines);
+export function findBracketsWithDepth(lines) {
+    const foundBrackets = _detectMultilineBrackets(lines);
     foundBrackets.forEach(bracket => {
         bracket.depth = foundBrackets.reduce((acc, other) => {
             const isInside = (

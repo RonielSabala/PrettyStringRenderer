@@ -3,7 +3,7 @@ import {
 } from '../common/config.js';
 import {
     BRACKET_SETS,
-    calculateNestingDepth
+    findBracketsWithDepth
 } from './brackets.js';
 import {
     isCommentPart,
@@ -33,25 +33,25 @@ function _consumeLine(line, i, maxIndex, predicate) {
 
 class LineAnalysis {
     constructor(lineWidth) {
-        this.boundaryDepths = new Array(lineWidth).fill(undefined);
-        this.containmentDepths = new Int32Array(lineWidth).fill(0);
+        this.bracketArmDepths = new Array(lineWidth).fill(undefined);
+        this.bracketNestingDepths = new Int32Array(lineWidth).fill(0);
     }
 
     equals(other) {
-        if (!other || this.boundaryDepths.length !== other.boundaryDepths.length) {
+        if (!other || this.bracketArmDepths.length !== other.bracketArmDepths.length) {
             return false;
         }
 
-        const otherBoundary = other.boundaryDepths;
-        const otherContainment = other.containmentDepths;
+        const otherBoundary = other.bracketArmDepths;
+        const otherContainment = other.bracketNestingDepths;
         return (
-            this.boundaryDepths.every((item, i) => item === otherBoundary[i]) &&
-            this.containmentDepths.every((item, i) => item === otherContainment[i])
+            this.bracketArmDepths.every((item, i) => item === otherBoundary[i]) &&
+            this.bracketNestingDepths.every((item, i) => item === otherContainment[i])
         );
     }
 
     static generateAnalysisMap(lines) {
-        const foundBrackets = calculateNestingDepth(lines);
+        const foundBrackets = findBracketsWithDepth(lines);
         const foundBracketsCount = foundBrackets.length;
 
         return lines.map((line, y) => {
@@ -68,17 +68,17 @@ class LineAnalysis {
                     continue;
                 }
                 if (x1 < lineWidth) {
-                    lineAnalysis.boundaryDepths[x1] = depth;
+                    lineAnalysis.bracketArmDepths[x1] = depth;
                 }
                 if (x2 < lineWidth) {
-                    lineAnalysis.boundaryDepths[x2] = depth;
+                    lineAnalysis.bracketArmDepths[x2] = depth;
                 }
 
                 // Mark chars between the left and right arms
                 const xStart = x1 + 1;
                 const xEnd = Math.min(lineWidth, x2);
                 for (let x = xStart; x < xEnd; x++) {
-                    lineAnalysis.containmentDepths[x]++;
+                    lineAnalysis.bracketNestingDepths[x]++;
                 }
             }
 
@@ -94,7 +94,7 @@ export class IncrementalTokenizer {
         this.tokenizedLines = [];
     }
 
-    update(text) {
+    tokenize(text) {
         const result = [];
         const newLines = text.split(LINE_BREAK);
         const newLineAnalysis = LineAnalysis.generateAnalysisMap(newLines);
@@ -137,8 +137,8 @@ export class IncrementalTokenizer {
 
         while (i < lineWidth) {
             const char = line[i];
-            const baseDepth = lineAnalysis.containmentDepths[i];
-            const boundaryDepth = lineAnalysis.boundaryDepths[i];
+            const baseDepth = lineAnalysis.bracketNestingDepths[i];
+            const boundaryDepth = lineAnalysis.bracketArmDepths[i];
 
             if (boundaryDepth !== undefined) {
                 tokens.addBracket(char, boundaryDepth);

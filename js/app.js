@@ -20,7 +20,7 @@ import {
     editorResizeHandleElement,
     getColorPickerElement,
     getHexInputElement,
-    headerBadgeElement,
+    resolutionBadgeElement,
     sectionBracketColors,
     sectionCanvasColors,
     sectionSyntaxColors,
@@ -51,11 +51,11 @@ import {
     onPick,
 } from './controllers/color_controller.js';
 import {
-    onCanvasFocus,
+    onEditorChange,
     onEditorFontSize,
-    onEditorInput,
     onEditorMouseMove,
     onEditorMouseUp,
+    onEscapeToCanvas,
     onResize
 } from './controllers/editor_controller.js';
 import {
@@ -88,7 +88,7 @@ function toggleSection(element) {
 
 function initElements() {
     // Header
-    headerBadgeElement.textContent = `${describeResolution()} · ${CANVAS_DEFAULTS.aspectRatio}:1`;
+    resolutionBadgeElement.textContent = `${describeResolution()} · ${CANVAS_DEFAULTS.aspectRatio}:1`;
 
     // Sections
     toggleSection(sectionBracketColors);
@@ -151,12 +151,12 @@ function initListeners() {
     typographyPadYElement.addEventListener(EVENTS.INPUT, onPadYConfig);
 
     // Editor
-    editorElement.addEventListener(EVENTS.INPUT, onEditorInput);
+    editorElement.addEventListener(EVENTS.INPUT, onEditorChange);
     editorFontSizeElement.addEventListener(EVENTS.INPUT, onEditorFontSize);
     editorResizeHandleElement.addEventListener(EVENTS.MOUSE_DOWN, onResize);
     document.addEventListener(EVENTS.MOUSE_UP, onEditorMouseUp);
     document.addEventListener(EVENTS.MOUSE_MOVE, onEditorMouseMove);
-    document.addEventListener(EVENTS.KEY_DOWN, onCanvasFocus)
+    document.addEventListener(EVENTS.KEY_DOWN, onEscapeToCanvas)
 
     // Canvas
     canvasWrapElement.addEventListener(EVENTS.WHEEL, onZoom, {
@@ -174,5 +174,5 @@ function initListeners() {
 await document.fonts.ready.then(() => {
     initElements();
     initListeners();
-    onEditorInput();
+    onEditorChange();
 });

@@ -46,8 +46,8 @@ export function onResize(event) {
     editorResizeHandleElement.classList.add(CSS.DRAG);
 }
 
-export function onEditorInput() {
-    const tokenizedLines = _tokenizer.update(editorElement.value);
+export function onEditorChange() {
+    const tokenizedLines = _tokenizer.tokenize(editorElement.value);
     setTokenizedLines(tokenizedLines);
     redraw();
 }
@@ -77,7 +77,7 @@ export function onEditorMouseUp() {
     editorResizeHandleElement.classList.remove(CSS.DRAG);
 }
 
-export function onCanvasFocus(event) {
+export function onEscapeToCanvas(event) {
     if (event.code !== KEYS.ESCAPE) {
         return;
     }

@@ -41,7 +41,7 @@ function _scaleConfig() {
     };
 }
 
-function _applyScaledConfig(scalar) {
+function _saveConfig(scalar) {
     const snapshot = _scaleConfig();
     config.fontSize *= scalar;
     config.letterSpacing *= scalar;
@@ -85,7 +85,7 @@ async function exportCanvas() {
     offscreen.width = exportWidth;
     offscreen.height = exportHeight;
 
-    const snapshot = _applyScaledConfig(scalar);
+    const snapshot = _saveConfig(scalar);
     render(offscreen.getContext(CANVAS_CONTEXT_TYPE), exportWidth, exportHeight);
     _restoreConfig(snapshot);
 

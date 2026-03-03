@@ -8,6 +8,11 @@ export const btnExportTheme = document.getElementById('btn-export-theme');
 export const emptyThemeElement = document.getElementById('theme-empty');
 export const themeListElement = document.getElementById('theme-list');
 
+// Sections
+export const sectionBracketColors = document.getElementById('section-bracket-colors');
+export const sectionSyntaxColors = document.getElementById('section-syntax-colors');
+export const sectionCanvasColors = document.getElementById('section-canvas-colors');
+
 // Typography section
 export const typographyFontSizeElement = document.getElementById('typography-font-size');
 export const typographyLineHeightElement = document.getElementById('typography-line-height');

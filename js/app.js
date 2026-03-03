@@ -21,6 +21,9 @@ import {
     getColorPickerElement,
     getHexInputElement,
     headerBadgeElement,
+    sectionBracketColors,
+    sectionCanvasColors,
+    sectionSyntaxColors,
     typographyFontSizeElement,
     typographyLetterSpacingElement,
     typographyLineHeightElement,
@@ -86,6 +89,11 @@ function toggleSection(element) {
 function initElements() {
     // Header
     headerBadgeElement.textContent = `${describeResolution()} · ${CANVAS_DEFAULTS.aspectRatio}:1`;
+
+    // Sections
+    toggleSection(sectionBracketColors);
+    toggleSection(sectionSyntaxColors);
+    toggleSection(sectionCanvasColors);
 
     // Typography
     initNumberInput(typographyFontSizeElement, CANVAS_DEFAULTS.fontSize)

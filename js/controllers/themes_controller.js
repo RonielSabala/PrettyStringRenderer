@@ -44,7 +44,7 @@ function _applyTheme(theme) {
     _activeThemeName = theme._name;
     for (const themeKey of THEME_KEYS) {
         const themeValue = theme[themeKey];
-        if (themeValue === null) {
+        if (themeValue == null) {
             continue;
         }
 
@@ -57,7 +57,7 @@ function _applyTheme(theme) {
 }
 
 function _applyThemeOnArrow(event, index) {
-    if (event.code !== KEYS.ARROW_UP && event.code !== KEYS.ARROW_DOWN) {
+    if (event.key !== KEYS.ARROW_UP && event.key !== KEYS.ARROW_DOWN) {
         return;
     }
 

@@ -106,7 +106,7 @@ function initElements() {
     initNumberInput(editorFontSizeElement, EDITOR_DEFAULTS.fontSize)
     editorElement.scrollTop = 0;
     editorElement.setSelectionRange(0, 0);
-    editorElement.innerHTML = EDITOR_DEFAULTS.content;
+    editorElement.value = EDITOR_DEFAULTS.content;
     editorElement.style.fontSize = toPx(EDITOR_DEFAULTS.fontSize.value);
     editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
     editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;

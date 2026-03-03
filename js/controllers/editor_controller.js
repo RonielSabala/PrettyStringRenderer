@@ -53,7 +53,7 @@ export function onEditorChange() {
 }
 
 export function onEditorFontSize() {
-    const newFontSize = parseNumber(editorFontSizeElement, EDITOR_DEFAULTS.fontSize);
+    const newFontSize = parseNumber(editorFontSizeElement.value, EDITOR_DEFAULTS.fontSize.value);
     editorElement.style.fontSize = toPx(newFontSize);
 }
 

@@ -1,4 +1,4 @@
-export function parseNumber(htmlElement, fallback) {
-    const number = parseFloat(htmlElement.value);
-    return isNaN(number) ? fallback.value : number;
+export function parseNumber(value, fallback) {
+    const number = parseFloat(value);
+    return isNaN(number) ? fallback : number;
 }

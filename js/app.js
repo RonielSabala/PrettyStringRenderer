@@ -46,7 +46,7 @@ import {
 import {
     onHex,
     onPick,
-} from './controllers/color_controller.js';
+} from './features/color.js';
 import {
     initEditorPanel,
     onEditorChange,
@@ -55,16 +55,16 @@ import {
     onEditorMouseUp,
     onEscapeToCanvas,
     onResize
-} from './controllers/editor_controller.js';
+} from './features/editor.js';
 import {
     exportCanvas,
     exportCanvasOnCtrlS
-} from './controllers/export_controller.js';
+} from './features/export.js';
 import {
     exportCurrentTheme,
     loadThemes,
     onThemesFocus
-} from './controllers/themes_controller.js';
+} from './features/themes.js';
 import {
     initTypographyPanel,
     onFontSizeConfig,
@@ -72,7 +72,7 @@ import {
     onLineHeightConfig,
     onPadXConfig,
     onPadYConfig
-} from './controllers/typography_controller.js';
+} from './features/typography.js';
 import {
     updateColor
 } from './utils/color.js';

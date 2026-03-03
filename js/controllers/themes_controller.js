@@ -11,17 +11,17 @@ import {
 } from '../common/config.js';
 import {
     CSS
-} from '../common/css_classes.js';
+} from '../common/constants/css.js';
+import {
+    EVENTS
+} from '../common/constants/events.js';
+import {
+    KEYS
+} from '../common/constants/keys.js';
 import {
     emptyThemeElement,
     themeListElement
 } from '../common/elements.js';
-import {
-    EVENTS
-} from '../common/events.js';
-import {
-    KEYS
-} from '../common/keys.js';
 import {
     state
 } from '../common/store.js';

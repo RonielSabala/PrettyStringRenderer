@@ -14,7 +14,7 @@ import {
 } from '../common/config.js';
 import {
     KEYS
-} from '../common/keys.js';
+} from '../common/constants/keys.js';
 import {
     state
 } from '../common/store.js';

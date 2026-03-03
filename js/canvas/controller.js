@@ -6,16 +6,16 @@ import {
 } from '../common/config.js';
 import {
     CSS_CURSORS
-} from '../common/css_classes.js';
+} from '../common/constants/css.js';
+import {
+    KEYS
+} from '../common/constants/keys.js';
 import {
     canvasInnerElement,
     canvasWrapElement,
     editorElement,
     editorStatusElement
 } from '../common/elements.js';
-import {
-    KEYS
-} from '../common/keys.js';
 import {
     describeResolution,
     toPx

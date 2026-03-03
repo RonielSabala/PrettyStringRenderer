@@ -16,7 +16,10 @@ import {
 } from './common/config.js';
 import {
     CSS
-} from './common/css_classes.js';
+} from './common/constants/css.js';
+import {
+    EVENTS
+} from './common/constants/events.js';
 import {
     btnExport,
     btnExportTheme,
@@ -37,9 +40,6 @@ import {
     typographyPadXElement,
     typographyPadYElement
 } from './common/elements.js';
-import {
-    EVENTS
-} from './common/events.js';
 import {
     state
 } from './common/store.js';

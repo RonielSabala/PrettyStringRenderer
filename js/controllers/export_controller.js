@@ -10,6 +10,9 @@ import {
     LINE_BREAK
 } from '../common/config.js';
 import {
+    KEYS
+} from '../common/keys.js';
+import {
     state
 } from '../common/store.js';
 import {
@@ -72,7 +75,7 @@ function _downloadBlob(blob, filename) {
     URL.revokeObjectURL(anchor.href);
 }
 
-async function exportCanvas() {
+export function exportCanvas() {
     const rawInput = _askScalar();
     if (rawInput === null) {
         return;
@@ -85,8 +88,6 @@ async function exportCanvas() {
 
     const exportWidth = Math.round(scalar * CANVAS_DEFAULTS.width);
     const exportHeight = Math.round(scalar * CANVAS_DEFAULTS.height);
-
-    await document.fonts.ready;
 
     const offscreen = document.createElement('canvas');
     offscreen.width = exportWidth;
@@ -101,6 +102,11 @@ async function exportCanvas() {
     }, IMAGE_BLOB_TYPE);
 }
 
-export {
-    exportCanvas
-};
+export function exportCanvasOnCtrlS(event) {
+    if (!event.ctrlKey || event.code !== KEYS.S) {
+        return;
+    }
+
+    event.preventDefault();
+    exportCanvas();
+}

@@ -57,7 +57,8 @@ import {
     onResize
 } from './controllers/editor_controller.js';
 import {
-    exportCanvas
+    exportCanvas,
+    exportCanvasOnCtrlS
 } from './controllers/export_controller.js';
 import {
     exportCurrentTheme,
@@ -141,11 +142,12 @@ function initListeners() {
     canvasWrapElement.addEventListener(EVENTS.WHEEL, onZoom, {
         passive: false
     });
-    canvasWrapElement.addEventListener(EVENTS.DBL_CLICK, onZoomReset);
     canvasWrapElement.addEventListener(EVENTS.CONTEXT_MENU, (event) => event.preventDefault());
-    document.addEventListener(EVENTS.KEY_DOWN, onSpace);
-    document.addEventListener(EVENTS.KEY_UP, onSpaceRelease);
+    canvasWrapElement.addEventListener(EVENTS.DBL_CLICK, onZoomReset);
     canvasWrapElement.addEventListener(EVENTS.MOUSE_DOWN, onPanning);
+    document.addEventListener(EVENTS.KEY_DOWN, onSpace);
+    document.addEventListener(EVENTS.KEY_DOWN, exportCanvasOnCtrlS);
+    document.addEventListener(EVENTS.KEY_UP, onSpaceRelease);
     document.addEventListener(EVENTS.MOUSE_MOVE, onPanningMove);
     document.addEventListener(EVENTS.MOUSE_UP, onPanningRelease);
 }

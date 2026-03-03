@@ -1,4 +1,16 @@
 import {
+    redraw
+} from './canvas/buffer.js';
+import {
+    onPanning,
+    onPanningMove,
+    onPanningRelease,
+    onSpace,
+    onSpaceRelease,
+    onZoom,
+    onZoomReset
+} from './canvas/controller.js';
+import {
     CANVAS_DEFAULTS,
     THEME_KEYS
 } from './common/config.js';
@@ -31,18 +43,6 @@ import {
 import {
     state
 } from './common/store.js';
-import {
-    redraw
-} from './controllers/canvas_buffer.js';
-import {
-    onPanning,
-    onPanningMove,
-    onPanningRelease,
-    onSpace,
-    onSpaceRelease,
-    onZoom,
-    onZoomReset
-} from './controllers/canvas_controller.js';
 import {
     onHex,
     onPick,

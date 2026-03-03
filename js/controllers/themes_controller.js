@@ -1,4 +1,7 @@
 import {
+    redraw,
+} from '../canvas/buffer.js';
+import {
     DEFAULT_EXPORT_THEME_FILENAME,
     EXPORT_THEME_PROMPT_MESSAGE,
     THEME_BLOB_TYPE,
@@ -25,9 +28,6 @@ import {
 import {
     setColor
 } from '../utils/color.js';
-import {
-    redraw,
-} from './canvas_buffer.js';
 
 const ACTIVE_THEME_CSS = `.${CSS.THEME_ITEM}.${CSS.THEME_ITEM_ACTIVE}`;
 

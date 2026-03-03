@@ -1,4 +1,7 @@
 import {
+    redraw
+} from '../canvas/buffer.js';
+import {
     CANVAS_DEFAULTS
 } from '../common/config.js';
 import {
@@ -17,9 +20,6 @@ import {
 import {
     parseNumber
 } from '../utils/parse.js';
-import {
-    redraw
-} from './canvas_buffer.js';
 
 export function initTypographyPanel() {
     initNumberInput(typographyFontSizeElement, CANVAS_DEFAULTS.fontSize)

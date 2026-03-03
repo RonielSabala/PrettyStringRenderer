@@ -1,9 +1,9 @@
 import {
+    redraw
+} from '../canvas/buffer.js';
+import {
     setColor
 } from '../utils/color.js';
-import {
-    redraw
-} from './canvas_buffer.js';
 
 export function onPick(themeKey, themeValue) {
     setColor(themeKey, themeValue);

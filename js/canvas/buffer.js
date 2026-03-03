@@ -16,10 +16,10 @@ import {
 import {
     getCanvasZoom,
     setZoomChangeCallback
-} from './canvas_controller.js';
+} from './controller.js';
 import {
     render
-} from './render_controller.js';
+} from './renderer.js';
 
 let _lastCanvasWidth = 0;
 let _lastCanvasHeight = 0;

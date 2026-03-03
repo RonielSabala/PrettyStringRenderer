@@ -1,4 +1,10 @@
 import {
+    redraw
+} from '../canvas/buffer.js';
+import {
+    updateZoomInfo
+} from '../canvas/controller.js';
+import {
     EDITOR_DEFAULTS
 } from '../common/config.js';
 import {
@@ -27,12 +33,6 @@ import {
 import {
     toPx
 } from '../utils/resolution.js';
-import {
-    redraw
-} from './canvas_buffer.js';
-import {
-    updateZoomInfo
-} from './canvas_controller.js';
 
 let startY = 0;
 let startHeight = 0;

@@ -1,4 +1,7 @@
 import {
+    render
+} from '../canvas/renderer.js';
+import {
     CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
     DEFAULT_EXPORT_IMAGE_FILENAME,
@@ -19,9 +22,6 @@ import {
     createResolution,
     describeResolution
 } from '../utils/resolution.js';
-import {
-    render
-} from './render_controller.js';
 
 const _DEFAULT_PROMPT_MESSAGE = `${EXPORT_IMAGE_PROMPT_MESSAGE}
 ${EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES

@@ -67,6 +67,7 @@ function _detectMultilineBrackets(lines) {
 
 export function findBracketsWithDepth(lines) {
     const foundBrackets = _detectMultilineBrackets(lines);
+
     foundBrackets.forEach(bracket => {
         bracket.depth = foundBrackets.reduce((acc, other) => {
             const isInside = (

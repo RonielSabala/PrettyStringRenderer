@@ -2,10 +2,13 @@ import {
     LINE_BREAK
 } from '../common/config.js';
 import {
+    findBracketsWithDepth
+} from './bracket_detector.js';
+import {
     BRACKET_SETS,
 } from './brackets.js';
 import {
-    generateAnalysisMap
+    getLineAnalysis
 } from './line_analysis.js';
 import {
     isCommentPart,
@@ -42,26 +45,31 @@ export class IncrementalTokenizer {
 
     tokenize(text) {
         const newLines = text.split(LINE_BREAK);
-        const newLineAnalysis = generateAnalysisMap(newLines);
+        const newLineAnalysis = [];
+        const newTokenizedLines = [];
 
         const height = newLines.length;
-        for (let y = 0; y < height; y++) {
-            const line = newLines[y];
-            const lineAnalysis = newLineAnalysis[y];
+        const foundBrackets = findBracketsWithDepth(newLines);
+
+        for (let i = 0; i < height; i++) {
+            const line = newLines[i];
+            let lineAnalysis = getLineAnalysis(line, i, foundBrackets);
+            let tokens = [];
 
             // Only re-tokenize if the text or the bracket depth context changed
-            if (this.lines[y] === line && this.lineAnalysis[y]?.equals(lineAnalysis)) {
-                continue;
+            if (this.lines[i] === line && this.lineAnalysis[i]?.equals(lineAnalysis)) {
+                tokens = this.tokenizedLines[i];
+            } else {
+                tokens = this._tokenizeLine(line, lineAnalysis);
             }
 
-            const tokens = this._tokenizeLine(line, lineAnalysis);
-
-            // Update caches
-            this.tokenizedLines[y] = tokens;
-            this.lineAnalysis[y] = lineAnalysis;
+            newTokenizedLines.push(tokens);
+            newLineAnalysis.push(lineAnalysis);
         }
 
         this.lines = newLines;
+        this.lineAnalysis = newLineAnalysis;
+        this.tokenizedLines = newTokenizedLines;
     }
 
     _tokenizeLine(line, lineAnalysis) {

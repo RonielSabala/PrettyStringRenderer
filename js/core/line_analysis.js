@@ -1,7 +1,3 @@
-import {
-    findBracketsWithDepth
-} from './bracket_detector.js';
-
 class LineAnalysis {
     constructor(lineWidth) {
         this.bracketArmDepths = new Array(lineWidth).fill(undefined);
@@ -9,51 +5,58 @@ class LineAnalysis {
     }
 
     equals(other) {
-        if (!other || this.bracketArmDepths.length !== other.bracketArmDepths.length) {
+        if (this === other) {
+            return true;
+        }
+
+        const boundaryA = this.bracketArmDepths;
+        const boundaryB = other.bracketArmDepths;
+        const len = boundaryA.length;
+
+        if (!other || len !== boundaryB.length) {
             return false;
         }
 
-        const otherBoundary = other.bracketArmDepths;
-        const otherContainment = other.bracketNestingDepths;
-        return (
-            this.bracketArmDepths.every((item, i) => item === otherBoundary[i]) &&
-            this.bracketNestingDepths.every((item, i) => item === otherContainment[i])
-        );
-    }
-}
+        const containmentA = this.bracketNestingDepths;
+        const containmentB = other.bracketNestingDepths;
 
-export function generateAnalysisMap(lines) {
-    const foundBrackets = findBracketsWithDepth(lines);
-    const foundBracketsCount = foundBrackets.length;
-
-    return lines.map((line, y) => {
-        const lineWidth = line.length;
-        const lineAnalysis = new LineAnalysis(lineWidth);
-
-        for (let i = 0; i < foundBracketsCount; i++) {
-            const bracket = foundBrackets[i];
-            const depth = bracket.depth;
-            const x1 = bracket.x1;
-            const x2 = bracket.x2;
-
-            if (y < bracket.y1 || y > bracket.y2) {
-                continue;
-            }
-            if (x1 < lineWidth) {
-                lineAnalysis.bracketArmDepths[x1] = depth;
-            }
-            if (x2 < lineWidth) {
-                lineAnalysis.bracketArmDepths[x2] = depth;
-            }
-
-            // Mark chars between the left and right arms
-            const xStart = x1 + 1;
-            const xEnd = Math.min(lineWidth, x2);
-            for (let x = xStart; x < xEnd; x++) {
-                lineAnalysis.bracketNestingDepths[x]++;
+        for (let i = 0; i < len; i++) {
+            if (boundaryA[i] !== boundaryB[i] || containmentA[i] !== containmentB[i]) {
+                return false;
             }
         }
 
-        return lineAnalysis;
-    });
+        return true;
+    }
+}
+
+export function getLineAnalysis(line, lineIdx, brackets) {
+    const lineWidth = line.length;
+    const lineAnalysis = new LineAnalysis(lineWidth);
+
+    for (const bracket of brackets) {
+        if (lineIdx < bracket.y1 || lineIdx > bracket.y2) {
+            continue;
+        }
+
+        const x1 = bracket.x1;
+        const x2 = bracket.x2;
+        const depth = bracket.depth;
+
+        if (x1 < lineWidth) {
+            lineAnalysis.bracketArmDepths[x1] = depth;
+        }
+        if (x2 < lineWidth) {
+            lineAnalysis.bracketArmDepths[x2] = depth;
+        }
+
+        // Mark chars between the left and right arms
+        const xStart = x1 + 1;
+        const xEnd = Math.min(lineWidth, x2);
+        for (let x = xStart; x < xEnd; x++) {
+            lineAnalysis.bracketNestingDepths[x]++;
+        }
+    }
+
+    return lineAnalysis;
 }

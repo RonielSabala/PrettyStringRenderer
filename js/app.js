@@ -75,13 +75,13 @@ import {
 } from './controllers/typography_controller.js';
 import {
     updateColor
-} from './utils/color_sync.js';
+} from './utils/color.js';
 import {
     toggleSection
-} from './utils/init_utils.js';
+} from './utils/init.js';
 import {
     describeResolution
-} from './utils/resolution_utils.js';
+} from './utils/resolution.js';
 
 function initSections() {
     resolutionBadgeElement.textContent = `${describeResolution()} · ${CANVAS_DEFAULTS.aspectRatio}:1`;

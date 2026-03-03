@@ -9,7 +9,7 @@ import {
 } from '../common/store.js';
 import {
     toPx
-} from '../utils/resolution_utils.js';
+} from '../utils/resolution.js';
 
 export function render(ctx, width, height) {
     const config = state.config;

@@ -24,7 +24,7 @@ import {
 } from '../common/store.js';
 import {
     setColor
-} from '../utils/color_sync.js';
+} from '../utils/color.js';
 import {
     redraw,
 } from './canvas_buffer.js';

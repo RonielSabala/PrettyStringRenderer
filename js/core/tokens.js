@@ -1,7 +1,7 @@
 import {
     resolveBracketColor,
     resolveTokenColor
-} from '../utils/color_utils.js';
+} from '../utils/color.js';
 
 export const TOKENS = Object.freeze({
     WHITE_SPACE: 'white_space',

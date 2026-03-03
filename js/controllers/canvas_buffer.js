@@ -12,7 +12,7 @@ import {
 } from '../common/elements.js';
 import {
     toPx
-} from '../utils/resolution_utils.js';
+} from '../utils/resolution.js';
 import {
     getCanvasZoom,
     setZoomChangeCallback

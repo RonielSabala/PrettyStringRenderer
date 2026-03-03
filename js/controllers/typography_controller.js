@@ -13,10 +13,10 @@ import {
 } from '../common/store.js';
 import {
     initNumberInput
-} from '../utils/init_utils.js';
+} from '../utils/init.js';
 import {
     parseNumber
-} from '../utils/parse_utils.js';
+} from '../utils/parse.js';
 import {
     redraw
 } from './canvas_buffer.js';

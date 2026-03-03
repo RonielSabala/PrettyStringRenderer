@@ -18,7 +18,7 @@ import {
 import {
     createResolution,
     describeResolution
-} from '../utils/resolution_utils.js';
+} from '../utils/resolution.js';
 import {
     render
 } from './render_controller.js';

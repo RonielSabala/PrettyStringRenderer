@@ -1,8 +1,8 @@
 import {
     MULTILINE_BRACKETS
-} from "./data.js";
+} from './data.js';
 
-function _match(lines, x, y, char) {
+function _armMatches(lines, x, y, char) {
     return y < lines.length && lines[y][x] === char;
 }
 
@@ -29,11 +29,11 @@ function _detectMultilineBrackets(lines) {
 
                 let yEnd = y + 1;
                 const part = isLeft ? bracket.left : bracket.right;
-                while (_match(lines, x, yEnd, part.mid)) {
+                while (_armMatches(lines, x, yEnd, part.mid)) {
                     yEnd++;
                 }
 
-                if (!_match(lines, x, yEnd, part.bottom)) {
+                if (!_armMatches(lines, x, yEnd, part.bottom)) {
                     continue;
                 }
 
@@ -47,8 +47,9 @@ function _detectMultilineBrackets(lines) {
                     continue;
                 }
 
+                // Pop matching left arm
                 const stack = stacks.get(key);
-                if (!stack || stack.length === 0) {
+                if (!stack?.length) {
                     continue;
                 }
 
@@ -66,21 +67,31 @@ function _detectMultilineBrackets(lines) {
 }
 
 export function findBracketsWithDepth(lines) {
-    const foundBrackets = _detectMultilineBrackets(lines);
+    const brackets = _detectMultilineBrackets(lines);
+    if (brackets.length === 0) {
+        return brackets;
+    }
 
-    foundBrackets.forEach(bracket => {
-        bracket.depth = foundBrackets.reduce((acc, other) => {
-            const isInside = (
-                other !== bracket &&
-                bracket.x1 > other.x1 &&
-                bracket.x2 < other.x2 &&
-                bracket.y1 >= other.y1 &&
-                bracket.y2 <= other.y2
-            );
+    brackets.sort((bracketA, bracketB) =>
+        bracketA.y1 !== bracketB.y1 ? bracketA.y1 - bracketB.y1 :
+        bracketA.x1 !== bracketB.x1 ? bracketA.x1 - bracketB.x1 :
+        (bracketB.x2 - bracketB.x1) - (bracketA.x2 - bracketA.x1)
+    );
 
-            return isInside ? acc + 1 : acc;
-        }, 0);
-    });
+    const stack = [];
+    for (const bracket of brackets) {
+        while (stack.length > 0) {
+            const top = stack[stack.length - 1];
+            if (top.x2 > bracket.x1 && top.y2 >= bracket.y1) {
+                break;
+            }
 
-    return foundBrackets;
+            stack.pop();
+        }
+
+        bracket.depth = stack.length;
+        stack.push(bracket);
+    }
+
+    return brackets;
 }

@@ -1,6 +1,6 @@
 import {
     CSS
-} from "../common/constants/css.js";
+} from '../common/constants/css.js';
 
 export function initNumberInput(element, dataContainer) {
     element.value = dataContainer.value;

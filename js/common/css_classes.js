@@ -7,7 +7,7 @@ export const CSS = Object.freeze({
     THEME_ITEM: 'theme-item',
     THEME_ITEM_ACTIVE: 'active',
     THEME_NAME: 'theme-name',
-    THEME_DOT: 'theme-dot',
+    THEME_PREVIEW: 'theme-preview',
     // Resize handle classes
     DRAG: 'drag',
 });

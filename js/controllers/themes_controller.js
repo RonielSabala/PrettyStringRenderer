@@ -91,17 +91,17 @@ function _renderHtmlThemeList() {
     _themes.forEach((theme, index) => {
         const themeItem = document.createElement('div');
         const themeName = document.createElement('span');
-        const themeDot = document.createElement('div');
+        const themePreview = document.createElement('div');
 
         themeItem.className = CSS.THEME_ITEM + (theme._name === _activeThemeName ? ` ${CSS.THEME_ITEM_ACTIVE}` : '');
         themeName.className = CSS.THEME_NAME;
-        themeDot.className = CSS.THEME_DOT;
+        themePreview.className = CSS.THEME_PREVIEW;
 
         themeItem.tabIndex = 0;
         themeName.textContent = theme._name;
-        themeDot.style.background = theme.background;
+        themePreview.style.background = theme.background;
 
-        themeItem.append(themeName, themeDot);
+        themeItem.append(themeName, themePreview);
         themeItem.addEventListener(EVENTS.CLICK, () => _applyTheme(theme));
         themeItem.addEventListener(EVENTS.DBL_CLICK, () => _showThemeOnNewWindow(theme));
         themeItem.addEventListener(EVENTS.KEY_DOWN, (event) => _applyThemeOnArrow(event, index));

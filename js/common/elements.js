@@ -1,47 +1,56 @@
+function _getElement(id) {
+    const element = document.getElementById(id);
+    if (!element) {
+        throw new Error(`Element #${id} not found`);
+    }
+
+    return element;
+}
+
 // Header section
-export const btnExport = document.getElementById('btn-export');
-export const resolutionBadgeElement = document.getElementById('header-badge');
+export const btnExport = _getElement('btn-export');
+export const resolutionBadgeElement = _getElement('header-badge');
 
 // Theme section
-export const btnLoadThemes = document.getElementById('btn-load-themes')
-export const btnExportTheme = document.getElementById('btn-export-theme');
-export const emptyThemeElement = document.getElementById('theme-empty');
-export const themeListElement = document.getElementById('theme-list');
+export const btnLoadThemes = _getElement('btn-load-themes')
+export const btnExportTheme = _getElement('btn-export-theme');
+export const emptyThemeElement = _getElement('theme-empty');
+export const themeListElement = _getElement('theme-list');
 
 // Sections
-export const sectionBracketColors = document.getElementById('section-bracket-colors');
-export const sectionSyntaxColors = document.getElementById('section-syntax-colors');
-export const sectionCanvasColors = document.getElementById('section-canvas-colors');
+export const sectionBracketColors = _getElement('section-bracket-colors');
+export const sectionSyntaxColors = _getElement('section-syntax-colors');
+export const sectionCanvasColors = _getElement('section-canvas-colors');
 
 // Typography section
-export const typographyFontSizeElement = document.getElementById('typography-font-size');
-export const typographyLineHeightElement = document.getElementById('typography-line-height');
-export const typographyLetterSpacingElement = document.getElementById('typography-letter-spacing');
-export const typographyPadXElement = document.getElementById('typography-pad-x');
-export const typographyPadYElement = document.getElementById('typography-pad-y');
+export const typographyFontSizeElement = _getElement('typography-font-size');
+export const typographyLineHeightElement = _getElement('typography-line-height');
+export const typographyLetterSpacingElement = _getElement('typography-letter-spacing');
+export const typographyPadXElement = _getElement('typography-pad-x');
+export const typographyPadYElement = _getElement('typography-pad-y');
 
 // Editor
-export const editorResizeHandleElement = document.getElementById('editor-resize-handle');
-export const editorPanelElement = document.getElementById('editor-panel');
-export const editorFontSizeElement = document.getElementById('editor-font-size');
-export const editorStatusElement = document.getElementById('editor-status');
-export const editorElement = document.getElementById('editor');
+export const editorResizeHandleElement = _getElement('editor-resize-handle');
+export const editorPanelElement = _getElement('editor-panel');
+export const editorFontSizeElement = _getElement('editor-font-size');
+export const editorStatusElement = _getElement('editor-status');
+export const editorElement = _getElement('editor');
 
 // Canvas
-export const canvasWrapElement = document.getElementById('canvas-wrap');
-export const canvasInnerElement = document.getElementById('canvas-inner');
-export const canvasElement = document.getElementById('canvas');
+export const canvasWrapElement = _getElement('canvas-wrap');
+export const canvasInnerElement = _getElement('canvas-inner');
+export const canvasElement = _getElement('canvas');
 
 // Color input getters
 
 export function getSwatchFillElement(themeKey) {
-    return document.getElementById(`swatch-fill-${themeKey}`);
+    return _getElement(`swatch-fill-${themeKey}`);
 }
 
 export function getColorPickerElement(themeKey) {
-    return document.getElementById(`color-picker-${themeKey}`);
+    return _getElement(`color-picker-${themeKey}`);
 }
 
 export function getHexInputElement(themeKey) {
-    return document.getElementById(`hex-input-${themeKey}`);
+    return _getElement(`hex-input-${themeKey}`);
 }

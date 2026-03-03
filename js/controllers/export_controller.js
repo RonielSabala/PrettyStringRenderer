@@ -1,19 +1,21 @@
 import {
     CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
-    config,
     DEFAULT_EXPORT_IMAGE_FILENAME,
     DEFAULT_EXPORT_SCALAR,
     EXPORT_IMAGE_PROMPT_MESSAGE,
     EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES,
     IMAGE_BLOB_TYPE,
     IMAGES_EXTENSION,
-    LINE_BREAK,
+    LINE_BREAK
 } from '../common/config.js';
 import {
     createResolution,
     describeResolution
 } from '../common/resolution_utils.js';
+import {
+    state
+} from '../common/store.js';
 import {
     render
 } from './render_controller.js';
@@ -33,6 +35,7 @@ function _askScalar() {
 }
 
 function _scaleConfig() {
+    const config = state.config;
     return {
         fontSize: config.fontSize,
         letterSpacing: config.letterSpacing,
@@ -42,15 +45,19 @@ function _scaleConfig() {
 }
 
 function _saveConfig(scalar) {
+    const config = state.config;
     const snapshot = _scaleConfig();
+
     config.fontSize *= scalar;
     config.letterSpacing *= scalar;
     config.padX *= scalar;
     config.padY *= scalar;
+
     return snapshot;
 }
 
 function _restoreConfig(snapshot) {
+    const config = state.config;
     config.fontSize = snapshot.fontSize;
     config.letterSpacing = snapshot.letterSpacing;
     config.padX = snapshot.padX;

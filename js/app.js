@@ -3,8 +3,7 @@ import {
 } from './common/color_sync.js';
 import {
     CANVAS_DEFAULTS,
-    THEME_KEYS,
-    config
+    THEME_KEYS
 } from './common/config.js';
 import {
     CSS
@@ -38,6 +37,9 @@ import {
 import {
     describeResolution
 } from './common/resolution_utils.js';
+import {
+    state
+} from './common/store.js';
 import {
     onPanning,
     onPanningMove,
@@ -98,7 +100,7 @@ function initListeners() {
     );
 
     // Apply default theme
-    for (const [ThemeKey, ThemeValue] of Object.entries(config.colors)) {
+    for (const [ThemeKey, ThemeValue] of Object.entries(state.colors)) {
         updateColor(ThemeKey, ThemeValue);
     }
 

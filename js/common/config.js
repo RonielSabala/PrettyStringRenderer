@@ -40,13 +40,12 @@ export const IMAGE_BLOB_TYPE = {
 
 // UI defaults
 
-const width = 3120;
-const height = 780;
-
+const canvasWidth = 3120;
+const canvasHeight = 780;
 export const CANVAS_DEFAULTS = {
-    width,
-    height,
-    aspectRatio: width / height,
+    width: canvasWidth,
+    height: canvasHeight,
+    aspectRatio: canvasWidth / canvasHeight,
     fontSize: {
         value: 85,
         min: 5,
@@ -113,15 +112,3 @@ export const DEFAULT_THEME = {
 };
 
 export const THEME_KEYS = Object.keys(DEFAULT_THEME);
-
-// Mutable runtime config
-export const config = {
-    fontSize: CANVAS_DEFAULTS.fontSize.value,
-    lineHeight: CANVAS_DEFAULTS.lineHeight.value,
-    letterSpacing: CANVAS_DEFAULTS.letterSpacing.value,
-    padX: CANVAS_DEFAULTS.padX.value,
-    padY: CANVAS_DEFAULTS.padY.value,
-    colors: {
-        ...DEFAULT_THEME
-    },
-};

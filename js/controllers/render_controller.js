@@ -2,25 +2,23 @@ import {
     CANVAS_ASCENT_CORRECTION,
     CANVAS_FONT,
     CANVAS_FONT_REFERENCE_GLYPH,
-    CANVAS_FONT_WEIGHT,
-    config
+    CANVAS_FONT_WEIGHT
 } from '../common/config.js';
 import {
     toPx
 } from '../common/resolution_utils.js';
-
-let _tokenizedLines = [];
-
-export function setTokenizedLines(lines) {
-    _tokenizedLines = lines;
-}
+import {
+    state
+} from '../common/store.js';
 
 export function render(ctx, width, height) {
+    const config = state.config;
     const fontSize = config.fontSize;
     const lineHeight = fontSize * config.lineHeight;
-    const totalLines = _tokenizedLines.length;
+    const tokenizedLines = state.tokenizer.tokenizedLines;
+    const totalLines = tokenizedLines.length;
 
-    ctx.fillStyle = config.colors.background;
+    ctx.fillStyle = state.colors.background;
     ctx.fillRect(0, 0, width, height);
     ctx.font = `${CANVAS_FONT_WEIGHT} ${toPx(fontSize)} '${CANVAS_FONT}'`;
 
@@ -35,7 +33,7 @@ export function render(ctx, width, height) {
         let col = 0;
         const charY = y0 + row * lineHeight;
 
-        for (const token of _tokenizedLines[row]) {
+        for (const token of tokenizedLines[row]) {
             const tokenValue = token.value;
             const tokenColor = token.getColor();
             const tokenWidth = tokenValue.length;

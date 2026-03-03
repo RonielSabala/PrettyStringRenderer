@@ -1,6 +1,5 @@
 import {
-    CANVAS_DEFAULTS,
-    config
+    CANVAS_DEFAULTS
 } from '../common/config.js';
 import {
     typographyFontSizeElement,
@@ -16,6 +15,9 @@ import {
     parseNumber
 } from '../common/parse_utils.js';
 import {
+    state
+} from '../common/store.js';
+import {
     redraw
 } from './canvas_buffer.js';
 
@@ -28,26 +30,26 @@ export function initTypographyPanel() {
 }
 
 export function onFontSizeConfig() {
-    config.fontSize = parseNumber(typographyFontSizeElement.value, CANVAS_DEFAULTS.fontSize.value);
+    state.config.fontSize = parseNumber(typographyFontSizeElement.value, CANVAS_DEFAULTS.fontSize.value);
     redraw();
 }
 
 export function onLineHeightConfig() {
-    config.lineHeight = parseNumber(typographyLineHeightElement.value, CANVAS_DEFAULTS.lineHeight.value);
+    state.config.lineHeight = parseNumber(typographyLineHeightElement.value, CANVAS_DEFAULTS.lineHeight.value);
     redraw();
 }
 
 export function onLetterSpacingConfig() {
-    config.letterSpacing = parseNumber(typographyLetterSpacingElement.value, CANVAS_DEFAULTS.letterSpacing.value);
+    state.config.letterSpacing = parseNumber(typographyLetterSpacingElement.value, CANVAS_DEFAULTS.letterSpacing.value);
     redraw();
 }
 
 export function onPadXConfig() {
-    config.padX = parseNumber(typographyPadXElement.value, CANVAS_DEFAULTS.padX.value);
+    state.config.padX = parseNumber(typographyPadXElement.value, CANVAS_DEFAULTS.padX.value);
     redraw();
 }
 
 export function onPadYConfig() {
-    config.padY = parseNumber(typographyPadYElement.value, CANVAS_DEFAULTS.padY.value);
+    state.config.padY = parseNumber(typographyPadYElement.value, CANVAS_DEFAULTS.padY.value);
     redraw();
 }

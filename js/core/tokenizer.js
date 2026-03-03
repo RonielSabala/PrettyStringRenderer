@@ -41,7 +41,6 @@ export class IncrementalTokenizer {
     }
 
     tokenize(text) {
-        const result = [];
         const newLines = text.split(LINE_BREAK);
         const newLineAnalysis = generateAnalysisMap(newLines);
 
@@ -52,7 +51,6 @@ export class IncrementalTokenizer {
 
             // Only re-tokenize if the text or the bracket depth context changed
             if (this.lines[y] === line && this.lineAnalysis[y]?.equals(lineAnalysis)) {
-                result.push(this.tokenizedLines[y]);
                 continue;
             }
 
@@ -61,12 +59,9 @@ export class IncrementalTokenizer {
             // Update caches
             this.tokenizedLines[y] = tokens;
             this.lineAnalysis[y] = lineAnalysis;
-
-            result.push(tokens);
         }
 
         this.lines = newLines;
-        return result;
     }
 
     _tokenizeLine(line, lineAnalysis) {

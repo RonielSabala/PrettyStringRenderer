@@ -10,7 +10,7 @@ import {
     editorElement,
     editorFontSizeElement,
     editorPanelElement,
-    editorResizeHandleElement,
+    editorResizeHandleElement
 } from '../common/elements.js';
 import {
     initNumberInput
@@ -25,22 +25,21 @@ import {
     toPx
 } from '../common/resolution_utils.js';
 import {
-    IncrementalTokenizer
-} from '../core/tokenizer.js';
+    state
+} from '../common/store.js';
 import {
     redraw
 } from './canvas_buffer.js';
 import {
-    setTokenizedLines
-} from './render_controller.js';
+    updateZoomInfo
+} from './canvas_controller.js';
 
 let startY = 0;
 let startHeight = 0;
 let dragging = false;
 
-const _tokenizer = new IncrementalTokenizer();
-
 export function initEditorPanel() {
+    updateZoomInfo();
     initNumberInput(editorFontSizeElement, EDITOR_DEFAULTS.fontSize)
 
     editorElement.scrollTop = 0;
@@ -64,8 +63,7 @@ export function onResize(event) {
 }
 
 export function onEditorChange() {
-    const tokenizedLines = _tokenizer.tokenize(editorElement.value);
-    setTokenizedLines(tokenizedLines);
+    state.tokenizer.tokenize(editorElement.value);
     redraw();
 }
 

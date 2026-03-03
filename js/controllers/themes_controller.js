@@ -2,7 +2,6 @@ import {
     setColor
 } from '../common/color_sync.js';
 import {
-    config,
     DEFAULT_EXPORT_THEME_FILENAME,
     EXPORT_THEME_PROMPT_MESSAGE,
     THEME_BLOB_TYPE,
@@ -24,11 +23,12 @@ import {
     KEYS
 } from '../common/keys.js';
 import {
+    state
+} from '../common/store.js';
+import {
     redraw,
 } from './canvas_buffer.js';
 
-let _themes = [];
-let _activeThemeName = '';
 const ACTIVE_THEME_CSS = `.${CSS.THEME_ITEM}.${CSS.THEME_ITEM_ACTIVE}`;
 
 function _getUrlFromObject(object) {
@@ -41,7 +41,7 @@ function _focusActiveTheme() {
 }
 
 function _applyTheme(theme) {
-    _activeThemeName = theme._name;
+    state.activeThemeName = theme._name;
     for (const themeKey of THEME_KEYS) {
         const themeValue = theme[themeKey];
         if (themeValue == null) {
@@ -62,12 +62,14 @@ function _applyThemeOnArrow(event, index) {
     }
 
     event.preventDefault();
+    const themes = state.themes;
+
     if (event.code === KEYS.ARROW_UP) {
-        _applyTheme(_themes.at(index - 1));
+        _applyTheme(themes.at(index - 1));
     }
 
     if (event.code === KEYS.ARROW_DOWN) {
-        _applyTheme(_themes.at((index + 1) % _themes.length))
+        _applyTheme(themes.at((index + 1) % themes.length))
     };
 }
 
@@ -79,8 +81,9 @@ function _showThemeOnNewWindow(theme) {
 
 function _renderThemeList() {
     themeListElement.innerHTML = '';
+    const themes = state.themes;
 
-    if (_themes.length === 0) {
+    if (themes.length === 0) {
         if (emptyThemeElement) {
             themeListElement.appendChild(emptyThemeElement);
         }
@@ -88,12 +91,12 @@ function _renderThemeList() {
         return;
     }
 
-    _themes.forEach((theme, index) => {
+    themes.forEach((theme, index) => {
         const themeItem = document.createElement('div');
         const themeName = document.createElement('span');
         const themeSwatch = document.createElement('div');
 
-        themeItem.className = CSS.THEME_ITEM + (theme._name === _activeThemeName ? ` ${CSS.THEME_ITEM_ACTIVE}` : '');
+        themeItem.className = CSS.THEME_ITEM + (theme._name === state.activeThemeName ? ` ${CSS.THEME_ITEM_ACTIVE}` : '');
         themeName.className = CSS.THEME_NAME;
         themeSwatch.className = CSS.THEME_SWATCH;
 
@@ -112,14 +115,15 @@ function _renderThemeList() {
 
 function _mergeTheme(theme, themeName) {
     theme._name = themeName;
+    let themes = state.themes;
+    const i = themes.findIndex(t => t._name === themeName);
 
-    const i = _themes.findIndex(t => t._name === themeName);
     if (i === -1) {
-        _themes.push(theme);
+        themes.push(theme);
         return;
     }
 
-    _themes[i] = theme;
+    themes[i] = theme;
 }
 
 async function _onLoadThemes(files) {
@@ -129,12 +133,13 @@ async function _onLoadThemes(files) {
         _mergeTheme(theme, themeName);
     }
 
-    if (_themes.length === 0) {
+    const themes = state.themes;
+    if (themes.length === 0) {
         _renderThemeList();
         return;
     }
 
-    _applyTheme(_themes.at(-1));
+    _applyTheme(themes.at(-1));
 }
 
 export async function loadThemes() {
@@ -147,13 +152,13 @@ export async function loadThemes() {
 }
 
 export function exportCurrentTheme() {
-    const filename = prompt(EXPORT_THEME_PROMPT_MESSAGE, _activeThemeName || DEFAULT_EXPORT_THEME_FILENAME);
+    const filename = prompt(EXPORT_THEME_PROMPT_MESSAGE, state.activeThemeName || DEFAULT_EXPORT_THEME_FILENAME);
     if (!filename) {
         return;
     }
 
     const anchorElement = document.createElement('a');
-    anchorElement.href = _getUrlFromObject(config.colors);
+    anchorElement.href = _getUrlFromObject(state.colors);
     anchorElement.download = filename.endsWith(THEMES_EXTENSION) ? filename : `${filename}${THEMES_EXTENSION}`;
     anchorElement.click();
     setTimeout(() => URL.revokeObjectURL(anchorElement.href), 1000);

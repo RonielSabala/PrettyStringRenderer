@@ -37,6 +37,10 @@ function getCanvasZoom() {
     return canvasZoom;
 }
 
+function updateZoomInfo() {
+    editorStatusElement.textContent = `${describeResolution()} · ${(canvasZoom * 100).toFixed(0)}%`;
+}
+
 function setZoomChangeCallback(callback) {
     onZoomChangeCallback = callback;
 }
@@ -44,7 +48,7 @@ function setZoomChangeCallback(callback) {
 function _applyTransform() {
     rafScheduled = false;
     canvasInnerElement.style.transform = `translate(${toPx(canvasPanX)},${toPx(canvasPanY)}) scale(${canvasZoom})`;
-    editorStatusElement.textContent = `${describeResolution()} · ${(canvasZoom * 100).toFixed(0)}%`;
+    updateZoomInfo();
 }
 
 function _scheduleTransform() {
@@ -178,5 +182,6 @@ export {
     onSpaceRelease,
     onZoom,
     onZoomReset,
-    setZoomChangeCallback
+    setZoomChangeCallback,
+    updateZoomInfo
 };

@@ -1,11 +1,11 @@
 import {
-    config
-} from './config.js';
-import {
     getColorPickerElement,
     getHexInputElement,
     getSwatchFillElement
 } from './elements.js';
+import {
+    state
+} from './store.js';
 
 export function updateColor(themeKey, themeValue) {
     getSwatchFillElement(themeKey).style.background = themeValue;
@@ -14,6 +14,6 @@ export function updateColor(themeKey, themeValue) {
 }
 
 export function setColor(themeKey, themeValue) {
-    config.colors[themeKey] = themeValue;
+    state.colors[themeKey] = themeValue;
     updateColor(themeKey, themeValue);
 }

@@ -2,15 +2,15 @@ import {
     TOKENS
 } from '../core/tokens.js';
 import {
-    config
-} from './config.js';
+    state
+} from './store.js';
 
 export function resolveBracketColor(bracketDepth) {
-    return config.colors[`bracket${bracketDepth % 3}`]
+    return state.colors[`bracket${bracketDepth % 3}`]
 }
 
 export function resolveTokenColor(token) {
-    const colors = config.colors;
+    const colors = state.colors;
     switch (token) {
         case TOKENS.WHITE_SPACE:
             return null;

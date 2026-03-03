@@ -13,20 +13,20 @@ import {
     editorResizeHandleElement
 } from '../common/elements.js';
 import {
-    initNumberInput
-} from '../common/init_utils.js';
-import {
     KEYS
 } from '../common/keys.js';
 import {
-    parseNumber
-} from '../common/parse_utils.js';
-import {
-    toPx
-} from '../common/resolution_utils.js';
-import {
     state
 } from '../common/store.js';
+import {
+    initNumberInput
+} from '../utils/init_utils.js';
+import {
+    parseNumber
+} from '../utils/parse_utils.js';
+import {
+    toPx
+} from '../utils/resolution_utils.js';
 import {
     redraw
 } from './canvas_buffer.js';

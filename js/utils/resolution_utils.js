@@ -1,6 +1,6 @@
 import {
     CANVAS_DEFAULTS
-} from './config.js';
+} from '../common/config.js';
 
 export function toPx(amount) {
     return `${amount}px`;

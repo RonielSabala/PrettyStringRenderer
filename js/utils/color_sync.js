@@ -2,10 +2,10 @@ import {
     getColorPickerElement,
     getHexInputElement,
     getSwatchFillElement
-} from './elements.js';
+} from '../common/elements.js';
 import {
     state
-} from './store.js';
+} from '../common/store.js';
 
 export function updateColor(themeKey, themeValue) {
     getSwatchFillElement(themeKey).style.background = themeValue;

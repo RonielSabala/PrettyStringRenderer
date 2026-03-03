@@ -1,9 +1,9 @@
 import {
+    state
+} from '../common/store.js';
+import {
     TOKENS
 } from '../core/tokens.js';
-import {
-    state
-} from './store.js';
 
 export function resolveBracketColor(bracketDepth) {
     return state.colors[`bracket${bracketDepth % 3}`]

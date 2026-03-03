@@ -19,7 +19,7 @@ import {
 import {
     describeResolution,
     toPx
-} from '../common/resolution_utils.js';
+} from '../utils/resolution_utils.js';
 
 let canvasZoom = 1;
 let canvasPanX = 0;

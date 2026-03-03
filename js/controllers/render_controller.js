@@ -5,11 +5,11 @@ import {
     CANVAS_FONT_WEIGHT
 } from '../common/config.js';
 import {
-    toPx
-} from '../common/resolution_utils.js';
-import {
     state
 } from '../common/store.js';
+import {
+    toPx
+} from '../utils/resolution_utils.js';
 
 export function render(ctx, width, height) {
     const config = state.config;

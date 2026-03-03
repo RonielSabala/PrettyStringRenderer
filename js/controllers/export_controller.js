@@ -10,12 +10,12 @@ import {
     LINE_BREAK
 } from '../common/config.js';
 import {
-    createResolution,
-    describeResolution
-} from '../common/resolution_utils.js';
-import {
     state
 } from '../common/store.js';
+import {
+    createResolution,
+    describeResolution
+} from '../utils/resolution_utils.js';
 import {
     render
 } from './render_controller.js';

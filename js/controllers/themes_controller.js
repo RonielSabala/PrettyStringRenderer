@@ -1,7 +1,4 @@
 import {
-    setColor
-} from '../common/color_sync.js';
-import {
     DEFAULT_EXPORT_THEME_FILENAME,
     EXPORT_THEME_PROMPT_MESSAGE,
     THEME_BLOB_TYPE,
@@ -25,6 +22,9 @@ import {
 import {
     state
 } from '../common/store.js';
+import {
+    setColor
+} from '../utils/color_sync.js';
 import {
     redraw,
 } from './canvas_buffer.js';

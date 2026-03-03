@@ -1,7 +1,4 @@
 import {
-    updateColor
-} from './common/color_sync.js';
-import {
     CANVAS_DEFAULTS,
     THEME_KEYS
 } from './common/config.js';
@@ -31,12 +28,6 @@ import {
 import {
     EVENTS
 } from './common/events.js';
-import {
-    toggleSection
-} from './common/init_utils.js';
-import {
-    describeResolution
-} from './common/resolution_utils.js';
 import {
     state
 } from './common/store.js';
@@ -81,6 +72,15 @@ import {
     onPadXConfig,
     onPadYConfig
 } from './controllers/typography_controller.js';
+import {
+    updateColor
+} from './utils/color_sync.js';
+import {
+    toggleSection
+} from './utils/init_utils.js';
+import {
+    describeResolution
+} from './utils/resolution_utils.js';
 
 function initSections() {
     resolutionBadgeElement.textContent = `${describeResolution()} · ${CANVAS_DEFAULTS.aspectRatio}:1`;

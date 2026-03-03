@@ -10,11 +10,22 @@ import {
     typographyPadYElement
 } from '../common/elements.js';
 import {
+    initNumberInput
+} from '../common/init_utils.js';
+import {
     parseNumber
 } from '../common/parse_utils.js';
 import {
     redraw
 } from './canvas_buffer.js';
+
+export function initTypographyPanel() {
+    initNumberInput(typographyFontSizeElement, CANVAS_DEFAULTS.fontSize)
+    initNumberInput(typographyLineHeightElement, CANVAS_DEFAULTS.lineHeight)
+    initNumberInput(typographyLetterSpacingElement, CANVAS_DEFAULTS.letterSpacing)
+    initNumberInput(typographyPadXElement, CANVAS_DEFAULTS.padX)
+    initNumberInput(typographyPadYElement, CANVAS_DEFAULTS.padY)
+}
 
 export function onFontSizeConfig() {
     config.fontSize = parseNumber(typographyFontSizeElement.value, CANVAS_DEFAULTS.fontSize.value);

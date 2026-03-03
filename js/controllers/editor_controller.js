@@ -13,6 +13,9 @@ import {
     editorResizeHandleElement,
 } from '../common/elements.js';
 import {
+    initNumberInput
+} from '../common/init_utils.js';
+import {
     KEYS
 } from '../common/keys.js';
 import {
@@ -31,11 +34,23 @@ import {
     setTokenizedLines
 } from './render_controller.js';
 
-const _tokenizer = new IncrementalTokenizer();
-
 let startY = 0;
 let startHeight = 0;
 let dragging = false;
+
+const _tokenizer = new IncrementalTokenizer();
+
+export function initEditorPanel() {
+    initNumberInput(editorFontSizeElement, EDITOR_DEFAULTS.fontSize)
+
+    editorElement.scrollTop = 0;
+    editorElement.setSelectionRange(0, 0);
+    editorElement.value = EDITOR_DEFAULTS.content;
+    editorElement.style.fontSize = toPx(EDITOR_DEFAULTS.fontSize.value);
+    editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
+    editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
+    editorElement.style.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
+}
 
 export function onResize(event) {
     event.preventDefault();

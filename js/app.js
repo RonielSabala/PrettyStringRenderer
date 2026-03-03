@@ -3,7 +3,6 @@ import {
 } from './common/color_sync.js';
 import {
     CANVAS_DEFAULTS,
-    EDITOR_DEFAULTS,
     THEME_KEYS,
     config
 } from './common/config.js';
@@ -34,8 +33,10 @@ import {
     EVENTS
 } from './common/events.js';
 import {
-    describeResolution,
-    toPx
+    toggleSection
+} from './common/init_utils.js';
+import {
+    describeResolution
 } from './common/resolution_utils.js';
 import {
     onPanning,
@@ -51,6 +52,7 @@ import {
     onPick,
 } from './controllers/color_controller.js';
 import {
+    initEditorPanel,
     onEditorChange,
     onEditorFontSize,
     onEditorMouseMove,
@@ -67,6 +69,7 @@ import {
     onThemesFocus
 } from './controllers/themes_controller.js';
 import {
+    initTypographyPanel,
     onFontSizeConfig,
     onLetterSpacingConfig,
     onLineHeightConfig,
@@ -74,43 +77,13 @@ import {
     onPadYConfig
 } from './controllers/typography_controller.js';
 
-function initNumberInput(element, dataContainer) {
-    element.value = dataContainer.value;
-    element.min = dataContainer.min;
-    element.max = dataContainer.max;
-    element.step = dataContainer?.step ?? 1;
-}
-
-function toggleSection(element) {
-    element.classList.toggle(CSS.COLLAPSED_HEADER);
-    element.nextElementSibling.classList.toggle(CSS.HIDDEN_BODY);
-}
-
-function initElements() {
-    // Header
+function initSections() {
     resolutionBadgeElement.textContent = `${describeResolution()} · ${CANVAS_DEFAULTS.aspectRatio}:1`;
 
-    // Sections
+    // Hide color sections
     toggleSection(sectionBracketColors);
     toggleSection(sectionSyntaxColors);
     toggleSection(sectionCanvasColors);
-
-    // Typography
-    initNumberInput(typographyFontSizeElement, CANVAS_DEFAULTS.fontSize)
-    initNumberInput(typographyLineHeightElement, CANVAS_DEFAULTS.lineHeight)
-    initNumberInput(typographyLetterSpacingElement, CANVAS_DEFAULTS.letterSpacing)
-    initNumberInput(typographyPadXElement, CANVAS_DEFAULTS.padX)
-    initNumberInput(typographyPadYElement, CANVAS_DEFAULTS.padY)
-
-    // Editor
-    initNumberInput(editorFontSizeElement, EDITOR_DEFAULTS.fontSize)
-    editorElement.scrollTop = 0;
-    editorElement.setSelectionRange(0, 0);
-    editorElement.value = EDITOR_DEFAULTS.content;
-    editorElement.style.fontSize = toPx(EDITOR_DEFAULTS.fontSize.value);
-    editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
-    editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
-    editorElement.style.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
 }
 
 function initListeners() {
@@ -172,7 +145,9 @@ function initListeners() {
 }
 
 await document.fonts.ready.then(() => {
-    initElements();
+    initSections();
+    initTypographyPanel();
+    initEditorPanel();
     initListeners();
     onEditorChange();
 });

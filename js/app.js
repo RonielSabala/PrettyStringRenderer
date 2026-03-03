@@ -1,6 +1,6 @@
 import {
     updateColor
-} from './common/color_utils.js';
+} from './common/color_sync.js';
 import {
     CANVAS_DEFAULTS,
     EDITOR_DEFAULTS,

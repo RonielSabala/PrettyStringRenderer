@@ -1,6 +1,6 @@
 import {
     setColor
-} from '../common/color_utils.js';
+} from '../common/color_sync.js';
 import {
     redraw
 } from './canvas_buffer.js';

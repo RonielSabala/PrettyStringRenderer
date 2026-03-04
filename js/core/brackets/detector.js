@@ -66,19 +66,30 @@ function _detectMultilineBrackets(lines) {
     return brackets;
 }
 
+function _sortBrackets(bracketA, bracketB) {
+    const Ay1 = bracketA.y1;
+    const By1 = bracketB.y1;
+    if (Ay1 !== By1) {
+        return Ay1 - By1
+    }
+
+    const Ax1 = bracketA.x1;
+    const Bx1 = bracketB.x1;
+    if (Ax1 !== Bx1) {
+        return Ax1 - Bx1;
+    }
+
+    return (bracketB.x2 - Bx1) - (bracketA.x2 - Ax1);
+}
+
 export function findBracketsWithDepth(lines) {
     const brackets = _detectMultilineBrackets(lines);
     if (brackets.length === 0) {
-        return brackets;
+        return [];
     }
 
-    brackets.sort((bracketA, bracketB) =>
-        bracketA.y1 !== bracketB.y1 ? bracketA.y1 - bracketB.y1 :
-        bracketA.x1 !== bracketB.x1 ? bracketA.x1 - bracketB.x1 :
-        (bracketB.x2 - bracketB.x1) - (bracketA.x2 - bracketA.x1)
-    );
-
     const stack = [];
+    brackets.sort(_sortBrackets);
     for (const bracket of brackets) {
         while (stack.length > 0) {
             const top = stack[stack.length - 1];

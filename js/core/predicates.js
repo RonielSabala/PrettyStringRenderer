@@ -1,5 +1,5 @@
 import {
-    BRACKET_SETS
+    ML_BRACKET_CHARS
 } from './brackets/data.js';
 import {
     OPERATORS_SET
@@ -21,6 +21,6 @@ export const isFunctionStart = (char) => char === '(';
 
 export const isCommentStart = (char) => char === '#';
 
-export const isCommentPart = (char) => !BRACKET_SETS.multilineAll.has(char);
+export const isCommentPart = (char) => !ML_BRACKET_CHARS.has(char);
 
 export const isSemicolon = (char) => char === ';';

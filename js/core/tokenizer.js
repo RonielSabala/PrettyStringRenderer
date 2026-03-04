@@ -6,10 +6,12 @@ import {
     ML_BRACKET_CHARS
 } from './brackets/data.js';
 import {
-    findBracketsWithDepth
+    buildBracketsWithDepth,
+    detectBrackets
 } from './brackets/detector.js';
 import {
-    getLineAnalysis
+    getLineAnalysis,
+    lineHasBracketChars
 } from './brackets/line_analysis.js';
 import {
     isCommentPart,
@@ -28,20 +30,13 @@ import {
     TokenResult
 } from './tokens.js';
 
-function _lineHasBracketChars(line) {
-    for (let i = 0; i < line.length; i++) {
-        if (ML_BRACKET_CHARS.has(line[i])) {
-            return true;
-        }
+function _consumeLine(line, start, end, predicate) {
+    let i = start;
+    while (i < end && predicate(line[i])) {
+        i++;
     }
 
-    return false;
-}
-
-function _consumeLine(line, i, maxIndex, predicate) {
-    let j = i;
-    while (j < maxIndex && predicate(line[j])) j++;
-    return j;
+    return i;
 }
 
 export class IncrementalTokenizer {
@@ -50,6 +45,7 @@ export class IncrementalTokenizer {
         this._lineAnalysis = [];
         this._tokenizedLines = [];
         this._brackets = [];
+        this._rawBrackets = [];
     }
 
     get tokenizedLines() {
@@ -88,61 +84,109 @@ export class IncrementalTokenizer {
 
     _syncBrackets(newLines) {
         const oldLines = this._lines;
-        const newLinesCount = newLines.length;
-        const oldLinesCount = oldLines.length;
-        const sharedHeight = Math.min(newLinesCount, oldLinesCount);
-        let changed = false;
+        const newHeight = newLines.length;
+        const oldHeight = oldLines.length;
+        const sharedHeight = Math.min(newHeight, oldHeight);
 
-        for (let i = 0; i < sharedHeight && !changed; i++) {
+        let yStart = Infinity;
+        let yEnd = -Infinity;
+
+        const updateRange = (index) => {
+            yStart = Math.min(yStart, index);
+            yEnd = Math.max(yEnd, index);
+        };
+
+        // Find range
+        for (let i = 0; i < sharedHeight; i++) {
             const newLine = newLines[i];
             const oldLine = oldLines[i];
             if (newLine === oldLine) {
                 continue;
             }
 
-            const newLineWidth = newLine.length;
-            const oldLineWidth = oldLine.length;
-            const sharedWidth = Math.min(newLineWidth, oldLineWidth);
+            let hit = false;
+            const sharedWidth = Math.min(newLine.length, oldLine.length);
 
-            // A bracket char must have appeared or disappeared
-            for (let j = 0; j < sharedWidth && !changed; j++) {
+            for (let j = 0; j < sharedWidth && !hit; j++) {
                 const oldChar = oldLine[j];
                 const newChar = newLine[j];
-                if (oldChar === newChar) {
+                hit = oldChar !== newChar && (ML_BRACKET_CHARS.has(oldChar) || ML_BRACKET_CHARS.has(newChar));
+            }
+
+            if (!hit) {
+                const longestLine = newLine.length > oldLine.length ? newLine : oldLine;
+                const maxWidth = longestLine.length;
+
+                for (let j = sharedWidth; j < maxWidth && !hit; j++) {
+                    hit = ML_BRACKET_CHARS.has(longestLine[j]);
+                }
+            }
+
+            if (hit) {
+                updateRange(i);
+            }
+        }
+
+        if (newHeight !== oldHeight) {
+            const maxHeight = Math.max(newHeight, oldHeight);
+
+            for (let i = sharedHeight; i < maxHeight; i++) {
+                if (!lineHasBracketChars(newLines[i] ?? oldLines[i])) {
                     continue;
                 }
 
-                changed = ML_BRACKET_CHARS.has(oldChar) || ML_BRACKET_CHARS.has(newChar);
-            }
-
-            if (changed) {
-                continue;
-            }
-
-            const maxWidth = Math.max(newLineWidth, oldLineWidth);
-            const longer = newLineWidth > oldLineWidth ? newLine : oldLine;
-
-            // Check the tail of the longest line
-            for (let j = sharedWidth; j < maxWidth && !changed; j++) {
-                changed = ML_BRACKET_CHARS.has(longer[j]);
+                updateRange(i);
             }
         }
 
-        // Check added or removed lines at the tail
-        if (!changed && newLinesCount !== oldLinesCount) {
-            const low = sharedHeight;
-            const high = Math.max(newLinesCount, oldLinesCount);
-
-            for (let i = low; i < high && !changed; i++) {
-                changed = _lineHasBracketChars(newLines[i] ?? oldLines[i]);
-            }
-        }
-
-        if (!changed) {
+        if (yStart === Infinity) {
             return false;
         }
 
-        this._brackets = findBracketsWithDepth(newLines);
+        // Expand yStart from cached brackets
+        let prevYStart = yStart;
+        for (const bracket of this._rawBrackets) {
+            const y1 = bracket.y1;
+            if (y1 > yEnd || bracket.y2 < prevYStart) {
+                continue;
+            }
+
+            yStart = Math.min(yStart, y1);
+        }
+
+        // Expand yStart upward
+        let i = yStart - 1;
+        while (i >= 0 && lineHasBracketChars(newLines[i] ?? oldLines[i])) {
+            yStart = i;
+            i--;
+        }
+
+        const safeBrackets = [];
+        const lineDelta = newHeight - oldHeight;
+
+        // Partition cached raw brackets
+        for (const bracket of this._rawBrackets) {
+            let y1 = bracket.y1;
+            let y2 = bracket.y2;
+            if (y2 >= yStart && y1 <= yEnd) {
+                continue;
+            }
+
+            const dy = lineDelta !== 0 && y1 > yEnd ? lineDelta : 0;
+            safeBrackets.push({
+                x1: bracket.x1,
+                y1: y1 + dy,
+                x2: bracket.x2,
+                y2: y2 + dy,
+            });
+        }
+
+        const newBrackets = detectBrackets(newLines, yStart, yEnd);
+        const allBrackets = [...safeBrackets, ...newBrackets];
+
+        this._rawBrackets = structuredClone(allBrackets);
+        this._brackets = buildBracketsWithDepth(allBrackets);
+
         return true;
     }
 

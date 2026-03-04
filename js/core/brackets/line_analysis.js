@@ -1,3 +1,7 @@
+import {
+    ML_BRACKET_CHARS
+} from './data.js';
+
 class LineAnalysis {
     constructor(lineWidth) {
         this.bracketArmDepths = new Array(lineWidth).fill(undefined);
@@ -30,9 +34,24 @@ class LineAnalysis {
     }
 }
 
+export function lineHasBracketChars(line) {
+    const lineWidth = line.length;
+    for (let i = 0; i < lineWidth; i++) {
+        if (ML_BRACKET_CHARS.has(line[i])) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 export function getLineAnalysis(line, lineIdx, brackets) {
     const lineWidth = line.length;
     const lineAnalysis = new LineAnalysis(lineWidth);
+
+    if (!lineHasBracketChars(line)) {
+        return lineAnalysis;
+    }
 
     for (const bracket of brackets) {
         if (lineIdx < bracket.y1 || lineIdx > bracket.y2) {

@@ -2,42 +2,77 @@ import {
     MULTILINE_BRACKETS
 } from './data.js';
 
-function _armMatches(lines, x, y, char) {
-    return y < lines.length && lines[y][x] === char;
+function _sortBrackets(a, b) {
+    const dy = a.y1 - b.y1;
+    if (dy !== 0) {
+        return dy;
+    }
+
+    const dx = a.x1 - b.x1;
+    if (dx !== 0) {
+        return dx
+    };
+
+    return (b.x2 - b.x1) - (a.x2 - a.x1);
 }
 
-function _detectMultilineBrackets(lines) {
+function _assignDepths(brackets) {
+    const stack = [];
+    for (const bracket of brackets) {
+        const x1 = bracket.x1;
+        const y1 = bracket.y1;
+
+        while (stack.length > 0) {
+            const top = stack[stack.length - 1];
+            if (top.x2 > x1 && top.y2 >= y1) {
+                break;
+            }
+
+            stack.pop();
+        }
+
+        bracket.depth = stack.length;
+        stack.push(bracket);
+    }
+}
+
+export function detectBrackets(lines, yStart, yEnd) {
     const brackets = [];
     const stacks = new Map();
-    const height = lines.length;
+    const linesCount = lines.length;
+    const mlBracketCount = MULTILINE_BRACKETS.length;
 
-    for (let y = 0; y < height; y++) {
+    yEnd = Math.min(yEnd ?? Infinity, linesCount - 1);
+
+    for (let y = yStart; y <= yEnd; y++) {
         const line = lines[y];
         const lineWidth = line.length;
 
         for (let x = 0; x < lineWidth; x++) {
             const char = line[x];
 
-            for (let bracketIdx = 0; bracketIdx < MULTILINE_BRACKETS.length; bracketIdx++) {
-                const bracket = MULTILINE_BRACKETS[bracketIdx];
+            for (let i = 0; i < mlBracketCount; i++) {
+                const bracket = MULTILINE_BRACKETS[i];
                 const isLeft = char === bracket.left.top;
                 const isRight = char === bracket.right.top;
-
                 if (!isLeft && !isRight) {
                     continue;
                 }
 
-                let yEnd = y + 1;
-                const part = isLeft ? bracket.left : bracket.right;
-                while (_armMatches(lines, x, yEnd, part.mid)) {
-                    yEnd++;
+                const bracketArm = isLeft ? bracket.left : bracket.right;
+                const midChar = bracketArm.mid;
+                const bottomChar = bracketArm.bottom;
+
+                let y2 = y + 1;
+                while (y2 < linesCount && lines[y2][x] === midChar) {
+                    y2++;
                 }
 
-                if (!_armMatches(lines, x, yEnd, part.bottom)) {
+                if (y2 >= linesCount || lines[y2][x] !== bottomChar) {
                     continue;
                 }
 
-                const key = `${y}-${yEnd}-${bracketIdx}`;
+                const key = `${y}-${y2}-${i}`;
                 if (isLeft) {
                     if (!stacks.has(key)) {
                         stacks.set(key, []);
@@ -47,7 +82,6 @@ function _detectMultilineBrackets(lines) {
                     continue;
                 }
 
-                // Pop matching left arm
                 const stack = stacks.get(key);
                 if (!stack?.length) {
                     continue;
@@ -57,7 +91,7 @@ function _detectMultilineBrackets(lines) {
                     x1: stack.pop(),
                     y1: y,
                     x2: x,
-                    y2: yEnd
+                    y2: y2
                 });
             }
         }
@@ -66,42 +100,10 @@ function _detectMultilineBrackets(lines) {
     return brackets;
 }
 
-function _sortBrackets(bracketA, bracketB) {
-    const Ay1 = bracketA.y1;
-    const By1 = bracketB.y1;
-    if (Ay1 !== By1) {
-        return Ay1 - By1
-    }
-
-    const Ax1 = bracketA.x1;
-    const Bx1 = bracketB.x1;
-    if (Ax1 !== Bx1) {
-        return Ax1 - Bx1;
-    }
-
-    return (bracketB.x2 - Bx1) - (bracketA.x2 - Ax1);
-}
-
-export function findBracketsWithDepth(lines) {
-    const brackets = _detectMultilineBrackets(lines);
-    if (brackets.length === 0) {
-        return [];
-    }
-
-    const stack = [];
-    brackets.sort(_sortBrackets);
-    for (const bracket of brackets) {
-        while (stack.length > 0) {
-            const top = stack[stack.length - 1];
-            if (top.x2 > bracket.x1 && top.y2 >= bracket.y1) {
-                break;
-            }
-
-            stack.pop();
-        }
-
-        bracket.depth = stack.length;
-        stack.push(bracket);
+export function buildBracketsWithDepth(brackets) {
+    if (brackets.length > 0) {
+        brackets.sort(_sortBrackets);
+        _assignDepths(brackets);
     }
 
     return brackets;

@@ -1,7 +1,4 @@
 import {
-    redraw
-} from './canvas/buffer.js';
-import {
     onPanning,
     onPanningMove,
     onPanningRelease,
@@ -138,7 +135,6 @@ function initListeners() {
     document.addEventListener(EVENTS.KEY_DOWN, onEscapeToCanvas)
 
     // Canvas
-    new ResizeObserver(redraw).observe(canvasWrapElement);
     canvasWrapElement.addEventListener(EVENTS.WHEEL, onZoom, {
         passive: false
     });

@@ -19,6 +19,9 @@ import {
     state
 } from '../common/store.js';
 import {
+    parseNumber
+} from '../utils/parse.js';
+import {
     createResolution,
     describeResolution
 } from '../utils/resolution.js';
@@ -37,36 +40,6 @@ function _askScalar() {
     return prompt(_DEFAULT_PROMPT_MESSAGE, DEFAULT_EXPORT_SCALAR);
 }
 
-function _scaleConfig() {
-    const config = state.config;
-    return {
-        fontSize: config.fontSize,
-        letterSpacing: config.letterSpacing,
-        padX: config.padX,
-        padY: config.padY,
-    };
-}
-
-function _saveConfig(scalar) {
-    const config = state.config;
-    const snapshot = _scaleConfig();
-
-    config.fontSize *= scalar;
-    config.letterSpacing *= scalar;
-    config.padX *= scalar;
-    config.padY *= scalar;
-
-    return snapshot;
-}
-
-function _restoreConfig(snapshot) {
-    const config = state.config;
-    config.fontSize = snapshot.fontSize;
-    config.letterSpacing = snapshot.letterSpacing;
-    config.padX = snapshot.padX;
-    config.padY = snapshot.padY;
-}
-
 function _downloadBlob(blob, filename) {
     const anchor = document.createElement('a');
     anchor.href = URL.createObjectURL(blob);
@@ -76,15 +49,18 @@ function _downloadBlob(blob, filename) {
 }
 
 export function exportCanvas() {
-    const rawInput = _askScalar();
-    if (rawInput === null) {
+    const scalar = parseNumber(_askScalar(), 0);
+    if (scalar <= 0) {
         return;
     }
 
-    const scalar = parseFloat(rawInput);
-    if (isNaN(scalar) || scalar <= 0) {
-        return;
-    }
+    const config = state.config;
+    const configCopy = structuredClone(config);
+
+    config.fontSize *= scalar;
+    config.letterSpacing *= scalar;
+    config.padX *= scalar;
+    config.padY *= scalar;
 
     const exportWidth = Math.round(scalar * CANVAS_DEFAULTS.width);
     const exportHeight = Math.round(scalar * CANVAS_DEFAULTS.height);
@@ -93,9 +69,8 @@ export function exportCanvas() {
     offscreen.width = exportWidth;
     offscreen.height = exportHeight;
 
-    const snapshot = _saveConfig(scalar);
     render(offscreen.getContext(CANVAS_CONTEXT_TYPE), exportWidth, exportHeight);
-    _restoreConfig(snapshot);
+    state.config = configCopy;
 
     offscreen.toBlob(blob => {
         _downloadBlob(blob, _createFilename(exportWidth, exportHeight));

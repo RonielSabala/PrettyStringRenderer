@@ -1,7 +1,9 @@
 import {
+    CANVAS_DEFAULTS,
     CANVAS_MAX_ZOOM,
     CANVAS_MIN_ZOOM,
     CANVAS_PAN_SCROLL_SPEED,
+    CANVAS_VIEWPORT_PADDING_PX,
     CANVAS_ZOOM_FACTOR
 } from '../common/config.js';
 import {
@@ -11,6 +13,7 @@ import {
     KEYS
 } from '../common/constants/keys.js';
 import {
+    canvasElement,
     canvasInnerElement,
     canvasWrapElement,
     editorElement,
@@ -33,16 +36,20 @@ let panStartY = 0;
 let rafScheduled = false;
 let onZoomChangeCallback = null;
 
-function getCanvasZoom() {
+export function getCanvasZoom() {
     return canvasZoom;
 }
 
-function updateZoomInfo() {
+export function updateZoomInfo() {
     editorStatusElement.textContent = `${describeResolution()} · ${(canvasZoom * 100).toFixed(0)}%`;
 }
 
-function setZoomChangeCallback(callback) {
+export function setZoomChangeCallback(callback) {
     onZoomChangeCallback = callback;
+}
+
+function _getNormalizedDimension(dimension) {
+    return toPx(Math.max(1, Math.round(dimension)));
 }
 
 function _applyTransform() {
@@ -93,7 +100,7 @@ function _applyScrollPan(deltaX, deltaY) {
     _scheduleTransform();
 }
 
-function onZoom(event) {
+export function onZoom(event) {
     event.preventDefault();
 
     if (event.altKey) {
@@ -105,7 +112,7 @@ function onZoom(event) {
     }
 }
 
-function onZoomReset(event) {
+export function onZoomReset(event) {
     canvasZoom = 1;
     canvasPanX = 0;
     canvasPanY = 0;
@@ -114,7 +121,7 @@ function onZoomReset(event) {
 
 // Pan
 
-function onSpace(event) {
+export function onSpace(event) {
     if (event.code !== KEYS.SPACE || document.activeElement === editorElement) {
         return;
     }
@@ -128,7 +135,7 @@ function onSpace(event) {
 
 }
 
-function onSpaceRelease(event) {
+export function onSpaceRelease(event) {
     if (event.code !== KEYS.SPACE) {
         return;
     }
@@ -141,7 +148,7 @@ function onSpaceRelease(event) {
     canvasWrapElement.style.cursor = CSS_CURSORS.DEFAULT;
 }
 
-function onPanning(event) {
+export function onPanning(event) {
     if (!spaceHeld && event.button !== 2) {
         return;
     }
@@ -154,7 +161,7 @@ function onPanning(event) {
     canvasWrapElement.style.cursor = CSS_CURSORS.GRABBING;
 }
 
-function onPanningMove(event) {
+export function onPanningMove(event) {
     if (!panning) {
         return;
     }
@@ -164,7 +171,7 @@ function onPanningMove(event) {
     _scheduleTransform();
 }
 
-function onPanningRelease() {
+export function onPanningRelease() {
     if (!panning) {
         return;
     }
@@ -173,15 +180,19 @@ function onPanningRelease() {
     canvasWrapElement.style.cursor = spaceHeld ? CSS_CURSORS.GRAB : CSS_CURSORS.DEFAULT;
 }
 
-export {
-    getCanvasZoom,
-    onPanning,
-    onPanningMove,
-    onPanningRelease,
-    onSpace,
-    onSpaceRelease,
-    onZoom,
-    onZoomReset,
-    setZoomChangeCallback,
-    updateZoomInfo
-};
+export function adjustCanvas() {
+    const aspectRatio = CANVAS_DEFAULTS.aspectRatio;
+    const availableWidth = canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX;
+    const availableHeight = canvasWrapElement.clientHeight - CANVAS_VIEWPORT_PADDING_PX;
+
+    let displayWidth = Math.min(availableWidth, availableHeight * aspectRatio);
+    let displayHeight = displayWidth / aspectRatio;
+
+    if (displayHeight > availableHeight) {
+        displayHeight = availableHeight;
+        displayWidth = displayHeight * aspectRatio;
+    }
+
+    canvasElement.style.width = _getNormalizedDimension(displayWidth);
+    canvasElement.style.height = _getNormalizedDimension(displayHeight);
+}

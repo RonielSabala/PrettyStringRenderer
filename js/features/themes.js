@@ -51,9 +51,9 @@ function _applyTheme(theme) {
         setColor(themeKey, themeValue);
     }
 
-    redraw();
     _renderThemeList();
     _focusActiveTheme();
+    redraw();
 }
 
 function _applyThemeOnArrow(event, index) {

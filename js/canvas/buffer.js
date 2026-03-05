@@ -3,16 +3,11 @@ import {
     CANVAS_DEFAULTS,
     CANVAS_MAX_PIXEL_SCALE,
     CANVAS_MIN_PIXEL_SCALE,
-    CANVAS_QUALITY_REDRAW_DEBOUNCE_MS,
-    CANVAS_VIEWPORT_PADDING_PX
+    CANVAS_QUALITY_REDRAW_DEBOUNCE_MS
 } from '../common/config.js';
 import {
-    canvasElement,
-    canvasWrapElement
+    canvasElement
 } from '../common/elements.js';
-import {
-    toPx
-} from '../utils/resolution.js';
 import {
     getCanvasZoom,
     setZoomChangeCallback
@@ -29,16 +24,12 @@ let _qualityRedrawTimer = null;
 
 const _ctx = canvasElement.getContext(CANVAS_CONTEXT_TYPE);
 
-function _getNormalizedDimension(dimension) {
-    return toPx(Math.max(1, Math.round(dimension)));
-}
-
 function _computePixelScale(canvasZoom) {
     const deviceAwareZoom = canvasZoom * window.devicePixelRatio;
     return Math.min(CANVAS_MAX_PIXEL_SCALE, Math.max(CANVAS_MIN_PIXEL_SCALE, Math.ceil(deviceAwareZoom)));
 }
 
-function _renderAtScale() {
+export function redraw() {
     const width = CANVAS_DEFAULTS.width;
     const height = CANVAS_DEFAULTS.height;
     const pixelScale = _computePixelScale(getCanvasZoom());
@@ -65,29 +56,7 @@ function _scheduleQualityRedraw(canvasZoom) {
     }
 
     clearTimeout(_qualityRedrawTimer);
-    _qualityRedrawTimer = setTimeout(_renderAtScale, CANVAS_QUALITY_REDRAW_DEBOUNCE_MS);
-}
-
-export function adjustCanvas() {
-    const aspectRatio = CANVAS_DEFAULTS.aspectRatio;
-    const availableWidth = canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX;
-    const availableHeight = canvasWrapElement.clientHeight - CANVAS_VIEWPORT_PADDING_PX;
-
-    let displayWidth = Math.min(availableWidth, availableHeight * aspectRatio);
-    let displayHeight = displayWidth / aspectRatio;
-
-    if (displayHeight > availableHeight) {
-        displayHeight = availableHeight;
-        displayWidth = displayHeight * aspectRatio;
-    }
-
-    canvasElement.style.width = _getNormalizedDimension(displayWidth);
-    canvasElement.style.height = _getNormalizedDimension(displayHeight);
-}
-
-export function redraw() {
-    _renderAtScale();
-    adjustCanvas();
+    _qualityRedrawTimer = setTimeout(redraw, CANVAS_QUALITY_REDRAW_DEBOUNCE_MS);
 }
 
 setZoomChangeCallback(_scheduleQualityRedraw);

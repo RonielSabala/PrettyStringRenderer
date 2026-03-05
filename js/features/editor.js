@@ -1,8 +1,8 @@
 import {
-    adjustCanvas,
     redraw
 } from '../canvas/buffer.js';
 import {
+    adjustCanvas,
     updateZoomInfo
 } from '../canvas/controller.js';
 import {

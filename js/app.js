@@ -1,3 +1,4 @@
+import { adjustCanvas } from './canvas/controller.js';
 import {
     onPanning,
     onPanningMove,
@@ -154,4 +155,5 @@ await document.fonts.ready.then(() => {
     initEditorPanel();
     initListeners();
     onEditorChange();
+    adjustCanvas();
 });

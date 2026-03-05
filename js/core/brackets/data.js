@@ -27,10 +27,16 @@ export const MULTILINE_BRACKETS = Object.freeze([{
 }]);
 
 function buildInlineBracketSets() {
-    return {
+    return Object.freeze({
         inlineOpen: new Set(INLINE_PAIRS.map(([open]) => open)),
         inlineClose: new Set(INLINE_PAIRS.map(([, close]) => close)),
-    };
+        multilineOpen: new Set(
+            MULTILINE_BRACKETS.flatMap(({
+                left,
+                right
+            }) => [left.top, right.top])
+        ),
+    });
 }
 
 function buildMultilineBracketChars() {
@@ -45,5 +51,6 @@ function buildMultilineBracketChars() {
     );
 }
 
-export const BRACKET_SETS = Object.freeze(buildInlineBracketSets());
+export const BRACKET_SETS = buildInlineBracketSets();
 export const ML_BRACKET_CHARS = buildMultilineBracketChars();
+export const ML_BRACKETS_COUNT = MULTILINE_BRACKETS.length;

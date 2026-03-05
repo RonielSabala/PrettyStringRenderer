@@ -41,11 +41,12 @@ function _consumeLine(line, start, end, predicate) {
 
 export class IncrementalTokenizer {
     constructor() {
+        this._brackets = [];
+        this._rawBrackets = [];
+
         this._lines = [];
         this._lineAnalysis = [];
         this._tokenizedLines = [];
-        this._brackets = [];
-        this._rawBrackets = [];
     }
 
     get tokenizedLines() {
@@ -86,27 +87,34 @@ export class IncrementalTokenizer {
         const oldLines = this._lines;
         const newHeight = newLines.length;
         const oldHeight = oldLines.length;
-        const sharedHeight = Math.min(newHeight, oldHeight);
+        const minHeight = Math.min(newHeight, oldHeight);
+        const maxHeight = Math.max(newHeight, oldHeight);
 
         let yStart = Infinity;
         let yEnd = -Infinity;
 
-        const updateRange = (index) => {
-            yStart = Math.min(yStart, index);
-            yEnd = Math.max(yEnd, index);
+        const updateRange = (yIdx) => {
+            yStart = Math.min(yStart, yIdx);
+            yEnd = Math.max(yEnd, yIdx);
         };
 
+        const lineHasBrackets = (lineIdx) => {
+            return lineHasBracketChars(newLines[lineIdx] ?? oldLines[lineIdx]);
+        }
+
         // Find range
-        for (let i = 0; i < sharedHeight; i++) {
+        for (let i = 0; i < minHeight; i++) {
             const newLine = newLines[i];
             const oldLine = oldLines[i];
             if (newLine === oldLine) {
                 continue;
             }
 
-            let hit = false;
-            const sharedWidth = Math.min(newLine.length, oldLine.length);
+            const newLineWidth = newLine.length;
+            const oldLineWidth = oldLine.length;
+            const sharedWidth = Math.min(newLineWidth, oldLineWidth);
 
+            let hit = false;
             for (let j = 0; j < sharedWidth && !hit; j++) {
                 const oldChar = oldLine[j];
                 const newChar = newLine[j];
@@ -114,8 +122,8 @@ export class IncrementalTokenizer {
             }
 
             if (!hit) {
-                const longestLine = newLine.length > oldLine.length ? newLine : oldLine;
-                const maxWidth = longestLine.length;
+                const maxWidth = Math.max(newLineWidth, oldLineWidth);
+                const longestLine = newLineWidth > oldLineWidth ? newLine : oldLine;
 
                 for (let j = sharedWidth; j < maxWidth && !hit; j++) {
                     hit = ML_BRACKET_CHARS.has(longestLine[j]);
@@ -128,14 +136,10 @@ export class IncrementalTokenizer {
         }
 
         if (newHeight !== oldHeight) {
-            const maxHeight = Math.max(newHeight, oldHeight);
-
-            for (let i = sharedHeight; i < maxHeight; i++) {
-                if (!lineHasBracketChars(newLines[i] ?? oldLines[i])) {
-                    continue;
+            for (let i = minHeight; i < maxHeight; i++) {
+                if (lineHasBrackets(i)) {
+                    updateRange(i);
                 }
-
-                updateRange(i);
             }
         }
 
@@ -144,10 +148,10 @@ export class IncrementalTokenizer {
         }
 
         // Expand yStart from cached brackets
-        let prevYStart = yStart;
+        const prevStart = yStart;
         for (const bracket of this._rawBrackets) {
             const y1 = bracket.y1;
-            if (y1 > yEnd || bracket.y2 < prevYStart) {
+            if (y1 > yEnd || bracket.y2 < prevStart) {
                 continue;
             }
 
@@ -156,7 +160,7 @@ export class IncrementalTokenizer {
 
         // Expand yStart upward
         let i = yStart - 1;
-        while (i >= 0 && lineHasBracketChars(newLines[i] ?? oldLines[i])) {
+        while (i >= 0 && lineHasBrackets(i)) {
             yStart = i;
             i--;
         }

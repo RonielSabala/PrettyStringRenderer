@@ -1,4 +1,6 @@
 import {
+    BRACKET_SETS,
+    ML_BRACKETS_COUNT,
     MULTILINE_BRACKETS
 } from './data.js';
 
@@ -40,7 +42,6 @@ export function detectBrackets(lines, yStart, yEnd) {
     const brackets = [];
     const stacks = new Map();
     const linesCount = lines.length;
-    const mlBracketCount = MULTILINE_BRACKETS.length;
 
     yEnd = Math.min(yEnd ?? Infinity, linesCount - 1);
 
@@ -50,15 +51,13 @@ export function detectBrackets(lines, yStart, yEnd) {
 
         for (let x = 0; x < lineWidth; x++) {
             const char = line[x];
+            if (!BRACKET_SETS.multilineOpen.has(char)) {
+                continue;
+            }
 
-            for (let i = 0; i < mlBracketCount; i++) {
+            for (let i = 0; i < ML_BRACKETS_COUNT; i++) {
                 const bracket = MULTILINE_BRACKETS[i];
                 const isLeft = char === bracket.left.top;
-                const isRight = char === bracket.right.top;
-                if (!isLeft && !isRight) {
-                    continue;
-                }
-
                 const bracketArm = isLeft ? bracket.left : bracket.right;
                 const midChar = bracketArm.mid;
                 const bottomChar = bracketArm.bottom;

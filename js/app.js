@@ -1,5 +1,5 @@
-import { adjustCanvas } from './canvas/controller.js';
 import {
+    adjustCanvas,
     onPanning,
     onPanningMove,
     onPanningRelease,
@@ -10,6 +10,7 @@ import {
 } from './canvas/controller.js';
 import {
     CANVAS_DEFAULTS,
+    DEFAULT_THEME,
     THEME_KEYS
 } from './common/config.js';
 import {
@@ -38,9 +39,6 @@ import {
     typographyPadXElement,
     typographyPadYElement
 } from './common/elements.js';
-import {
-    state
-} from './common/store.js';
 import {
     onHex,
     onPick,
@@ -72,7 +70,7 @@ import {
     onPadYConfig
 } from './features/typography.js';
 import {
-    updateColor
+    setColor
 } from './utils/color.js';
 import {
     toggleSection
@@ -102,8 +100,8 @@ function initListeners() {
     );
 
     // Apply default theme
-    for (const [ThemeKey, ThemeValue] of Object.entries(state.colors)) {
-        updateColor(ThemeKey, ThemeValue);
+    for (const [ThemeKey, ThemeValue] of Object.entries(DEFAULT_THEME)) {
+        setColor(ThemeKey, ThemeValue);
     }
 
     document.addEventListener(EVENTS.KEY_DOWN, onThemesFocus)

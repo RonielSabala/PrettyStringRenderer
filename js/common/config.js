@@ -105,10 +105,14 @@ export const EDITOR_DEFAULTS = {
 
 // Default pre-loaded UI theme
 
+const _DEFAULT_BRACKET_COLORS = ['#569CD6', '#FFD700', '#C586C0'];
+export const BRACKET_COLOR_PREFIX = 'bracket';
+export const BRACKET_COLORS_COUNT = _DEFAULT_BRACKET_COLORS.length;
+
 export const DEFAULT_THEME = {
-    bracket0: '#569CD6',
-    bracket1: '#FFD700',
-    bracket2: '#C586C0',
+    ...Object.fromEntries(
+        _DEFAULT_BRACKET_COLORS.map((color, i) => [`${BRACKET_COLOR_PREFIX}${i}`, color])
+    ),
     function: '#DCDCAA',
     variable: '#9CDCFE',
     operator: '#D4D4D4',

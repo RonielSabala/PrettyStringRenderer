@@ -2,11 +2,13 @@ import {
     redraw
 } from '../canvas/buffer.js';
 import {
-    setColor
+    setColor,
+    updateTokensColor
 } from '../utils/color.js';
 
 export function onPick(themeKey, themeValue) {
     setColor(themeKey, themeValue);
+    updateTokensColor(themeKey);
     redraw();
 }
 
@@ -16,5 +18,6 @@ export function onHex(themeKey, themeValue) {
     }
 
     setColor(themeKey, themeValue);
+    updateTokensColor(themeKey);
     redraw();
 }

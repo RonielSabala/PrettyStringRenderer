@@ -54,21 +54,19 @@ export function render(ctx, width, height) {
         const charY = y0 + row * lineHeight;
 
         for (const token of tokenizedLines[row]) {
-            const charX = padX + col * charWidth;
-            const tokenValue = token.value;
-            col += tokenValue.length;
+            const prevCol = col;
+            col += token.value.length;
+            if (token.color === null) {
+                continue;
+            }
 
+            const charX = padX + prevCol * charWidth;
             if (charX >= width) {
                 break;
             }
 
-            const tokenColor = token.getColor();
-            if (tokenColor === null) {
-                continue;
-            }
-
-            ctx.fillStyle = tokenColor;
-            ctx.fillText(tokenValue, charX, charY);
+            ctx.fillStyle = token.color;
+            ctx.fillText(token.value, charX, charY);
         }
     }
 

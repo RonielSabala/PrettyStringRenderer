@@ -26,7 +26,8 @@ import {
     state
 } from '../common/store.js';
 import {
-    setColor
+    setColor,
+    updateTokensColor
 } from '../utils/color.js';
 
 const ACTIVE_THEME_CSS = `.${CSS.THEME_ITEM}.${CSS.THEME_ITEM_ACTIVE}`;
@@ -53,6 +54,7 @@ function _applyTheme(theme) {
 
     _renderThemeList();
     _focusActiveTheme();
+    updateTokensColor();
     redraw();
 }
 

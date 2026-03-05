@@ -1,11 +1,14 @@
 import {
+    adjustCanvas,
     redraw
 } from '../canvas/buffer.js';
 import {
     updateZoomInfo
 } from '../canvas/controller.js';
 import {
-    EDITOR_DEFAULTS
+    EDITOR_DEFAULTS,
+    EDITOR_MAX_HEIGHT_PERCENTAGE,
+    EDITOR_MIN_HEIGHT_PX
 } from '../common/config.js';
 import {
     CSS,
@@ -36,7 +39,12 @@ import {
 
 let startY = 0;
 let startHeight = 0;
+let startMaxHeight = 0;
 let dragging = false;
+
+function _getHeight(y) {
+    return Math.min(startMaxHeight, startHeight + (startY - y));
+}
 
 export function initEditorPanel() {
     updateZoomInfo();
@@ -57,6 +65,7 @@ export function onResize(event) {
     dragging = true;
     startY = event.clientY;
     startHeight = editorPanelElement.offsetHeight;
+    startMaxHeight = Math.round(window.innerHeight * EDITOR_MAX_HEIGHT_PERCENTAGE);
 
     document.body.style.userSelect = CSS_USER_SELECT.NONE;
     editorResizeHandleElement.classList.add(CSS.DRAG);
@@ -77,9 +86,19 @@ export function onEditorMouseMove(event) {
         return;
     }
 
-    const newHeight = Math.max(55, Math.min(window.innerHeight * 0.8, startHeight + (startY - event.clientY)));
+    const newHeight = Math.max(EDITOR_MIN_HEIGHT_PX, _getHeight(event.clientY));
+    const editorHeight = editorPanelElement.offsetHeight;
+    if (
+        newHeight === startMaxHeight &&
+        editorHeight === startMaxHeight ||
+        newHeight === EDITOR_MIN_HEIGHT_PX &&
+        editorHeight === EDITOR_MIN_HEIGHT_PX
+    ) {
+        return;
+    }
+
     editorPanelElement.style.height = toPx(newHeight);
-    redraw();
+    adjustCanvas();
 }
 
 export function onEditorMouseUp() {

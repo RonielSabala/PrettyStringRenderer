@@ -31,6 +31,7 @@ export const typographyPadYElement = _getElement('typography-pad-y');
 
 // Editor
 export const editorResizeHandleElement = _getElement('editor-resize-handle');
+export const editorTabsElement = _getElement('editor-tabs');
 export const editorPanelElement = _getElement('editor-panel');
 export const editorFontSizeElement = _getElement('editor-font-size');
 export const editorStatusElement = _getElement('editor-status');

@@ -1,4 +1,12 @@
+import {
+    editorTabsElement
+} from "./elements.js";
+
 export const LINE_BREAK = '\n';
+
+// Editor constants
+export const EDITOR_MIN_HEIGHT_PX = editorTabsElement.offsetHeight;
+export const EDITOR_MAX_HEIGHT_PERCENTAGE = 0.8;
 
 // Canvas movement constants
 export const CANVAS_MIN_ZOOM = 0.3;

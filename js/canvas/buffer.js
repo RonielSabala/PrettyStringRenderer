@@ -68,9 +68,7 @@ function _scheduleQualityRedraw(canvasZoom) {
     _qualityRedrawTimer = setTimeout(_renderAtScale, CANVAS_QUALITY_REDRAW_DEBOUNCE_MS);
 }
 
-export function redraw() {
-    _renderAtScale();
-
+export function adjustCanvas() {
     const aspectRatio = CANVAS_DEFAULTS.aspectRatio;
     const availableWidth = canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX;
     const availableHeight = canvasWrapElement.clientHeight - CANVAS_VIEWPORT_PADDING_PX;
@@ -85,6 +83,11 @@ export function redraw() {
 
     canvasElement.style.width = _getNormalizedDimension(displayWidth);
     canvasElement.style.height = _getNormalizedDimension(displayHeight);
+}
+
+export function redraw() {
+    _renderAtScale();
+    adjustCanvas();
 }
 
 setZoomChangeCallback(_scheduleQualityRedraw);

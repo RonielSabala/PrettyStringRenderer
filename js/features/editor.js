@@ -37,16 +37,19 @@ import {
     parseNumber
 } from '../utils/parse.js';
 import {
+    createSaveScheduler,
     saveEditorConfigState
 } from '../utils/persistence.js';
 import {
     toPx
 } from '../utils/resolution.js';
 
+let dragging = false;
 let startY = 0;
 let startHeight = 0;
 let startMaxHeight = 0;
-let dragging = false;
+
+const _scheduleEditorConfigSave = createSaveScheduler(saveEditorConfigState);
 
 const CONFIG_KEYS_TO_ELEMENT = [
     ['height', [document, EVENTS.MOUSE_MOVE, _onEditorMouseMove]],
@@ -192,7 +195,7 @@ export function initEditorSection() {
             }
 
             config[configKey] = newValue;
-            saveEditorConfigState();
+            _scheduleEditorConfigSave();
         });
     }
 

@@ -6,12 +6,15 @@ import {
     updateTokensColor
 } from '../utils/color.js';
 import {
+    createSaveScheduler,
     saveColorsState
 } from '../utils/persistence.js';
 
+const _scheduleColorSave = createSaveScheduler(saveColorsState);
+
 export function onPick(themeKey, themeValue) {
     setColor(themeKey, themeValue);
-    saveColorsState();
+    _scheduleColorSave();
     updateTokensColor(themeKey);
     redraw();
 }
@@ -22,7 +25,7 @@ export function onHex(themeKey, themeValue) {
     }
 
     setColor(themeKey, themeValue);
-    saveColorsState();
+    _scheduleColorSave();
     updateTokensColor(themeKey);
     redraw();
 }

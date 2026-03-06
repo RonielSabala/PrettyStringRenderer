@@ -24,9 +24,11 @@ import {
     parseNumber
 } from '../utils/parse.js';
 import {
+    createSaveScheduler,
     saveTypographyConfigState
 } from '../utils/persistence.js';
 
+const _scheduleTypographyConfigSave = createSaveScheduler(saveTypographyConfigState);
 const CONFIG_KEYS_TO_ELEMENT = {
     'fontSize': typographyFontSizeElement,
     'lineHeight': typographyLineHeightElement,
@@ -47,7 +49,7 @@ export function initTypographySection() {
             const fallback = TYPOGRAPHY_DEFAULTS[configKey].value;
 
             config[configKey] = parseNumber(value, fallback);
-            saveTypographyConfigState();
+            _scheduleTypographyConfigSave();
             redraw();
         });
     }

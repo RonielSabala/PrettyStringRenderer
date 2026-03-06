@@ -34,12 +34,15 @@ import {
     isObjectEmpty
 } from '../utils/parse.js';
 import {
+    createSaveScheduler,
     saveActiveThemeNameState,
     saveColorsState,
     saveThemesState
 } from '../utils/persistence.js';
 
 const ACTIVE_THEME_CSS = `.${CSS.THEME_ITEM}.${CSS.THEME_ITEM_ACTIVE}`;
+const _scheduleColorSave = createSaveScheduler(saveColorsState);
+const _scheduleActiveThemeNameSave = createSaveScheduler(saveActiveThemeNameState);
 
 function _getUrlFromObject(object) {
     const blob = new Blob([JSON.stringify(object, null, 2)], THEME_BLOB_TYPE);
@@ -51,9 +54,6 @@ function _focusActiveTheme() {
 }
 
 function _applyTheme(theme) {
-    state.activeThemeName = theme._name;
-    saveActiveThemeNameState();
-
     for (const themeKey of THEME_KEYS) {
         const themeValue = theme[themeKey];
         if (themeValue == null) {
@@ -63,7 +63,9 @@ function _applyTheme(theme) {
         setColor(themeKey, themeValue);
     }
 
-    saveColorsState();
+    state.activeThemeName = theme._name;
+    _scheduleActiveThemeNameSave();
+    _scheduleColorSave();
     _renderThemeList();
     _focusActiveTheme();
     updateTokensColor();

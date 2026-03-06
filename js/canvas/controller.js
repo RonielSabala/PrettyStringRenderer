@@ -23,6 +23,7 @@ import {
     state
 } from '../common/store.js';
 import {
+    createSaveScheduler,
     saveCanvasConfigState
 } from '../utils/persistence.js';
 import {
@@ -37,6 +38,8 @@ let panStartY = 0;
 
 let rafScheduled = false;
 let onZoomChangeCallback = null;
+
+const _scheduleCanvasConfigSave = createSaveScheduler(saveCanvasConfigState);
 
 export function updateZoomInfo() {
     const zoom = (state.canvasConfig.zoom * 100).toFixed(0);
@@ -114,7 +117,7 @@ export function onZoom(event) {
         _applyScrollPan(0, event.deltaY);
     }
 
-    saveCanvasConfigState();
+    _scheduleCanvasConfigSave();
 }
 
 export function onZoomReset() {

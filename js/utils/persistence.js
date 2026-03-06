@@ -1,4 +1,7 @@
 import {
+    SAVE_TIMEOUT_MS
+} from '../common/config.js';
+import {
     state
 } from '../common/store.js';
 
@@ -13,22 +16,32 @@ const STORAGE_KEYS = Object.freeze({
     CANVAS_CONFIG: 'psr:canvasConfig',
 });
 
-// Helpers
-
-function _saveValueState(storageKey, storageValue) {
-    try {
-        localStorage.setItem(storageKey, storageValue);
-    } catch (error) {
-        console.warn('Could not save state:', error);
-    }
+export function createSaveScheduler(saveFn, ms = SAVE_TIMEOUT_MS) {
+    let timer = null;
+    return () => {
+        clearTimeout(timer);
+        timer = setTimeout(saveFn, ms);
+    };
 }
 
-function _saveObjectState(storageKey, storageValue) {
-    _saveValueState(storageKey, JSON.stringify(storageValue));
+// Internal helpers
+
+function _saveAsync(key, value) {
+    setTimeout(() => {
+        try {
+            localStorage.setItem(key, value);
+        } catch (error) {
+            console.warn('Could not save state:', error);
+        }
+    }, 0);
 }
 
-function _getState(storageKey) {
-    return localStorage.getItem(storageKey);
+function _saveObjectAsync(key, value) {
+    _saveAsync(key, JSON.stringify(value));
+}
+
+function _getState(key) {
+    return localStorage.getItem(key);
 }
 
 function _restoreStateToObject(current, savedJSON) {
@@ -43,38 +56,30 @@ function _restoreStateToObject(current, savedJSON) {
     }
 }
 
-// Public methods
+// Public save functions
 
-export const saveColorsState = () => _saveObjectState(STORAGE_KEYS.COLORS, state.colors);
-export const saveThemesState = () => _saveObjectState(STORAGE_KEYS.THEMES, state.themes);
-export const saveActiveThemeNameState = () => _saveValueState(STORAGE_KEYS.ACTIVE_THEME_NAME, state.activeThemeName);
-export const saveActiveElementIdState = () => _saveValueState(STORAGE_KEYS.ACTIVE_ELEMENT_ID, state.activeElementId);
-export const saveCollapsedSectionIdsState = () => _saveObjectState(STORAGE_KEYS.COLLAPSED_SECTION_IDS, state.collapsedSectionIds);
-export const saveTypographyConfigState = () => _saveObjectState(STORAGE_KEYS.TYPOGRAPHY_CONFIG, state.typographyConfig);
-export const saveEditorConfigState = () => _saveObjectState(STORAGE_KEYS.EDITOR_CONFIG, state.editorConfig);
-export const saveCanvasConfigState = () => _saveObjectState(STORAGE_KEYS.CANVAS_CONFIG, state.canvasConfig);
+export const saveColorsState = () => _saveObjectAsync(STORAGE_KEYS.COLORS, state.colors);
+export const saveThemesState = () => _saveObjectAsync(STORAGE_KEYS.THEMES, state.themes);
+export const saveActiveThemeNameState = () => _saveAsync(STORAGE_KEYS.ACTIVE_THEME_NAME, state.activeThemeName);
+export const saveActiveElementIdState = () => _saveAsync(STORAGE_KEYS.ACTIVE_ELEMENT_ID, state.activeElementId);
+export const saveCollapsedSectionIdsState = () => _saveObjectAsync(STORAGE_KEYS.COLLAPSED_SECTION_IDS, state.collapsedSectionIds);
+export const saveTypographyConfigState = () => _saveObjectAsync(STORAGE_KEYS.TYPOGRAPHY_CONFIG, state.typographyConfig);
+export const saveEditorConfigState = () => _saveObjectAsync(STORAGE_KEYS.EDITOR_CONFIG, state.editorConfig);
+export const saveCanvasConfigState = () => _saveObjectAsync(STORAGE_KEYS.CANVAS_CONFIG, state.canvasConfig);
 
 export function restoreState() {
     try {
-        const colors = _getState(STORAGE_KEYS.COLORS);
-        const themes = _getState(STORAGE_KEYS.THEMES);
+        _restoreStateToObject(state.colors, _getState(STORAGE_KEYS.COLORS));
+        _restoreStateToObject(state.themes, _getState(STORAGE_KEYS.THEMES));
+        _restoreStateToObject(state.collapsedSectionIds, _getState(STORAGE_KEYS.COLLAPSED_SECTION_IDS));
+        _restoreStateToObject(state.typographyConfig, _getState(STORAGE_KEYS.TYPOGRAPHY_CONFIG));
+        _restoreStateToObject(state.editorConfig, _getState(STORAGE_KEYS.EDITOR_CONFIG));
+        _restoreStateToObject(state.canvasConfig, _getState(STORAGE_KEYS.CANVAS_CONFIG));
+
         const activeThemeName = _getState(STORAGE_KEYS.ACTIVE_THEME_NAME);
         const activeElementId = _getState(STORAGE_KEYS.ACTIVE_ELEMENT_ID);
-        const collapsedSectionIds = _getState(STORAGE_KEYS.COLLAPSED_SECTION_IDS);
-        const typographyConfig = _getState(STORAGE_KEYS.TYPOGRAPHY_CONFIG);
-        const editorConfig = _getState(STORAGE_KEYS.EDITOR_CONFIG);
-        const canvasConfig = _getState(STORAGE_KEYS.CANVAS_CONFIG);
-
-        _restoreStateToObject(state.colors, colors);
-        _restoreStateToObject(state.themes, themes);
-        _restoreStateToObject(state.collapsedSectionIds, collapsedSectionIds);
-        _restoreStateToObject(state.typographyConfig, typographyConfig);
-        _restoreStateToObject(state.editorConfig, editorConfig);
-        _restoreStateToObject(state.canvasConfig, canvasConfig);
-
         if (activeThemeName) state.activeThemeName = activeThemeName;
         if (activeElementId) state.activeElementId = activeElementId;
-
     } catch (err) {
         console.warn('Could not restore state:', err);
     }

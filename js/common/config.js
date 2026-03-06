@@ -3,6 +3,7 @@ import {
 } from "./elements.js";
 
 export const LINE_BREAK = '\n';
+export const SAVE_TIMEOUT_MS = 200;
 
 // Editor constants
 export const EDITOR_MIN_HEIGHT_PX = editorTabsElement.offsetHeight;

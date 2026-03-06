@@ -27,7 +27,7 @@ import {
     saveConfigState
 } from '../utils/persistence.js';
 
-const CONFIG_KEY_TO_ELEMENT = {
+const CONFIG_KEYS_TO_ELEMENT = {
     'fontSize': typographyFontSizeElement,
     'lineHeight': typographyLineHeightElement,
     'letterSpacing': typographyLetterSpacingElement,
@@ -38,12 +38,12 @@ const CONFIG_KEY_TO_ELEMENT = {
 export function initTypographySection() {
     const config = state.config;
 
-    for (const [configKey, element] of Object.entries(CONFIG_KEY_TO_ELEMENT)) {
+    for (const [configKey, element] of Object.entries(CONFIG_KEYS_TO_ELEMENT)) {
         initNumberInput(config, configKey, element, CANVAS_DEFAULTS);
 
         // Configure listener
         element.addEventListener(EVENTS.INPUT, () => {
-            const value = CONFIG_KEY_TO_ELEMENT[configKey].value;
+            const value = element.value;
             const fallback = CANVAS_DEFAULTS[configKey].value;
 
             config[configKey] = parseNumber(value, fallback);

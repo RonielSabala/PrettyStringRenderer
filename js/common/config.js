@@ -92,6 +92,7 @@ export const EDITOR_DEFAULTS = {
 /           —**r_(on)ie[l] + saba(la) \
 ▏/       _ \                          ▕
 \\((_)++)  /                          /`,
+    height: 210,
     fontSize: {
         value: 16,
         min: 8,

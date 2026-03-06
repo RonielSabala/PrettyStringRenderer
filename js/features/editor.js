@@ -48,14 +48,24 @@ let startHeight = 0;
 let startMaxHeight = 0;
 let dragging = false;
 
-const CONFIG_KEY_TO_ELEMENT = [
+const CONFIG_KEYS_TO_ELEMENT = [
+    ['height', [document, EVENTS.MOUSE_MOVE, _onEditorMouseMove]],
+    ['height', [editorResizeHandleElement, EVENTS.DBL_CLICK, _onResizeReset]],
     ['content', [editorElement, EVENTS.INPUT, _onEditorContentChange]],
     ['fontSize', [editorFontSizeElement, EVENTS.INPUT, _onEditorFontSize]],
     ['cursorSelection', [editorElement, EVENTS.CLICK, _onEditorCursorChange]],
     ['cursorSelection', [editorElement, EVENTS.KEY_UP, _onEditorCursorChange]],
 ];
 
-function _getHeight(y) {
+function _getHeight() {
+    return editorPanelElement.offsetHeight;
+}
+
+function _setHeight(newHeight) {
+    editorPanelElement.style.height = toPx(newHeight);
+}
+
+function _getNormalizedHeight(y) {
     return Math.min(startMaxHeight, startHeight + (startY - y));
 }
 
@@ -84,64 +94,13 @@ function _onEditorCursorChange() {
     return [editorElement.selectionStart, editorElement.selectionEnd];
 }
 
-export function initEditorSection() {
-    updateZoomInfo();
-    const config = state.editorConfig;
-
-    // Configure editor
-    editorElement.scrollTop = 0;
-    editorElement.style.fontSize = toPx(config.fontSize);
-    editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
-    editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
-    editorElement.style.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
-    editorElement.value = config.content ?? EDITOR_DEFAULTS.content;
-
-    // Set cursor selection
-    const cursorSelection = config.cursorSelection;
-    if (cursorSelection.length > 0) {
-        editorElement.setSelectionRange(...cursorSelection);
-    }
-
-    for (const [configKey, [element, eventType, onElementChange]] of CONFIG_KEY_TO_ELEMENT) {
-        initNumberInput(config, configKey, element, EDITOR_DEFAULTS);
-
-        // Configure listener
-        element.addEventListener(eventType, () => {
-            const prevValue = config[configKey];
-            const newValue = onElementChange();
-            if (prevValue === newValue || Array.isArray(newValue) && _arraysEqual(prevValue, newValue)) {
-                return;
-            }
-
-            config[configKey] = newValue;
-            saveEditorConfigState();
-        });
-    }
-
-    // Tokenize content
-    state.tokenizer.tokenize(editorElement.value);
-    redraw();
-}
-
-export function onResize(event) {
-    event.preventDefault();
-
-    dragging = true;
-    startY = event.clientY;
-    startHeight = editorPanelElement.offsetHeight;
-    startMaxHeight = Math.round(window.innerHeight * EDITOR_MAX_HEIGHT_PERCENTAGE);
-
-    document.body.style.userSelect = CSS_USER_SELECT.NONE;
-    editorResizeHandleElement.classList.add(CSS.DRAG);
-}
-
-export function onEditorMouseMove(event) {
+function _onEditorMouseMove(event) {
     if (!dragging) {
         return;
     }
 
-    const newHeight = Math.max(EDITOR_MIN_HEIGHT_PX, _getHeight(event.clientY));
-    const editorHeight = editorPanelElement.offsetHeight;
+    const editorHeight = _getHeight();
+    const newHeight = Math.max(EDITOR_MIN_HEIGHT_PX, _getNormalizedHeight(event.clientY));
     if (
         newHeight === startMaxHeight &&
         editorHeight === startMaxHeight ||
@@ -151,8 +110,30 @@ export function onEditorMouseMove(event) {
         return;
     }
 
-    editorPanelElement.style.height = toPx(newHeight);
+    _setHeight(newHeight);
     adjustCanvas();
+
+    return newHeight
+}
+
+function _onResizeReset() {
+    const defaultHeight = EDITOR_DEFAULTS.height;
+    _setHeight(defaultHeight);
+    adjustCanvas();
+
+    return defaultHeight;
+}
+
+export function onResize(event) {
+    event.preventDefault();
+
+    dragging = true;
+    startY = event.clientY;
+    startHeight = _getHeight();
+    startMaxHeight = Math.round(window.innerHeight * EDITOR_MAX_HEIGHT_PERCENTAGE);
+
+    document.body.style.userSelect = CSS_USER_SELECT.NONE;
+    editorResizeHandleElement.classList.add(CSS.DRAG);
 }
 
 export function onEditorMouseUp() {
@@ -172,4 +153,50 @@ export function onEscapeToCanvas(event) {
 
     event.preventDefault();
     canvasWrapElement.focus();
+}
+
+export function initEditorSection() {
+    const config = state.editorConfig;
+
+    // Configure editor
+
+    updateZoomInfo();
+    _setHeight(config.height);
+
+    editorElement.scrollTop = 0;
+    editorElement.style.fontSize = toPx(config.fontSize);
+    editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
+    editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
+    editorElement.style.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
+    editorElement.value = config.content ?? EDITOR_DEFAULTS.content;
+
+    // Set cursor selection
+    const cursorSelection = config.cursorSelection;
+    if (cursorSelection.length > 0) {
+        editorElement.setSelectionRange(...cursorSelection);
+    }
+
+    for (const [configKey, [element, eventType, onElementChange]] of CONFIG_KEYS_TO_ELEMENT) {
+        initNumberInput(config, configKey, element, EDITOR_DEFAULTS);
+
+        // Configure listener
+        element.addEventListener(eventType, (event) => {
+            const newValue = onElementChange(event);
+            if (newValue === undefined) {
+                return;
+            }
+
+            const prevValue = config[configKey];
+            if (prevValue === newValue || Array.isArray(newValue) && _arraysEqual(prevValue, newValue)) {
+                return;
+            }
+
+            config[configKey] = newValue;
+            saveEditorConfigState();
+        });
+    }
+
+    // Tokenize content
+    state.tokenizer.tokenize(editorElement.value);
+    redraw();
 }

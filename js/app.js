@@ -41,7 +41,6 @@ import {
 } from './features/color.js';
 import {
     initEditorSection,
-    onEditorMouseMove,
     onEditorMouseUp,
     onEscapeToCanvas,
     onResize
@@ -123,7 +122,6 @@ function initListeners() {
     // Editor
     editorResizeHandleElement.addEventListener(EVENTS.MOUSE_DOWN, onResize);
     document.addEventListener(EVENTS.MOUSE_UP, onEditorMouseUp);
-    document.addEventListener(EVENTS.MOUSE_MOVE, onEditorMouseMove);
     document.addEventListener(EVENTS.KEY_DOWN, onEscapeToCanvas)
 
     // Canvas

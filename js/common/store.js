@@ -22,6 +22,7 @@ export const state = {
     },
     editorConfig: {
         cursorSelection: [],
+        height: EDITOR_DEFAULTS.height,
         content: EDITOR_DEFAULTS.content,
         fontSize: EDITOR_DEFAULTS.fontSize.value,
     },

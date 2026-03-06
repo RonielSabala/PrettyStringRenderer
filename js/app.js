@@ -23,8 +23,6 @@ import {
     btnExportTheme,
     btnLoadThemes,
     canvasWrapElement,
-    editorElement,
-    editorFontSizeElement,
     editorResizeHandleElement,
     getColorPickerElement,
     getElement,
@@ -32,12 +30,7 @@ import {
     resolutionBadgeElement,
     sectionBracketColors,
     sectionCanvasColors,
-    sectionSyntaxColors,
-    typographyFontSizeElement,
-    typographyLetterSpacingElement,
-    typographyLineHeightElement,
-    typographyPadXElement,
-    typographyPadYElement
+    sectionSyntaxColors
 } from './common/elements.js';
 import {
     state
@@ -48,9 +41,6 @@ import {
 } from './features/color.js';
 import {
     initEditorSection,
-    onEditorContentChange,
-    onEditorCursorChange,
-    onEditorFontSize,
     onEditorMouseMove,
     onEditorMouseUp,
     onEscapeToCanvas,
@@ -67,12 +57,7 @@ import {
     onThemesFocus
 } from './features/themes.js';
 import {
-    initTypographySection,
-    onFontSizeConfig,
-    onLetterSpacingConfig,
-    onLineHeightConfig,
-    onPadXConfig,
-    onPadYConfig
+    initTypographySection
 } from './features/typography.js';
 import {
     baseToggleSection,
@@ -135,18 +120,7 @@ function initListeners() {
         );
     }
 
-    // Typography section
-    typographyFontSizeElement.addEventListener(EVENTS.INPUT, onFontSizeConfig);
-    typographyLineHeightElement.addEventListener(EVENTS.INPUT, onLineHeightConfig);
-    typographyLetterSpacingElement.addEventListener(EVENTS.INPUT, onLetterSpacingConfig);
-    typographyPadXElement.addEventListener(EVENTS.INPUT, onPadXConfig);
-    typographyPadYElement.addEventListener(EVENTS.INPUT, onPadYConfig);
-
     // Editor
-    editorElement.addEventListener(EVENTS.INPUT, onEditorContentChange);
-    editorElement.addEventListener(EVENTS.CLICK, onEditorCursorChange);
-    editorElement.addEventListener(EVENTS.KEY_UP, onEditorCursorChange);
-    editorFontSizeElement.addEventListener(EVENTS.INPUT, onEditorFontSize);
     editorResizeHandleElement.addEventListener(EVENTS.MOUSE_DOWN, onResize);
     document.addEventListener(EVENTS.MOUSE_UP, onEditorMouseUp);
     document.addEventListener(EVENTS.MOUSE_MOVE, onEditorMouseMove);

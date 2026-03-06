@@ -5,6 +5,9 @@ import {
     CANVAS_DEFAULTS
 } from '../common/config.js';
 import {
+    EVENTS
+} from '../common/constants/events.js';
+import {
     typographyFontSizeElement,
     typographyLetterSpacingElement,
     typographyLineHeightElement,
@@ -24,41 +27,28 @@ import {
     saveConfigState
 } from '../utils/persistence.js';
 
+const CONFIG_KEY_TO_ELEMENT = {
+    'fontSize': typographyFontSizeElement,
+    'lineHeight': typographyLineHeightElement,
+    'letterSpacing': typographyLetterSpacingElement,
+    'padX': typographyPadXElement,
+    'padY': typographyPadYElement,
+}
+
 export function initTypographySection() {
     const config = state.config;
-    initNumberInput(typographyFontSizeElement, config.fontSize, CANVAS_DEFAULTS.fontSize)
-    initNumberInput(typographyLineHeightElement, config.lineHeight, CANVAS_DEFAULTS.lineHeight)
-    initNumberInput(typographyLetterSpacingElement, config.letterSpacing, CANVAS_DEFAULTS.letterSpacing)
-    initNumberInput(typographyPadXElement, config.padX, CANVAS_DEFAULTS.padX)
-    initNumberInput(typographyPadYElement, config.padY, CANVAS_DEFAULTS.padY)
-}
 
-export function onFontSizeConfig() {
-    state.config.fontSize = parseNumber(typographyFontSizeElement.value, CANVAS_DEFAULTS.fontSize.value);
-    saveConfigState();
-    redraw();
-}
+    for (const [configKey, element] of Object.entries(CONFIG_KEY_TO_ELEMENT)) {
+        initNumberInput(config, configKey, element, CANVAS_DEFAULTS);
 
-export function onLineHeightConfig() {
-    state.config.lineHeight = parseNumber(typographyLineHeightElement.value, CANVAS_DEFAULTS.lineHeight.value);
-    saveConfigState();
-    redraw();
-}
+        // Configure listener
+        element.addEventListener(EVENTS.INPUT, () => {
+            const value = CONFIG_KEY_TO_ELEMENT[configKey].value;
+            const fallback = CANVAS_DEFAULTS[configKey].value;
 
-export function onLetterSpacingConfig() {
-    state.config.letterSpacing = parseNumber(typographyLetterSpacingElement.value, CANVAS_DEFAULTS.letterSpacing.value);
-    saveConfigState();
-    redraw();
-}
-
-export function onPadXConfig() {
-    state.config.padX = parseNumber(typographyPadXElement.value, CANVAS_DEFAULTS.padX.value);
-    saveConfigState();
-    redraw();
-}
-
-export function onPadYConfig() {
-    state.config.padY = parseNumber(typographyPadYElement.value, CANVAS_DEFAULTS.padY.value);
-    saveConfigState();
-    redraw();
-}
+            config[configKey] = parseNumber(value, fallback);
+            saveConfigState();
+            redraw();
+        });
+    }
+};

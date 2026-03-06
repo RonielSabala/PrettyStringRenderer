@@ -1,4 +1,4 @@
-function _getElement(id) {
+export function getElement(id) {
     const element = document.getElementById(id);
     if (!element) {
         throw new Error(`Element #${id} not found`);
@@ -8,50 +8,50 @@ function _getElement(id) {
 }
 
 // Header section
-export const btnExport = _getElement('btn-export');
-export const resolutionBadgeElement = _getElement('header-badge');
+export const btnExport = getElement('btn-export');
+export const resolutionBadgeElement = getElement('header-badge');
 
 // Theme section
-export const btnLoadThemes = _getElement('btn-load-themes')
-export const btnExportTheme = _getElement('btn-export-theme');
-export const emptyThemeElement = _getElement('theme-empty');
-export const themeListElement = _getElement('theme-list');
+export const btnLoadThemes = getElement('btn-load-themes')
+export const btnExportTheme = getElement('btn-export-theme');
+export const emptyThemeElement = getElement('theme-empty');
+export const themeListElement = getElement('theme-list');
 
 // Sections
-export const sectionBracketColors = _getElement('section-bracket-colors');
-export const sectionSyntaxColors = _getElement('section-syntax-colors');
-export const sectionCanvasColors = _getElement('section-canvas-colors');
+export const sectionBracketColors = getElement('section-bracket-colors');
+export const sectionSyntaxColors = getElement('section-syntax-colors');
+export const sectionCanvasColors = getElement('section-canvas-colors');
 
 // Typography section
-export const typographyFontSizeElement = _getElement('typography-font-size');
-export const typographyLineHeightElement = _getElement('typography-line-height');
-export const typographyLetterSpacingElement = _getElement('typography-letter-spacing');
-export const typographyPadXElement = _getElement('typography-pad-x');
-export const typographyPadYElement = _getElement('typography-pad-y');
+export const typographyFontSizeElement = getElement('typography-font-size');
+export const typographyLineHeightElement = getElement('typography-line-height');
+export const typographyLetterSpacingElement = getElement('typography-letter-spacing');
+export const typographyPadXElement = getElement('typography-pad-x');
+export const typographyPadYElement = getElement('typography-pad-y');
 
 // Editor
-export const editorResizeHandleElement = _getElement('editor-resize-handle');
-export const editorTabsElement = _getElement('editor-tabs');
-export const editorPanelElement = _getElement('editor-panel');
-export const editorFontSizeElement = _getElement('editor-font-size');
-export const editorStatusElement = _getElement('editor-status');
-export const editorElement = _getElement('editor');
+export const editorResizeHandleElement = getElement('editor-resize-handle');
+export const editorTabsElement = getElement('editor-tabs');
+export const editorPanelElement = getElement('editor-panel');
+export const editorFontSizeElement = getElement('editor-font-size');
+export const editorStatusElement = getElement('editor-status');
+export const editorElement = getElement('editor');
 
 // Canvas
-export const canvasWrapElement = _getElement('canvas-wrap');
-export const canvasInnerElement = _getElement('canvas-inner');
-export const canvasElement = _getElement('canvas');
+export const canvasWrapElement = getElement('canvas-wrap');
+export const canvasInnerElement = getElement('canvas-inner');
+export const canvasElement = getElement('canvas');
 
 // Color input getters
 
 export function getSwatchFillElement(themeKey) {
-    return _getElement(`swatch-fill-${themeKey}`);
+    return getElement(`swatch-fill-${themeKey}`);
 }
 
 export function getColorPickerElement(themeKey) {
-    return _getElement(`color-picker-${themeKey}`);
+    return getElement(`color-picker-${themeKey}`);
 }
 
 export function getHexInputElement(themeKey) {
-    return _getElement(`hex-input-${themeKey}`);
+    return getElement(`hex-input-${themeKey}`);
 }

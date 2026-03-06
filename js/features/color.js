@@ -5,9 +5,13 @@ import {
     setColor,
     updateTokensColor
 } from '../utils/color.js';
+import {
+    saveColorsState
+} from '../utils/persistence.js';
 
 export function onPick(themeKey, themeValue) {
     setColor(themeKey, themeValue);
+    saveColorsState();
     updateTokensColor(themeKey);
     redraw();
 }
@@ -18,6 +22,7 @@ export function onHex(themeKey, themeValue) {
     }
 
     setColor(themeKey, themeValue);
+    saveColorsState();
     updateTokensColor(themeKey);
     redraw();
 }

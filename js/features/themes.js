@@ -3,6 +3,7 @@ import {
 } from '../canvas/buffer.js';
 import {
     DEFAULT_EXPORT_THEME_FILENAME,
+    DEFAULT_THEME,
     EXPORT_THEME_PROMPT_MESSAGE,
     THEME_BLOB_TYPE,
     THEME_KEYS,
@@ -29,6 +30,14 @@ import {
     setColor,
     updateTokensColor
 } from '../utils/color.js';
+import {
+    isObjectEmpty
+} from '../utils/parse.js';
+import {
+    saveActiveThemeNameState,
+    saveColorsState,
+    saveThemesState
+} from '../utils/persistence.js';
 
 const ACTIVE_THEME_CSS = `.${CSS.THEME_ITEM}.${CSS.THEME_ITEM_ACTIVE}`;
 
@@ -43,6 +52,8 @@ function _focusActiveTheme() {
 
 function _applyTheme(theme) {
     state.activeThemeName = theme._name;
+    saveActiveThemeNameState();
+
     for (const themeKey of THEME_KEYS) {
         const themeValue = theme[themeKey];
         if (themeValue == null) {
@@ -52,6 +63,7 @@ function _applyTheme(theme) {
         setColor(themeKey, themeValue);
     }
 
+    saveColorsState();
     _renderThemeList();
     _focusActiveTheme();
     updateTokensColor();
@@ -64,15 +76,21 @@ function _applyThemeOnArrow(event, index) {
     }
 
     event.preventDefault();
-    const themes = state.themes;
 
-    if (event.code === KEYS.ARROW_UP) {
-        _applyTheme(themes.at(index - 1));
+    let i;
+    const themes = state.themes;
+    switch (event.key) {
+        case KEYS.ARROW_UP:
+            i = index - 1;
+            break;
+        case KEYS.ARROW_DOWN:
+            i = (index + 1) % themes.length;
+            break;
+        default:
+            return;
     }
 
-    if (event.code === KEYS.ARROW_DOWN) {
-        _applyTheme(themes.at((index + 1) % themes.length))
-    };
+    _applyTheme(themes.at(i));
 }
 
 function _showThemeOnNewWindow(theme) {
@@ -94,24 +112,28 @@ function _renderThemeList() {
     }
 
     themes.forEach((theme, index) => {
-        const themeItem = document.createElement('div');
-        const themeName = document.createElement('span');
-        const themeSwatch = document.createElement('div');
+        const themeName = theme._name;
+        const themeItemClass = CSS.THEME_ITEM + (themeName === state.activeThemeName ? ` ${CSS.THEME_ITEM_ACTIVE}` : '');
 
-        themeItem.className = CSS.THEME_ITEM + (theme._name === state.activeThemeName ? ` ${CSS.THEME_ITEM_ACTIVE}` : '');
-        themeName.className = CSS.THEME_NAME;
-        themeSwatch.className = CSS.THEME_SWATCH;
+        const themeItemElement = document.createElement('div');
+        const themeNameElement = document.createElement('span');
+        const themeSwatchElement = document.createElement('div');
 
-        themeItem.tabIndex = 0;
-        themeName.textContent = theme._name;
-        themeSwatch.style.background = theme.background;
+        themeNameElement.className = CSS.THEME_NAME;
+        themeNameElement.textContent = themeName;
 
-        themeItem.append(themeName, themeSwatch);
-        themeItem.addEventListener(EVENTS.CLICK, () => _applyTheme(theme));
-        themeItem.addEventListener(EVENTS.DBL_CLICK, () => _showThemeOnNewWindow(theme));
-        themeItem.addEventListener(EVENTS.KEY_DOWN, (event) => _applyThemeOnArrow(event, index));
+        themeSwatchElement.className = CSS.THEME_SWATCH;
+        themeSwatchElement.style.background = theme.background;
 
-        themeListElement.appendChild(themeItem);
+        themeItemElement.tabIndex = 0;
+        themeItemElement.id = `${themeItemClass}-${themeName.toLowerCase()}`;
+        themeItemElement.className = themeItemClass;
+        themeItemElement.append(themeNameElement, themeSwatchElement);
+        themeItemElement.addEventListener(EVENTS.CLICK, () => _applyTheme(theme));
+        themeItemElement.addEventListener(EVENTS.DBL_CLICK, () => _showThemeOnNewWindow(theme));
+        themeItemElement.addEventListener(EVENTS.KEY_DOWN, (event) => _applyThemeOnArrow(event, index));
+
+        themeListElement.appendChild(themeItemElement);
     });
 }
 
@@ -135,6 +157,8 @@ async function _onLoadThemes(files) {
         _mergeTheme(theme, themeName);
     }
 
+    saveThemesState();
+
     const themes = state.themes;
     if (themes.length === 0) {
         _renderThemeList();
@@ -144,7 +168,7 @@ async function _onLoadThemes(files) {
     _applyTheme(themes.at(-1));
 }
 
-export async function loadThemes() {
+export function loadThemes() {
     const inputElement = document.createElement('input');
     inputElement.type = THEMES_FILE_TYPE;
     inputElement.accept = THEMES_EXTENSION;
@@ -173,4 +197,15 @@ export function onThemesFocus(event) {
 
     event.preventDefault();
     _focusActiveTheme();
+}
+
+export function initThemesSection() {
+    const colors = state.colors;
+    const themeToApply = isObjectEmpty(colors) ? DEFAULT_THEME : colors;
+
+    for (const [ThemeKey, ThemeValue] of Object.entries(themeToApply)) {
+        setColor(ThemeKey, ThemeValue);
+    }
+
+    _renderThemeList();
 }

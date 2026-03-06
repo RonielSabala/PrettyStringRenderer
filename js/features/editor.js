@@ -34,29 +34,53 @@ import {
     parseNumber
 } from '../utils/parse.js';
 import {
+    saveEditorConfigState
+} from '../utils/persistence.js';
+import {
     toPx
 } from '../utils/resolution.js';
 
 let startY = 0;
 let startHeight = 0;
 let startMaxHeight = 0;
+let lastCursorSelection = [];
 let dragging = false;
 
 function _getHeight(y) {
     return Math.min(startMaxHeight, startHeight + (startY - y));
 }
 
-export function initEditorPanel() {
+function _arraysEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+
+    return arr1.every((element, index) => element === arr2[index]);
+}
+
+export function initEditorSection() {
+    const config = state.editorConfig;
+    const fontSize = config.fontSize;
+
     updateZoomInfo();
-    initNumberInput(editorFontSizeElement, EDITOR_DEFAULTS.fontSize)
+    initNumberInput(editorFontSizeElement, fontSize, EDITOR_DEFAULTS.fontSize)
 
     editorElement.scrollTop = 0;
-    editorElement.setSelectionRange(0, 0);
-    editorElement.value = EDITOR_DEFAULTS.content;
-    editorElement.style.fontSize = toPx(EDITOR_DEFAULTS.fontSize.value);
+    editorElement.style.fontSize = toPx(fontSize);
     editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
     editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
     editorElement.style.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
+    editorElement.value = config.content ?? EDITOR_DEFAULTS.content;
+
+    // Set cursor selection
+    const cursorSelection = config.cursorSelection;
+    if (cursorSelection.length > 0) {
+        editorElement.setSelectionRange(...cursorSelection);
+    }
+
+    // Tokenize content
+    state.tokenizer.tokenize(editorElement.value);
+    redraw();
 }
 
 export function onResize(event) {
@@ -71,14 +95,31 @@ export function onResize(event) {
     editorResizeHandleElement.classList.add(CSS.DRAG);
 }
 
-export function onEditorChange() {
-    state.tokenizer.tokenize(editorElement.value);
+export function onEditorCursorChange() {
+    const cursorSelection = [editorElement.selectionStart, editorElement.selectionEnd]
+    if (_arraysEqual(cursorSelection, lastCursorSelection)) {
+        return;
+    }
+
+    lastCursorSelection = cursorSelection;
+    state.editorConfig.cursorSelection = cursorSelection;
+    saveEditorConfigState();
+}
+
+export function onEditorContentChange() {
+    const content = editorElement.value;
+    state.tokenizer.tokenize(content);
+    state.editorConfig.content = content;
+
+    saveEditorConfigState();
     redraw();
 }
 
 export function onEditorFontSize() {
     const newFontSize = parseNumber(editorFontSizeElement.value, EDITOR_DEFAULTS.fontSize.value);
     editorElement.style.fontSize = toPx(newFontSize);
+    state.editorConfig.fontSize = newFontSize;
+    saveEditorConfigState();
 }
 
 export function onEditorMouseMove(event) {

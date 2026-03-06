@@ -10,7 +10,6 @@ import {
 } from './canvas/controller.js';
 import {
     CANVAS_DEFAULTS,
-    DEFAULT_THEME,
     THEME_KEYS
 } from './common/config.js';
 import {
@@ -28,6 +27,7 @@ import {
     editorFontSizeElement,
     editorResizeHandleElement,
     getColorPickerElement,
+    getElement,
     getHexInputElement,
     resolutionBadgeElement,
     sectionBracketColors,
@@ -40,12 +40,16 @@ import {
     typographyPadYElement
 } from './common/elements.js';
 import {
+    state
+} from './common/store.js';
+import {
     onHex,
     onPick,
 } from './features/color.js';
 import {
-    initEditorPanel,
-    onEditorChange,
+    initEditorSection,
+    onEditorContentChange,
+    onEditorCursorChange,
     onEditorFontSize,
     onEditorMouseMove,
     onEditorMouseUp,
@@ -58,11 +62,12 @@ import {
 } from './features/export.js';
 import {
     exportCurrentTheme,
+    initThemesSection,
     loadThemes,
     onThemesFocus
 } from './features/themes.js';
 import {
-    initTypographyPanel,
+    initTypographySection,
     onFontSizeConfig,
     onLetterSpacingConfig,
     onLineHeightConfig,
@@ -70,40 +75,52 @@ import {
     onPadYConfig
 } from './features/typography.js';
 import {
-    setColor
-} from './utils/color.js';
-import {
+    baseToggleSection,
     toggleSection
 } from './utils/init.js';
+import {
+    isObjectEmpty
+} from './utils/parse.js';
+import {
+    restoreState,
+    saveActiveElementIdState
+} from './utils/persistence.js';
 import {
     describeResolution
 } from './utils/resolution.js';
 
 function initSections() {
     resolutionBadgeElement.textContent = `${describeResolution()} · ${CANVAS_DEFAULTS.aspectRatio}:1`;
+    let collapsedSectionIds = state.collapsedSectionIds;
 
-    // Hide color sections
-    toggleSection(sectionBracketColors);
-    toggleSection(sectionSyntaxColors);
-    toggleSection(sectionCanvasColors);
+    if (isObjectEmpty(collapsedSectionIds)) {
+        // Hide these color sections on start
+        toggleSection(sectionBracketColors);
+        toggleSection(sectionSyntaxColors);
+        toggleSection(sectionCanvasColors);
+        return;
+    }
+
+    for (const [id, toggle] of Object.entries(collapsedSectionIds)) {
+        if (toggle) {
+            baseToggleSection(getElement(id));
+        }
+    }
+
+    return;
 }
 
 function initListeners() {
-    // Buttons
     btnExport.addEventListener(EVENTS.CLICK, exportCanvas);
-    btnLoadThemes.addEventListener(EVENTS.CLICK, loadThemes);
-    btnExportTheme.addEventListener(EVENTS.CLICK, exportCurrentTheme);
 
-    // Collapse sections
+    // Sections
     document.querySelectorAll(`.${CSS.SECTION_HEADER}`).forEach(
         element => element.addEventListener(EVENTS.CLICK, () => toggleSection(element))
     );
 
-    // Apply default theme
-    for (const [ThemeKey, ThemeValue] of Object.entries(DEFAULT_THEME)) {
-        setColor(ThemeKey, ThemeValue);
-    }
-
+    // Theme section
+    btnLoadThemes.addEventListener(EVENTS.CLICK, loadThemes);
+    btnExportTheme.addEventListener(EVENTS.CLICK, exportCurrentTheme);
     document.addEventListener(EVENTS.KEY_DOWN, onThemesFocus)
 
     // Color pickers + hex
@@ -118,7 +135,7 @@ function initListeners() {
         );
     }
 
-    // Typography
+    // Typography section
     typographyFontSizeElement.addEventListener(EVENTS.INPUT, onFontSizeConfig);
     typographyLineHeightElement.addEventListener(EVENTS.INPUT, onLineHeightConfig);
     typographyLetterSpacingElement.addEventListener(EVENTS.INPUT, onLetterSpacingConfig);
@@ -126,7 +143,9 @@ function initListeners() {
     typographyPadYElement.addEventListener(EVENTS.INPUT, onPadYConfig);
 
     // Editor
-    editorElement.addEventListener(EVENTS.INPUT, onEditorChange);
+    editorElement.addEventListener(EVENTS.INPUT, onEditorContentChange);
+    editorElement.addEventListener(EVENTS.CLICK, onEditorCursorChange);
+    editorElement.addEventListener(EVENTS.KEY_UP, onEditorCursorChange);
     editorFontSizeElement.addEventListener(EVENTS.INPUT, onEditorFontSize);
     editorResizeHandleElement.addEventListener(EVENTS.MOUSE_DOWN, onResize);
     document.addEventListener(EVENTS.MOUSE_UP, onEditorMouseUp);
@@ -145,13 +164,21 @@ function initListeners() {
     document.addEventListener(EVENTS.KEY_UP, onSpaceRelease);
     document.addEventListener(EVENTS.MOUSE_MOVE, onPanningMove);
     document.addEventListener(EVENTS.MOUSE_UP, onPanningRelease);
+
+    // Window reload listener
+    window.addEventListener(EVENTS.WINDOW_RELOAD, () => {
+        state.activeElementId = document.activeElement.id;
+        saveActiveElementIdState();
+    });
 }
 
-await document.fonts.ready.then(() => {
+document.fonts.ready.then(() => {
+    restoreState();
     initSections();
-    initTypographyPanel();
-    initEditorPanel();
+    initThemesSection();
+    initTypographySection();
+    initEditorSection();
     initListeners();
-    onEditorChange();
     adjustCanvas();
+    document.getElementById(state.activeElementId)?.focus();
 });

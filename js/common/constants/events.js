@@ -9,5 +9,6 @@ export const EVENTS = Object.freeze({
     DBL_CLICK: 'dblclick',
     INPUT: 'input',
     CHANGE: 'change',
-    CONTEXT_MENU: 'contextmenu'
+    CONTEXT_MENU: 'contextmenu',
+    WINDOW_RELOAD: 'beforeunload',
 });

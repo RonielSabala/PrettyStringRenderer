@@ -1,5 +1,6 @@
 import {
     adjustCanvas,
+    applyZoomTransform,
     onPanning,
     onPanningMove,
     onPanningRelease,
@@ -152,5 +153,6 @@ document.fonts.ready.then(() => {
     initEditorSection();
     initListeners();
     adjustCanvas();
+    applyZoomTransform();
     document.getElementById(state.activeElementId)?.focus();
 });

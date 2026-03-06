@@ -48,12 +48,7 @@ export const IMAGE_BLOB_TYPE = {
 
 // UI defaults
 
-const canvasWidth = 3120;
-const canvasHeight = 780;
-export const CANVAS_DEFAULTS = {
-    width: canvasWidth,
-    height: canvasHeight,
-    aspectRatio: canvasWidth / canvasHeight,
+export const TYPOGRAPHY_DEFAULTS = {
     fontSize: {
         value: 85,
         min: 5,
@@ -102,6 +97,17 @@ export const EDITOR_DEFAULTS = {
     letterSpacing: 'auto',
     padX: 10,
     padY: 10,
+};
+
+const canvasWidth = 3120;
+const canvasHeight = 780;
+export const CANVAS_DEFAULTS = {
+    zoom: 1,
+    panX: 0,
+    panY: 0,
+    width: canvasWidth,
+    height: canvasHeight,
+    aspectRatio: canvasWidth / canvasHeight,
 };
 
 // Default pre-loaded UI theme

@@ -20,13 +20,15 @@ import {
     editorStatusElement
 } from '../common/elements.js';
 import {
+    state
+} from '../common/store.js';
+import {
+    saveCanvasConfigState
+} from '../utils/persistence.js';
+import {
     describeResolution,
     toPx
 } from '../utils/resolution.js';
-
-let canvasZoom = 1;
-let canvasPanX = 0;
-let canvasPanY = 0;
 
 let spaceHeld = false;
 let panning = false;
@@ -36,25 +38,23 @@ let panStartY = 0;
 let rafScheduled = false;
 let onZoomChangeCallback = null;
 
-export function getCanvasZoom() {
-    return canvasZoom;
-}
-
 export function updateZoomInfo() {
-    editorStatusElement.textContent = `${describeResolution()} · ${(canvasZoom * 100).toFixed(0)}%`;
+    const zoom = (state.canvasConfig.zoom * 100).toFixed(0);
+    editorStatusElement.textContent = `${describeResolution()} · ${zoom}%`;
 }
 
 export function setZoomChangeCallback(callback) {
     onZoomChangeCallback = callback;
 }
 
-function _getNormalizedDimension(dimension) {
-    return toPx(Math.max(1, Math.round(dimension)));
-}
+export function applyZoomTransform() {
+    const config = state.canvasConfig;
+    const panX = toPx(config.panX);
+    const panY = toPx(config.panY);
+    const zoom = config.zoom;
 
-function _applyTransform() {
     rafScheduled = false;
-    canvasInnerElement.style.transform = `translate(${toPx(canvasPanX)},${toPx(canvasPanY)}) scale(${canvasZoom})`;
+    canvasInnerElement.style.transform = `translate(${panX},${panY}) scale(${zoom})`;
     updateZoomInfo();
 }
 
@@ -64,7 +64,7 @@ function _scheduleTransform() {
     }
 
     rafScheduled = true;
-    requestAnimationFrame(_applyTransform);
+    requestAnimationFrame(applyZoomTransform);
 }
 
 // Zoom
@@ -75,7 +75,7 @@ function _onZoomChange() {
         return;
     }
 
-    onZoomChangeCallback(canvasZoom);
+    onZoomChangeCallback();
 }
 
 function _applyZoom(event) {
@@ -83,20 +83,23 @@ function _applyZoom(event) {
     const pivotX = event.clientX - (rect.left + rect.width / 2);
     const pivotY = event.clientY - (rect.top + rect.height / 2);
 
+    const config = state.canvasConfig;
+    const oldZoom = config.zoom;
     const zoomFactor = event.deltaY < 0 ? CANVAS_ZOOM_FACTOR : 1 / CANVAS_ZOOM_FACTOR;
-    const newZoom = Math.max(CANVAS_MIN_ZOOM, Math.min(CANVAS_MAX_ZOOM, canvasZoom * zoomFactor));
-    const appliedFactor = newZoom / canvasZoom;
+    const newZoom = Math.max(CANVAS_MIN_ZOOM, Math.min(CANVAS_MAX_ZOOM, oldZoom * zoomFactor));
+    const appliedFactor = newZoom / oldZoom;
 
-    canvasPanX = pivotX * (1 - appliedFactor) + canvasPanX * appliedFactor;
-    canvasPanY = pivotY * (1 - appliedFactor) + canvasPanY * appliedFactor;
-    canvasZoom = newZoom;
+    config.zoom = newZoom;
+    config.panX = pivotX * (1 - appliedFactor) + config.panX * appliedFactor;
+    config.panY = pivotY * (1 - appliedFactor) + config.panY * appliedFactor;
 
     _onZoomChange();
 }
 
 function _applyScrollPan(deltaX, deltaY) {
-    canvasPanX -= deltaX * CANVAS_PAN_SCROLL_SPEED;
-    canvasPanY -= deltaY * CANVAS_PAN_SCROLL_SPEED;
+    const config = state.canvasConfig;
+    config.panX -= deltaX * CANVAS_PAN_SCROLL_SPEED;
+    config.panY -= deltaY * CANVAS_PAN_SCROLL_SPEED;
     _scheduleTransform();
 }
 
@@ -110,13 +113,17 @@ export function onZoom(event) {
     } else {
         _applyScrollPan(0, event.deltaY);
     }
+
+    saveCanvasConfigState();
 }
 
-export function onZoomReset(event) {
-    canvasZoom = 1;
-    canvasPanX = 0;
-    canvasPanY = 0;
+export function onZoomReset() {
+    const config = state.canvasConfig;
+    config.zoom = CANVAS_DEFAULTS.zoom;
+    config.panX = CANVAS_DEFAULTS.panX;
+    config.panY = CANVAS_DEFAULTS.panY;
     _onZoomChange();
+    saveCanvasConfigState();
 }
 
 // Pan
@@ -153,11 +160,12 @@ export function onPanning(event) {
         return;
     }
 
-    event.preventDefault();
-
     panning = true;
-    panStartX = event.clientX - canvasPanX;
-    panStartY = event.clientY - canvasPanY;
+    event.preventDefault();
+    const config = state.canvasConfig;
+
+    panStartX = event.clientX - config.panX;
+    panStartY = event.clientY - config.panY;
     canvasWrapElement.style.cursor = CSS_CURSORS.GRABBING;
 }
 
@@ -166,8 +174,9 @@ export function onPanningMove(event) {
         return;
     }
 
-    canvasPanX = event.clientX - panStartX;
-    canvasPanY = event.clientY - panStartY;
+    const config = state.canvasConfig;
+    config.panX = event.clientX - panStartX;
+    config.panY = event.clientY - panStartY;
     _scheduleTransform();
 }
 
@@ -178,6 +187,11 @@ export function onPanningRelease() {
 
     panning = false;
     canvasWrapElement.style.cursor = spaceHeld ? CSS_CURSORS.GRAB : CSS_CURSORS.DEFAULT;
+    saveCanvasConfigState();
+}
+
+function _getNormalizedDimension(dimension) {
+    return toPx(Math.max(1, Math.round(dimension)));
 }
 
 export function adjustCanvas() {

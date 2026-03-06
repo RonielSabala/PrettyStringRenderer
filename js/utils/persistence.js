@@ -8,8 +8,9 @@ const STORAGE_KEYS = Object.freeze({
     ACTIVE_THEME_NAME: 'psr:activeThemeName',
     ACTIVE_ELEMENT_ID: 'psr:activeElementID',
     COLLAPSED_SECTION_IDS: 'psr:collapsedSectionIds',
-    CONFIG: 'psr:config',
+    TYPOGRAPHY_CONFIG: 'psr:typographyConfig',
     EDITOR_CONFIG: 'psr:editorConfig',
+    CANVAS_CONFIG: 'psr:canvasConfig',
 });
 
 // Helpers
@@ -49,8 +50,9 @@ export const saveThemesState = () => _saveObjectState(STORAGE_KEYS.THEMES, state
 export const saveActiveThemeNameState = () => _saveValueState(STORAGE_KEYS.ACTIVE_THEME_NAME, state.activeThemeName);
 export const saveActiveElementIdState = () => _saveValueState(STORAGE_KEYS.ACTIVE_ELEMENT_ID, state.activeElementId);
 export const saveCollapsedSectionIdsState = () => _saveObjectState(STORAGE_KEYS.COLLAPSED_SECTION_IDS, state.collapsedSectionIds);
-export const saveConfigState = () => _saveObjectState(STORAGE_KEYS.CONFIG, state.config);
+export const saveTypographyConfigState = () => _saveObjectState(STORAGE_KEYS.TYPOGRAPHY_CONFIG, state.typographyConfig);
 export const saveEditorConfigState = () => _saveObjectState(STORAGE_KEYS.EDITOR_CONFIG, state.editorConfig);
+export const saveCanvasConfigState = () => _saveObjectState(STORAGE_KEYS.CANVAS_CONFIG, state.canvasConfig);
 
 export function restoreState() {
     try {
@@ -59,14 +61,16 @@ export function restoreState() {
         const activeThemeName = _getState(STORAGE_KEYS.ACTIVE_THEME_NAME);
         const activeElementId = _getState(STORAGE_KEYS.ACTIVE_ELEMENT_ID);
         const collapsedSectionIds = _getState(STORAGE_KEYS.COLLAPSED_SECTION_IDS);
-        const config = _getState(STORAGE_KEYS.CONFIG);
+        const typographyConfig = _getState(STORAGE_KEYS.TYPOGRAPHY_CONFIG);
         const editorConfig = _getState(STORAGE_KEYS.EDITOR_CONFIG);
+        const canvasConfig = _getState(STORAGE_KEYS.CANVAS_CONFIG);
 
         _restoreStateToObject(state.colors, colors);
         _restoreStateToObject(state.themes, themes);
         _restoreStateToObject(state.collapsedSectionIds, collapsedSectionIds);
-        _restoreStateToObject(state.config, config);
+        _restoreStateToObject(state.typographyConfig, typographyConfig);
         _restoreStateToObject(state.editorConfig, editorConfig);
+        _restoreStateToObject(state.canvasConfig, canvasConfig);
 
         if (activeThemeName) state.activeThemeName = activeThemeName;
         if (activeElementId) state.activeElementId = activeElementId;

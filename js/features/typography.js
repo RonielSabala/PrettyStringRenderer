@@ -2,7 +2,7 @@ import {
     redraw
 } from '../canvas/buffer.js';
 import {
-    CANVAS_DEFAULTS
+    TYPOGRAPHY_DEFAULTS
 } from '../common/config.js';
 import {
     EVENTS
@@ -24,7 +24,7 @@ import {
     parseNumber
 } from '../utils/parse.js';
 import {
-    saveConfigState
+    saveTypographyConfigState
 } from '../utils/persistence.js';
 
 const CONFIG_KEYS_TO_ELEMENT = {
@@ -36,18 +36,18 @@ const CONFIG_KEYS_TO_ELEMENT = {
 }
 
 export function initTypographySection() {
-    const config = state.config;
+    const config = state.typographyConfig;
 
     for (const [configKey, element] of Object.entries(CONFIG_KEYS_TO_ELEMENT)) {
-        initNumberInput(config, configKey, element, CANVAS_DEFAULTS);
+        initNumberInput(config, configKey, element, TYPOGRAPHY_DEFAULTS);
 
         // Configure listener
         element.addEventListener(EVENTS.INPUT, () => {
             const value = element.value;
-            const fallback = CANVAS_DEFAULTS[configKey].value;
+            const fallback = TYPOGRAPHY_DEFAULTS[configKey].value;
 
             config[configKey] = parseNumber(value, fallback);
-            saveConfigState();
+            saveTypographyConfigState();
             redraw();
         });
     }

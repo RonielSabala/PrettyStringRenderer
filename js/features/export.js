@@ -54,7 +54,7 @@ export function exportCanvas() {
         return;
     }
 
-    const config = state.config;
+    const config = state.typographyConfig;
     const configCopy = structuredClone(config);
 
     config.fontSize *= scalar;
@@ -70,7 +70,7 @@ export function exportCanvas() {
     offscreen.height = exportHeight;
 
     render(offscreen.getContext(CANVAS_CONTEXT_TYPE), exportWidth, exportHeight);
-    state.config = configCopy;
+    state.typographyConfig = configCopy;
 
     offscreen.toBlob(blob => {
         _downloadBlob(blob, _createFilename(exportWidth, exportHeight));

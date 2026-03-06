@@ -9,7 +9,9 @@ import {
     canvasElement
 } from '../common/elements.js';
 import {
-    getCanvasZoom,
+    state
+} from '../common/store.js';
+import {
     setZoomChangeCallback
 } from './controller.js';
 import {
@@ -24,15 +26,15 @@ let _qualityRedrawTimer = null;
 
 const _ctx = canvasElement.getContext(CANVAS_CONTEXT_TYPE);
 
-function _computePixelScale(canvasZoom) {
-    const deviceAwareZoom = canvasZoom * window.devicePixelRatio;
+function _computePixelScale() {
+    const deviceAwareZoom = state.canvasConfig.zoom * window.devicePixelRatio;
     return Math.min(CANVAS_MAX_PIXEL_SCALE, Math.max(CANVAS_MIN_PIXEL_SCALE, Math.ceil(deviceAwareZoom)));
 }
 
 export function redraw() {
     const width = CANVAS_DEFAULTS.width;
     const height = CANVAS_DEFAULTS.height;
-    const pixelScale = _computePixelScale(getCanvasZoom());
+    const pixelScale = _computePixelScale();
 
     const bufferWidth = pixelScale * width;
     const bufferHeight = pixelScale * height;
@@ -49,8 +51,8 @@ export function redraw() {
     render(_ctx, width, height);
 }
 
-function _scheduleQualityRedraw(canvasZoom) {
-    const neededPixelScale = _computePixelScale(canvasZoom);
+function _scheduleQualityRedraw() {
+    const neededPixelScale = _computePixelScale();
     if (neededPixelScale === _currentPixelScale) {
         return;
     }

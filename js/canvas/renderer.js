@@ -12,7 +12,7 @@ import {
 } from '../utils/resolution.js';
 
 export function render(ctx, width, height) {
-    const config = state.config;
+    const config = state.typographyConfig;
     const tokenizedLines = state.tokenizer.tokenizedLines;
 
     const padX = config.padX;

@@ -20,6 +20,8 @@
   --red: #f85149;
   --grn: #3fb950;
   --r: 5px;
+  --danger: #e05555;
+  --dangerd: color-mix(in srgb, var(--danger) 15%, transparent);
   --mono: "Cascadia Code";
 }
 

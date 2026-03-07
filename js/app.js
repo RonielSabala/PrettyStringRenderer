@@ -28,6 +28,7 @@ import {
     getColorPickerElement,
     getElement,
     getHexInputElement,
+    resetButtonElement,
     resolutionBadgeElement,
     sectionBracketColors,
     sectionCanvasColors,
@@ -68,6 +69,7 @@ import {
     roundUp
 } from './utils/parse.js';
 import {
+    clearState,
     restoreState,
     saveActiveElementIdState
 } from './utils/persistence.js';
@@ -97,7 +99,12 @@ function initSections() {
 }
 
 function initListeners() {
+    // App buttons
     btnExport.addEventListener(EVENTS.CLICK, exportCanvas);
+    resetButtonElement.addEventListener(EVENTS.CLICK, () => {
+        clearState();
+        location.reload();
+    });
 
     // Sections
     document.querySelectorAll(`.${CSS.SECTION_HEADER}`).forEach(
@@ -141,7 +148,8 @@ function initListeners() {
 
     // Window reload listener
     window.addEventListener(EVENTS.WINDOW_RELOAD, () => {
-        state.activeElementId = document.activeElement.id;
+        const id = document.activeElement.id;
+        state.activeElementId = id === resetButtonElement.id ? '' : id;
         saveActiveElementIdState();
     });
 }

@@ -84,3 +84,7 @@ export function restoreState() {
         console.warn('Could not restore state:', err);
     }
 }
+
+export function clearState() {
+    localStorage.clear();
+}

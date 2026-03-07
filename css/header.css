@@ -18,20 +18,30 @@
   border-radius: 20px;
 }
 
-#btn-export {
+.btn {
   padding: 5px 15px;
   border-radius: var(--r);
   font-family: var(--mono);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  border: 1px solid var(--acc);
-  background: var(--accd);
+  border: 1px solid var(--btn-color);
+  background: var(--btn-color-dim);
   color: var(--t0);
   transition: background 0.12s;
 }
 
-#btn-export:hover {
-  background: var(--acc);
+.btn:hover {
+  background: var(--btn-color);
   color: #fff;
+}
+
+#btn-reset {
+  --btn-color: var(--danger);
+  --btn-color-dim: var(--dangerd);
+}
+
+#btn-export {
+  --btn-color: var(--acc);
+  --btn-color-dim: var(--accd);
 }

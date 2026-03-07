@@ -8,6 +8,7 @@ export function getElement(id) {
 }
 
 // Header section
+export const resetButtonElement = document.getElementById('btn-reset');
 export const btnExport = getElement('btn-export');
 export const resolutionBadgeElement = getElement('header-badge');
 

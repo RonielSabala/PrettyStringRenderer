@@ -64,7 +64,8 @@ import {
     toggleSection
 } from './utils/init.js';
 import {
-    isObjectEmpty
+    isObjectEmpty,
+    roundUp
 } from './utils/parse.js';
 import {
     restoreState,
@@ -75,7 +76,7 @@ import {
 } from './utils/resolution.js';
 
 function initSections() {
-    resolutionBadgeElement.textContent = `${describeResolution()} · ${CANVAS_DEFAULTS.aspectRatio}:1`;
+    resolutionBadgeElement.textContent = `${describeResolution()} · ${roundUp(CANVAS_DEFAULTS.aspectRatio)}:1`;
     let collapsedSectionIds = state.collapsedSectionIds;
 
     if (isObjectEmpty(collapsedSectionIds)) {

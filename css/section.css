@@ -6,13 +6,13 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--t1);
+  color: var(--text-secondary);
   cursor: pointer;
   user-select: none;
 }
 
 .section-header:hover {
-  color: var(--t0);
+  color: var(--text-primary);
 }
 
 .section-header.header-collapsed .accordion-control {
@@ -44,12 +44,12 @@
 .row label {
   flex: 1;
   font-size: 11.5px;
-  color: var(--t1);
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
 .section-separator {
   height: 1px;
-  background: var(--b0);
+  background: var(--border);
   margin: 4px 12px;
 }

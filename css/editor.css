@@ -2,13 +2,13 @@
   height: 5px;
   flex-shrink: 0;
   cursor: row-resize;
-  background: var(--b0);
+  background: var(--border);
   transition: background 0.15s;
 }
 
 #editor-resize-handle:hover,
 #editor-resize-handle.drag {
-  background: var(--acc);
+  background: var(--accent);
 }
 
 #editor-panel {
@@ -20,8 +20,8 @@
 #editor-tabs {
   display: flex;
   align-items: center;
-  background: var(--panel);
-  border-top: 1px solid var(--b0);
+  background: var(--surface-panel);
+  border-top: 1px solid var(--border);
   height: 32px;
   flex-shrink: 0;
   padding: 0 10px;
@@ -34,8 +34,8 @@
   display: flex;
   align-items: center;
   font-size: 12.5px;
-  color: var(--t0);
-  border-top: 2px solid var(--acc);
+  color: var(--text-primary);
+  border-top: 2px solid var(--accent);
 }
 
 .editor-font {
@@ -43,12 +43,12 @@
   align-items: center;
   gap: 5px;
   font-size: 11.5px;
-  color: var(--t1);
+  color: var(--text-secondary);
 }
 
 #editor-status {
   font-size: 10.5px;
-  color: var(--t2);
+  color: var(--text-muted);
   margin-left: auto;
 }
 
@@ -57,7 +57,7 @@
   background: #0d1117;
   border: none;
   color: #e6edf3;
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   resize: none;
   white-space: pre;
   overflow: auto;
@@ -80,6 +80,6 @@
 }
 
 #editor::-webkit-scrollbar-thumb {
-  background: var(--b0);
+  background: var(--border);
   border-radius: 4px;
 }

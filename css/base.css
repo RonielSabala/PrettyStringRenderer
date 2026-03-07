@@ -7,31 +7,40 @@
 }
 
 :root {
-  --bg: #0d1117;
-  --panel: #161b22;
-  --card: #21262d;
-  --b0: #30363d;
-  --bhi: #58a6ff;
-  --t0: #e6edf3;
-  --t1: #8b949e;
-  --t2: #484f58;
-  --acc: #388bfd;
-  --accd: rgba(56, 139, 253, 0.2);
-  --red: #f85149;
-  --grn: #3fb950;
-  --r: 5px;
+  /* Surfaces */
+  --surface-base: #0d1117;
+  --surface-panel: #161b22;
+  --surface-card: #21262d;
+
+  /* Borders */
+  --border: #30363d;
+  --border-focus: #58a6ff;
+
+  /* Text */
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+
+  /* Accent */
+  --accent: #388bfd;
+  --accent-dim: rgba(56, 139, 253, 0.2);
+
+  /* Status */
   --danger: #e05555;
-  --dangerd: color-mix(in srgb, var(--danger) 15%, transparent);
-  --mono: "Cascadia Code";
+  --danger-dim: color-mix(in srgb, var(--danger) 15%, transparent);
+
+  /* Misc */
+  --radius: 5px;
+  --font-mono: "Cascadia Code";
 }
 
 html,
 body {
   height: 100%;
   overflow: hidden;
-  background: var(--bg);
-  color: var(--t0);
-  font-family: var(--mono);
+  background: var(--surface-base);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
   font-size: 13px;
   line-height: 1.5;
 }

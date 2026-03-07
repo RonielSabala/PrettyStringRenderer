@@ -2,7 +2,7 @@
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--t0);
+  color: var(--text-primary);
 }
 
 .header-title-separator {
@@ -11,23 +11,23 @@
 
 .badge {
   font-size: 10.5px;
-  color: var(--t1);
-  background: var(--accd);
-  border: 1px solid var(--b0);
+  color: var(--text-secondary);
+  background: var(--accent-dim);
+  border: 1px solid var(--border);
   padding: 2px 9px;
   border-radius: 20px;
 }
 
 .btn {
   padding: 5px 15px;
-  border-radius: var(--r);
-  font-family: var(--mono);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   border: 1px solid var(--btn-color);
   background: var(--btn-color-dim);
-  color: var(--t0);
+  color: var(--text-primary);
   transition: background 0.12s;
 }
 
@@ -38,10 +38,10 @@
 
 #btn-reset {
   --btn-color: var(--danger);
-  --btn-color-dim: var(--dangerd);
+  --btn-color-dim: var(--danger-dim);
 }
 
 #btn-export {
-  --btn-color: var(--acc);
-  --btn-color-dim: var(--accd);
+  --btn-color: var(--accent);
+  --btn-color-dim: var(--accent-dim);
 }

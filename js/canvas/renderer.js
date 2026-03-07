@@ -11,8 +11,8 @@ import {
     toPx
 } from '../utils/resolution.js';
 
-export function render(ctx, width, height) {
-    const config = state.typographyConfig;
+export function render(ctx, width, height, configOverride = null) {
+    const config = configOverride || state.typographyConfig;
     const tokenizedLines = state.tokenizer.tokenizedLines;
 
     const padX = config.padX;

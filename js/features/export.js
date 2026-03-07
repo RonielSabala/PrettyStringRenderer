@@ -55,12 +55,13 @@ export function exportCanvas() {
     }
 
     const config = state.typographyConfig;
-    const configCopy = structuredClone(config);
-
-    config.fontSize *= scalar;
-    config.letterSpacing *= scalar;
-    config.padX *= scalar;
-    config.padY *= scalar;
+    const scaledConfig = {
+        ...config,
+        fontSize: config.fontSize * scalar,
+        letterSpacing: config.letterSpacing * scalar,
+        padX: config.padX * scalar,
+        padY: config.padY * scalar,
+    };
 
     const exportWidth = Math.round(scalar * CANVAS_DEFAULTS.width);
     const exportHeight = Math.round(scalar * CANVAS_DEFAULTS.height);
@@ -69,8 +70,12 @@ export function exportCanvas() {
     offscreen.width = exportWidth;
     offscreen.height = exportHeight;
 
-    render(offscreen.getContext(CANVAS_CONTEXT_TYPE), exportWidth, exportHeight);
-    state.typographyConfig = configCopy;
+    render(
+        offscreen.getContext(CANVAS_CONTEXT_TYPE),
+        exportWidth,
+        exportHeight,
+        scaledConfig
+    );
 
     offscreen.toBlob(blob => {
         _downloadBlob(blob, _createFilename(exportWidth, exportHeight));

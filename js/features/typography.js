@@ -29,7 +29,7 @@ import {
 } from '../utils/persistence.js';
 
 const _scheduleTypographyConfigSave = createSaveScheduler(saveTypographyConfigState);
-const CONFIG_KEYS_TO_ELEMENT = {
+const CONFIG_KEYS_TO_ELEMENTS = {
     'fontSize': typographyFontSizeElement,
     'lineHeight': typographyLineHeightElement,
     'letterSpacing': typographyLetterSpacingElement,
@@ -40,7 +40,7 @@ const CONFIG_KEYS_TO_ELEMENT = {
 export function initTypographySection() {
     const config = state.typographyConfig;
 
-    for (const [configKey, element] of Object.entries(CONFIG_KEYS_TO_ELEMENT)) {
+    for (const [configKey, element] of Object.entries(CONFIG_KEYS_TO_ELEMENTS)) {
         initNumberInput(config, configKey, element, TYPOGRAPHY_DEFAULTS);
 
         // Configure listener

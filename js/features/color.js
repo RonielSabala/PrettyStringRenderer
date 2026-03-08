@@ -2,6 +2,16 @@ import {
     redraw
 } from '../canvas/buffer.js';
 import {
+    THEME_KEYS
+} from '../common/config.js';
+import {
+    EVENTS
+} from '../common/constants/events.js';
+import {
+    getColorPickerElement,
+    getHexInputElement
+} from '../common/elements.js';
+import {
     setColor,
     updateTokensColor
 } from '../utils/color.js';
@@ -12,20 +22,30 @@ import {
 
 const _scheduleColorSave = createSaveScheduler(saveColorsState);
 
-export function onPick(themeKey, themeValue) {
+// Helpers
+
+function _updateColor(themeKey, themeValue) {
     setColor(themeKey, themeValue);
     _scheduleColorSave();
     updateTokensColor(themeKey);
     redraw();
 }
 
-export function onHex(themeKey, themeValue) {
-    if (!(/^#[0-9A-Fa-f]{6}$/.test(themeValue))) {
-        return;
-    }
+// Public methods
 
-    setColor(themeKey, themeValue);
-    _scheduleColorSave();
-    updateTokensColor(themeKey);
-    redraw();
+export function initColors() {
+    for (const themeKey of THEME_KEYS) {
+        // Color Picker
+        getColorPickerElement(themeKey).addEventListener(EVENTS.INPUT, (event) => {
+            _updateColor(themeKey, event.target.value);
+        });
+
+        // Hex Input
+        getHexInputElement(themeKey).addEventListener(EVENTS.INPUT, (event) => {
+            const value = event.target.value;
+            if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                _updateColor(themeKey, value);
+            }
+        });
+    }
 }

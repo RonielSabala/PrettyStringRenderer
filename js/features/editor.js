@@ -2,8 +2,7 @@ import {
     redraw
 } from '../canvas/buffer.js';
 import {
-    adjustCanvas,
-    updateZoomInfo
+    adjustCanvas
 } from '../canvas/controller.js';
 import {
     EDITOR_DEFAULTS,
@@ -51,7 +50,7 @@ let startMaxHeight = 0;
 
 const _scheduleEditorConfigSave = createSaveScheduler(saveEditorConfigState);
 
-const CONFIG_KEYS_TO_ELEMENT = [
+const CONFIG_KEYS_TO_ELEMENT_CALLBACKS = [
     ['height', [document, EVENTS.MOUSE_MOVE, _onEditorMouseMove]],
     ['height', [editorResizeHandleElement, EVENTS.DBL_CLICK, _onResizeReset]],
     ['content', [editorElement, EVENTS.INPUT, _onEditorContentChange]],
@@ -59,6 +58,8 @@ const CONFIG_KEYS_TO_ELEMENT = [
     ['cursorSelection', [editorElement, EVENTS.CLICK, _onEditorCursorChange]],
     ['cursorSelection', [editorElement, EVENTS.KEY_UP, _onEditorCursorChange]],
 ];
+
+// Helpers
 
 function _getHeight() {
     return editorPanelElement.offsetHeight;
@@ -79,6 +80,8 @@ function _arraysEqual(arr1, arr2) {
 
     return arr1.every((element, index) => element === arr2[index]);
 }
+
+// Listeners
 
 function _onEditorContentChange() {
     const content = editorElement.value;
@@ -127,7 +130,7 @@ function _onResizeReset() {
     return defaultHeight;
 }
 
-export function onResize(event) {
+function _onResize(event) {
     event.preventDefault();
 
     dragging = true;
@@ -139,7 +142,7 @@ export function onResize(event) {
     editorResizeHandleElement.classList.add(CSS.DRAG);
 }
 
-export function onEditorMouseUp() {
+function _onEditorMouseUp() {
     if (!dragging) {
         return;
     }
@@ -149,7 +152,7 @@ export function onEditorMouseUp() {
     editorResizeHandleElement.classList.remove(CSS.DRAG);
 }
 
-export function onEscapeToCanvas(event) {
+function _onEscapeToCanvas(event) {
     if (event.code !== KEYS.ESCAPE) {
         return;
     }
@@ -158,14 +161,12 @@ export function onEscapeToCanvas(event) {
     canvasWrapElement.focus();
 }
 
+// Public methods
+
 export function initEditorSection() {
     const config = state.editorConfig;
 
-    // Configure editor
-
-    updateZoomInfo();
-    _setHeight(config.height);
-
+    // Set editor values
     editorElement.scrollTop = 0;
     editorElement.style.fontSize = toPx(config.fontSize);
     editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
@@ -173,18 +174,21 @@ export function initEditorSection() {
     editorElement.style.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
     editorElement.value = config.content ?? EDITOR_DEFAULTS.content;
 
-    // Set cursor selection
+    // Restore editor height
+    _setHeight(config.height);
+
+    // Restore cursor selection
     const cursorSelection = config.cursorSelection;
     if (cursorSelection.length > 0) {
         editorElement.setSelectionRange(...cursorSelection);
     }
 
-    for (const [configKey, [element, eventType, onElementChange]] of CONFIG_KEYS_TO_ELEMENT) {
+    // Init editor inputs
+    for (const [configKey, [element, eventType, callback]] of CONFIG_KEYS_TO_ELEMENT_CALLBACKS) {
         initNumberInput(config, configKey, element, EDITOR_DEFAULTS);
 
-        // Configure listener
         element.addEventListener(eventType, (event) => {
-            const newValue = onElementChange(event);
+            const newValue = callback(event);
             if (newValue === undefined) {
                 return;
             }
@@ -199,7 +203,8 @@ export function initEditorSection() {
         });
     }
 
-    // Tokenize content
-    state.tokenizer.tokenize(editorElement.value);
-    redraw();
+    // Listeners
+    editorResizeHandleElement.addEventListener(EVENTS.MOUSE_DOWN, _onResize);
+    document.addEventListener(EVENTS.MOUSE_UP, _onEditorMouseUp);
+    document.addEventListener(EVENTS.KEY_DOWN, _onEscapeToCanvas)
 }

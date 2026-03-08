@@ -13,7 +13,6 @@ export const state = {
     activeThemeName: '',
     activeElementId: '',
     collapsedSectionIds: {},
-    tokenizer: new IncrementalTokenizer(),
     typographyConfig: {
         fontSize: TYPOGRAPHY_DEFAULTS.fontSize.value,
         lineHeight: TYPOGRAPHY_DEFAULTS.lineHeight.value,
@@ -31,5 +30,6 @@ export const state = {
         zoom: CANVAS_DEFAULTS.zoom,
         panX: CANVAS_DEFAULTS.panX,
         panY: CANVAS_DEFAULTS.panY,
-    }
+    },
+    tokenizer: new IncrementalTokenizer(),
 };

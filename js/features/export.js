@@ -13,9 +13,6 @@ import {
     LINE_BREAK
 } from '../common/config.js';
 import {
-    KEYS
-} from '../common/constants/keys.js';
-import {
     state
 } from '../common/store.js';
 import {
@@ -80,13 +77,4 @@ export function exportCanvas() {
     offscreen.toBlob(blob => {
         _downloadBlob(blob, _createFilename(exportWidth, exportHeight));
     }, IMAGE_BLOB_TYPE);
-}
-
-export function exportCanvasOnCtrlS(event) {
-    if (!event.ctrlKey || event.code !== KEYS.S) {
-        return;
-    }
-
-    event.preventDefault();
-    exportCanvas();
 }

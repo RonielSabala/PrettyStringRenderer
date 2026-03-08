@@ -10,6 +10,9 @@ import {
     CSS_CURSORS
 } from '../common/constants/css.js';
 import {
+    EVENTS
+} from '../common/constants/events.js';
+import {
     KEYS
 } from '../common/constants/keys.js';
 import {
@@ -22,6 +25,9 @@ import {
 import {
     state
 } from '../common/store.js';
+import {
+    exportCanvas
+} from '../features/export.js';
 import {
     createSaveScheduler,
     saveCanvasConfigState
@@ -41,16 +47,24 @@ let onZoomChangeCallback = null;
 
 const _scheduleCanvasConfigSave = createSaveScheduler(saveCanvasConfigState);
 
-export function updateZoomInfo() {
-    const zoom = (state.canvasConfig.zoom * 100).toFixed(0);
-    editorStatusElement.textContent = `${describeResolution()} · ${zoom}%`;
-}
+// Setters
 
 export function setZoomChangeCallback(callback) {
     onZoomChangeCallback = callback;
 }
 
-export function applyZoomTransform() {
+// Helpers
+
+function _getNormalizedDimension(dimension) {
+    return toPx(Math.max(1, Math.round(dimension)));
+}
+
+function _updateEditorZoomInfo() {
+    const zoom = (state.canvasConfig.zoom * 100).toFixed(0);
+    editorStatusElement.textContent = `${describeResolution()} · ${zoom}%`;
+}
+
+function _applyZoomTransform() {
     const config = state.canvasConfig;
     const panX = toPx(config.panX);
     const panY = toPx(config.panY);
@@ -58,7 +72,7 @@ export function applyZoomTransform() {
 
     rafScheduled = false;
     canvasInnerElement.style.transform = `translate(${panX},${panY}) scale(${zoom})`;
-    updateZoomInfo();
+    _updateEditorZoomInfo();
 }
 
 function _scheduleTransform() {
@@ -67,10 +81,10 @@ function _scheduleTransform() {
     }
 
     rafScheduled = true;
-    requestAnimationFrame(applyZoomTransform);
+    requestAnimationFrame(_applyZoomTransform);
 }
 
-// Zoom
+// Zoom helpers
 
 function _onZoomChange() {
     _scheduleTransform();
@@ -106,7 +120,9 @@ function _applyScrollPan(deltaX, deltaY) {
     _scheduleTransform();
 }
 
-export function onZoom(event) {
+// Canvas listeners
+
+function _onZoom(event) {
     event.preventDefault();
 
     if (event.altKey) {
@@ -120,7 +136,7 @@ export function onZoom(event) {
     _scheduleCanvasConfigSave();
 }
 
-export function onZoomReset() {
+function _onZoomReset() {
     const config = state.canvasConfig;
     config.zoom = CANVAS_DEFAULTS.zoom;
     config.panX = CANVAS_DEFAULTS.panX;
@@ -129,23 +145,38 @@ export function onZoomReset() {
     saveCanvasConfigState();
 }
 
-// Pan
+function _onPanning(event) {
+    if (!spaceHeld && event.button !== 2) {
+        return;
+    }
 
-export function onSpace(event) {
+    event.preventDefault();
+    const config = state.canvasConfig;
+
+    panning = true;
+    panStartX = event.clientX - config.panX;
+    panStartY = event.clientY - config.panY;
+    canvasWrapElement.style.cursor = CSS_CURSORS.GRABBING;
+}
+
+// Document listeners
+
+function _onSpace(event) {
     if (event.code !== KEYS.SPACE || document.activeElement === editorElement) {
         return;
     }
 
     event.preventDefault();
-
-    if (!spaceHeld) {
-        spaceHeld = true;
-        canvasWrapElement.style.cursor = CSS_CURSORS.GRAB;
+    if (spaceHeld) {
+        return
     }
+
+    spaceHeld = true;
+    canvasWrapElement.style.cursor = CSS_CURSORS.GRAB;
 
 }
 
-export function onSpaceRelease(event) {
+function _onSpaceRelease(event) {
     if (event.code !== KEYS.SPACE) {
         return;
     }
@@ -158,21 +189,7 @@ export function onSpaceRelease(event) {
     canvasWrapElement.style.cursor = CSS_CURSORS.DEFAULT;
 }
 
-export function onPanning(event) {
-    if (!spaceHeld && event.button !== 2) {
-        return;
-    }
-
-    panning = true;
-    event.preventDefault();
-    const config = state.canvasConfig;
-
-    panStartX = event.clientX - config.panX;
-    panStartY = event.clientY - config.panY;
-    canvasWrapElement.style.cursor = CSS_CURSORS.GRABBING;
-}
-
-export function onPanningMove(event) {
+function _onPanningMove(event) {
     if (!panning) {
         return;
     }
@@ -183,7 +200,7 @@ export function onPanningMove(event) {
     _scheduleTransform();
 }
 
-export function onPanningRelease() {
+function _onPanningRelease() {
     if (!panning) {
         return;
     }
@@ -193,9 +210,16 @@ export function onPanningRelease() {
     saveCanvasConfigState();
 }
 
-function _getNormalizedDimension(dimension) {
-    return toPx(Math.max(1, Math.round(dimension)));
+function _onExportCanvas(event) {
+    if (!event.ctrlKey || event.code !== KEYS.S) {
+        return;
+    }
+
+    event.preventDefault();
+    exportCanvas();
 }
+
+// Public methods
 
 export function adjustCanvas() {
     const aspectRatio = CANVAS_DEFAULTS.aspectRatio;
@@ -212,4 +236,25 @@ export function adjustCanvas() {
 
     canvasElement.style.width = _getNormalizedDimension(displayWidth);
     canvasElement.style.height = _getNormalizedDimension(displayHeight);
+}
+
+export function initCanvas() {
+    adjustCanvas();
+    _applyZoomTransform();
+
+    // Canvas listeners
+
+    canvasWrapElement.addEventListener(EVENTS.CONTEXT_MENU, (e) => e.preventDefault());
+    canvasWrapElement.addEventListener(EVENTS.WHEEL, _onZoom, {
+        passive: false
+    });
+    canvasWrapElement.addEventListener(EVENTS.DBL_CLICK, _onZoomReset);
+    canvasWrapElement.addEventListener(EVENTS.MOUSE_DOWN, _onPanning);
+
+    // Document listeners
+    document.addEventListener(EVENTS.KEY_DOWN, _onSpace);
+    document.addEventListener(EVENTS.KEY_UP, _onSpaceRelease);
+    document.addEventListener(EVENTS.MOUSE_MOVE, _onPanningMove);
+    document.addEventListener(EVENTS.MOUSE_UP, _onPanningRelease);
+    document.addEventListener(EVENTS.KEY_DOWN, _onExportCanvas);
 }

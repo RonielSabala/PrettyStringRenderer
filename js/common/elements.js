@@ -43,6 +43,12 @@ export const canvasWrapElement = getElement('canvas-wrap');
 export const canvasInnerElement = getElement('canvas-inner');
 export const canvasElement = getElement('canvas');
 
+// Elements to exclude from automatic focus during application reload
+export const RELOAD_FOCUS_EXCLUSIONS = Object.freeze([
+    canvasWrapElement,
+    resetButtonElement
+]);
+
 // Color input getters
 
 export function getSwatchFillElement(themeKey) {

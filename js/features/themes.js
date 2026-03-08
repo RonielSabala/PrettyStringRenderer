@@ -20,6 +20,8 @@ import {
     KEYS
 } from '../common/constants/keys.js';
 import {
+    btnExportTheme,
+    btnLoadThemes,
     emptyThemeElement,
     themeListElement
 } from '../common/elements.js';
@@ -43,6 +45,8 @@ import {
 const ACTIVE_THEME_CSS = `.${CSS.THEME_ITEM}.${CSS.THEME_ITEM_ACTIVE}`;
 const _scheduleColorSave = createSaveScheduler(saveColorsState);
 const _scheduleActiveThemeNameSave = createSaveScheduler(saveActiveThemeNameState);
+
+// Helpers
 
 function _getUrlFromObject(object) {
     const blob = new Blob([JSON.stringify(object, null, 2)], THEME_BLOB_TYPE);
@@ -152,7 +156,7 @@ function _mergeTheme(theme, themeName) {
     themes[i] = theme;
 }
 
-async function _onLoadThemes(files) {
+async function _loadThemes(files) {
     for (const file of files) {
         const theme = JSON.parse(await file.text());
         const themeName = file.name.replace(new RegExp(`${THEMES_EXTENSION}$`, 'i'), '');
@@ -170,16 +174,18 @@ async function _onLoadThemes(files) {
     _applyTheme(themes.at(-1));
 }
 
-export function loadThemes() {
+// Listeners
+
+function _onLoadThemes() {
     const inputElement = document.createElement('input');
     inputElement.type = THEMES_FILE_TYPE;
     inputElement.accept = THEMES_EXTENSION;
     inputElement.multiple = true;
-    inputElement.addEventListener(EVENTS.CHANGE, () => _onLoadThemes(inputElement.files));
+    inputElement.addEventListener(EVENTS.CHANGE, () => _loadThemes(inputElement.files));
     inputElement.click();
 }
 
-export function exportCurrentTheme() {
+function _onExportTheme() {
     const filename = prompt(EXPORT_THEME_PROMPT_MESSAGE, state.activeThemeName || DEFAULT_EXPORT_THEME_FILENAME);
     if (!filename) {
         return;
@@ -192,7 +198,7 @@ export function exportCurrentTheme() {
     setTimeout(() => URL.revokeObjectURL(anchorElement.href), 1000);
 }
 
-export function onThemesFocus(event) {
+function _onThemesFocus(event) {
     if (event.code !== KEYS.TAB) {
         return;
     }
@@ -201,7 +207,13 @@ export function onThemesFocus(event) {
     _focusActiveTheme();
 }
 
+// Public methods
+
 export function initThemesSection() {
+    _renderThemeList();
+
+    // Apply theme
+
     const colors = state.colors;
     const themeToApply = isObjectEmpty(colors) ? DEFAULT_THEME : colors;
 
@@ -209,5 +221,8 @@ export function initThemesSection() {
         setColor(ThemeKey, ThemeValue);
     }
 
-    _renderThemeList();
+    // Listeners
+    btnLoadThemes.addEventListener(EVENTS.CLICK, _onLoadThemes);
+    btnExportTheme.addEventListener(EVENTS.CLICK, _onExportTheme);
+    document.addEventListener(EVENTS.KEY_DOWN, _onThemesFocus)
 }

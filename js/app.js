@@ -1,18 +1,9 @@
 import {
-    adjustCanvas,
-    applyZoomTransform,
-    onPanning,
-    onPanningMove,
-    onPanningRelease,
-    onSpace,
-    onSpaceRelease,
-    onZoom,
-    onZoomReset
-} from './canvas/controller.js';
+    redraw
+} from './canvas/buffer.js';
 import {
-    CANVAS_DEFAULTS,
-    THEME_KEYS
-} from './common/config.js';
+    initCanvas
+} from './canvas/controller.js';
 import {
     CSS
 } from './common/constants/css.js';
@@ -21,13 +12,9 @@ import {
 } from './common/constants/events.js';
 import {
     btnExport,
-    btnExportTheme,
-    btnLoadThemes,
-    canvasWrapElement,
-    editorResizeHandleElement,
-    getColorPickerElement,
+    editorElement,
     getElement,
-    getHexInputElement,
+    RELOAD_FOCUS_EXCLUSIONS,
     resetButtonElement,
     resolutionBadgeElement,
     sectionBracketColors,
@@ -38,24 +25,16 @@ import {
     state
 } from './common/store.js';
 import {
-    onHex,
-    onPick,
+    initColors
 } from './features/color.js';
 import {
-    initEditorSection,
-    onEditorMouseUp,
-    onEscapeToCanvas,
-    onResize
+    initEditorSection
 } from './features/editor.js';
 import {
-    exportCanvas,
-    exportCanvasOnCtrlS
+    exportCanvas
 } from './features/export.js';
 import {
-    exportCurrentTheme,
-    initThemesSection,
-    loadThemes,
-    onThemesFocus
+    initThemesSection
 } from './features/themes.js';
 import {
     initTypographySection
@@ -65,8 +44,7 @@ import {
     toggleSection
 } from './utils/init.js';
 import {
-    isObjectEmpty,
-    roundUp
+    isObjectEmpty
 } from './utils/parse.js';
 import {
     clearState,
@@ -74,94 +52,75 @@ import {
     saveActiveElementIdState
 } from './utils/persistence.js';
 import {
-    describeResolution
+    describeAspectRatio
 } from './utils/resolution.js';
 
-function initSections() {
-    resolutionBadgeElement.textContent = `${describeResolution()} · ${roundUp(CANVAS_DEFAULTS.aspectRatio)}:1`;
+function hideSections() {
+    // Hide default sections on start
     let collapsedSectionIds = state.collapsedSectionIds;
-
     if (isObjectEmpty(collapsedSectionIds)) {
-        // Hide these color sections on start
         toggleSection(sectionBracketColors);
         toggleSection(sectionSyntaxColors);
         toggleSection(sectionCanvasColors);
         return;
     }
 
+    // Restore hidden sections
     for (const [id, toggle] of Object.entries(collapsedSectionIds)) {
-        if (toggle) {
-            baseToggleSection(getElement(id));
+        if (!toggle) {
+            continue;
         }
-    }
 
-    return;
+        baseToggleSection(getElement(id));
+    }
 }
 
-function initListeners() {
-    // App buttons
+function init() {
+    restoreState();
+    hideSections();
+
+    // Focus last selected element before reload
+    document.getElementById(state.activeElementId)?.focus();
+
+    // Set resolution badge
+    resolutionBadgeElement.textContent = describeAspectRatio();
+
+    // Sections listeners
+    document.querySelectorAll(`.${CSS.SECTION_HEADER}`).forEach(
+        element => element.addEventListener(EVENTS.CLICK, () => toggleSection(element))
+    );
+
+    // Buttons listeners
     btnExport.addEventListener(EVENTS.CLICK, exportCanvas);
     resetButtonElement.addEventListener(EVENTS.CLICK, () => {
         clearState();
         location.reload();
     });
 
-    // Sections
-    document.querySelectorAll(`.${CSS.SECTION_HEADER}`).forEach(
-        element => element.addEventListener(EVENTS.CLICK, () => toggleSection(element))
-    );
-
-    // Theme section
-    btnLoadThemes.addEventListener(EVENTS.CLICK, loadThemes);
-    btnExportTheme.addEventListener(EVENTS.CLICK, exportCurrentTheme);
-    document.addEventListener(EVENTS.KEY_DOWN, onThemesFocus)
-
-    // Color pickers + hex
-    for (const themeKey of THEME_KEYS) {
-        getColorPickerElement(themeKey).addEventListener(
-            EVENTS.INPUT,
-            event => onPick(themeKey, event.target.value)
-        );
-        getHexInputElement(themeKey).addEventListener(
-            EVENTS.INPUT,
-            event => onHex(themeKey, event.target.value)
-        );
-    }
-
-    // Editor
-    editorResizeHandleElement.addEventListener(EVENTS.MOUSE_DOWN, onResize);
-    document.addEventListener(EVENTS.MOUSE_UP, onEditorMouseUp);
-    document.addEventListener(EVENTS.KEY_DOWN, onEscapeToCanvas)
-
-    // Canvas
-    canvasWrapElement.addEventListener(EVENTS.WHEEL, onZoom, {
-        passive: false
-    });
-    canvasWrapElement.addEventListener(EVENTS.CONTEXT_MENU, (event) => event.preventDefault());
-    canvasWrapElement.addEventListener(EVENTS.DBL_CLICK, onZoomReset);
-    canvasWrapElement.addEventListener(EVENTS.MOUSE_DOWN, onPanning);
-    document.addEventListener(EVENTS.KEY_DOWN, onSpace);
-    document.addEventListener(EVENTS.KEY_DOWN, exportCanvasOnCtrlS);
-    document.addEventListener(EVENTS.KEY_UP, onSpaceRelease);
-    document.addEventListener(EVENTS.MOUSE_MOVE, onPanningMove);
-    document.addEventListener(EVENTS.MOUSE_UP, onPanningRelease);
-
     // Window reload listener
     window.addEventListener(EVENTS.WINDOW_RELOAD, () => {
-        const id = document.activeElement.id;
-        state.activeElementId = id === resetButtonElement.id ? '' : id;
+        let id = document.activeElement.id;
+        for (const element of RELOAD_FOCUS_EXCLUSIONS) {
+            if (id === element.id) {
+                id = '';
+                break;
+            }
+        }
+
+        state.activeElementId = id;
         saveActiveElementIdState();
     });
-}
 
-document.fonts.ready.then(() => {
-    restoreState();
-    initSections();
+    // Initializers
+    initColors();
     initThemesSection();
     initTypographySection();
     initEditorSection();
-    initListeners();
-    adjustCanvas();
-    applyZoomTransform();
-    document.getElementById(state.activeElementId)?.focus();
-});
+    initCanvas();
+
+    // Show editor content
+    state.tokenizer.tokenize(editorElement.value);
+    redraw();
+}
+
+document.fonts.ready.then(init);

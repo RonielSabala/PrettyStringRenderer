@@ -25,7 +25,7 @@ export const CANVAS_ASCENT_CORRECTION = 9 / 100; // fontSize=100 needs 9 extra p
 export const CANVAS_CONTEXT_TYPE = '2d';
 export const CANVAS_MIN_PIXEL_SCALE = 1;
 export const CANVAS_MAX_PIXEL_SCALE = 5;
-export const CANVAS_VIEWPORT_PADDING_PX = 50;
+export const CANVAS_VIEWPORT_PADDING_PX = 25;
 export const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
 
 // Theme constants

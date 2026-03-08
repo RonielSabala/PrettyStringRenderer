@@ -31,7 +31,7 @@ import {
 import {
     setColor,
     updateTokensColor
-} from '../utils/color.js';
+} from '../utils/color_sync.js';
 import {
     isObjectEmpty
 } from '../utils/parse.js';

@@ -11,7 +11,6 @@ import {
     EVENTS
 } from './common/constants/events.js';
 import {
-    btnExport,
     editorElement,
     getElement,
     RELOAD_FOCUS_EXCLUSIONS,
@@ -31,7 +30,7 @@ import {
     initEditorSection
 } from './features/editor.js';
 import {
-    exportCanvas
+    initExport
 } from './features/export.js';
 import {
     initThemesSection
@@ -91,7 +90,6 @@ function init() {
     );
 
     // Buttons listeners
-    btnExport.addEventListener(EVENTS.CLICK, exportCanvas);
     resetButtonElement.addEventListener(EVENTS.CLICK, () => {
         clearState();
         location.reload();
@@ -117,6 +115,7 @@ function init() {
     initTypographySection();
     initEditorSection();
     initCanvas();
+    initExport();
 
     // Show editor content
     state.tokenizer.tokenize(editorElement.value);

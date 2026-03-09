@@ -1,17 +1,35 @@
 import {
+    iterateTokens,
     render
 } from '../canvas/renderer.js';
 import {
     CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
+    CANVAS_FONT,
+    CANVAS_FONT_WEIGHT,
     DEFAULT_EXPORT_IMAGE_FILENAME,
     DEFAULT_EXPORT_SCALAR,
     EXPORT_IMAGE_PROMPT_MESSAGE,
     EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES,
-    IMAGE_BLOB_TYPE,
-    IMAGES_EXTENSION,
-    LINE_BREAK
+    LINE_BREAK,
+    PNG_BLOB_TYPE,
+    PNG_EXTENSION,
+    SVG_BLOB_TYPE,
+    SVG_EXTENSION,
+    SVG_NS
 } from '../common/config.js';
+import {
+    EVENTS
+} from '../common/constants/events.js';
+import {
+    KEYS
+} from '../common/constants/keys.js';
+import {
+    btnExport,
+    btnExportPNG,
+    btnExportSVG,
+    exportDialogElement,
+} from '../common/elements.js';
 import {
     state
 } from '../common/store.js';
@@ -23,30 +41,34 @@ import {
     describeResolution
 } from '../utils/resolution.js';
 
-const _DEFAULT_PROMPT_MESSAGE = `${EXPORT_IMAGE_PROMPT_MESSAGE}
+const _SCALAR_PROMPT_MESSAGE = `${EXPORT_IMAGE_PROMPT_MESSAGE}
 ${EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES
-  .map(scalar => `    ${scalar} -> ${describeResolution(scalar)}`)
-  .join(LINE_BREAK)
+    .map(scalar => `    ${scalar} -> ${describeResolution(scalar)}`)
+    .join(LINE_BREAK)
 }`;
 
-function _createFilename(width, height) {
-    return `${DEFAULT_EXPORT_IMAGE_FILENAME}-${createResolution(width, height)}${IMAGES_EXTENSION}`;
+// Helpers
+
+function _closeDialog() {
+    exportDialogElement.close();
 }
 
-function _askScalar() {
-    return prompt(_DEFAULT_PROMPT_MESSAGE, DEFAULT_EXPORT_SCALAR);
+function _createFilename(width, height, ext) {
+    return `${DEFAULT_EXPORT_IMAGE_FILENAME}-${createResolution(width, height)}${ext}`;
 }
 
-function _downloadBlob(blob, filename) {
-    const anchor = document.createElement('a');
-    anchor.href = URL.createObjectURL(blob);
-    anchor.download = filename;
-    anchor.click();
-    URL.revokeObjectURL(anchor.href);
+function _download(blob, filename) {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
 }
 
-export function exportCanvas() {
-    const scalar = parseNumber(_askScalar(), 0);
+// PNG exporter
+
+function _exportPNG() {
+    const scalar = parseNumber(prompt(_SCALAR_PROMPT_MESSAGE, DEFAULT_EXPORT_SCALAR), 0);
     if (scalar <= 0) {
         return;
     }
@@ -67,14 +89,101 @@ export function exportCanvas() {
     offscreen.width = exportWidth;
     offscreen.height = exportHeight;
 
-    render(
-        offscreen.getContext(CANVAS_CONTEXT_TYPE),
-        exportWidth,
-        exportHeight,
-        scaledConfig
-    );
-
+    render(offscreen.getContext(CANVAS_CONTEXT_TYPE), exportWidth, exportHeight, scaledConfig);
     offscreen.toBlob(blob => {
-        _downloadBlob(blob, _createFilename(exportWidth, exportHeight));
-    }, IMAGE_BLOB_TYPE);
+        _download(blob, _createFilename(exportWidth, exportHeight, PNG_EXTENSION));
+    }, PNG_BLOB_TYPE);
+}
+
+// SVG exporter
+
+function _createSVGElement(tag) {
+    return document.createElementNS(SVG_NS, tag);
+}
+
+function _buildSVG(width, height) {
+    const config = state.typographyConfig;
+    const svg = _createSVGElement('svg');
+
+    svg.setAttribute("xmlns", SVG_NS);
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+    // Add background
+    const rect = _createSVGElement('rect');
+    rect.setAttribute('width', width);
+    rect.setAttribute('height', height);
+    rect.setAttribute('fill', state.colors.background);
+    svg.appendChild(rect);
+
+    // Add tokens
+
+    const group = _createSVGElement('g');
+    group.setAttribute('font-family', CANVAS_FONT);
+    group.setAttribute('font-weight', CANVAS_FONT_WEIGHT);
+    group.setAttribute('font-size', config.fontSize);
+    group.setAttribute('letter-spacing', config.letterSpacing);
+    svg.appendChild(group);
+
+    iterateTokens(width, height, config, (text, color, x, y) => {
+        const element = _createSVGElement('text');
+        element.textContent = text;
+        element.setAttribute('x', x.toFixed(3));
+        element.setAttribute('y', y.toFixed(3));
+        element.setAttribute('fill', color);
+        group.appendChild(element);
+    });
+
+    return svg.outerHTML;
+}
+
+function _exportSVG() {
+    const width = CANVAS_DEFAULTS.width;
+    const height = CANVAS_DEFAULTS.height;
+    const svg = _buildSVG(width, height);
+    const blob = new Blob([svg], SVG_BLOB_TYPE);
+    _download(blob, _createFilename(width, height, SVG_EXTENSION));
+}
+
+// Listeners
+
+function _onClickExportCanvas() {
+    exportDialogElement.showModal();
+}
+
+function _onKeyDownExportCanvas(event) {
+    if (!event.ctrlKey || event.code !== KEYS.S) {
+        return;
+    }
+
+    event.preventDefault();
+    _onClickExportCanvas();
+}
+
+function _onDialogClose(event) {
+    if (event.target === exportDialogElement || event.code === KEYS.ESCAPE) {
+        _closeDialog();
+    }
+}
+
+function _onExportPNG() {
+    _closeDialog();
+    _exportPNG();
+}
+
+function _onExportSVG() {
+    _closeDialog();
+    _exportSVG();
+}
+
+// Public methods
+
+export function initExport() {
+    btnExport.addEventListener(EVENTS.CLICK, _onClickExportCanvas);
+    document.addEventListener(EVENTS.KEY_DOWN, _onKeyDownExportCanvas);
+    exportDialogElement.addEventListener(EVENTS.CLICK, _onDialogClose);
+    exportDialogElement.addEventListener(EVENTS.KEY_DOWN, _onDialogClose);
+    btnExportPNG.addEventListener(EVENTS.CLICK, _onExportPNG);
+    btnExportSVG.addEventListener(EVENTS.CLICK, _onExportSVG);
 }

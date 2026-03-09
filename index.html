@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="css/layout/app.css">
     <link rel="stylesheet" href="css/layout/header.css">
     <link rel="stylesheet" href="css/layout/section.css">
-    <link rel="stylesheet" href="css/features/themes.css">
     <link rel="stylesheet" href="css/features/inputs.css">
+    <link rel="stylesheet" href="css/features/themes.css">
     <link rel="stylesheet" href="css/features/editor.css">
+    <link rel="stylesheet" href="css/features/export.css">
     <link rel="stylesheet" href="css/canvas/canvas.css">
 </head>
 
@@ -200,6 +201,15 @@
                 <textarea id="editor" spellcheck="false"></textarea>
             </div>
         </main>
+
+        <!-- Export dialog -->
+        <dialog id="dialog-export">
+            <p class="dialog-title">Export canvas as</p>
+            <div class="dialog-actions">
+                <button id="btn-export-png" class="btn" type="button">PNG</button>
+                <button id="btn-export-svg" class="btn" type="button">SVG</button>
+            </div>
+        </dialog>
     </div>
     <script type="module" src="js/app.js"></script>
 </body>

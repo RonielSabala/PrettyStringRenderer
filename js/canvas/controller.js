@@ -26,9 +26,6 @@ import {
     state
 } from '../common/store.js';
 import {
-    exportCanvas
-} from '../features/export.js';
-import {
     createSaveScheduler,
     saveCanvasConfigState
 } from '../utils/persistence.js';
@@ -210,15 +207,6 @@ function _onPanningRelease() {
     saveCanvasConfigState();
 }
 
-function _onExportCanvas(event) {
-    if (!event.ctrlKey || event.code !== KEYS.S) {
-        return;
-    }
-
-    event.preventDefault();
-    exportCanvas();
-}
-
 // Public methods
 
 export function adjustCanvas() {
@@ -256,5 +244,4 @@ export function initCanvas() {
     document.addEventListener(EVENTS.KEY_UP, _onSpaceRelease);
     document.addEventListener(EVENTS.MOUSE_MOVE, _onPanningMove);
     document.addEventListener(EVENTS.MOUSE_UP, _onPanningRelease);
-    document.addEventListener(EVENTS.KEY_DOWN, _onExportCanvas);
 }

@@ -8,7 +8,7 @@ export function getElement(id) {
 }
 
 // Header section
-export const resetButtonElement = document.getElementById('btn-reset');
+export const resetButtonElement = getElement('btn-reset');
 export const btnExport = getElement('btn-export');
 export const resolutionBadgeElement = getElement('header-badge');
 
@@ -43,10 +43,16 @@ export const canvasWrapElement = getElement('canvas-wrap');
 export const canvasInnerElement = getElement('canvas-inner');
 export const canvasElement = getElement('canvas');
 
+// Export dialog
+export const exportDialogElement = getElement('dialog-export');
+export const btnExportPNG = getElement('btn-export-png');
+export const btnExportSVG = getElement('btn-export-svg');
+
 // Elements to exclude from automatic focus during application reload
 export const RELOAD_FOCUS_EXCLUSIONS = Object.freeze([
     canvasWrapElement,
-    resetButtonElement
+    resetButtonElement,
+    btnExport
 ]);
 
 // Color input getters

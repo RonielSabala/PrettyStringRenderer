@@ -42,9 +42,14 @@ export const EXPORT_IMAGE_PROMPT_MESSAGE = 'Scale multiplier:';
 export const EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES = [1, 2, 0.5];
 export const DEFAULT_EXPORT_SCALAR = 1;
 export const DEFAULT_EXPORT_IMAGE_FILENAME = 'pretty-string';
-export const IMAGES_EXTENSION = '.png';
-export const IMAGE_BLOB_TYPE = {
+export const PNG_EXTENSION = '.png';
+export const SVG_EXTENSION = '.svg';
+export const SVG_NS = "http://www.w3.org/2000/svg";
+export const PNG_BLOB_TYPE = {
     type: 'image/png'
+};
+export const SVG_BLOB_TYPE = {
+    type: 'image/svg+xml'
 };
 
 // UI defaults

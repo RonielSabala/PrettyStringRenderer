@@ -26,6 +26,8 @@
   --accent-dim: rgba(56, 139, 253, 0.2);
 
   /* Status */
+  --success: #3fb950;
+  --success-dim: color-mix(in srgb, var(--success) 15%, transparent);
   --danger: #e05555;
   --danger-dim: color-mix(in srgb, var(--danger) 15%, transparent);
 

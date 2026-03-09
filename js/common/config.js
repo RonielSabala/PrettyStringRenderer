@@ -18,11 +18,12 @@ export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 // Canvas render constants
 export const CANVAS_FONT = 'Cascadia Code';
 export const CANVAS_FONT_WEIGHT = 400;
+export const CANVAS_CONTEXT_TYPE = '2d';
 export const CANVAS_FONT_REFERENCE_GLYPH = 'M';
+export const CANVAS_TEXT_RENDERING = 'optimizeSpeed';
 export const CANVAS_ASCENT_CORRECTION = 9 / 100; // fontSize=100 needs 9 extra pixels so that padY=0 is congruent
 
 // Canvas buffer constants
-export const CANVAS_CONTEXT_TYPE = '2d';
 export const CANVAS_MIN_PIXEL_SCALE = 1;
 export const CANVAS_MAX_PIXEL_SCALE = 5;
 export const CANVAS_VIEWPORT_PADDING_PX = 25;
@@ -37,17 +38,22 @@ export const THEME_BLOB_TYPE = {
     type: 'application/json'
 };
 
-// Image constants
-export const EXPORT_IMAGE_PROMPT_MESSAGE = 'Scale multiplier:';
-export const EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES = [1, 2, 0.5];
-export const DEFAULT_EXPORT_SCALAR = 1;
+// Canvas export constants
 export const DEFAULT_EXPORT_IMAGE_FILENAME = 'pretty-string';
+
+// PNG constants
 export const PNG_EXTENSION = '.png';
-export const SVG_EXTENSION = '.svg';
-export const SVG_NS = "http://www.w3.org/2000/svg";
+export const DEFAULT_PNG_SCALAR = 1;
+export const EXPORT_PNG_PROMPT_MESSAGE = 'Scale multiplier:';
+export const EXPORT_PNG_PROMPT_SCALAR_EXAMPLES = [1, 2, 0.5];
 export const PNG_BLOB_TYPE = {
     type: 'image/png'
 };
+
+// SVG constants
+export const SVG_NS = "http://www.w3.org/2000/svg";
+export const SVG_FONT_VARIANT_LIGATURES = 'none';
+export const SVG_EXTENSION = '.svg';
 export const SVG_BLOB_TYPE = {
     type: 'image/svg+xml'
 };

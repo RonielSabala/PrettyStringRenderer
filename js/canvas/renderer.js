@@ -3,7 +3,8 @@ import {
     CANVAS_CONTEXT_TYPE,
     CANVAS_FONT,
     CANVAS_FONT_REFERENCE_GLYPH,
-    CANVAS_FONT_WEIGHT
+    CANVAS_FONT_WEIGHT,
+    CANVAS_TEXT_RENDERING
 } from '../common/config.js';
 import {
     state
@@ -21,6 +22,7 @@ function _getTextMetrics() {
 function _setupContextFont(ctx, fontSize, letterSpacing) {
     ctx.font = `${CANVAS_FONT_WEIGHT} ${toPx(fontSize)} '${CANVAS_FONT}'`;
     ctx.letterSpacing = toPx(letterSpacing);
+    ctx.textRendering = CANVAS_TEXT_RENDERING;
 }
 
 export function iterateTokens(width, height, config, onToken) {

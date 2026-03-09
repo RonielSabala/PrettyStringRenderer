@@ -57,13 +57,14 @@
   background: #0d1117;
   border: none;
   color: #e6edf3;
-  font-family: var(--font-mono);
   resize: none;
   white-space: pre;
   overflow: auto;
   tab-size: 2;
-  caret-color: #58a6ff;
   caret-shape: block;
+  caret-color: #58a6ff;
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
 }
 
 #editor:focus {

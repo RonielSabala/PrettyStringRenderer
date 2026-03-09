@@ -8,14 +8,15 @@ import {
     CANVAS_FONT,
     CANVAS_FONT_WEIGHT,
     DEFAULT_EXPORT_IMAGE_FILENAME,
-    DEFAULT_EXPORT_SCALAR,
-    EXPORT_IMAGE_PROMPT_MESSAGE,
-    EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES,
+    DEFAULT_PNG_SCALAR,
+    EXPORT_PNG_PROMPT_MESSAGE,
+    EXPORT_PNG_PROMPT_SCALAR_EXAMPLES,
     LINE_BREAK,
     PNG_BLOB_TYPE,
     PNG_EXTENSION,
     SVG_BLOB_TYPE,
     SVG_EXTENSION,
+    SVG_FONT_VARIANT_LIGATURES,
     SVG_NS
 } from '../common/config.js';
 import {
@@ -41,8 +42,8 @@ import {
     describeResolution
 } from '../utils/resolution.js';
 
-const _SCALAR_PROMPT_MESSAGE = `${EXPORT_IMAGE_PROMPT_MESSAGE}
-${EXPORT_IMAGE_PROMPT_SCALAR_EXAMPLES
+const _SCALAR_PROMPT_MESSAGE = `${EXPORT_PNG_PROMPT_MESSAGE}
+${EXPORT_PNG_PROMPT_SCALAR_EXAMPLES
     .map(scalar => `    ${scalar} -> ${describeResolution(scalar)}`)
     .join(LINE_BREAK)
 }`;
@@ -68,7 +69,7 @@ function _download(blob, filename) {
 // PNG exporter
 
 function _exportPNG() {
-    const scalar = parseNumber(prompt(_SCALAR_PROMPT_MESSAGE, DEFAULT_EXPORT_SCALAR), 0);
+    const scalar = parseNumber(prompt(_SCALAR_PROMPT_MESSAGE, DEFAULT_PNG_SCALAR), 0);
     if (scalar <= 0) {
         return;
     }
@@ -121,17 +122,21 @@ function _buildSVG(width, height) {
 
     const group = _createSVGElement('g');
     group.setAttribute('font-family', CANVAS_FONT);
-    group.setAttribute('font-weight', CANVAS_FONT_WEIGHT);
     group.setAttribute('font-size', config.fontSize);
+    group.setAttribute('font-weight', CANVAS_FONT_WEIGHT);
     group.setAttribute('letter-spacing', config.letterSpacing);
     svg.appendChild(group);
 
     iterateTokens(width, height, config, (text, color, x, y) => {
         const element = _createSVGElement('text');
+
         element.textContent = text;
+        element.style.fontVariantLigatures = SVG_FONT_VARIANT_LIGATURES;
+
         element.setAttribute('x', x.toFixed(3));
         element.setAttribute('y', y.toFixed(3));
         element.setAttribute('fill', color);
+
         group.appendChild(element);
     });
 

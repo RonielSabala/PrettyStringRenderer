@@ -6,8 +6,8 @@
   "variable": "#a5a5a5",
   "operator": "#000000",
   "semicolon": "#cd3131",
-  "number": "#B5CEA8",
+  "number": "#b5cea8",
   "comment": "#008000",
-  "unknown": "#CE9178",
+  "unknown": "#ce9178",
   "background": "#ffffff"
 }

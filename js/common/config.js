@@ -1,9 +1,9 @@
 import {
     CSS_FONT_VARIANT_LIGATURES
-} from "./constants/css.js";
+} from './constants/css.js';
 import {
     editorTabsElement
-} from "./elements.js";
+} from './elements.js';
 
 // App constants
 export const LINE_BREAK = '\n';
@@ -23,17 +23,15 @@ export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 // Canvas render constants
 export const CANVAS_FONT = 'Cascadia Code';
 export const CANVAS_FONT_WEIGHT = 400;
-export const CANVAS_CONTEXT_TYPE = '2d';
-export const CANVAS_FONT_REFERENCE_GLYPH = 'M';
 export const CANVAS_ASCENT_CORRECTION = 9 / 100; // fontSize=100 needs 9 extra pixels so that padY=0 is congruent
 
 // Canvas buffer constants
 export const CANVAS_MIN_PIXEL_SCALE = 1;
 export const CANVAS_MAX_PIXEL_SCALE = 5;
 export const CANVAS_VIEWPORT_PADDING_PX = 25;
-export const CANVAS_QUALITY_REDRAW_DEBOUNCE_MS = 120;
+export const CANVAS_QUALITY_REDRAW_TIMEOUT_MS = 120;
 
-// Theme constants
+// Themes constants
 export const EXPORT_THEME_PROMPT_MESSAGE = 'Theme name:';
 export const DEFAULT_EXPORT_THEME_FILENAME = 'my-theme';
 export const THEMES_EXTENSION = '.json';
@@ -55,7 +53,7 @@ export const PNG_BLOB_TYPE = {
 };
 
 // SVG constants
-export const SVG_NS = "http://www.w3.org/2000/svg";
+export const SVG_NS = 'http://www.w3.org/2000/svg';
 export const SVG_EXTENSION = '.svg';
 export const SVG_BLOB_TYPE = {
     type: 'image/svg+xml'
@@ -127,7 +125,7 @@ export const CANVAS_DEFAULTS = {
 
 // Default pre-loaded UI theme
 
-const _DEFAULT_BRACKET_COLORS = ['#569CD6', '#FFD700', '#C586C0'];
+const _DEFAULT_BRACKET_COLORS = ['#569cd6', '#ffd700', '#c586c0'];
 export const BRACKET_COLOR_PREFIX = 'bracket';
 export const BRACKET_COLORS_COUNT = _DEFAULT_BRACKET_COLORS.length;
 
@@ -135,13 +133,13 @@ export const DEFAULT_THEME = {
     ...Object.fromEntries(
         _DEFAULT_BRACKET_COLORS.map((color, i) => [`${BRACKET_COLOR_PREFIX}${i}`, color])
     ),
-    function: '#DCDCAA',
-    variable: '#9CDCFE',
-    operator: '#D4D4D4',
+    function: '#dcdcaa',
+    variable: '#9cdcfe',
+    operator: '#d4d4d4',
     semicolon: '#808080',
-    number: '#B5CEA8',
-    comment: '#6A9955',
-    unknown: '#CE9178',
+    number: '#b5cea8',
+    comment: '#6a9955',
+    unknown: '#ce9178',
     background: '#1e1e1e',
 };
 

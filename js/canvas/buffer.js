@@ -1,9 +1,8 @@
 import {
-    CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
     CANVAS_MAX_PIXEL_SCALE,
     CANVAS_MIN_PIXEL_SCALE,
-    CANVAS_QUALITY_REDRAW_DEBOUNCE_MS
+    CANVAS_QUALITY_REDRAW_TIMEOUT_MS
 } from '../common/config.js';
 import {
     canvasElement
@@ -15,6 +14,7 @@ import {
     setZoomChangeCallback
 } from './controller.js';
 import {
+    getDrawingContext,
     render
 } from './renderer.js';
 
@@ -24,7 +24,7 @@ let _lastCanvasHeight = 0;
 let _currentPixelScale = 1;
 let _qualityRedrawTimer = null;
 
-const _ctx = canvasElement.getContext(CANVAS_CONTEXT_TYPE);
+const _ctx = getDrawingContext(canvasElement);
 
 function _computePixelScale() {
     const deviceAwareZoom = state.canvasConfig.zoom * window.devicePixelRatio;
@@ -58,7 +58,7 @@ function _scheduleQualityRedraw() {
     }
 
     clearTimeout(_qualityRedrawTimer);
-    _qualityRedrawTimer = setTimeout(redraw, CANVAS_QUALITY_REDRAW_DEBOUNCE_MS);
+    _qualityRedrawTimer = setTimeout(redraw, CANVAS_QUALITY_REDRAW_TIMEOUT_MS);
 }
 
 setZoomChangeCallback(_scheduleQualityRedraw);

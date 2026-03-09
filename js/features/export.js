@@ -1,10 +1,10 @@
 import {
+    getDrawingContext,
     iterateTokens,
     render
 } from '../canvas/renderer.js';
 import {
     APP_FONT_VARIANT_LIGATURES,
-    CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
     CANVAS_FONT,
     CANVAS_FONT_WEIGHT,
@@ -38,7 +38,8 @@ import {
     state
 } from '../common/store.js';
 import {
-    parseNumber
+    parseNumber,
+    roundUp
 } from '../utils/parse.js';
 import {
     createResolution,
@@ -94,7 +95,7 @@ function _exportPNG() {
     offscreen.width = exportWidth;
     offscreen.height = exportHeight;
 
-    render(offscreen.getContext(CANVAS_CONTEXT_TYPE), exportWidth, exportHeight, scaledConfig);
+    render(getDrawingContext(offscreen), exportWidth, exportHeight, scaledConfig);
     offscreen.toBlob(blob => {
         _download(blob, _createFilename(exportWidth, exportHeight, PNG_EXTENSION));
     }, PNG_BLOB_TYPE);
@@ -102,53 +103,74 @@ function _exportPNG() {
 
 // SVG exporter
 
-function _createSVGElement(tag) {
+function _setAttrs(element, attrs) {
+    for (const [key, value] of Object.entries(attrs)) {
+        element.setAttribute(key, value);
+    };
+
+    return element;
+};
+
+function _createElement(tag) {
     return document.createElementNS(SVG_NS, tag);
 }
 
+function _createText({
+    text,
+    x,
+    y
+}) {
+    const element = _createElement('text');
+    element.textContent = text;
+    return _setAttrs(element, {
+        x: roundUp(x),
+        y: roundUp(y)
+    });;
+};
+
 function _buildSVG(width, height) {
-    const svg = _createSVGElement('svg');
     const config = state.typographyConfig;
-    const svgConfig = {
-        ...config,
-        textRendering: CSS_TEXT_RENDERING.GEOMETRIC_PRECISION,
-    };
 
-    svg.setAttribute("xmlns", SVG_NS);
-    svg.setAttribute('width', width);
-    svg.setAttribute('height', height);
-    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-
-    // Add background
-    const rect = _createSVGElement('rect');
-    rect.setAttribute('width', width);
-    rect.setAttribute('height', height);
-    rect.setAttribute('fill', state.colors.background);
-    svg.appendChild(rect);
-
-    // Add tokens
-
-    const group = _createSVGElement('g');
-    group.setAttribute('font-family', CANVAS_FONT);
-    group.setAttribute('font-size', config.fontSize);
-    group.setAttribute('font-weight', CANVAS_FONT_WEIGHT);
-    group.setAttribute('letter-spacing', config.letterSpacing);
-    svg.appendChild(group);
-
-    iterateTokens(width, height, svgConfig, (text, color, x, y) => {
-        const element = _createSVGElement('text');
-
-        element.textContent = text;
-        element.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
-
-        element.setAttribute('x', x.toFixed(3));
-        element.setAttribute('y', y.toFixed(3));
-        element.setAttribute('fill', color);
-
-        group.appendChild(element);
+    const svgElement = _setAttrs(_createElement('svg'), {
+        xmlns: SVG_NS,
+        width,
+        height,
+        viewBox: `0 0 ${width} ${height}`
     });
 
-    return svg.outerHTML;
+    const pathElement = _setAttrs(_createElement('path'), {
+        fill: state.colors.background,
+        d: `M0 0h${width}v${height}H0z`
+    });
+
+    const groupElement = _setAttrs(_createElement('g'), {
+        'font-family': CANVAS_FONT,
+        'font-size': config.fontSize,
+        'font-weight': CANVAS_FONT_WEIGHT,
+        'letter-spacing': config.letterSpacing
+    });
+
+    groupElement.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
+    svgElement.append(pathElement, groupElement);
+
+    const batch = iterateTokens(width, height, {
+        ...config,
+        textRendering: CSS_TEXT_RENDERING.GEOMETRIC_PRECISION,
+    });
+
+    for (const [color, calls] of batch) {
+        const isSingle = calls.length === 1;
+        const container = isSingle ? _createText(calls[0]) : _createElement('g');;
+
+        container.setAttribute('fill', color);
+        if (!isSingle) {
+            container.append(...calls.map(_createText));
+        }
+
+        groupElement.appendChild(container);
+    }
+
+    return svgElement.outerHTML;
 }
 
 function _exportSVG() {

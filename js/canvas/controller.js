@@ -1,4 +1,5 @@
 import {
+    APP_FONT_VARIANT_LIGATURES,
     CANVAS_DEFAULTS,
     CANVAS_MAX_ZOOM,
     CANVAS_MIN_ZOOM,
@@ -227,6 +228,8 @@ export function adjustCanvas() {
 }
 
 export function initCanvas() {
+    canvasElement.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
+
     adjustCanvas();
     _applyZoomTransform();
 

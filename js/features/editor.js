@@ -5,6 +5,7 @@ import {
     adjustCanvas
 } from '../canvas/controller.js';
 import {
+    APP_FONT_VARIANT_LIGATURES,
     EDITOR_DEFAULTS,
     EDITOR_MAX_HEIGHT_PERCENTAGE,
     EDITOR_MIN_HEIGHT_PX
@@ -168,10 +169,11 @@ export function initEditorSection() {
 
     // Set editor values
     editorElement.scrollTop = 0;
+    editorElement.style.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
     editorElement.style.fontSize = toPx(config.fontSize);
     editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
     editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
-    editorElement.style.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
+    editorElement.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
     editorElement.value = config.content ?? EDITOR_DEFAULTS.content;
 
     // Restore editor height

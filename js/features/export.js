@@ -3,6 +3,7 @@ import {
     render
 } from '../canvas/renderer.js';
 import {
+    APP_FONT_VARIANT_LIGATURES,
     CANVAS_CONTEXT_TYPE,
     CANVAS_DEFAULTS,
     CANVAS_FONT,
@@ -16,9 +17,11 @@ import {
     PNG_EXTENSION,
     SVG_BLOB_TYPE,
     SVG_EXTENSION,
-    SVG_FONT_VARIANT_LIGATURES,
     SVG_NS
 } from '../common/config.js';
+import {
+    CSS_TEXT_RENDERING
+} from '../common/constants/css.js';
 import {
     EVENTS
 } from '../common/constants/events.js';
@@ -79,6 +82,7 @@ function _exportPNG() {
         ...config,
         fontSize: config.fontSize * scalar,
         letterSpacing: config.letterSpacing * scalar,
+        textRendering: CSS_TEXT_RENDERING.GEOMETRIC_PRECISION,
         padX: config.padX * scalar,
         padY: config.padY * scalar,
     };
@@ -103,8 +107,12 @@ function _createSVGElement(tag) {
 }
 
 function _buildSVG(width, height) {
-    const config = state.typographyConfig;
     const svg = _createSVGElement('svg');
+    const config = state.typographyConfig;
+    const svgConfig = {
+        ...config,
+        textRendering: CSS_TEXT_RENDERING.GEOMETRIC_PRECISION,
+    };
 
     svg.setAttribute("xmlns", SVG_NS);
     svg.setAttribute('width', width);
@@ -127,11 +135,11 @@ function _buildSVG(width, height) {
     group.setAttribute('letter-spacing', config.letterSpacing);
     svg.appendChild(group);
 
-    iterateTokens(width, height, config, (text, color, x, y) => {
+    iterateTokens(width, height, svgConfig, (text, color, x, y) => {
         const element = _createSVGElement('text');
 
         element.textContent = text;
-        element.style.fontVariantLigatures = SVG_FONT_VARIANT_LIGATURES;
+        element.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
         element.setAttribute('x', x.toFixed(3));
         element.setAttribute('y', y.toFixed(3));

@@ -20,5 +20,5 @@ export function describeResolution(scalar = 1) {
 }
 
 export function describeAspectRatio() {
-    return `${describeResolution()} · ${roundUp(CANVAS_DEFAULTS.aspectRatio)}:1`;;
+    return `${describeResolution()} · ${roundUp(CANVAS_DEFAULTS.aspectRatio)}:1`;
 }

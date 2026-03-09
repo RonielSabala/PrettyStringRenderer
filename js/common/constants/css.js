@@ -22,3 +22,14 @@ export const CSS_USER_SELECT = Object.freeze({
     AUTO: '',
     NONE: 'none',
 });
+
+export const CSS_FONT_VARIANT_LIGATURES = Object.freeze({
+    NONE: 'none',
+    NORMAL: 'normal',
+});
+
+export const CSS_TEXT_RENDERING = Object.freeze({
+    OPTIMIZE_SPEED: 'optimizeSpeed',
+    OPTIMIZE_LEGIBILITY: 'optimizeLegibility',
+    GEOMETRIC_PRECISION: 'geometricPrecision',
+});

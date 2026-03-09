@@ -1,11 +1,15 @@
 import {
+    APP_FONT_VARIANT_LIGATURES,
     CANVAS_ASCENT_CORRECTION,
     CANVAS_CONTEXT_TYPE,
     CANVAS_FONT,
     CANVAS_FONT_REFERENCE_GLYPH,
-    CANVAS_FONT_WEIGHT,
-    CANVAS_TEXT_RENDERING
+    CANVAS_FONT_WEIGHT
 } from '../common/config.js';
+import {
+    CSS_FONT_VARIANT_LIGATURES,
+    CSS_TEXT_RENDERING
+} from '../common/constants/css.js';
 import {
     state
 } from '../common/store.js';
@@ -19,24 +23,22 @@ function _getTextMetrics() {
     return _measureCtx.measureText(CANVAS_FONT_REFERENCE_GLYPH);
 }
 
-function _setupContextFont(ctx, fontSize, letterSpacing) {
-    ctx.font = `${CANVAS_FONT_WEIGHT} ${toPx(fontSize)} '${CANVAS_FONT}'`;
-    ctx.letterSpacing = toPx(letterSpacing);
-    ctx.textRendering = CANVAS_TEXT_RENDERING;
+function _setupContextFont(ctx, config) {
+    ctx.font = `${CANVAS_FONT_WEIGHT} ${toPx(config.fontSize)} '${CANVAS_FONT}'`;
+    ctx.letterSpacing = toPx(config.letterSpacing);
+    ctx.textRendering = config.textRendering;
 }
 
 export function iterateTokens(width, height, config, onToken) {
-    const padX = config.padX;
-    const padY = config.padY;
     const fontSize = config.fontSize;
     const lineHeight = fontSize * config.lineHeight;
     const tokenizedLines = state.tokenizer.tokenizedLines;
 
-    _setupContextFont(_measureCtx, fontSize, config.letterSpacing);
+    _setupContextFont(_measureCtx, config);
     const metrics = _getTextMetrics();
     const charWidth = metrics.width;
     const ascent = metrics.actualBoundingBoxAscent;
-    const y0 = padY + ascent + Math.round(fontSize * CANVAS_ASCENT_CORRECTION);
+    const y0 = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_CORRECTION);
 
     // Pre-compute last row
     const lastRow = Math.min(
@@ -48,6 +50,7 @@ export function iterateTokens(width, height, config, onToken) {
         return;
     }
 
+    const padX = config.padX;
     for (let row = 0; row <= lastRow; row++) {
         let col = 0;
         const charY = y0 + row * lineHeight;
@@ -67,7 +70,7 @@ export function iterateTokens(width, height, config, onToken) {
                 break;
             }
 
-            onToken(tokenValue, tokenColor, charX, charY);
+            onToken(tokenValue, tokenColor, charX, charY, charWidth);
         }
     }
 }
@@ -76,6 +79,7 @@ export function render(ctx, width, height, configOverride = null) {
     const config = configOverride ?? state.typographyConfig;
     const padX = config.padX;
     const padY = config.padY;
+    const optimizeRender = config.textRendering === CSS_TEXT_RENDERING.OPTIMIZE_SPEED;
 
     // Draw background
     ctx.fillStyle = state.colors.background;
@@ -88,10 +92,24 @@ export function render(ctx, width, height, configOverride = null) {
     ctx.clip();
 
     // Draw tokens
-    _setupContextFont(ctx, config.fontSize, config.letterSpacing);
-    iterateTokens(width, height, config, (text, color, x, y) => {
+    _setupContextFont(ctx, config);
+    iterateTokens(width, height, config, (text, color, x, y, charWidth) => {
         ctx.fillStyle = color;
-        ctx.fillText(text, x, y);
+        if (optimizeRender) {
+            x = Math.floor(x);
+            y = Math.floor(y);
+        }
+
+        // Show ligatures
+        if (APP_FONT_VARIANT_LIGATURES !== CSS_FONT_VARIANT_LIGATURES.NONE) {
+            ctx.fillText(text, x, y);
+            return;
+        }
+
+        // Draw char-by-char to prevent ligature substitution
+        for (let i = 0; i < text.length; i++) {
+            ctx.fillText(text[i], x + i * charWidth, y);
+        }
     });
 
     ctx.restore();

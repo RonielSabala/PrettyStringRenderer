@@ -1,9 +1,14 @@
 import {
+    CSS_FONT_VARIANT_LIGATURES
+} from "./constants/css.js";
+import {
     editorTabsElement
 } from "./elements.js";
 
+// App constants
 export const LINE_BREAK = '\n';
 export const SAVE_TIMEOUT_MS = 200;
+export const APP_FONT_VARIANT_LIGATURES = CSS_FONT_VARIANT_LIGATURES.NONE;
 
 // Editor constants
 export const EDITOR_MIN_HEIGHT_PX = editorTabsElement.offsetHeight;
@@ -20,7 +25,6 @@ export const CANVAS_FONT = 'Cascadia Code';
 export const CANVAS_FONT_WEIGHT = 400;
 export const CANVAS_CONTEXT_TYPE = '2d';
 export const CANVAS_FONT_REFERENCE_GLYPH = 'M';
-export const CANVAS_TEXT_RENDERING = 'optimizeSpeed';
 export const CANVAS_ASCENT_CORRECTION = 9 / 100; // fontSize=100 needs 9 extra pixels so that padY=0 is congruent
 
 // Canvas buffer constants
@@ -52,7 +56,6 @@ export const PNG_BLOB_TYPE = {
 
 // SVG constants
 export const SVG_NS = "http://www.w3.org/2000/svg";
-export const SVG_FONT_VARIANT_LIGATURES = 'none';
 export const SVG_EXTENSION = '.svg';
 export const SVG_BLOB_TYPE = {
     type: 'image/svg+xml'

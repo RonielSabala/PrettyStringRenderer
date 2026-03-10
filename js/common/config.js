@@ -23,7 +23,7 @@ export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 // Canvas render constants
 export const CANVAS_FONT = 'Cascadia Code';
 export const CANVAS_FONT_WEIGHT = 400;
-export const CANVAS_ASCENT_CORRECTION = 9 / 100; // fontSize=100 needs 9 extra pixels so that padY=0 is congruent
+export const CANVAS_ASCENT_CORRECTION = 9 / 100; // A text with fontSize=100 needs 9 extra pixels so that padY=0 sits flush
 
 // Canvas buffer constants
 export const CANVAS_MIN_PIXEL_SCALE = 1;

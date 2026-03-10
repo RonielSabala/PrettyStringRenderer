@@ -1,11 +1,9 @@
 import {
-    APP_FONT_VARIANT_LIGATURES,
     CANVAS_ASCENT_CORRECTION,
     CANVAS_FONT,
     CANVAS_FONT_WEIGHT
 } from '../common/config.js';
 import {
-    CSS_FONT_VARIANT_LIGATURES,
     CSS_TEXT_RENDERING
 } from '../common/constants/css.js';
 import {
@@ -29,14 +27,13 @@ function _setupContextFont(ctx, config) {
 
 // Public helpers
 
-export function getDrawingContext(canvasElement) {
-    return canvasElement.getContext(_CONTEXT_TYPE, {
+export function getDrawingContext(HTMLCanvasElement) {
+    return HTMLCanvasElement.getContext(_CONTEXT_TYPE, {
         alpha: false
     });
 }
 
-export function iterateTokens(width, height, config) {
-    const batch = new Map();
+export function iterateTokens(width, height, config, onToken) {
     const fontSize = config.fontSize;
     const lineHeight = fontSize * config.lineHeight;
     const tokenizedLines = state.tokenizer.tokenizedLines;
@@ -54,7 +51,7 @@ export function iterateTokens(width, height, config) {
     );
 
     if (lastRow < 0) {
-        return batch;
+        return;
     }
 
     const padX = config.padX;
@@ -64,10 +61,10 @@ export function iterateTokens(width, height, config) {
 
         for (const token of tokenizedLines[row]) {
             const startCol = col;
-            const text = token.value;
+            const tokenValue = token.value;
             const tokenColor = token.color;
 
-            col += text.length;
+            col += tokenValue.length;
             if (tokenColor === null) {
                 continue;
             }
@@ -77,21 +74,9 @@ export function iterateTokens(width, height, config) {
                 break;
             }
 
-            if (!batch.has(tokenColor)) {
-                batch.set(tokenColor, []);
-            }
-
-            batch.get(tokenColor).push({
-                text,
-                x,
-                y,
-                charWidth
-            });
-
+            onToken(tokenValue, tokenColor, x, y);
         }
     }
-
-    return batch;
 }
 
 // Render function
@@ -109,32 +94,14 @@ export function render(ctx, width, height, configOverride = null) {
     ctx.clip();
 
     _setupContextFont(ctx, config);
-    const batch = iterateTokens(width, height, config);
-
-    for (const [color, calls] of batch) {
+    iterateTokens(width, height, config, (text, color, x, y) => {
         ctx.fillStyle = color;
-        for (const {
-                text,
-                x,
-                y,
-                charWidth
-            }
-            of calls) {
-            const fx = optimizeRender ? Math.floor(x) : x;
-            const fy = optimizeRender ? Math.floor(y) : y;
-
-            // Show ligatures
-            if (APP_FONT_VARIANT_LIGATURES !== CSS_FONT_VARIANT_LIGATURES.NONE) {
-                ctx.fillText(text, fx, fy);
-                continue;
-            }
-
-            // Draw char-by-char to prevent ligature substitution
-            for (let i = 0; i < text.length; i++) {
-                ctx.fillText(text[i], fx + i * charWidth, fy);
-            }
-        }
-    }
+        ctx.fillText(
+            text,
+            optimizeRender ? Math.floor(x) : x,
+            optimizeRender ? Math.floor(y) : y
+        );
+    });
 
     ctx.restore();
 }

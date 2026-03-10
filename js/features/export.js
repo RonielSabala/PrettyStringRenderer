@@ -32,7 +32,7 @@ import {
     btnExport,
     btnExportPNG,
     btnExportSVG,
-    exportDialogElement,
+    exportDialogElement
 } from '../common/elements.js';
 import {
     state
@@ -92,12 +92,20 @@ function _exportPNG() {
     const exportHeight = Math.round(scalar * CANVAS_DEFAULTS.height);
 
     const offscreen = document.createElement('canvas');
+    const offscreenStyle = offscreen.style;
+
+    // Temporarily append to DOM to ensure the context inherits the styles
+    document.body.appendChild(offscreen);
     offscreen.width = exportWidth;
     offscreen.height = exportHeight;
+    offscreenStyle.visibility = 'hidden';
+    offscreenStyle.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
     render(getDrawingContext(offscreen), exportWidth, exportHeight, scaledConfig);
+
     offscreen.toBlob(blob => {
         _download(blob, _createFilename(exportWidth, exportHeight, PNG_EXTENSION));
+        document.body.removeChild(offscreen);
     }, PNG_BLOB_TYPE);
 }
 
@@ -125,11 +133,15 @@ function _createText({
     return _setAttrs(element, {
         x: roundUp(x),
         y: roundUp(y)
-    });;
+    });
 };
 
 function _buildSVG(width, height) {
     const config = state.typographyConfig;
+    const renderConfig = {
+        ...config,
+        textRendering: CSS_TEXT_RENDERING.GEOMETRIC_PRECISION,
+    };
 
     const svgElement = _setAttrs(_createElement('svg'), {
         xmlns: SVG_NS,
@@ -153,14 +165,23 @@ function _buildSVG(width, height) {
     groupElement.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
     svgElement.append(pathElement, groupElement);
 
-    const batch = iterateTokens(width, height, {
-        ...config,
-        textRendering: CSS_TEXT_RENDERING.GEOMETRIC_PRECISION,
+    const batch = new Map();
+    iterateTokens(width, height, renderConfig, (text, color, x, y) => {
+        if (!batch.has(color)) {
+            batch.set(color, []);
+        }
+
+        batch.get(color).push({
+            text,
+            color,
+            x,
+            y,
+        });
     });
 
     for (const [color, calls] of batch) {
         const isSingle = calls.length === 1;
-        const container = isSingle ? _createText(calls[0]) : _createElement('g');;
+        const container = isSingle ? _createText(calls[0]) : _createElement('g');
 
         container.setAttribute('fill', color);
         if (!isSingle) {

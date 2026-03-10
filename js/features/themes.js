@@ -209,7 +209,7 @@ function _onThemesFocus(event) {
 
 // Public methods
 
-export function initThemesSection() {
+export function initThemesSection(signal) {
     _renderThemeList();
 
     // Apply theme
@@ -222,7 +222,13 @@ export function initThemesSection() {
     }
 
     // Listeners
-    btnLoadThemes.addEventListener(EVENTS.CLICK, _onLoadThemes);
-    btnExportTheme.addEventListener(EVENTS.CLICK, _onExportTheme);
-    document.addEventListener(EVENTS.KEY_DOWN, _onThemesFocus)
+    btnLoadThemes.addEventListener(EVENTS.CLICK, _onLoadThemes, {
+        signal
+    });
+    btnExportTheme.addEventListener(EVENTS.CLICK, _onExportTheme, {
+        signal
+    });
+    document.addEventListener(EVENTS.KEY_DOWN, _onThemesFocus, {
+        signal
+    })
 }

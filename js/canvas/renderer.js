@@ -15,7 +15,6 @@ import {
 
 const _CONTEXT_TYPE = '2d';
 const _FONT_REFERENCE_GLYPH = 'M';
-const _measureCtx = getDrawingContext(document.createElement('canvas'));
 
 // Private helpers
 
@@ -33,6 +32,8 @@ export function getDrawingContext(HTMLCanvasElement) {
     });
 }
 
+const _measureCtx = (window.__MEASURE_CTX ??= getDrawingContext(document.createElement('canvas')));
+
 export function iterateTokens(width, height, config, onToken) {
     const fontSize = config.fontSize;
     const lineHeight = fontSize * config.lineHeight;
@@ -42,22 +43,23 @@ export function iterateTokens(width, height, config, onToken) {
     const metrics = _measureCtx.measureText(_FONT_REFERENCE_GLYPH);
     const charWidth = metrics.width;
     const ascent = metrics.actualBoundingBoxAscent;
-    const y0 = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_CORRECTION);
 
-    // Pre-compute last row
-    const lastRow = Math.min(
-        Math.ceil((height - y0) / lineHeight) + 1,
+    const padX = config.padX;
+    const padY = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_CORRECTION);
+
+    const maxCol = Math.ceil((width - padX) / charWidth);
+    const maxRow = Math.min(
+        Math.ceil((height - padY) / lineHeight) + 1,
         tokenizedLines.length - 1
     );
 
-    if (lastRow < 0) {
+    if (maxRow < 0 || maxCol < 0) {
         return;
     }
 
-    const padX = config.padX;
-    for (let row = 0; row <= lastRow; row++) {
+    for (let row = 0; row <= maxRow; row++) {
         let col = 0;
-        const y = y0 + row * lineHeight;
+        const y = padY + row * lineHeight;
 
         for (const token of tokenizedLines[row]) {
             const startCol = col;
@@ -70,11 +72,13 @@ export function iterateTokens(width, height, config, onToken) {
             }
 
             const x = padX + startCol * charWidth;
-            if (x >= width) {
+            const maxColExceeded = col > maxCol;
+            const visibleText = maxColExceeded ? tokenValue.substring(0, maxCol - startCol) : tokenValue;
+            onToken(visibleText, tokenColor, x, y);
+
+            if (maxColExceeded) {
                 break;
             }
-
-            onToken(tokenValue, tokenColor, x, y);
         }
     }
 }
@@ -88,11 +92,6 @@ export function render(ctx, width, height, configOverride = null) {
     ctx.fillStyle = state.colors.background;
     ctx.fillRect(0, 0, width, height);
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(config.padX, config.padY, width - config.padX, height - config.padY);
-    ctx.clip();
-
     _setupContextFont(ctx, config);
     iterateTokens(width, height, config, (text, color, x, y) => {
         ctx.fillStyle = color;
@@ -102,6 +101,4 @@ export function render(ctx, width, height, configOverride = null) {
             optimizeRender ? Math.floor(y) : y
         );
     });
-
-    ctx.restore();
 }

@@ -18,13 +18,15 @@ import {
     render
 } from './renderer.js';
 
-let _lastCanvasWidth = 0;
-let _lastCanvasHeight = 0;
+const _lastDimensions = (window.__BUFFER_DIMENSIONS ??= {
+    width: 0,
+    height: 0
+});
 
 let _currentPixelScale = 1;
 let _qualityRedrawTimer = null;
 
-const _ctx = getDrawingContext(canvasElement);
+const _ctx = (window.__BUFFER_CTX ??= getDrawingContext(canvasElement));
 
 function _computePixelScale() {
     const deviceAwareZoom = state.canvasConfig.zoom * window.devicePixelRatio;
@@ -39,11 +41,11 @@ export function redraw() {
     const bufferWidth = pixelScale * width;
     const bufferHeight = pixelScale * height;
 
-    if (bufferWidth !== _lastCanvasWidth || bufferHeight !== _lastCanvasHeight) {
+    if (bufferWidth !== _lastDimensions.width || bufferHeight !== _lastDimensions.height) {
         canvasElement.width = bufferWidth;
         canvasElement.height = bufferHeight;
-        _lastCanvasWidth = bufferWidth;
-        _lastCanvasHeight = bufferHeight;
+        _lastDimensions.width = bufferWidth;
+        _lastDimensions.height = bufferHeight;
     }
 
     _currentPixelScale = pixelScale;

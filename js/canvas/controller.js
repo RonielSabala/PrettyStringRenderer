@@ -227,24 +227,38 @@ export function adjustCanvas() {
     canvasElement.style.height = _getNormalizedDimension(displayHeight);
 }
 
-export function initCanvas() {
+export function initCanvas(signal) {
     canvasElement.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
     adjustCanvas();
     _applyZoomTransform();
 
     // Canvas listeners
-
-    canvasWrapElement.addEventListener(EVENTS.CONTEXT_MENU, (e) => e.preventDefault());
-    canvasWrapElement.addEventListener(EVENTS.WHEEL, _onZoom, {
-        passive: false
+    canvasWrapElement.addEventListener(EVENTS.CONTEXT_MENU, (e) => e.preventDefault(), {
+        signal
     });
-    canvasWrapElement.addEventListener(EVENTS.DBL_CLICK, _onZoomReset);
-    canvasWrapElement.addEventListener(EVENTS.MOUSE_DOWN, _onPanning);
+    canvasWrapElement.addEventListener(EVENTS.WHEEL, _onZoom, {
+        passive: false,
+        signal
+    });
+    canvasWrapElement.addEventListener(EVENTS.DBL_CLICK, _onZoomReset, {
+        signal
+    });
+    canvasWrapElement.addEventListener(EVENTS.MOUSE_DOWN, _onPanning, {
+        signal
+    });
 
     // Document listeners
-    document.addEventListener(EVENTS.KEY_DOWN, _onSpace);
-    document.addEventListener(EVENTS.KEY_UP, _onSpaceRelease);
-    document.addEventListener(EVENTS.MOUSE_MOVE, _onPanningMove);
-    document.addEventListener(EVENTS.MOUSE_UP, _onPanningRelease);
+    document.addEventListener(EVENTS.KEY_DOWN, _onSpace, {
+        signal
+    });
+    document.addEventListener(EVENTS.KEY_UP, _onSpaceRelease, {
+        signal
+    });
+    document.addEventListener(EVENTS.MOUSE_MOVE, _onPanningMove, {
+        signal
+    });
+    document.addEventListener(EVENTS.MOUSE_UP, _onPanningRelease, {
+        signal
+    });
 }

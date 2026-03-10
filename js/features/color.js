@@ -33,11 +33,13 @@ function _updateColor(themeKey, themeValue) {
 
 // Public methods
 
-export function initColors() {
+export function initColors(signal) {
     for (const themeKey of THEME_KEYS) {
         // Color Picker
         getColorPickerElement(themeKey).addEventListener(EVENTS.INPUT, (event) => {
             _updateColor(themeKey, event.target.value);
+        }, {
+            signal
         });
 
         // Hex Input
@@ -46,6 +48,8 @@ export function initColors() {
             if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
                 _updateColor(themeKey, value);
             }
+        }, {
+            signal
         });
     }
 }

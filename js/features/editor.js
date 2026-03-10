@@ -164,7 +164,7 @@ function _onEscapeToCanvas(event) {
 
 // Public methods
 
-export function initEditorSection() {
+export function initEditorSection(signal) {
     const config = state.editorConfig;
 
     // Set editor values
@@ -202,11 +202,19 @@ export function initEditorSection() {
 
             config[configKey] = newValue;
             _scheduleEditorConfigSave();
+        }, {
+            signal
         });
     }
 
     // Listeners
-    editorResizeHandleElement.addEventListener(EVENTS.MOUSE_DOWN, _onResize);
-    document.addEventListener(EVENTS.MOUSE_UP, _onEditorMouseUp);
-    document.addEventListener(EVENTS.KEY_DOWN, _onEscapeToCanvas)
+    editorResizeHandleElement.addEventListener(EVENTS.MOUSE_DOWN, _onResize, {
+        signal
+    });
+    document.addEventListener(EVENTS.MOUSE_UP, _onEditorMouseUp, {
+        signal
+    });
+    document.addEventListener(EVENTS.KEY_DOWN, _onEscapeToCanvas, {
+        signal
+    })
 }

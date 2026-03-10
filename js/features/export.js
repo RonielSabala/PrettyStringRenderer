@@ -235,11 +235,23 @@ function _onExportSVG() {
 
 // Public methods
 
-export function initExport() {
-    btnExport.addEventListener(EVENTS.CLICK, _onClickExportCanvas);
-    document.addEventListener(EVENTS.KEY_DOWN, _onKeyDownExportCanvas);
-    exportDialogElement.addEventListener(EVENTS.CLICK, _onDialogClose);
-    exportDialogElement.addEventListener(EVENTS.KEY_DOWN, _onDialogClose);
-    btnExportPNG.addEventListener(EVENTS.CLICK, _onExportPNG);
-    btnExportSVG.addEventListener(EVENTS.CLICK, _onExportSVG);
+export function initExport(signal) {
+    btnExport.addEventListener(EVENTS.CLICK, _onClickExportCanvas, {
+        signal
+    });
+    document.addEventListener(EVENTS.KEY_DOWN, _onKeyDownExportCanvas, {
+        signal
+    });
+    exportDialogElement.addEventListener(EVENTS.CLICK, _onDialogClose, {
+        signal
+    });
+    exportDialogElement.addEventListener(EVENTS.KEY_DOWN, _onDialogClose, {
+        signal
+    });
+    btnExportPNG.addEventListener(EVENTS.CLICK, _onExportPNG, {
+        signal
+    });
+    btnExportSVG.addEventListener(EVENTS.CLICK, _onExportSVG, {
+        signal
+    });
 }

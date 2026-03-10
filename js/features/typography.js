@@ -37,7 +37,7 @@ const CONFIG_KEYS_TO_ELEMENTS = {
     'padY': typographyPadYElement,
 }
 
-export function initTypographySection() {
+export function initTypographySection(signal) {
     const config = state.typographyConfig;
 
     for (const [configKey, element] of Object.entries(CONFIG_KEYS_TO_ELEMENTS)) {
@@ -51,6 +51,8 @@ export function initTypographySection() {
             config[configKey] = parseNumber(value, fallback);
             _scheduleTypographyConfigSave();
             redraw();
+        }, {
+            signal
         });
     }
 };

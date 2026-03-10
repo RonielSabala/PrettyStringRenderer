@@ -75,6 +75,13 @@ function hideSections() {
 }
 
 function init() {
+    // Abort any listeners from a previous HMR reload
+    window._appListenersController?.abort();
+    window._appListenersController = new AbortController();
+    const {
+        signal
+    } = window._appListenersController;
+
     restoreState();
     hideSections();
 
@@ -86,13 +93,17 @@ function init() {
 
     // Sections listeners
     document.querySelectorAll(`.${CSS.SECTION_HEADER}`).forEach(
-        element => element.addEventListener(EVENTS.CLICK, () => toggleSection(element))
+        element => element.addEventListener(EVENTS.CLICK, () => toggleSection(element), {
+            signal
+        })
     );
 
     // Buttons listeners
     resetButtonElement.addEventListener(EVENTS.CLICK, () => {
         clearState();
         location.reload();
+    }, {
+        signal
     });
 
     // Window reload listener
@@ -107,15 +118,17 @@ function init() {
 
         state.activeElementId = id;
         saveActiveElementIdState();
+    }, {
+        signal
     });
 
     // Initializers
-    initColors();
-    initThemesSection();
-    initTypographySection();
-    initEditorSection();
-    initCanvas();
-    initExport();
+    initColors(signal);
+    initThemesSection(signal);
+    initTypographySection(signal);
+    initEditorSection(signal);
+    initCanvas(signal);
+    initExport(signal);
 
     // Show editor content
     state.tokenizer.tokenize(editorElement.value);

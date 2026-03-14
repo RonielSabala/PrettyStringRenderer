@@ -125,24 +125,8 @@ export const CANVAS_DEFAULTS = {
     fontWeight: _uCanvas?.fontWeight ?? 400,
 };
 
-// Default pre-loaded UI theme
+// Theme
 
-const _DEFAULT_BRACKET_COLORS = ['#569cd6', '#ffd700', '#c586c0'];
-export const BRACKET_COLOR_PREFIX = 'bracket';
-export const BRACKET_COLORS_COUNT = _DEFAULT_BRACKET_COLORS.length;
-
-export const DEFAULT_THEME = {
-    ...Object.fromEntries(
-        _DEFAULT_BRACKET_COLORS.map((color, i) => [`${BRACKET_COLOR_PREFIX}${i}`, color])
-    ),
-    function: '#dcdcaa',
-    variable: '#9cdcfe',
-    operator: '#d4d4d4',
-    semicolon: '#808080',
-    number: '#b5cea8',
-    comment: '#6a9955',
-    unknown: '#ce9178',
-    background: '#1e1e1e',
-};
-
-export const THEME_KEYS = Object.keys(DEFAULT_THEME);
+const _theme = _u.theme ?? _defaultTheme;
+export const THEME_KEYS = Object.keys(_theme);
+export const DEFAULT_THEME = Object.freeze(_theme);

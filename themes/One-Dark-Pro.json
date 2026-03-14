@@ -1,7 +1,5 @@
 {
-  "bracket0": "#c678dd",
-  "bracket1": "#61afef",
-  "bracket2": "#d19a66",
+  "bracket": ["#c678dd", "#61afef", "#d19a66"],
   "function": "#61afef",
   "variable": "#e06c75",
   "operator": "#56b6c2",

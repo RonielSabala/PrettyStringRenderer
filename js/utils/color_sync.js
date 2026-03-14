@@ -10,25 +10,40 @@ import {
     THEME_KEYS_TO_TOKENS
 } from '../core/tokens.js';
 
+// Private helpers
+
+function _updateElementsColors(HTMLElementId, colorHex) {
+    getSwatchFillElement(HTMLElementId).style.background = colorHex;
+    getColorPickerElement(HTMLElementId).value = colorHex;
+    getHexInputElement(HTMLElementId).value = colorHex;
+}
+
+// Public methods
+
 export function setColor(themeKey, themeValue) {
     state.colors[themeKey] = themeValue;
-    getSwatchFillElement(themeKey).style.background = themeValue;
-    getColorPickerElement(themeKey).value = themeValue;
-    getHexInputElement(themeKey).value = themeValue;
+
+    const multipleValues = Array.isArray(themeValue);
+    const colors = multipleValues ? themeValue : [themeValue];
+
+    colors.forEach((colorHex, i) => {
+        const HTMLElementID = themeKey + (multipleValues ? `${i}` : '');
+        _updateElementsColors(HTMLElementID, colorHex);
+    });
 }
 
 export function updateTokensColor(themeKey = null) {
-    const providedKey = themeKey !== null;
+    const isKeyProvided = themeKey !== null;
     const tokenType = THEME_KEYS_TO_TOKENS[themeKey];
 
-    if (providedKey && tokenType == null) {
+    if (isKeyProvided && tokenType == null) {
         return;
     }
 
     const tokenizedLines = state.tokenizer.tokenizedLines;
     for (const tokenizedLine of tokenizedLines) {
         for (const token of tokenizedLine) {
-            if (providedKey && token.type !== tokenType) {
+            if (isKeyProvided && token.type !== tokenType) {
                 continue;
             }
 

@@ -1,6 +1,4 @@
 import {
-    BRACKET_COLOR_PREFIX,
-    BRACKET_COLORS_COUNT,
     DEFAULT_THEME
 } from '../common/config.js';
 import {
@@ -20,41 +18,37 @@ export const TOKENS = Object.freeze({
 });
 
 export const THEME_KEYS_TO_TOKENS = Object.freeze(
-    Object.keys(DEFAULT_THEME).reduce((acc, key) => {
-        if (key.startsWith(BRACKET_COLOR_PREFIX)) {
-            acc[key] = TOKENS.BRACKET;
-        } else {
-            acc[key] = TOKENS[key.toUpperCase()];
-        }
-
-        return acc;
-    }, {})
+    Object.fromEntries(
+        Object.keys(DEFAULT_THEME).map(key => [
+            key,
+            TOKENS[key.toUpperCase()]
+        ])
+    )
 );
 
 export class Token {
-    constructor(string, type, bracketDepth = null) {
+    constructor(string, type, depth) {
         this.value = string;
         this.color = null;
         this.type = type;
-        this.bracketDepth = bracketDepth;
+        this.depth = depth;
         this.updateColor();
     }
 
     updateColor() {
-        const tokenType = this.type;
-        if (tokenType === TOKENS.WHITE_SPACE) {
+        const type = this.type;
+        if (type === TOKENS.WHITE_SPACE) {
             return;
         }
 
-        let colorKey;
-        if (tokenType === TOKENS.BRACKET) {
-            colorKey = `${BRACKET_COLOR_PREFIX}${this.bracketDepth % BRACKET_COLORS_COUNT}`;
-        } else {
-            colorKey = tokenType;
+        const colors = state.colors;
+        let color = colors[type];
+
+        if (Array.isArray(color)) {
+            color = color[this.depth % color.length];
         }
 
-        const colors = state.colors;
-        this.color = colors[colorKey] ?? colors.unknown;
+        this.color = color ?? colors.unknown;
     }
 }
 
@@ -63,11 +57,7 @@ export class TokenResult {
         this.list = [];
     }
 
-    add(string, tokenType) {
-        this.list.push(new Token(string, tokenType));
-    }
-
-    addBracket(char, depth) {
-        this.list.push(new Token(char, TOKENS.BRACKET, depth));
+    add(string, tokenType, depth = null) {
+        this.list.push(new Token(string, tokenType, depth));
     }
 }

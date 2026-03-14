@@ -2,7 +2,7 @@ import {
     redraw
 } from '../canvas/buffer.js';
 import {
-    THEME_KEYS
+    DEFAULT_THEME
 } from '../common/config.js';
 import {
     EVENTS
@@ -11,6 +11,9 @@ import {
     getColorPickerElement,
     getHexInputElement
 } from '../common/elements.js';
+import {
+    state
+} from '../common/store.js';
 import {
     setColor,
     updateTokensColor
@@ -22,34 +25,50 @@ import {
 
 const _scheduleColorSave = createSaveScheduler(saveColorsState);
 
-// Helpers
+// Private helper
 
-function _updateColor(themeKey, themeValue) {
+function _updateColor(themeKey, value, depth) {
+    let themeValue;
+    if (depth === null) {
+        themeValue = value;
+    } else {
+        themeValue = state.colors[themeKey].with(depth, value);
+    }
+
     setColor(themeKey, themeValue);
     _scheduleColorSave();
     updateTokensColor(themeKey);
     redraw();
 }
 
-// Public methods
+// Public method
 
 export function initColors(signal) {
-    for (const themeKey of THEME_KEYS) {
-        // Color Picker
-        getColorPickerElement(themeKey).addEventListener(EVENTS.INPUT, (event) => {
-            _updateColor(themeKey, event.target.value);
-        }, {
-            signal
-        });
+    for (const [themeKey, themeValue] of Object.entries(DEFAULT_THEME)) {
+        const multipleValues = Array.isArray(themeValue);
+        const maxIndex = multipleValues ? themeValue.length : 1;
 
-        // Hex Input
-        getHexInputElement(themeKey).addEventListener(EVENTS.INPUT, (event) => {
-            const value = event.target.value;
-            if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-                _updateColor(themeKey, value);
-            }
-        }, {
-            signal
-        });
+        // Add listeners
+        for (let i = 0; i < maxIndex; i++) {
+            const depth = multipleValues ? i : null;
+            const HTMLElementID = themeKey + (multipleValues ? `${i}` : '');
+
+            // Color Picker
+            getColorPickerElement(HTMLElementID).addEventListener(EVENTS.INPUT, (event) => {
+                _updateColor(themeKey, event.target.value, depth);
+            }, {
+                signal
+            });
+
+            // Hex Input
+            getHexInputElement(HTMLElementID).addEventListener(EVENTS.INPUT, (event) => {
+                const value = event.target.value;
+                if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                    _updateColor(themeKey, value, depth);
+                }
+            }, {
+                signal
+            });
+        }
     }
 }

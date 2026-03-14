@@ -212,16 +212,16 @@ export class IncrementalTokenizer {
             const boundaryDepth = lineAnalysis.bracketArmDepths[i];
 
             if (boundaryDepth !== undefined) {
-                tokens.addBracket(char, boundaryDepth);
+                tokens.add(char, TOKENS.BRACKET, boundaryDepth);
                 i++;
 
             } else if (BRACKET_SETS.inlineOpen.has(char)) {
-                tokens.addBracket(char, baseDepth + inlineDepth++);
+                tokens.add(char, TOKENS.BRACKET, baseDepth + inlineDepth++);
                 i++;
 
             } else if (BRACKET_SETS.inlineClose.has(char)) {
                 inlineDepth = Math.max(0, inlineDepth - 1);
-                tokens.addBracket(char, baseDepth + inlineDepth);
+                tokens.add(char, TOKENS.BRACKET, baseDepth + inlineDepth);
                 i++;
 
             } else if (isIdentifierStart(char)) {

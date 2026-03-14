@@ -6,10 +6,10 @@ import {
     editorTabsElement
 } from './elements.js';
 
-const userConfig = import.meta.glob('../../user.config.json', {
+const userProfile = import.meta.glob('../../user.profile.json', {
     eager: true
 });
-const _u = userConfig['../../user.config.json']?.default || {};
+const _u = userProfile['../../user.profile.json']?.default || {};
 
 // App constants
 export const LINE_BREAK = '\n';

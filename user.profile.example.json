@@ -1,0 +1,40 @@
+{
+  "app": {
+    "fontVariantLigatures": "normal"
+  },
+  "typography": {
+    "fontSize": 110,
+    "lineHeight": 1,
+    "letterSpacing": 1,
+    "padX": 20,
+    "padY": 20
+  },
+  "editor": {
+    "content": "Welcome to your custom workspace!",
+    "height": 300,
+    "fontSize": 25,
+    "padX": 12,
+    "padY": 12
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "font": "JetBrains Mono",
+    "fontWeight": 500
+  },
+  "export": {
+    "defaultThemeFilename": "my-custom-theme",
+    "defaultImageFilename": "workspace-capture"
+  },
+  "theme": {
+    "bracket": ["#569cd6", "#ffd700", "#c586c0"],
+    "function": "#dcdcaa",
+    "variable": "#9cdcfe",
+    "operator": "#d4d4d4",
+    "semicolon": "#808080",
+    "number": "#b5cea8",
+    "comment": "#6a9955",
+    "unknown": "#ce9178",
+    "background": "#1e1e1e"
+  }
+}

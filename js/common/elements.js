@@ -1,3 +1,7 @@
+import {
+    CSS
+} from "./constants/css";
+
 export function getElement(id) {
     const element = document.getElementById(id);
     if (!element) {
@@ -22,13 +26,12 @@ export const themeListElement = getElement('theme-list');
 export const sectionBracketColors = getElement('section-bracket-colors');
 export const sectionSyntaxColors = getElement('section-syntax-colors');
 export const sectionCanvasColors = getElement('section-canvas-colors');
+export const sectionTypography = getElement('section-typography');
 
-// Typography section
-export const typographyFontSizeElement = getElement('typography-font-size');
-export const typographyLineHeightElement = getElement('typography-line-height');
-export const typographyLetterSpacingElement = getElement('typography-letter-spacing');
-export const typographyPadXElement = getElement('typography-pad-x');
-export const typographyPadYElement = getElement('typography-pad-y');
+// Section headers
+export const sectionHeaderBracketColors = getElement('section-header-bracket-colors');
+export const sectionHeaderSyntaxColors = getElement('section-header-syntax-colors');
+export const sectionHeaderCanvasColors = getElement('section-header-canvas-colors');
 
 // Editor
 export const editorResizeHandleElement = getElement('editor-resize-handle');
@@ -58,13 +61,13 @@ export const RELOAD_FOCUS_EXCLUSIONS = Object.freeze([
 // Color input getters
 
 export function getSwatchFillElement(themeKey) {
-    return getElement(`swatch-fill-${themeKey}`);
+    return getElement(`${CSS.SWATCH_FILL}-${themeKey}`);
 }
 
 export function getColorPickerElement(themeKey) {
-    return getElement(`color-picker-${themeKey}`);
+    return getElement(`${CSS.COLOR_PICKER}-${themeKey}`);
 }
 
 export function getHexInputElement(themeKey) {
-    return getElement(`hex-input-${themeKey}`);
+    return getElement(`${CSS.HEX_INPUT}-${themeKey}`);
 }

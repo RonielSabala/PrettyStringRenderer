@@ -5,14 +5,13 @@ import {
     TYPOGRAPHY_DEFAULTS
 } from '../common/config.js';
 import {
+    CSS
+} from '../common/constants/css.js';
+import {
     EVENTS
 } from '../common/constants/events.js';
 import {
-    typographyFontSizeElement,
-    typographyLetterSpacingElement,
-    typographyLineHeightElement,
-    typographyPadXElement,
-    typographyPadYElement
+    getElement
 } from '../common/elements.js';
 import {
     state
@@ -21,6 +20,7 @@ import {
     initNumberInput
 } from '../utils/init.js';
 import {
+    camelToKebab,
     parseNumber
 } from '../utils/parse.js';
 import {
@@ -29,18 +29,13 @@ import {
 } from '../utils/persistence.js';
 
 const _scheduleTypographyConfigSave = createSaveScheduler(saveTypographyConfigState);
-const CONFIG_KEYS_TO_ELEMENTS = {
-    'fontSize': typographyFontSizeElement,
-    'lineHeight': typographyLineHeightElement,
-    'letterSpacing': typographyLetterSpacingElement,
-    'padX': typographyPadXElement,
-    'padY': typographyPadYElement,
-}
 
 export function initTypographySection(signal) {
     const config = state.typographyConfig;
 
-    for (const [configKey, element] of Object.entries(CONFIG_KEYS_TO_ELEMENTS)) {
+    for (const configKey of Object.keys(TYPOGRAPHY_DEFAULTS)) {
+        const element = getElement(`${CSS.TYPOGRAPHY}-${camelToKebab(configKey)}`);
+
         initNumberInput(config, configKey, element, TYPOGRAPHY_DEFAULTS);
 
         // Configure listener

@@ -16,9 +16,9 @@ import {
     RELOAD_FOCUS_EXCLUSIONS,
     resetButtonElement,
     resolutionBadgeElement,
-    sectionBracketColors,
-    sectionCanvasColors,
-    sectionSyntaxColors
+    sectionHeaderBracketColors,
+    sectionHeaderCanvasColors,
+    sectionHeaderSyntaxColors
 } from './common/elements.js';
 import {
     state
@@ -32,6 +32,9 @@ import {
 import {
     initExport
 } from './features/export.js';
+import {
+    initSections
+} from './features/section_renderer.js';
 import {
     initThemesSection
 } from './features/themes.js';
@@ -58,9 +61,9 @@ function hideSections() {
     // Hide default sections on start
     let collapsedSectionIds = state.collapsedSectionIds;
     if (isObjectEmpty(collapsedSectionIds)) {
-        toggleSection(sectionBracketColors);
-        toggleSection(sectionSyntaxColors);
-        toggleSection(sectionCanvasColors);
+        toggleSection(sectionHeaderBracketColors);
+        toggleSection(sectionHeaderSyntaxColors);
+        toggleSection(sectionHeaderCanvasColors);
         return;
     }
 
@@ -83,6 +86,7 @@ function init() {
     } = window._appListenersController;
 
     restoreState();
+    initSections();
     hideSections();
 
     // Focus last selected element before reload

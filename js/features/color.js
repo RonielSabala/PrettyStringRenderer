@@ -25,7 +25,7 @@ import {
 
 const _scheduleColorSave = createSaveScheduler(saveColorsState);
 
-// Private helper
+// Private helpers
 
 function _updateColor(themeKey, value, depth) {
     let themeValue;
@@ -41,14 +41,14 @@ function _updateColor(themeKey, value, depth) {
     redraw();
 }
 
-// Public method
+// Public methods
 
 export function initColors(signal) {
+    // Add listeners
     for (const [themeKey, themeValue] of Object.entries(DEFAULT_THEME)) {
         const multipleValues = Array.isArray(themeValue);
         const maxIndex = multipleValues ? themeValue.length : 1;
 
-        // Add listeners
         for (let i = 0; i < maxIndex; i++) {
             const depth = multipleValues ? i : null;
             const HTMLElementID = themeKey + (multipleValues ? `${i}` : '');

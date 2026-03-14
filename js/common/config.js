@@ -12,6 +12,7 @@ const _u = _userConfig ?? {};
 // App constants
 export const LINE_BREAK = '\n';
 export const SAVE_TIMEOUT_MS = 200;
+export const MAX_HEX_INPUT_LENGTH = 7;
 export const APP_FONT_VARIANT_LIGATURES = _u.app?.fontVariantLigatures ?? CSS_FONT_VARIANT_LIGATURES.NONE;
 
 // Editor constants
@@ -126,7 +127,6 @@ export const CANVAS_DEFAULTS = {
 };
 
 // Theme
-
 const _theme = _u.theme ?? _defaultTheme;
 export const THEME_KEYS = Object.keys(_theme);
 export const DEFAULT_THEME = Object.freeze(_theme);

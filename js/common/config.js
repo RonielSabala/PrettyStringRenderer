@@ -1,5 +1,4 @@
 import _defaultTheme from '../../themes/default.json';
-import _userConfig from '../../user.config.json';
 import {
     CSS_FONT_VARIANT_LIGATURES
 } from './constants/css.js';
@@ -7,7 +6,10 @@ import {
     editorTabsElement
 } from './elements.js';
 
-const _u = _userConfig ?? {};
+const userConfig = import.meta.glob('../../user.config.json', {
+    eager: true
+});
+const _u = userConfig['../../user.config.json']?.default || {};
 
 // App constants
 export const LINE_BREAK = '\n';
@@ -97,10 +99,10 @@ export const TYPOGRAPHY_DEFAULTS = {
 // Editor
 const _uEditor = _u.editor;
 export const EDITOR_DEFAULTS = {
-    content: _uEditor?.content ?? 'Start writing...',
+    content: _uEditor?.content ?? 'Hello world!',
     height: _uEditor?.height ?? 210,
     fontSize: {
-        value: _uEditor?.fontSize ?? 16,
+        value: _uEditor?.fontSize ?? 20,
         min: 8,
         max: 36,
     },

@@ -25,7 +25,6 @@ export const CSS_USER_SELECT = Object.freeze({
 
 export const CSS_FONT_VARIANT_LIGATURES = Object.freeze({
     NONE: 'none',
-    NORMAL: 'normal',
 });
 
 export const CSS_TEXT_RENDERING = Object.freeze({

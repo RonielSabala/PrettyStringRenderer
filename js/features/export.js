@@ -6,8 +6,6 @@ import {
 import {
     APP_FONT_VARIANT_LIGATURES,
     CANVAS_DEFAULTS,
-    CANVAS_FONT,
-    CANVAS_FONT_WEIGHT,
     DEFAULT_EXPORT_IMAGE_FILENAME,
     DEFAULT_PNG_SCALAR,
     EXPORT_PNG_PROMPT_MESSAGE,
@@ -156,9 +154,9 @@ function _buildSVG(width, height) {
     });
 
     const groupElement = _setAttrs(_createElement('g'), {
-        'font-family': CANVAS_FONT,
         'font-size': config.fontSize,
-        'font-weight': CANVAS_FONT_WEIGHT,
+        'font-family': CANVAS_DEFAULTS.font,
+        'font-weight': CANVAS_DEFAULTS.fontWeight,
         'letter-spacing': config.letterSpacing
     });
 

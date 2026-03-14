@@ -1,7 +1,5 @@
 import {
-    CANVAS_ASCENT_CORRECTION,
-    CANVAS_FONT,
-    CANVAS_FONT_WEIGHT
+    CANVAS_DEFAULTS
 } from '../common/config.js';
 import {
     CSS_TEXT_RENDERING
@@ -19,7 +17,7 @@ const _FONT_REFERENCE_GLYPH = 'M';
 // Private helpers
 
 function _setupContextFont(ctx, config) {
-    ctx.font = `${CANVAS_FONT_WEIGHT} ${toPx(config.fontSize)} '${CANVAS_FONT}'`;
+    ctx.font = `${CANVAS_DEFAULTS.fontWeight} ${toPx(config.fontSize)} '${CANVAS_DEFAULTS.font}'`;
     ctx.letterSpacing = toPx(config.letterSpacing);
     ctx.textRendering = config.textRendering;
 }
@@ -45,7 +43,7 @@ export function iterateTokens(width, height, config, onToken) {
     const ascent = metrics.actualBoundingBoxAscent;
 
     const padX = config.padX;
-    const padY = config.padY + ascent + Math.round(fontSize * CANVAS_ASCENT_CORRECTION);
+    const padY = config.padY + ascent + Math.round(fontSize * CANVAS_DEFAULTS.ascentCorrection);
 
     const maxCol = Math.ceil((width - padX) / charWidth);
     const maxRow = Math.min(

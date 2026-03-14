@@ -1,3 +1,5 @@
+import _defaultTheme from '../../themes/default.json';
+import _userConfig from '../../user.config.json';
 import {
     CSS_FONT_VARIANT_LIGATURES
 } from './constants/css.js';
@@ -5,10 +7,12 @@ import {
     editorTabsElement
 } from './elements.js';
 
+const _u = _userConfig ?? {};
+
 // App constants
 export const LINE_BREAK = '\n';
 export const SAVE_TIMEOUT_MS = 200;
-export const APP_FONT_VARIANT_LIGATURES = CSS_FONT_VARIANT_LIGATURES.NONE;
+export const APP_FONT_VARIANT_LIGATURES = _u.app?.fontVariantLigatures ?? CSS_FONT_VARIANT_LIGATURES.NONE;
 
 // Editor constants
 export const EDITOR_MIN_HEIGHT_PX = editorTabsElement.offsetHeight;
@@ -20,11 +24,6 @@ export const CANVAS_MAX_ZOOM = 10;
 export const CANVAS_ZOOM_FACTOR = 1.15;
 export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 
-// Canvas render constants
-export const CANVAS_FONT = 'Cascadia Code';
-export const CANVAS_FONT_WEIGHT = 400;
-export const CANVAS_ASCENT_CORRECTION = 9 / 100; // A text with fontSize=100 needs 9 extra pixels so that padY=0 sits flush
-
 // Canvas buffer constants
 export const CANVAS_MIN_PIXEL_SCALE = 1;
 export const CANVAS_MAX_PIXEL_SCALE = 5;
@@ -32,8 +31,9 @@ export const CANVAS_VIEWPORT_PADDING_PX = 25;
 export const CANVAS_QUALITY_REDRAW_TIMEOUT_MS = 120;
 
 // Themes constants
+const _uExport = _u.export;
 export const EXPORT_THEME_PROMPT_MESSAGE = 'Theme name:';
-export const DEFAULT_EXPORT_THEME_FILENAME = 'my-theme';
+export const DEFAULT_EXPORT_THEME_FILENAME = _uExport?.defaultThemeFilename ?? 'theme';
 export const THEMES_EXTENSION = '.json';
 export const THEMES_FILE_TYPE = 'file';
 export const THEME_BLOB_TYPE = {
@@ -41,7 +41,7 @@ export const THEME_BLOB_TYPE = {
 };
 
 // Canvas export constants
-export const DEFAULT_EXPORT_IMAGE_FILENAME = 'pretty-string';
+export const DEFAULT_EXPORT_IMAGE_FILENAME = _uExport?.defaultImageFilename ?? 'canvas';
 
 // PNG constants
 export const PNG_EXTENSION = '.png';
@@ -61,66 +61,68 @@ export const SVG_BLOB_TYPE = {
 
 // UI defaults
 
+// Typography
+const _uTypography = _u.typography;
 export const TYPOGRAPHY_DEFAULTS = {
     fontSize: {
-        value: 85,
+        value: _uTypography?.fontSize ?? 100,
         min: 5,
         max: 300,
     },
     lineHeight: {
-        value: 1.15,
+        value: _uTypography?.lineHeight ?? 1.15,
         min: 0.8,
         max: 4,
         step: 0.01,
     },
     letterSpacing: {
-        value: 0,
+        value: _uTypography?.letterSpacing ?? 0,
         min: -10,
         max: 50,
         step: 0.5,
     },
     padX: {
-        value: 64,
+        value: _uTypography?.padX ?? 10,
         min: 0,
         max: 400,
     },
     padY: {
-        value: 4,
+        value: _uTypography?.padY ?? 10,
         min: 0,
         max: 400,
     },
 };
 
+// Editor
+const _uEditor = _u.editor;
 export const EDITOR_DEFAULTS = {
-    content: String.raw`                                       /        /      *B2 \\
-                                       ▏        \(en())    /▕
-              # Software Developer     ▏/ dev; \            ▕
-                                       ▏▏ ──── ▕            ▕
-                                       \\ solv /            /
-/           —**r_(on)ie[l] + saba(la) \
-▏/       _ \                          ▕
-\\((_)++)  /                          /`,
-    height: 210,
+    content: _uEditor?.content ?? 'Start writing...',
+    height: _uEditor?.height ?? 210,
     fontSize: {
-        value: 16,
+        value: _uEditor?.fontSize ?? 16,
         min: 8,
         max: 36,
     },
     lineHeight: 'auto',
     letterSpacing: 'auto',
-    padX: 10,
-    padY: 10,
+    padX: _uEditor?.padX ?? 10,
+    padY: _uEditor?.padY ?? 10,
 };
 
-const canvasWidth = 3120;
-const canvasHeight = 780;
+// Canvas
+const _uCanvas = _u.canvas;
+const _canvasWidth = _uCanvas?.width ?? window.screen.width;
+const _canvasHeight = _uCanvas?.height ?? window.screen.height;
 export const CANVAS_DEFAULTS = {
     zoom: 1,
     panX: 0,
     panY: 0,
-    width: canvasWidth,
-    height: canvasHeight,
-    aspectRatio: canvasWidth / canvasHeight,
+    width: _canvasWidth,
+    height: _canvasHeight,
+    aspectRatio: _canvasWidth / _canvasHeight,
+    ascentCorrection: 9 / 100, // A text with fontSize=100 needs 9 extra pixels so that padY=0 sits flush
+    font: _uCanvas?.font ?? 'Cascadia Code',
+    fontWeight: _uCanvas?.fontWeight ?? 400,
 };
 
 // Default pre-loaded UI theme

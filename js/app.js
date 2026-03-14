@@ -24,7 +24,7 @@ import {
     state
 } from './common/store.js';
 import {
-    initColors
+    initColorSections
 } from './features/color.js';
 import {
     initEditorSection
@@ -32,9 +32,6 @@ import {
 import {
     initExport
 } from './features/export.js';
-import {
-    initSections
-} from './features/section_renderer.js';
 import {
     initThemesSection
 } from './features/themes.js';
@@ -86,8 +83,16 @@ function init() {
     } = window._appListenersController;
 
     restoreState();
-    initSections();
+
+    // Init sections
+    initColorSections(signal);
+    initThemesSection(signal);
+    initTypographySection(signal);
+    initEditorSection(signal);
     hideSections();
+
+    initCanvas(signal);
+    initExport(signal);
 
     // Focus last selected element before reload
     document.getElementById(state.activeElementId)?.focus();
@@ -125,14 +130,6 @@ function init() {
     }, {
         signal
     });
-
-    // Initializers
-    initColors(signal);
-    initThemesSection(signal);
-    initTypographySection(signal);
-    initEditorSection(signal);
-    initCanvas(signal);
-    initExport(signal);
 
     // Show editor content
     state.tokenizer.tokenize(editorElement.value);

@@ -50,7 +50,6 @@ let startHeight = 0;
 let startMaxHeight = 0;
 
 const _scheduleEditorConfigSave = createSaveScheduler(saveEditorConfigState);
-
 const CONFIG_KEYS_TO_ELEMENT_CALLBACKS = [
     ['height', [document, EVENTS.MOUSE_MOVE, _onEditorMouseMove]],
     ['height', [editorResizeHandleElement, EVENTS.DBL_CLICK, _onResizeReset]],

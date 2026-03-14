@@ -5,11 +5,17 @@ import {
     DEFAULT_THEME
 } from '../common/config.js';
 import {
+    CSS
+} from '../common/constants/css.js';
+import {
     EVENTS
 } from '../common/constants/events.js';
 import {
     getColorPickerElement,
-    getHexInputElement
+    getHexInputElement,
+    sectionBracketColors,
+    sectionCanvasColors,
+    sectionSyntaxColors
 } from '../common/elements.js';
 import {
     state
@@ -19,9 +25,16 @@ import {
     updateTokensColor
 } from '../utils/color_sync.js';
 import {
+    toTitle
+} from '../utils/parse.js';
+import {
     createSaveScheduler,
     saveColorsState
 } from '../utils/persistence.js';
+import {
+    createColorRow,
+    renderSection
+} from './section_renderer.js';
 
 const _scheduleColorSave = createSaveScheduler(saveColorsState);
 
@@ -41,9 +54,37 @@ function _updateColor(themeKey, value, depth) {
     redraw();
 }
 
+function _renderBracketColorSection(container, colors) {
+    const rows = Object.keys(colors).map((_, i) =>
+        createColorRow(`${CSS.BRACKET}${i}`, `Level ${i + 1}`)
+    );
+
+    renderSection(container, rows);
+}
+
+function _renderColorSection(container, keys) {
+    const rows = Object.keys(keys).map(key =>
+        createColorRow(key, toTitle(key))
+    );
+
+    renderSection(container, rows);
+}
+
 // Public methods
 
-export function initColors(signal) {
+export function initColorSections(signal) {
+    const {
+        bracket,
+        background,
+        ...syntaxColors
+    } = DEFAULT_THEME;
+
+    _renderBracketColorSection(sectionBracketColors, bracket);
+    _renderColorSection(sectionSyntaxColors, syntaxColors);
+    _renderColorSection(sectionCanvasColors, {
+        background
+    });
+
     // Add listeners
     for (const [themeKey, themeValue] of Object.entries(DEFAULT_THEME)) {
         const multipleValues = Array.isArray(themeValue);

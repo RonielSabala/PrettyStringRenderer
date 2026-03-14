@@ -11,7 +11,7 @@ import {
     EVENTS
 } from '../common/constants/events.js';
 import {
-    getElement
+    sectionTypography
 } from '../common/elements.js';
 import {
     state
@@ -21,27 +21,35 @@ import {
 } from '../utils/init.js';
 import {
     camelToKebab,
+    camelToTitle,
     parseNumber
 } from '../utils/parse.js';
 import {
     createSaveScheduler,
     saveTypographyConfigState
 } from '../utils/persistence.js';
+import {
+    createNumberRow,
+    renderSection
+} from './section_renderer.js';
 
 const _scheduleTypographyConfigSave = createSaveScheduler(saveTypographyConfigState);
 
 export function initTypographySection(signal) {
     const config = state.typographyConfig;
+    const rows = [];
 
-    for (const configKey of Object.keys(TYPOGRAPHY_DEFAULTS)) {
-        const element = getElement(`${CSS.TYPOGRAPHY}-${camelToKebab(configKey)}`);
+    for (const [configKey, configValue] of Object.entries(TYPOGRAPHY_DEFAULTS)) {
+        const elementID = `${CSS.TYPOGRAPHY}-${camelToKebab(configKey)}`;
+        const [rowElement, inputElement] = createNumberRow(elementID, camelToTitle(configKey));
+        rows.push(rowElement);
 
-        initNumberInput(config, configKey, element, TYPOGRAPHY_DEFAULTS);
+        initNumberInput(config, configKey, inputElement, TYPOGRAPHY_DEFAULTS);
 
-        // Configure listener
-        element.addEventListener(EVENTS.INPUT, () => {
-            const value = element.value;
-            const fallback = TYPOGRAPHY_DEFAULTS[configKey].value;
+        // Add listener
+        inputElement.addEventListener(EVENTS.INPUT, () => {
+            const value = inputElement.value;
+            const fallback = configValue.value;
 
             config[configKey] = parseNumber(value, fallback);
             _scheduleTypographyConfigSave();
@@ -50,4 +58,6 @@ export function initTypographySection(signal) {
             signal
         });
     }
+
+    renderSection(sectionTypography, rows);
 };

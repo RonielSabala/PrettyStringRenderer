@@ -22,14 +22,14 @@ export function toggleSection(element) {
     saveCollapsedSectionIdsState();
 }
 
-export function initNumberInput(config, configKey, element, defaults) {
-    if (element.tagName !== 'INPUT') {
+export function initNumberInput(config, configKey, HTMLInputElement, defaults) {
+    if (HTMLInputElement.tagName !== 'INPUT') {
         return;
     }
 
     const range = defaults[configKey];
-    element.value = config[configKey];
-    element.min = range.min;
-    element.max = range.max;
-    element.step = range?.step ?? 1;
+    HTMLInputElement.value = config[configKey];
+    HTMLInputElement.min = range.min;
+    HTMLInputElement.max = range.max;
+    HTMLInputElement.step = range?.step ?? 1;
 }

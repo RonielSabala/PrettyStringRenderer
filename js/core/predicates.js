@@ -7,9 +7,17 @@ import {
 
 export const isSpace = (char) => char === ' ' || char === '\t';
 
+export const isDot = (char) => char === '.';
+
 export const isDigit = (char) => /[0-9]/.test(char);
 
-export const isNumeric = (char) => /[0-9.]/.test(char);
+export const isNumberStart = (prevChar, char, nextChar) => {
+    if (isDigit(char)) {
+        return true;
+    }
+
+    return isDot(char) && (prevChar === undefined || isSpace(prevChar)) && isDigit(nextChar);
+};
 
 export const isOperator = (char) => OPERATORS_SET.has(char);
 

@@ -17,10 +17,11 @@ import {
     isCommentPart,
     isCommentStart,
     isDigit,
+    isDot,
     isFunctionStart,
     isIdentifierPart,
     isIdentifierStart,
-    isNumeric,
+    isNumberStart,
     isOperator,
     isSemicolon,
     isSpace
@@ -200,10 +201,13 @@ export class IncrementalTokenizer {
         const lineWidth = line.length;
         const tokens = new TokenResult();
 
-        const consume = (predicate, tokenType) => {
-            const j = _consumeLine(line, i, lineWidth, predicate);
+        const addSlice = (j, tokenType) => {
             tokens.add(line.slice(i, j), tokenType);
             i = j;
+        }
+        const consume = (predicate, tokenType) => {
+            const j = _consumeLine(line, i, lineWidth, predicate);
+            addSlice(j, tokenType);
         };
 
         while (i < lineWidth) {
@@ -224,27 +228,41 @@ export class IncrementalTokenizer {
                 tokens.add(char, TOKENS.BRACKET, baseDepth + inlineDepth);
                 i++;
 
-            } else if (isIdentifierStart(char)) {
-                const j = _consumeLine(line, i, lineWidth, isIdentifierPart);
-                const k = _consumeLine(line, j, lineWidth, isSpace);
-                const isFunction = k < lineWidth && isFunctionStart(line[k]);
-                tokens.add(line.slice(i, j), isFunction ? TOKENS.FUNCTION : TOKENS.VARIABLE);
-                i = j;
-
-            } else if (isCommentStart(char)) {
-                consume(isCommentPart, TOKENS.COMMENT);
-
             } else if (isSpace(char)) {
                 consume(isSpace, TOKENS.WHITE_SPACE);
-
-            } else if (isDigit(char)) {
-                consume(isNumeric, TOKENS.NUMBER);
 
             } else if (isOperator(char)) {
                 consume(isOperator, TOKENS.OPERATOR);
 
+            } else if (isIdentifierStart(char)) {
+                const j = _consumeLine(line, i, lineWidth, isIdentifierPart);
+                const k = _consumeLine(line, j, lineWidth, isSpace);
+                const isFunction = k < lineWidth && isFunctionStart(line[k]);
+                addSlice(j, isFunction ? TOKENS.FUNCTION : TOKENS.VARIABLE)
+
+            } else if (isCommentStart(char)) {
+                consume(isCommentPart, TOKENS.COMMENT);
+
             } else if (isSemicolon(char)) {
                 consume(isSemicolon, TOKENS.SEMICOLON);
+
+            } else if (isNumberStart(line[i - 1], char, line[i + 1])) {
+                let j = i;
+                let dotPresent = false;
+
+                while (j < lineWidth) {
+                    const current = line[j];
+                    if (isDot(current) && !dotPresent) {
+                        dotPresent = true;
+                    } else if (!isDigit(current)) {
+                        break;
+                    }
+
+                    j++;
+
+                }
+
+                addSlice(j, TOKENS.NUMBER)
 
             } else {
                 tokens.add(char, TOKENS.UNKNOWN);

@@ -1,4 +1,8 @@
-const INLINE_PAIRS = Object.freeze(['()', '[]', '{}']);
+export const INLINE_BRACKETS = Object.freeze({
+    ')': '(',
+    ']': '[',
+    '}': '{',
+});
 
 export const MULTILINE_BRACKETS = Object.freeze([{
     // Round brackets
@@ -28,8 +32,8 @@ export const MULTILINE_BRACKETS = Object.freeze([{
 
 function buildInlineBracketSets() {
     return Object.freeze({
-        inlineOpen: new Set(INLINE_PAIRS.map(([open]) => open)),
-        inlineClose: new Set(INLINE_PAIRS.map(([, close]) => close)),
+        inlineOpen: new Set(Object.values(INLINE_BRACKETS)),
+        inlineClose: new Set(Object.keys(INLINE_BRACKETS)),
         multilineOpen: new Set(
             MULTILINE_BRACKETS.flatMap(({
                 left,

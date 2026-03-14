@@ -3,6 +3,7 @@ import {
 } from '../common/config.js';
 import {
     BRACKET_SETS,
+    INLINE_BRACKETS,
     ML_BRACKET_CHARS
 } from './brackets/data.js';
 import {
@@ -198,6 +199,7 @@ export class IncrementalTokenizer {
     _tokenizeLine(line, lineAnalysis) {
         let i = 0;
         let inlineDepth = 0;
+        const inlineBrackets = [];
         const lineWidth = line.length;
         const tokens = new TokenResult();
 
@@ -215,17 +217,27 @@ export class IncrementalTokenizer {
             const baseDepth = lineAnalysis.bracketNestingDepths[i];
             const boundaryDepth = lineAnalysis.bracketArmDepths[i];
 
+            // Multiline bracket char
             if (boundaryDepth !== undefined) {
                 tokens.add(char, TOKENS.BRACKET, boundaryDepth);
                 i++;
 
+                // Inline opening bracket
             } else if (BRACKET_SETS.inlineOpen.has(char)) {
-                tokens.add(char, TOKENS.BRACKET, baseDepth + inlineDepth++);
+                const currentDepth = baseDepth + inlineDepth++;
+                tokens.add(char, TOKENS.BRACKET, currentDepth);
+                inlineBrackets.push(char);
                 i++;
 
+                // Inline closing bracket
             } else if (BRACKET_SETS.inlineClose.has(char)) {
                 inlineDepth = Math.max(0, inlineDepth - 1);
-                tokens.add(char, TOKENS.BRACKET, baseDepth + inlineDepth);
+                const currentDepth = baseDepth + inlineDepth;
+                const expectedOpen = INLINE_BRACKETS[char];
+                const actualOpen = inlineBrackets.pop();
+                const tokenType = actualOpen === expectedOpen ? TOKENS.BRACKET : TOKENS.UNKNOWN;
+
+                tokens.add(char, tokenType, currentDepth);
                 i++;
 
             } else if (isSpace(char)) {

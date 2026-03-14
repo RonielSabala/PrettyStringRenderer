@@ -1,5 +1,6 @@
 {
   "editor.formatOnSave": true,
+  "vite.browserType": "system",
   "prettier.endOfLine": "lf",
   "markdown.extension.toc.levels": "2..3",
   "markdown.extension.toc.omittedFromToc": {

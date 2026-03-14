@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "antfu.vite",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "streetsidesoftware.code-spell-checker"

@@ -9,7 +9,7 @@ export default defineConfig({
         },
         watch: {
             usePolling: false,
-            ignored: ['**/node_modules/**', '**/.git/**'],
+            ignored: ['**/node_modules/**', '**/.vscode/**', '**/.git/**'],
         }
     },
     plugins: [{

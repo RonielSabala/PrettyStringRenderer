@@ -3,6 +3,7 @@
     "antfu.vite",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
+    "yzhang.markdown-all-in-one",
     "streetsidesoftware.code-spell-checker"
   ]
 }

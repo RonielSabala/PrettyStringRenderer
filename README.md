@@ -39,7 +39,7 @@ A high-fidelity monospace canvas engine for symbolic art and code visualization.
 ### Requirements
 
 - [Node.js](https://nodejs.org/)
-- **Recommended**: [Visual Studio Code](https://code.visualstudio.com/) with the [Vite extension](https://marketplace.visualstudio.com/items?itemName=antfu.vite) for one-click dev server control.
+- **Recommended**: [Visual Studio Code](https://code.visualstudio.com/) with the [Vite extension](https://marketplace.visualstudio.com/items?itemName=antfu.vite).
 
 ---
 
@@ -123,14 +123,13 @@ Themes are just simple JSON objects:
 {
   "bracket": ["#569cd6", "#ffd700", "#c586c0"],
   "function": "#dcdcaa",
-  "variable": "#9cdcfe",
-  ...
+  "variable": "#9cdcfe"
 }
 ```
 
 You can define as many colors (nesting levels) as you want in the `bracket` array.
 
-Check the `/themes` folder for a collection of pre-bundled color palettes.
+Check the [/themes](/themes/) folder for a collection of pre-bundled color palettes.
 
 ---
 
@@ -152,7 +151,7 @@ Brackets can scale to any height. Top & bottom rows remain fixed; middle "arms" 
 
 ![bracket-families](examples/01_bracket_families/round_vs_square_1080p.png)
 
-Nesting depth picks the next color from the theme bracket array, cycles if `depth > array.length`:
+Nesting depth picks the next color from the theme bracket array:
 
 ![nesting-depth](examples/02_nesting_depth/color_cycle_demo_1080p.png)
 

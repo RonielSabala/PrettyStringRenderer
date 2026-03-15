@@ -1,6 +1,6 @@
 # PrettyStringRenderer
 
-A high-fidelity monospace canvas engine for symbolic art and code visualization. Transforms ASCII / Unicode text into colorized, high-resolution string-art suitable for screenshots, illustrations, or vector export.
+A high-fidelity monospace canvas engine for symbolic math art and code visualization. Transforms ASCII / Unicode text into colorized, high-resolution string-art suitable for screenshots, illustrations, or vector export.
 
 ---
 
@@ -117,7 +117,7 @@ See [user.profile.example.json](user.profile.example.json) for the full list of 
 
 ### Theme format
 
-Themes are just simple JSON objects:
+Themes are just simple JSON objects. Minimal theme example:
 
 ```json
 {
@@ -129,21 +129,20 @@ Themes are just simple JSON objects:
 
 You can define as many colors (nesting levels) as you want in the `bracket` array.
 
-Check the [/themes](/themes/) folder for a collection of pre-bundled color palettes.
+Check the [themes/](/themes/) folder for a collection of pre-bundled color palettes.
 
 ---
 
 ## String-Art Syntax
 
-The tokenizer highlights categories shown below.
+The tokenizer highlights the categories shown below.
 
-| Category                 | Patterns                                                      |
-| ------------------------ | ------------------------------------------------------------- |
-| **Brackets (Inline)**    | `()` `[]` `{}`                                                |
-| **Brackets (Multiline)** | `/ \` `▏ ▕` `\ /` `┌ ┐` `│ │` `└ ┘`                           |
-| **Identifiers**          | `variables` and `functions()`                                 |
-| **Literals**             | numbers (`7`, `3.14`, `.5`) and inline comments (`# comment`) |
-| **Operators**            | `+`, `-`, `*`, `>`, and semicolons `;`                        |
+| Category        | Patterns                                                                       |
+| --------------- | ------------------------------------------------------------------------------ |
+| **Brackets**    | inline (`()`, `[]`, `{}`) and multiline (`/ \` `▏ ▕` `\ /`, `┌ ┐` `│ │` `└ ┘`) |
+| **Identifiers** | `variables` and `functions()`                                                  |
+| **Literals**    | numbers (`7`, `3.14`, `.5`) and inline comments (`# comment`)                  |
+| **Operators**   | `+`, `-`, `*`, `>`, and semicolons `;`                                         |
 
 ### Bracket Logic
 

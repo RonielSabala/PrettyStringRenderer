@@ -5,6 +5,8 @@ import {
 import {
     APP_FONT_VARIANT_LIGATURES,
     EDITOR_DEFAULTS,
+    EDITOR_LETTER_SPACING,
+    EDITOR_LINE_HEIGHT,
     EDITOR_MAX_HEIGHT_PERCENTAGE,
     EDITOR_MIN_HEIGHT_PX
 } from '../common/config.js';
@@ -60,7 +62,7 @@ const CONFIG_KEYS_TO_ELEMENT_CALLBACKS = [
 
 // Helpers
 
-function _getHeight() {
+function _getEditorHeight() {
     return editorPanelElement.offsetHeight;
 }
 
@@ -104,7 +106,7 @@ function _onEditorMouseMove(event) {
         return;
     }
 
-    const editorHeight = _getHeight();
+    const editorHeight = _getEditorHeight();
     const newHeight = Math.max(EDITOR_MIN_HEIGHT_PX, _getNormalizedHeight(event.clientY));
     if (
         newHeight === startMaxHeight &&
@@ -122,11 +124,15 @@ function _onEditorMouseMove(event) {
 }
 
 function _onResizeReset() {
-    const defaultHeight = EDITOR_DEFAULTS.height;
-    _setEditorHeight(defaultHeight);
+    let newHeight = EDITOR_DEFAULTS.height;
+    if (newHeight === _getEditorHeight()) {
+        newHeight = EDITOR_MIN_HEIGHT_PX;
+    }
+
+    _setEditorHeight(newHeight);
     adjustCanvas();
 
-    return defaultHeight;
+    return newHeight;
 }
 
 function _onResize(event) {
@@ -134,7 +140,7 @@ function _onResize(event) {
 
     dragging = true;
     startY = event.clientY;
-    startHeight = _getHeight();
+    startHeight = _getEditorHeight();
     startMaxHeight = Math.round(window.innerHeight * EDITOR_MAX_HEIGHT_PERCENTAGE);
 
     document.body.style.userSelect = CSS_USER_SELECT.NONE;
@@ -164,15 +170,16 @@ function _onEscapeToCanvas(event) {
 
 export function initEditorSection(signal) {
     const config = state.editorConfig;
+    const editorStyle = editorElement.style;
 
     // Set editor values
     editorElement.scrollTop = 0;
-    editorElement.style.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
-    editorElement.style.fontSize = toPx(config.fontSize);
-    editorElement.style.lineHeight = EDITOR_DEFAULTS.lineHeight;
-    editorElement.style.letterSpacing = EDITOR_DEFAULTS.letterSpacing;
-    editorElement.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
     editorElement.value = config.content ?? EDITOR_DEFAULTS.content;
+    editorStyle.padding = `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`;
+    editorStyle.fontSize = toPx(config.fontSize);
+    editorStyle.lineHeight = EDITOR_LINE_HEIGHT;
+    editorStyle.letterSpacing = EDITOR_LETTER_SPACING;
+    editorStyle.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
     // Restore editor height
     _setEditorHeight(config.height);

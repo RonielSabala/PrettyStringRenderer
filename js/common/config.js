@@ -44,6 +44,7 @@ const _DEFAULTS = {
         defaultThemeFilename: 'theme',
         defaultImageFilename: 'canvas',
     },
+    theme: _defaultTheme
 };
 
 // App
@@ -83,20 +84,20 @@ export const TYPOGRAPHY_DEFAULTS = {
         value: _uTypography.padY ?? _DEFAULTS.typography.padY,
         min: 0,
         max: 400,
-    },
+    }
 };
 
 // Editor
 
-export const EDITOR_MIN_HEIGHT_PX = editorTabsElement.offsetHeight;
+export const EDITOR_LINE_HEIGHT = 'auto';
+export const EDITOR_LETTER_SPACING = 'auto';
 export const EDITOR_MAX_HEIGHT_PERCENTAGE = 0.8;
+export const EDITOR_MIN_HEIGHT_PX = editorTabsElement.offsetHeight;
 
 const _uEditor = _u.editor ?? {};
 export const EDITOR_DEFAULTS = {
     content: _uEditor.content ?? _DEFAULTS.editor.content,
     height: _uEditor.height ?? _DEFAULTS.editor.height,
-    lineHeight: 'auto',
-    letterSpacing: 'auto',
     padX: _uEditor.padX ?? _DEFAULTS.editor.padX,
     padY: _uEditor.padY ?? _DEFAULTS.editor.padY,
     fontSize: {
@@ -160,6 +161,6 @@ export const THEME_BLOB_TYPE = {
     type: 'application/json'
 };
 
-const _theme = _u.theme ?? _defaultTheme;
+const _theme = _u.theme ?? _DEFAULTS.theme;
 export const DEFAULT_THEME = Object.freeze(_theme);
 export const THEME_KEYS = Object.keys(_theme);

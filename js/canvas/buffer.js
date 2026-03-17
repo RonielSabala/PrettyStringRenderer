@@ -2,7 +2,7 @@ import {
     CANVAS_DEFAULTS,
     CANVAS_MAX_PIXEL_SCALE,
     CANVAS_MIN_PIXEL_SCALE,
-    CANVAS_QUALITY_REDRAW_TIMEOUT_MS,
+    CANVAS_REDRAW_TIMEOUT_MS,
     CANVAS_VIEWPORT_PADDING_PX
 } from '../common/config.js';
 import {
@@ -23,19 +23,17 @@ import {
     updateResolutionBadge
 } from '../utils/ui_sync.js';
 import {
+    charWidthMetric,
     getDrawingContext,
     render,
-    textMetrics,
     updateTextMetrics
 } from './renderer.js';
 
-const _lastDimensions = (window.__BUFFER_DIMENSIONS ??= {
-    width: 0,
-    height: 0
-});
-
 let _currentPixelScale = 1;
-let _qualityRedrawTimer = null;
+let _redrawTimer = null;
+
+let _lastBufferWidth = null;
+let _lastBufferHeight = null;
 
 const _ctx = (window.__BUFFER_CTX ??= getDrawingContext(canvasElement));
 
@@ -57,23 +55,23 @@ function _calculateFitToContentDimensions() {
     const padX = config.padX;
     const padY = config.padY;
     const lineHeight = config.fontSize * config.lineHeight;
-    const charWidth = textMetrics.charWidth;
-
-    const width = Math.ceil(padX * 2 + tokenizer.maxLine * charWidth);
+    const width = Math.ceil(padX * 2 + tokenizer.maxLine * charWidthMetric);
     const height = Math.ceil(padY * 2 + tokenizer.linesCount * lineHeight);
 
-    return [width, height];
+    return {
+        width,
+        height
+    };
 }
 
 // Public methods
 
 export function adjustCanvas(pixelScale = null) {
-    let displayWidth, displayHeight;
-    const config = state.canvasConfig;
     const availableWidth = canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX;
     const availableHeight = canvasWrapElement.clientHeight - CANVAS_VIEWPORT_PADDING_PX;
 
-    if (config.fitToContent) {
+    let displayWidth, displayHeight;
+    if (state.canvasConfig.fitToContent) {
         if (pixelScale === null) {
             pixelScale = _getPixelScale();
         }
@@ -96,54 +94,46 @@ export function adjustCanvas(pixelScale = null) {
 export function redraw(forceCanvasAdjustment = false) {
     const canvasConfig = state.canvasConfig;
     const fitToContent = canvasConfig.fitToContent;
-    const pixelScale = _getPixelScale();
 
-    let width, height;
-    if (fitToContent) {
-        [width, height] = _calculateFitToContentDimensions();
-    } else {
-        width = CANVAS_DEFAULTS.width;
-        height = CANVAS_DEFAULTS.height;
-    }
+    const {
+        width,
+        height
+    } = fitToContent ? _calculateFitToContentDimensions() : CANVAS_DEFAULTS;
+
+    const pixelScale = _getPixelScale();
+    _currentPixelScale = pixelScale;
 
     const bufferWidth = pixelScale * width;
     const bufferHeight = pixelScale * height;
-
-    const sizeChanged = bufferWidth !== _lastDimensions.width ||
-        bufferHeight !== _lastDimensions.height;
+    const sizeChanged = bufferWidth !== _lastBufferWidth || bufferHeight !== _lastBufferHeight;
 
     if (sizeChanged) {
+        _lastBufferWidth = bufferWidth;
+        _lastBufferHeight = bufferHeight;
+
         canvasElement.width = bufferWidth;
         canvasElement.height = bufferHeight;
-        _lastDimensions.width = bufferWidth;
-        _lastDimensions.height = bufferHeight;
+        _ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
     }
 
-    _currentPixelScale = pixelScale;
-    _ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
     render(_ctx, width, height);
 
-    if (!(forceCanvasAdjustment || sizeChanged && fitToContent)) {
-        return;
-    }
-
-    adjustCanvas(pixelScale);
-    if (canvasConfig.width === width && canvasConfig.height === height) {
+    if (!forceCanvasAdjustment && (!sizeChanged || !fitToContent)) {
         return;
     }
 
     canvasConfig.width = width;
     canvasConfig.height = height;
+    adjustCanvas(pixelScale);
     saveCanvasConfigState();
     updateResolutionBadge();
 }
 
-export function scheduleQualityRedraw() {
-    const neededPixelScale = _getPixelScale();
-    if (neededPixelScale === _currentPixelScale) {
+export function scheduleRedraw() {
+    if (_currentPixelScale === _getPixelScale()) {
         return;
     }
 
-    clearTimeout(_qualityRedrawTimer);
-    _qualityRedrawTimer = setTimeout(redraw, CANVAS_QUALITY_REDRAW_TIMEOUT_MS);
+    clearTimeout(_redrawTimer);
+    _redrawTimer = setTimeout(redraw, CANVAS_REDRAW_TIMEOUT_MS);
 }

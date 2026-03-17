@@ -115,7 +115,7 @@ export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 export const CANVAS_MIN_PIXEL_SCALE = 1;
 export const CANVAS_MAX_PIXEL_SCALE = 5;
 export const CANVAS_VIEWPORT_PADDING_PX = 25;
-export const CANVAS_QUALITY_REDRAW_TIMEOUT_MS = 120;
+export const CANVAS_REDRAW_TIMEOUT_MS = 120;
 
 const _uCanvas = _u.canvas ?? {};
 const _canvasWidth = _uCanvas.width ?? _DEFAULTS.canvas.width;

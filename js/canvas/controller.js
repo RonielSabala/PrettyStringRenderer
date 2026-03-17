@@ -37,7 +37,7 @@ import {
 } from '../utils/ui_sync.js';
 import {
     redraw,
-    scheduleQualityRedraw
+    scheduleRedraw
 } from './buffer.js';
 
 let spaceHeld = false;
@@ -92,7 +92,7 @@ function _scheduleTransform() {
 
 function _onZoomChange() {
     _scheduleTransform();
-    scheduleQualityRedraw();
+    scheduleRedraw();
 }
 
 function _applyZoom(event) {

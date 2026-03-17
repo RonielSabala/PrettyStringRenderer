@@ -15,13 +15,13 @@ import {
 const _CONTEXT_TYPE = '2d';
 const _FONT_REFERENCE_GLYPH = 'M';
 
-let _lastConfigStr = '';
+let _lastFontSize = 0;
+let _lastLetterSpacing = 0;
+let _lastTextRendering = '';
 let _lastMeasuredLine = null;
 
-export const textMetrics = {
-    charWidth: null,
-    fontAscent: null,
-}
+let _ascentMetric = null;
+export let charWidthMetric = null;
 
 export function getDrawingContext(HTMLCanvasElement) {
     return HTMLCanvasElement.getContext(_CONTEXT_TYPE, {
@@ -37,40 +37,56 @@ function _setupContextFont(ctx, config) {
     ctx.textRendering = config.textRendering;
 }
 
-export function updateTextMetrics(config) {
+export function updateTextMetrics(config, maxWidth = null) {
     const {
         fontSize,
         letterSpacing,
         textRendering
     } = config;
 
-    const configStr = `${fontSize}-${letterSpacing}-${textRendering}`;
-    const metricsChanged = configStr !== _lastConfigStr;
+    const metricsChanged =
+        fontSize !== _lastFontSize ||
+        letterSpacing !== _lastLetterSpacing ||
+        textRendering !== _lastTextRendering;
 
     if (metricsChanged) {
-        _lastConfigStr = configStr;
+        _lastFontSize = fontSize;
+        _lastLetterSpacing = letterSpacing;
+        _lastTextRendering = textRendering;
+
         _setupContextFont(_measureCtx, config);
-        textMetrics.charWidth = _measureCtx.measureText(_FONT_REFERENCE_GLYPH).width;
+        charWidthMetric = _measureCtx.measureText(_FONT_REFERENCE_GLYPH).width;
     }
 
-    const firstLine = tokenizer.lines[0] || _FONT_REFERENCE_GLYPH;
+    let firstLine = tokenizer.lines[0] || _FONT_REFERENCE_GLYPH;
 
+    // Optimize first line
+    if (maxWidth !== null && firstLine !== _FONT_REFERENCE_GLYPH) {
+        const maxChars = Math.ceil(maxWidth / charWidthMetric);
+
+        if (firstLine.length > maxChars) {
+            firstLine = firstLine.slice(0, maxChars);
+        }
+    }
+
+    // Measure ascent
     if (metricsChanged || _lastMeasuredLine !== firstLine) {
         _lastMeasuredLine = firstLine;
-        textMetrics.fontAscent = _measureCtx.measureText(firstLine).actualBoundingBoxAscent;
+        _ascentMetric = _measureCtx.measureText(firstLine).actualBoundingBoxAscent;
     }
 }
 
 export function iterateTokens(width, height, config, onToken) {
-    updateTextMetrics(config)
-
     const padX = config.padX;
-    const padY = config.padY + textMetrics.fontAscent;
-    const charWidth = textMetrics.charWidth;
+    const maxWidth = width - padX;
+    updateTextMetrics(config, maxWidth)
+
+    const padY = config.padY + _ascentMetric;
+    const charWidth = charWidthMetric;
     const lineHeight = config.fontSize * config.lineHeight;
 
     // Calculate visible bounds
-    const maxCol = Math.ceil((width - padX) / charWidth);
+    const maxCol = Math.ceil(maxWidth / charWidth);
     const maxRow = Math.min(
         Math.ceil((height - padY) / lineHeight) + 1,
         tokenizer.linesCount - 1

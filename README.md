@@ -9,16 +9,16 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - [Features](#features)
 - [Getting Started](#getting-started)
   - [Requirements](#requirements)
-  - [Install Dependencies](#install-dependencies)
+  - [Installation](#installation)
   - [Run Locally](#run-locally)
-- [Usage \& Shortcuts](#usage--shortcuts)
+- [Usage](#usage)
 - [Export Options](#export-options)
 - [Personalization](#personalization)
+  - [Overridable Keys](#overridable-keys)
   - [Theme format](#theme-format)
 - [String-Art Syntax](#string-art-syntax)
   - [Bracket Logic](#bracket-logic)
   - [Limitations](#limitations)
-- [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -26,11 +26,12 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 
 ## Features
 
-- **Incremental tokenizer**: High-performance engine that only re-tokenizes changed lines.
-- **Structural bracket support**: Inline and multiline bracket families with automatic nesting color cycles.
-- **High-resolution export**: **PNG** at custom scale multipliers and editable **SVG** files.
-- **Configurable workflow**: Theme system, and gitignored `user.profile.json` for personalization.
-- **Persistent state**: Progress is automatically cached to `localStorage`.
+- **Incremental Tokenizer**: High-performance engine that only re-tokenizes changed lines.
+- **Structural Bracket Support**: Inline and multiline bracket families with automatic nesting color cycles.
+- **High-Resolution Export**: Export **PNG** at custom scale multipliers or editable **SVG** files.
+- **Configurable Workflow**: Comprehensive theme system and gitignored `user.profile.json` for deep personalization.
+- **Persistent State**: Your progress and workspace settings are automatically cached to `localStorage`.
+- **Keyboard-first Workflow**: Most actions have keyboard shortcuts.
 
 ---
 
@@ -43,7 +44,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 
 ---
 
-### Install Dependencies
+### Installation
 
 ```bash
 npm install
@@ -53,66 +54,43 @@ npm install
 
 ### Run Locally
 
-Start dev server:
-
 - **Via VS Code**: Click the **Vite** button in the status bar.
-- **Via Terminal**: Run `npm run dev`, access at `http://localhost:5173`.
+- **Via Terminal**: Run `npm run dev` and access at `http://localhost:5173`.
 
 ---
 
-## Usage & Shortcuts
+## Usage
 
-Start typing in the canvas editor.
-
-### Editor <!-- omit in toc -->
-
-- `Ctrl+Z` / `Ctrl+Shift+Z` to **undo** / **redo**.
-- `click-and-drag` the resize handle to **adjust height**.
-- `double-click` the resize handle to **reset height**.
-- Toggle the **Fit to content** checkbox to make the canvas resize automatically to match the text and current typography settings.
-
-### Canvas <!-- omit in toc -->
-
-- `Esc` to focus the **Canvas**.
-- Hold `Alt` + `scroll-wheel` to zoom.
-- Hold `Space` + drag (or `right-click-and-drag`) to pan.
-- `double-click` the canvas to reset view.
-
-### Theme panel <!-- omit in toc -->
-
-- `Tab` to focus the **Theme panel**.
-- `ArrowUp` / `ArrowDown` to navigate themes.
-- `double-click` a theme file to open it in a new window.
-- Click the **Load themes** button to import and overwrite themes.
-- Click the **Export theme** button to export the current colors.
-
-### Workspace / Export <!-- omit in toc -->
-
-- `Ctrl+S` (or click the **Export** button) to open the export dialog.
-- Click the **Reset** button to reset workspace (clears theme selection & view state).
+Start typing in the canvas editor to begin. See [SHORTCUTS.md](SHORTCUTS.md) for the full list of keyboard shortcuts and mouse controls.
 
 ---
 
 ## Export Options
 
-- **PNG**: raster export with scale multipliers (`1`, `2`, `0.5`, etc)
-- **SVG**: vector export where tokens are grouped by color; fonts are embedded as attributes so SVGs are editable in Figma, Adobe Illustrator, Inkscape, etc.
+- **PNG**: Raster export with custom scale multipliers (e.g., `1`, `2`, `0.5`)
+- **SVG**: Vector export where tokens are grouped by color. Fonts are embedded as attributes, making files fully editable in Figma, Illustrator, or Inkscape.
+
+---
 
 ## Personalization
 
-Create a local profile (gitignored):
+Create a local profile to override default settings:
 
 ```bash
 cp user.profile.example.json user.profile.json
 ```
 
-Only include keys you want to override. Typical keys:
+---
 
-- `app.fontVariantLigatures`: **"normal"** (enable ligatures) or **"none"** (disable). See [MDN: font-variant-ligatures](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-variant-ligatures) for a full list of accepted values.
-- `typography`: **"fontSize"**.
-- `canvas`: **"width"**, **"height"**.
+### Overridable Keys
 
-See [user.profile.example.json](user.profile.example.json) for the full list of overridable keys.
+| Key                        | Description                                                                                                                                                                                                        |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `app.fontVariantLigatures` | **"normal"** (enable) or **"none"** (disable). See [MDN: font-variant-ligatures](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-variant-ligatures) for a full list of accepted values. |
+| `typography.fontSize`      | Base font size for the renderer.                                                                                                                                                                                   |
+| `canvas.width` / `height`  | Default dimensions for the drawing area.                                                                                                                                                                           |
+
+> See [user.profile.example.json](user.profile.example.json) for the full list of overridable keys.
 
 ---
 
@@ -130,73 +108,46 @@ Themes are just simple JSON objects. Minimal theme example:
 
 You can define as many colors (nesting levels) as you want in the `bracket` array.
 
-Check the [themes/](/themes/) folder for a collection of pre-bundled color palettes.
+> Check the [themes/](/themes/) folder for a collection of pre-bundled color palettes.
 
 ---
 
 ## String-Art Syntax
 
-The tokenizer highlights the categories shown below.
+The tokenizer highlights the following categories:
 
 | Category        | Patterns                                                                       |
 | --------------- | ------------------------------------------------------------------------------ |
-| **Brackets**    | inline (`()`, `[]`, `{}`) and multiline (`/ \` `▏ ▕` `\ /`, `┌ ┐` `│ │` `└ ┘`) |
+| **Brackets**    | Inline (`()`, `[]`, `{}`) and Multiline (`/ \` `▏ ▕` `\ /`, `┌ ┐` `│ │` `└ ┘`) |
 | **Identifiers** | `variables` and `functions()`                                                  |
-| **Literals**    | numbers (`7`, `3.14`, `.5`) and inline comments (`# comment`)                  |
+| **Literals**    | Numbers (`7`, `3.14`, `.5`) and inline comments (`# comment`)                  |
 | **Operators**   | `+`, `-`, `*`, `>`, and semicolons `;`                                         |
 
 ### Bracket Logic
 
-Brackets can scale to any height. Top & bottom rows remain fixed; middle "arms" repeat to form tall shapes:
+Brackets scale dynamically. Top and bottom rows remain fixed, while middle "arms" repeat to form tall shapes:
 
 ![bracket-families](examples/01_bracket_families/round_vs_square_1080p.png)
 
-Nesting depth picks the next color from the theme bracket array:
+Nesting depth automatically cycles through the colors defined in your theme's `bracket` array.
 
 ![nesting-depth](examples/02_nesting_depth/color_cycle_demo_1080p.png)
 
 ### Limitations
 
-While the engine is designed for flexibility, the current tokenizer has specific structural requirements:
+- **Comments**: `#` terminates early if it hits multiline bracket characters. This is done on purpose to avoid breaking shapes.
 
-- Comments `#` terminate early when encountering multiline bracket characters to avoid breaking shapes.
+- **Reserved Characters**: The `/` and `\` characters are reserved for multiline round-bracket arms.
 
-- `/` is reserved for multiline round-bracket arms and may not act as a division operator or a standalone slash.
+- **Pairing**: The tokenizer requires paired bracket families; orphaned or split vertical segments cannot be resolved.
 
-- The tokenizer needs paired bracket families; orphaned or split vertical segments cannot be resolved.
-
-```plain
-/
-▏ # Cannot resolve these as a single bracket without a closing pair.
-\
-```
-
-- The program does not currently support "wrapping" multiline brackets around standard inline code blocks like this:
+- **Structural Wrapping**: The program does not currently support "wrapping" multiline brackets around standard code blocks. This limitation applies to **both inline and multiline** brackets:
 
 ```plain
 {
-  // Standard code blocks are treated as individual tokens, not multiline structures.
+  // Standard code blocks are treated as individual tokens,
+  // and cannot be wrapped by multiline structures.
 }
-```
-
----
-
-## Project Structure
-
-```plain
-PrettyStringRenderer/
-├─ js/
-│  ├─ canvas/
-│  ├─ common/
-│  ├─ core/
-│  │  └─ brackets/
-│  ├─ features/
-│  └─ utils/
-├─ css/
-├─ themes/
-├─ examples/
-├─ user.profile.example.json
-└─ index.html
 ```
 
 ---

@@ -6,6 +6,9 @@
   "markdown.extension.toc.omittedFromToc": {
     "README.md": ["## Table of Contents"]
   },
+  "markdownlint.config": {
+    "MD033": false
+  },
   "cSpell.language": "en",
   "cSpell.caseSensitive": true
 }

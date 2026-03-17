@@ -3,7 +3,7 @@
     "fontVariantLigatures": "normal"
   },
   "typography": {
-    "fontSize": 110,
+    "fontSize": 100,
     "lineHeight": 1,
     "letterSpacing": 1,
     "padX": 20,
@@ -11,7 +11,7 @@
   },
   "editor": {
     "content": "Welcome to your custom workspace!",
-    "height": 300,
+    "height": 250,
     "fontSize": 25,
     "padX": 12,
     "padY": 12
@@ -19,8 +19,9 @@
   "canvas": {
     "width": 1920,
     "height": 1080,
-    "font": "JetBrains Mono",
-    "fontWeight": 500
+    "font": "Consolas",
+    "fontWeight": 500,
+    "fitToContent": false
   },
   "export": {
     "defaultThemeFilename": "my-custom-theme",

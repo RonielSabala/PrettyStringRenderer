@@ -4,7 +4,8 @@ import {
     getSwatchFillElement
 } from '../common/elements.js';
 import {
-    state
+    state,
+    tokenizer
 } from '../common/store.js';
 import {
     THEME_KEYS_TO_TOKENS
@@ -35,19 +36,15 @@ export function setColor(themeKey, themeValue) {
 export function updateTokensColor(themeKey = null) {
     const isKeyProvided = themeKey !== null;
     const tokenType = THEME_KEYS_TO_TOKENS[themeKey];
-
     if (isKeyProvided && tokenType == null) {
         return;
     }
 
-    const tokenizedLines = state.tokenizer.tokenizedLines;
-    for (const tokenizedLine of tokenizedLines) {
-        for (const token of tokenizedLine) {
-            if (isKeyProvided && token.type !== tokenType) {
-                continue;
+    for (const line of tokenizer.tokenizedLines) {
+        for (const token of line) {
+            if (!isKeyProvided || token.type === tokenType) {
+                token.updateColor();
             }
-
-            token.updateColor();
         }
     }
 }

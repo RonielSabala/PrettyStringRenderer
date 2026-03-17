@@ -41,7 +41,7 @@ function _consumeLine(line, start, end, predicate) {
     return i;
 }
 
-export class IncrementalTokenizer {
+export class Tokenizer {
     constructor() {
         this._brackets = [];
         this._rawBrackets = [];
@@ -49,6 +49,13 @@ export class IncrementalTokenizer {
         this._lines = [];
         this._lineAnalysis = [];
         this._tokenizedLines = [];
+
+        this.maxLine = null;
+        this.linesCount = null;
+    }
+
+    get lines() {
+        return this._lines;
     }
 
     get tokenizedLines() {
@@ -62,11 +69,13 @@ export class IncrementalTokenizer {
         const newLineAnalysis = new Array(height);
         const newTokenizedLines = new Array(height);
         const bracketsChanged = this._syncBrackets(newLines);
+        let maxLine = 0
 
         for (let i = 0; i < height; i++) {
             const line = newLines[i];
             const prevTokens = this._tokenizedLines[i];
             const prevLineAnalysis = this._lineAnalysis[i];
+            maxLine = Math.max(maxLine, line.length);
 
             const lineChanged = bracketsChanged || this._lines[i] !== line;
 
@@ -79,6 +88,9 @@ export class IncrementalTokenizer {
             newTokenizedLines[i] = tokens;
             newLineAnalysis[i] = lineAnalysis;
         }
+
+        this.maxLine = maxLine;
+        this.linesCount = height;
 
         this._lines = newLines;
         this._lineAnalysis = newLineAnalysis;

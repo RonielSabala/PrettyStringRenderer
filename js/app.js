@@ -21,7 +21,8 @@ import {
     sectionHeaderSyntaxColors
 } from './common/elements.js';
 import {
-    state
+    state,
+    tokenizer
 } from './common/store.js';
 import {
     initColorSections
@@ -51,8 +52,8 @@ import {
     saveActiveElementIdState
 } from './utils/persistence.js';
 import {
-    describeAspectRatio
-} from './utils/resolution.js';
+    updateResolutionBadge
+} from './utils/ui_sync.js';
 
 function hideSections() {
     // Hide default sections on start
@@ -94,11 +95,12 @@ function init() {
     initCanvas(signal);
     initExport(signal);
 
+    tokenizer.tokenize(editorElement.value);
+    redraw(true);
+    updateResolutionBadge();
+
     // Focus last selected element before reload
     document.getElementById(state.activeElementId)?.focus();
-
-    // Set resolution badge
-    resolutionBadgeElement.textContent = describeAspectRatio();
 
     // Sections listeners
     document.querySelectorAll(`.${CSS.SECTION_HEADER}`).forEach(
@@ -130,10 +132,6 @@ function init() {
     }, {
         signal
     });
-
-    // Show editor content
-    state.tokenizer.tokenize(editorElement.value);
-    redraw();
 }
 
 document.fonts.ready.then(init);

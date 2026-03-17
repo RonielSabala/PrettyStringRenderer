@@ -29,9 +29,9 @@ export const THEME_KEYS_TO_TOKENS = Object.freeze(
 export class Token {
     constructor(string, type, depth) {
         this.value = string;
-        this.color = null;
         this.type = type;
         this.depth = depth;
+        this.color = null;
         this.updateColor();
     }
 

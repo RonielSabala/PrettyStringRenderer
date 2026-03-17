@@ -1,9 +1,7 @@
 import {
+    adjustCanvas,
     redraw
 } from '../canvas/buffer.js';
-import {
-    adjustCanvas
-} from '../canvas/controller.js';
 import {
     APP_FONT_VARIANT_LIGATURES,
     EDITOR_DEFAULTS,
@@ -28,7 +26,8 @@ import {
     editorResizeHandleElement
 } from '../common/elements.js';
 import {
-    state
+    state,
+    tokenizer
 } from '../common/store.js';
 import {
     initNumberInput
@@ -65,7 +64,7 @@ function _getHeight() {
     return editorPanelElement.offsetHeight;
 }
 
-function _setHeight(newHeight) {
+function _setEditorHeight(newHeight) {
     editorPanelElement.style.height = toPx(newHeight);
 }
 
@@ -85,7 +84,7 @@ function _arraysEqual(arr1, arr2) {
 
 function _onEditorContentChange() {
     const content = editorElement.value;
-    state.tokenizer.tokenize(content);
+    tokenizer.tokenize(content);
     redraw();
     return content;
 }
@@ -116,7 +115,7 @@ function _onEditorMouseMove(event) {
         return;
     }
 
-    _setHeight(newHeight);
+    _setEditorHeight(newHeight);
     adjustCanvas();
 
     return newHeight
@@ -124,7 +123,7 @@ function _onEditorMouseMove(event) {
 
 function _onResizeReset() {
     const defaultHeight = EDITOR_DEFAULTS.height;
-    _setHeight(defaultHeight);
+    _setEditorHeight(defaultHeight);
     adjustCanvas();
 
     return defaultHeight;
@@ -176,7 +175,7 @@ export function initEditorSection(signal) {
     editorElement.value = config.content ?? EDITOR_DEFAULTS.content;
 
     // Restore editor height
-    _setHeight(config.height);
+    _setEditorHeight(config.height);
 
     // Restore cursor selection
     const cursorSelection = config.cursorSelection;

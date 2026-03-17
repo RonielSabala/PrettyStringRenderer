@@ -1,5 +1,5 @@
 import {
-    IncrementalTokenizer
+    Tokenizer
 } from '../core/tokenizer.js';
 import {
     APP_FONT_VARIANT_LIGATURES,
@@ -36,6 +36,10 @@ export const state = {
         zoom: CANVAS_DEFAULTS.zoom,
         panX: CANVAS_DEFAULTS.panX,
         panY: CANVAS_DEFAULTS.panY,
+        width: CANVAS_DEFAULTS.width,
+        height: CANVAS_DEFAULTS.height,
+        fitToContent: CANVAS_DEFAULTS.fitToContent,
     },
-    tokenizer: new IncrementalTokenizer(),
 };
+
+export const tokenizer = new Tokenizer();

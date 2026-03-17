@@ -41,14 +41,8 @@ import {
 } from '../utils/parse.js';
 import {
     createResolution,
-    describeResolution
+    getCanvasDimensions
 } from '../utils/resolution.js';
-
-const _SCALAR_PROMPT_MESSAGE = `${EXPORT_PNG_PROMPT_MESSAGE}
-${EXPORT_PNG_PROMPT_SCALAR_EXAMPLES
-    .map(scalar => `    ${scalar} -> ${describeResolution(scalar)}`)
-    .join(LINE_BREAK)
-}`;
 
 // Helpers
 
@@ -71,7 +65,13 @@ function _download(blob, filename) {
 // PNG exporter
 
 function _exportPNG() {
-    const scalar = parseNumber(prompt(_SCALAR_PROMPT_MESSAGE, DEFAULT_PNG_SCALAR), 0);
+    const scalarPromptMessage = `${EXPORT_PNG_PROMPT_MESSAGE}
+    ${EXPORT_PNG_PROMPT_SCALAR_EXAMPLES
+        .map(scalar => `    ${scalar} -> ${createResolution(...getCanvasDimensions(scalar))}`)
+        .join(LINE_BREAK)
+    }`;
+
+    const scalar = parseNumber(prompt(scalarPromptMessage, DEFAULT_PNG_SCALAR), 0);
     if (scalar <= 0) {
         return;
     }
@@ -86,9 +86,7 @@ function _exportPNG() {
         padY: config.padY * scalar,
     };
 
-    const exportWidth = Math.round(scalar * CANVAS_DEFAULTS.width);
-    const exportHeight = Math.round(scalar * CANVAS_DEFAULTS.height);
-
+    const [exportWidth, exportHeight] = getCanvasDimensions(scalar);
     const offscreen = document.createElement('canvas');
     const offscreenStyle = offscreen.style;
 
@@ -193,8 +191,7 @@ function _buildSVG(width, height) {
 }
 
 function _exportSVG() {
-    const width = CANVAS_DEFAULTS.width;
-    const height = CANVAS_DEFAULTS.height;
+    const [width, height] = getCanvasDimensions();
     const svg = _buildSVG(width, height);
     const blob = new Blob([svg], SVG_BLOB_TYPE);
     _download(blob, _createFilename(width, height, SVG_EXTENSION));

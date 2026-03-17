@@ -69,6 +69,7 @@ Start typing in the canvas editor.
 - `Ctrl+Z` / `Ctrl+Shift+Z` to **undo** / **redo**.
 - `click-and-drag` the resize handle to **adjust height**.
 - `double-click` the resize handle to **reset height**.
+- Toggle the **Fit to content** checkbox to make the canvas resize automatically to match the text and current typography settings.
 
 ### Canvas <!-- omit in toc -->
 

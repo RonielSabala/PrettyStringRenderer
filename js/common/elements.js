@@ -36,15 +36,16 @@ export const sectionHeaderCanvasColors = getElement('section-header-canvas-color
 // Editor
 export const editorResizeHandleElement = getElement('editor-resize-handle');
 export const editorTabsElement = getElement('editor-tabs');
+export const editorStatusElement = getElement('editor-status');
 export const editorPanelElement = getElement('editor-panel');
 export const editorFontSizeElement = getElement('editor-font-size');
-export const editorStatusElement = getElement('editor-status');
 export const editorElement = getElement('editor');
 
 // Canvas
 export const canvasWrapElement = getElement('canvas-wrap');
 export const canvasInnerElement = getElement('canvas-inner');
 export const canvasElement = getElement('canvas');
+export const fitToContentElement = getElement('editor-fit-to-content');
 
 // Export dialog
 export const exportDialogElement = getElement('dialog-export');

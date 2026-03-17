@@ -4,7 +4,6 @@ import {
     CANVAS_MAX_ZOOM,
     CANVAS_MIN_ZOOM,
     CANVAS_PAN_SCROLL_SPEED,
-    CANVAS_VIEWPORT_PADDING_PX,
     CANVAS_ZOOM_FACTOR
 } from '../common/config.js';
 import {
@@ -21,7 +20,7 @@ import {
     canvasInnerElement,
     canvasWrapElement,
     editorElement,
-    editorStatusElement
+    fitToContentElement
 } from '../common/elements.js';
 import {
     state
@@ -31,9 +30,15 @@ import {
     saveCanvasConfigState
 } from '../utils/persistence.js';
 import {
-    describeResolution,
     toPx
 } from '../utils/resolution.js';
+import {
+    updateEditorZoomInfo
+} from '../utils/ui_sync.js';
+import {
+    redraw,
+    scheduleQualityRedraw
+} from './buffer.js';
 
 let spaceHeld = false;
 let panning = false;
@@ -41,25 +46,26 @@ let panStartX = 0;
 let panStartY = 0;
 
 let rafScheduled = false;
-let onZoomChangeCallback = null;
-
 const _scheduleCanvasConfigSave = createSaveScheduler(saveCanvasConfigState);
-
-// Setters
-
-export function setZoomChangeCallback(callback) {
-    onZoomChangeCallback = callback;
-}
 
 // Helpers
 
-function _getNormalizedDimension(dimension) {
-    return toPx(Math.max(1, Math.round(dimension)));
-}
+function _resetZoom() {
+    const config = state.canvasConfig;
+    const zoom = CANVAS_DEFAULTS.zoom;
+    const panX = CANVAS_DEFAULTS.panX;
+    const panY = CANVAS_DEFAULTS.panY;
 
-function _updateEditorZoomInfo() {
-    const zoom = (state.canvasConfig.zoom * 100).toFixed(0);
-    editorStatusElement.textContent = `${describeResolution()} · ${zoom}%`;
+    if (config.zoom === zoom &&
+        config.panX === panX &&
+        config.panY === panY) {
+        return false;
+    }
+
+    config.zoom = zoom;
+    config.panX = panX;
+    config.panY = panY;
+    return true;
 }
 
 function _applyZoomTransform() {
@@ -68,9 +74,9 @@ function _applyZoomTransform() {
     const panY = toPx(config.panY);
     const zoom = config.zoom;
 
-    rafScheduled = false;
     canvasInnerElement.style.transform = `translate(${panX},${panY}) scale(${zoom})`;
-    _updateEditorZoomInfo();
+    updateEditorZoomInfo();
+    rafScheduled = false;
 }
 
 function _scheduleTransform() {
@@ -86,11 +92,7 @@ function _scheduleTransform() {
 
 function _onZoomChange() {
     _scheduleTransform();
-    if (onZoomChangeCallback === null) {
-        return;
-    }
-
-    onZoomChangeCallback();
+    scheduleQualityRedraw();
 }
 
 function _applyZoom(event) {
@@ -135,10 +137,11 @@ function _onZoom(event) {
 }
 
 function _onZoomReset() {
-    const config = state.canvasConfig;
-    config.zoom = CANVAS_DEFAULTS.zoom;
-    config.panX = CANVAS_DEFAULTS.panX;
-    config.panY = CANVAS_DEFAULTS.panY;
+    const reset = _resetZoom();
+    if (!reset) {
+        return;
+    }
+
     _onZoomChange();
     saveCanvasConfigState();
 }
@@ -155,6 +158,14 @@ function _onPanning(event) {
     panStartX = event.clientX - config.panX;
     panStartY = event.clientY - config.panY;
     canvasWrapElement.style.cursor = CSS_CURSORS.GRABBING;
+}
+
+function _onFitToContent() {
+    state.canvasConfig.fitToContent = fitToContentElement.checked;
+    _resetZoom();
+    _scheduleTransform();
+    saveCanvasConfigState();
+    redraw(true);
 }
 
 // Document listeners
@@ -210,27 +221,10 @@ function _onPanningRelease() {
 
 // Public methods
 
-export function adjustCanvas() {
-    const aspectRatio = CANVAS_DEFAULTS.aspectRatio;
-    const availableWidth = canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX;
-    const availableHeight = canvasWrapElement.clientHeight - CANVAS_VIEWPORT_PADDING_PX;
-
-    let displayWidth = Math.min(availableWidth, availableHeight * aspectRatio);
-    let displayHeight = displayWidth / aspectRatio;
-
-    if (displayHeight > availableHeight) {
-        displayHeight = availableHeight;
-        displayWidth = displayHeight * aspectRatio;
-    }
-
-    canvasElement.style.width = _getNormalizedDimension(displayWidth);
-    canvasElement.style.height = _getNormalizedDimension(displayHeight);
-}
-
 export function initCanvas(signal) {
     canvasElement.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
+    fitToContentElement.checked = state.canvasConfig.fitToContent;
 
-    adjustCanvas();
     _applyZoomTransform();
 
     // Canvas listeners
@@ -245,6 +239,9 @@ export function initCanvas(signal) {
         signal
     });
     canvasWrapElement.addEventListener(EVENTS.MOUSE_DOWN, _onPanning, {
+        signal
+    });
+    fitToContentElement.addEventListener(EVENTS.CHANGE, _onFitToContent, {
         signal
     });
 

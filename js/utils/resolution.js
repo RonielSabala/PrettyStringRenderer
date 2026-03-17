@@ -1,6 +1,6 @@
 import {
-    CANVAS_DEFAULTS
-} from '../common/config.js';
+    state
+} from '../common/store.js';
 import {
     roundUp
 } from './parse.js';
@@ -13,12 +13,21 @@ export function createResolution(width, height) {
     return `${width}x${height}`;
 }
 
-export function describeResolution(scalar = 1) {
-    const width = Math.round(scalar * CANVAS_DEFAULTS.width);
-    const height = Math.round(scalar * CANVAS_DEFAULTS.height);
-    return createResolution(width, height);
+export function getCanvasDimensions(scalar = null) {
+    let {
+        width,
+        height
+    } = state.canvasConfig;
+
+    if (scalar !== null) {
+        width = Math.round(scalar * width);
+        height = Math.round(scalar * height);
+    }
+
+    return [width, height]
 }
 
-export function describeAspectRatio() {
-    return `${describeResolution()} · ${roundUp(CANVAS_DEFAULTS.aspectRatio)}:1`;
+export function describeCanvasAspectRatio() {
+    const [width, height] = getCanvasDimensions();
+    return `${createResolution(width, height)} / ${roundUp(width/height)}:1`;
 }

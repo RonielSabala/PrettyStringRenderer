@@ -123,7 +123,7 @@ export const CANVAS_DEFAULTS = {
     width: _canvasWidth,
     height: _canvasHeight,
     aspectRatio: _canvasWidth / _canvasHeight,
-    ascentCorrection: 9 / 100, // A text with fontSize=100 needs 9 extra pixels so that padY=0 sits flush
+    fitToContent: _uCanvas?.fitToContent ?? false,
     font: _uCanvas?.font ?? 'Cascadia Code',
     fontWeight: _uCanvas?.fontWeight ?? 400,
 };

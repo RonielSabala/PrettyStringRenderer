@@ -32,7 +32,6 @@ import {
     createNumberRow,
     renderSection
 } from './section_renderer.js';
-
 const _scheduleTypographyConfigSave = createSaveScheduler(saveTypographyConfigState);
 
 export function initTypographySection(signal) {
@@ -42,8 +41,10 @@ export function initTypographySection(signal) {
     for (const [configKey, configValue] of Object.entries(TYPOGRAPHY_DEFAULTS)) {
         const elementID = `${CSS.TYPOGRAPHY}-${camelToKebab(configKey)}`;
         const [rowElement, inputElement] = createNumberRow(elementID, camelToTitle(configKey));
+
         rows.push(rowElement);
 
+        // Init input
         initNumberInput(config, configKey, inputElement, TYPOGRAPHY_DEFAULTS);
 
         // Add listener
@@ -53,6 +54,7 @@ export function initTypographySection(signal) {
 
             config[configKey] = parseNumber(value, fallback);
             _scheduleTypographyConfigSave();
+
             redraw();
         }, {
             signal

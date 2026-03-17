@@ -21,24 +21,25 @@
         <!-- Header -->
         <header id="app-header">
             <span class="header-title">Pretty String Renderer</span>
-            <button class="btn" id="btn-reset" type="button">Reset</button>
+            <button class="btn no-select" id="btn-reset" type="button">Reset</button>
             <div class="header-title-separator"></div>
             <div class="badge" id="header-badge"></div>
-            <button class="btn" id="btn-export">↓ Export</button>
+            <button class="btn no-select" id="btn-export">↓ Export</button>
         </header>
 
         <!-- Sidebar -->
         <aside id="app-sidebar">
             <!-- Themes -->
             <div id="section-themes">
-                <div class="section-header" id="section-header-themes">Themes<span class="accordion-control">▾</span>
+                <div class="section-header no-select" id="section-header-themes">Themes<span
+                        class="accordion-control">▾</span>
                 </div>
                 <div class="section-body">
                     <div id="theme-list">
                         <div id="theme-empty">No themes loaded.</div>
                     </div>
-                    <button id="btn-load-themes" class="theme-btn">Load themes</button>
-                    <button id="btn-export-theme" class="theme-btn">Export theme</button>
+                    <button id="btn-load-themes" class="theme-btn no-select">Load themes</button>
+                    <button id="btn-export-theme" class="theme-btn no-select">Export theme</button>
                 </div>
             </div>
 
@@ -46,7 +47,7 @@
 
             <!-- Bracket colors -->
             <div id="section-bracket-colors">
-                <div class="section-header" id="section-header-bracket-colors">Bracket Colors<span
+                <div class="section-header no-select" id="section-header-bracket-colors">Bracket Colors<span
                         class="accordion-control">▾</span></div>
 
                 <!-- Inputs filled by js -->
@@ -56,7 +57,7 @@
 
             <!-- Syntax colors -->
             <div id="section-syntax-colors">
-                <div class="section-header" id="section-header-syntax-colors">Syntax Colors<span
+                <div class="section-header no-select" id="section-header-syntax-colors">Syntax Colors<span
                         class="accordion-control">▾</span></div>
 
                 <!-- Inputs filled by js -->
@@ -66,7 +67,7 @@
 
             <!-- Canvas colors -->
             <div id="section-canvas-colors">
-                <div class="section-header" id="section-header-canvas-colors">Canvas Colors<span
+                <div class="section-header no-select" id="section-header-canvas-colors">Canvas Colors<span
                         class="accordion-control">▾</span></div>
 
                 <!-- Inputs filled by js -->
@@ -76,7 +77,7 @@
 
             <!-- Typography -->
             <div id="section-typography">
-                <div class="section-header" id="section-header-typography">Typography<span
+                <div class="section-header no-select" id="section-header-typography">Typography<span
                         class="accordion-control">▾</span>
                 </div>
 
@@ -99,8 +100,8 @@
             <!-- Editor area -->
             <div id="editor-panel">
                 <div id="editor-tabs">
-                    <div class="tab">Editor</div>
-                    <div class="editor-font">
+                    <div class="tab no-select">Editor</div>
+                    <div class="editor-font no-select">
                         <span>Font size</span>
                         <input class="number-input" type="number" id="editor-font-size" />
                     </div>
@@ -118,10 +119,10 @@
 
         <!-- Export dialog -->
         <dialog id="dialog-export">
-            <p class="dialog-title">Export canvas as</p>
+            <p class="dialog-title no-select">Export canvas as</p>
             <div class="dialog-actions">
-                <button id="btn-export-png" class="btn" type="button">PNG</button>
-                <button id="btn-export-svg" class="btn" type="button">SVG</button>
+                <button id="btn-export-png" class="btn no-select" type="button">PNG</button>
+                <button id="btn-export-svg" class="btn no-select" type="button">SVG</button>
             </div>
         </dialog>
     </div>

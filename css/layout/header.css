@@ -18,24 +18,6 @@
   border-radius: 20px;
 }
 
-.btn {
-  padding: 5px 10px;
-  border-radius: var(--radius);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid var(--btn-color);
-  background: var(--btn-color-dim);
-  color: var(--text-primary);
-  transition: background 0.12s;
-}
-
-.btn:hover {
-  background: var(--btn-color);
-  color: #fff;
-}
-
 #btn-reset {
   --btn-color: var(--danger);
   --btn-color-dim: var(--danger-dim);

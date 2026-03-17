@@ -8,7 +8,6 @@
   letter-spacing: 0.1em;
   color: var(--text-secondary);
   cursor: pointer;
-  user-select: none;
 }
 
 .section-header:hover {

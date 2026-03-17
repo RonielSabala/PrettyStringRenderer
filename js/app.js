@@ -13,12 +13,9 @@ import {
 import {
     editorElement,
     getElement,
+    HIDDEN_SECTIONS_ON_START,
     RELOAD_FOCUS_EXCLUSIONS,
-    resetButtonElement,
-    resolutionBadgeElement,
-    sectionHeaderBracketColors,
-    sectionHeaderCanvasColors,
-    sectionHeaderSyntaxColors
+    resetButtonElement
 } from './common/elements.js';
 import {
     state,
@@ -59,9 +56,10 @@ function hideSections() {
     // Hide default sections on start
     let collapsedSectionIds = state.collapsedSectionIds;
     if (isObjectEmpty(collapsedSectionIds)) {
-        toggleSection(sectionHeaderBracketColors);
-        toggleSection(sectionHeaderSyntaxColors);
-        toggleSection(sectionHeaderCanvasColors);
+        for (const section of HIDDEN_SECTIONS_ON_START) {
+            toggleSection(section);
+        }
+
         return;
     }
 

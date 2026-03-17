@@ -52,6 +52,13 @@ export const exportDialogElement = getElement('dialog-export');
 export const btnExportPNG = getElement('btn-export-png');
 export const btnExportSVG = getElement('btn-export-svg');
 
+// Sections to hide on application start
+export const HIDDEN_SECTIONS_ON_START = Object.freeze([
+    sectionHeaderBracketColors,
+    sectionHeaderSyntaxColors,
+    sectionHeaderCanvasColors
+]);
+
 // Elements to exclude from automatic focus during application reload
 export const RELOAD_FOCUS_EXCLUSIONS = Object.freeze([
     canvasWrapElement,

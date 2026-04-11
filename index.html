@@ -1,132 +1,145 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Pretty String Renderer</title>
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/layout/app.css">
-    <link rel="stylesheet" href="css/layout/header.css">
-    <link rel="stylesheet" href="css/layout/section.css">
-    <link rel="stylesheet" href="css/features/inputs.css">
-    <link rel="stylesheet" href="css/features/themes.css">
-    <link rel="stylesheet" href="css/features/editor.css">
-    <link rel="stylesheet" href="css/features/export.css">
-    <link rel="stylesheet" href="css/canvas/canvas.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Pretty String Renderer</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout/app.css" />
+  <link rel="stylesheet" href="css/layout/header.css" />
+  <link rel="stylesheet" href="css/layout/section.css" />
+  <link rel="stylesheet" href="css/features/inputs.css" />
+  <link rel="stylesheet" href="css/features/themes.css" />
+  <link rel="stylesheet" href="css/features/editor.css" />
+  <link rel="stylesheet" href="css/features/export.css" />
+  <link rel="stylesheet" href="css/canvas/canvas.css" />
 </head>
 
 <body>
-    <div id="app">
-        <!-- Header -->
-        <header id="app-header">
-            <span class="header-title">Pretty String Renderer</span>
-            <button class="btn no-select" id="btn-reset" type="button">Reset</button>
-            <div class="header-title-separator"></div>
-            <div class="badge" id="header-badge"></div>
-            <button class="btn no-select" id="btn-export">↓ Export</button>
-        </header>
+  <div id="app">
+    <!-- Header -->
+    <header id="app-header">
+      <span class="header-title">Pretty String Renderer</span>
+      <button class="btn no-select" id="btn-reset" type="button">
+        Reset
+      </button>
+      <div class="header-title-separator"></div>
+      <div class="badge" id="header-badge"></div>
+      <button class="btn no-select" id="btn-export">↓ Export</button>
+    </header>
 
-        <!-- Sidebar -->
-        <aside id="app-sidebar">
-            <!-- Themes -->
-            <div id="section-themes">
-                <div class="section-header no-select" id="section-header-themes">Themes<span
-                        class="accordion-control">▾</span>
-                </div>
-                <div class="section-body">
-                    <div id="theme-list">
-                        <div id="theme-empty">No themes loaded.</div>
-                    </div>
-                    <button id="btn-load-themes" class="theme-btn no-select">Load themes</button>
-                    <button id="btn-export-theme" class="theme-btn no-select">Export theme</button>
-                </div>
-            </div>
+    <!-- Sidebar -->
+    <aside id="app-sidebar">
+      <!-- Themes -->
+      <div id="section-themes">
+        <div class="section-header no-select" id="section-header-themes">
+          Themes<span class="accordion-control">▾</span>
+        </div>
+        <div class="section-body">
+          <div id="theme-list">
+            <div id="theme-empty">No themes loaded.</div>
+          </div>
+          <button id="btn-load-themes" class="theme-btn no-select">
+            Load themes
+          </button>
+          <button id="btn-export-theme" class="theme-btn no-select">
+            Export theme
+          </button>
+        </div>
+      </div>
 
-            <div class="section-separator"></div>
+      <div class="section-separator"></div>
 
-            <!-- Bracket colors -->
-            <div id="section-bracket-colors">
-                <div class="section-header no-select" id="section-header-bracket-colors">Bracket Colors<span
-                        class="accordion-control">▾</span></div>
+      <!-- Bracket colors -->
+      <div id="section-bracket-colors">
+        <div class="section-header no-select" id="section-header-bracket-colors">
+          Bracket Colors<span class="accordion-control">▾</span>
+        </div>
 
-                <!-- Inputs filled by js -->
-            </div>
+        <!-- Inputs filled by js -->
+      </div>
 
-            <div class="section-separator"></div>
+      <div class="section-separator"></div>
 
-            <!-- Syntax colors -->
-            <div id="section-syntax-colors">
-                <div class="section-header no-select" id="section-header-syntax-colors">Syntax Colors<span
-                        class="accordion-control">▾</span></div>
+      <!-- Syntax colors -->
+      <div id="section-syntax-colors">
+        <div class="section-header no-select" id="section-header-syntax-colors">
+          Syntax Colors<span class="accordion-control">▾</span>
+        </div>
 
-                <!-- Inputs filled by js -->
-            </div>
+        <!-- Inputs filled by js -->
+      </div>
 
-            <div class="section-separator"></div>
+      <div class="section-separator"></div>
 
-            <!-- Canvas colors -->
-            <div id="section-canvas-colors">
-                <div class="section-header no-select" id="section-header-canvas-colors">Canvas Colors<span
-                        class="accordion-control">▾</span></div>
+      <!-- Canvas colors -->
+      <div id="section-canvas-colors">
+        <div class="section-header no-select" id="section-header-canvas-colors">
+          Canvas Colors<span class="accordion-control">▾</span>
+        </div>
 
-                <!-- Inputs filled by js -->
-            </div>
+        <!-- Inputs filled by js -->
+      </div>
 
-            <div class="section-separator"></div>
+      <div class="section-separator"></div>
 
-            <!-- Typography -->
-            <div id="section-typography">
-                <div class="section-header no-select" id="section-header-typography">Typography<span
-                        class="accordion-control">▾</span>
-                </div>
+      <!-- Typography -->
+      <div id="section-typography">
+        <div class="section-header no-select" id="section-header-typography">
+          Typography<span class="accordion-control">▾</span>
+        </div>
 
-                <!-- Inputs filled by js -->
-            </div>
-        </aside>
+        <!-- Inputs filled by js -->
+      </div>
+    </aside>
 
-        <!-- Work area -->
-        <main id="app-work-area">
-            <!-- Canvas -->
-            <div id="canvas-wrap" tabindex="-1">
-                <div id="canvas-inner">
-                    <canvas id="canvas"></canvas>
-                </div>
-            </div>
+    <!-- Work area -->
+    <main id="app-work-area">
+      <!-- Canvas -->
+      <div id="canvas-wrap" tabindex="-1">
+        <div id="canvas-inner">
+          <canvas id="canvas"></canvas>
+        </div>
+      </div>
 
-            <!-- Resize handle -->
-            <div id="editor-resize-handle"></div>
+      <!-- Resize handle -->
+      <div id="editor-resize-handle"></div>
 
-            <!-- Editor area -->
-            <div id="editor-panel">
-                <div id="editor-tabs">
-                    <div class="tab no-select">Editor</div>
-                    <div class="editor-font no-select">
-                        <span>Font size</span>
-                        <input class="number-input" type="number" id="editor-font-size" />
-                    </div>
-                    <label class="editor-fit-label no-select">
-                        <input type="checkbox" id="editor-fit-to-content" />
-                        Fit to content
-                    </label>
-                    <span id="editor-status" class="no-select"></span>
-                </div>
+      <!-- Editor area -->
+      <div id="editor-panel">
+        <div id="editor-tabs">
+          <div class="tab no-select">Editor</div>
+          <div class="editor-font no-select">
+            <span>Font size</span>
+            <input class="number-input" type="number" id="editor-font-size" />
+          </div>
+          <label class="editor-fit-label no-select">
+            <input type="checkbox" id="editor-fit-to-content" />
+            Fit to content
+          </label>
+          <span id="editor-status" class="no-select"></span>
+        </div>
 
-                <!-- Editor -->
-                <textarea id="editor" spellcheck="false"></textarea>
-            </div>
-        </main>
+        <!-- Editor -->
+        <textarea id="editor" spellcheck="false"></textarea>
+      </div>
+    </main>
 
-        <!-- Export dialog -->
-        <dialog id="dialog-export">
-            <p class="dialog-title no-select">Export canvas as</p>
-            <div class="dialog-actions">
-                <button id="btn-export-png" class="btn no-select" type="button">PNG</button>
-                <button id="btn-export-svg" class="btn no-select" type="button">SVG</button>
-            </div>
-        </dialog>
-    </div>
-    <script type="module" src="js/app.js"></script>
+    <!-- Export dialog -->
+    <dialog id="dialog-export">
+      <p class="dialog-title no-select">Export canvas as</p>
+      <div class="dialog-actions">
+        <button id="btn-export-png" class="btn no-select" type="button">
+          PNG
+        </button>
+        <button id="btn-export-svg" class="btn no-select" type="button">
+          SVG
+        </button>
+      </div>
+    </dialog>
+  </div>
+  <script type="module" src="js/app.js"></script>
 </body>
 
 </html>

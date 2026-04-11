@@ -162,6 +162,21 @@ Contributions are welcome. Suggested workflow:
 4. Include appropriate documentation or tests.
 5. Commit, push, and open a pull request describing the change and the reason for it.
 
+### Pre-commit Hooks <!-- omit in toc -->
+
+This project uses [pre-commit](https://pre-commit.com/) to enforce code quality checks automatically before each commit. Run the following once from the **repo root** to set it up:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+After that, checks will run automatically on every `git commit`. To run them manually across all files:
+
+```bash
+pre-commit run --all-files
+```
+
 ---
 
 ## License

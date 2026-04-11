@@ -12,5 +12,8 @@
   },
   "markdownlint.config": {
     "MD033": false
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
   }
 }

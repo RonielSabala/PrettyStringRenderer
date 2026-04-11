@@ -1,9 +1,9 @@
 {
   "recommendations": [
     "antfu.vite",
-    "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "yzhang.markdown-all-in-one",
-    "streetsidesoftware.code-spell-checker"
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "yzhang.markdown-all-in-one"
   ]
 }

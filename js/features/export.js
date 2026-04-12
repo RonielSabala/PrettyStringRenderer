@@ -199,17 +199,17 @@ function _exportSVG() {
 
 // Listeners
 
-function _onClickExportCanvas() {
+function _openExportModal() {
     exportDialogElement.showModal();
 }
 
-function _onKeyDownExportCanvas(event) {
+function _onOpenExportModal(event) {
     if (!matchesKeybinding(event, 'export.open')) {
         return;
     }
 
     event.preventDefault();
-    _onClickExportCanvas();
+    _openExportModal();
 }
 
 function _onDialogClose(event) {
@@ -236,10 +236,10 @@ function _onExportSVG() {
 // Public methods
 
 export function initExport(signal) {
-    btnExport.addEventListener(EVENTS.CLICK, _onClickExportCanvas, {
+    btnExport.addEventListener(EVENTS.CLICK, _openExportModal, {
         signal
     });
-    document.addEventListener(EVENTS.KEY_DOWN, _onKeyDownExportCanvas, {
+    document.addEventListener(EVENTS.KEY_DOWN, _onOpenExportModal, {
         signal
     });
     exportDialogElement.addEventListener(EVENTS.CLICK, _onDialogClose, {

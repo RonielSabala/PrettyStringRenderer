@@ -91,6 +91,19 @@ function _onAppReload(event) {
 
 }
 
+function _saveLastActiveElement() {
+    let activeElementId = document.activeElement.id;
+    for (const element of RELOAD_FOCUS_EXCLUSIONS) {
+        if (activeElementId === element.id) {
+            activeElementId = '';
+            break;
+        }
+    }
+
+    state.activeElementId = activeElementId;
+    saveActiveElementIdState();
+}
+
 function init() {
     // Abort any listeners from a previous HMR reload
     window._appListenersController?.abort();
@@ -132,18 +145,7 @@ function init() {
     document.addEventListener(EVENTS.KEY_DOWN, _onAppReload, {
         signal
     });
-    window.addEventListener(EVENTS.WINDOW_RELOAD, () => {
-        let id = document.activeElement.id;
-        for (const element of RELOAD_FOCUS_EXCLUSIONS) {
-            if (id === element.id) {
-                id = '';
-                break;
-            }
-        }
-
-        state.activeElementId = id;
-        saveActiveElementIdState();
-    }, {
+    window.addEventListener(EVENTS.WINDOW_RELOAD, _saveLastActiveElement, {
         signal
     });
 }

@@ -76,7 +76,7 @@ function _applyTheme(theme) {
     redraw();
 }
 
-function _applyThemeOnArrow(event, index) {
+function _applyIthTheme(event, index) {
     const navigateUp = matchesKeybinding(event, 'themes.navigateUp');
     const navigateDown = matchesKeybinding(event, 'themes.navigateDown');
     if (!navigateUp && !navigateDown) {
@@ -135,7 +135,7 @@ function _renderThemeList() {
         themeItemElement.append(themeNameElement, themeSwatchElement);
         themeItemElement.addEventListener(EVENTS.CLICK, () => _applyTheme(theme));
         themeItemElement.addEventListener(EVENTS.DBL_CLICK, () => _showThemeOnNewWindow(theme));
-        themeItemElement.addEventListener(EVENTS.KEY_DOWN, (event) => _applyThemeOnArrow(event, index));
+        themeItemElement.addEventListener(EVENTS.KEY_DOWN, (event) => _applyIthTheme(event, index));
 
         themeListElement.appendChild(themeItemElement);
     });

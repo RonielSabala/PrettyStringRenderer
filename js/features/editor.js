@@ -147,7 +147,7 @@ function _onResize(event) {
     editorResizeHandleElement.classList.add(CSS.DRAG);
 }
 
-function _onEditorMouseUp() {
+function _onDraggingRelease() {
     if (!dragging) {
         return;
     }
@@ -216,7 +216,7 @@ export function initEditorSection(signal) {
     editorResizeHandleElement.addEventListener(EVENTS.MOUSE_DOWN, _onResize, {
         signal
     });
-    document.addEventListener(EVENTS.MOUSE_UP, _onEditorMouseUp, {
+    document.addEventListener(EVENTS.MOUSE_UP, _onDraggingRelease, {
         signal
     });
     document.addEventListener(EVENTS.KEY_DOWN, _onCanvasFocus, {

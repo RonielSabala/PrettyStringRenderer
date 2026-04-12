@@ -32,6 +32,7 @@ import {
     createNumberRow,
     renderSection
 } from './section_renderer.js';
+
 const _scheduleTypographyConfigSave = createSaveScheduler(saveTypographyConfigState);
 
 export function initTypographySection(signal) {

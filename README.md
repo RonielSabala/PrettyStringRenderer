@@ -16,6 +16,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - [Personalization](#personalization)
   - [Overridable Keys](#overridable-keys)
   - [Theme format](#theme-format)
+  - [Keybindings](#keybindings)
 - [String-Art Syntax](#string-art-syntax)
   - [Bracket Logic](#bracket-logic)
   - [Limitations](#limitations)
@@ -29,9 +30,9 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - **Incremental Tokenizer**: High-performance engine that only re-tokenizes changed lines.
 - **Structural Bracket Support**: Inline and multiline bracket families with automatic nesting color cycles.
 - **High-Resolution Export**: Export **PNG** at custom scale multipliers or editable **SVG** files.
-- **Configurable Workflow**: Comprehensive theme system and gitignored `user.profile.json` for deep personalization.
 - **Persistent State**: Your progress and workspace settings are automatically cached to `localStorage`.
-- **Keyboard-first Workflow**: Most actions have keyboard shortcuts.
+- **Configurable Workflow**: Comprehensive theme system and gitignored `userData/profile.json` for deep personalization.
+- **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `userData/keybindings.json`.
 
 ---
 
@@ -77,7 +78,7 @@ Start typing in the canvas editor to begin. See [SHORTCUTS.md](SHORTCUTS.md) for
 Create a local profile to override default settings:
 
 ```bash
-cp user.profile.example.json user.profile.json
+cp userData/profile.example.json userData/profile.json
 ```
 
 ---
@@ -90,7 +91,7 @@ cp user.profile.example.json user.profile.json
 | `typography.fontSize`      | Base font size for the renderer.                                                                                                                                                                                   |
 | `canvas.width` / `height`  | Default dimensions for the drawing area.                                                                                                                                                                           |
 
-> See [user.profile.example.json](user.profile.example.json) for the full list of overridable keys.
+> See [userData/profile.example.json](userData/profile.example.json) for the full list of overridable keys.
 
 ---
 
@@ -109,6 +110,29 @@ Themes are just simple JSON objects. Minimal theme example:
 You can define as many colors (nesting levels) as you want in the `bracket` array.
 
 > Check the [themes/](/themes/) folder for a collection of pre-bundled color palettes.
+
+---
+
+### Keybindings
+
+Create a local keybindings file to override the default shortcuts:
+
+```bash
+cp userData/keybindings.example.json userData/keybindings.json
+```
+
+Keys you omit keep their default. Each entry maps an action to a key combination string:
+
+```json
+{
+  "export.open": "ctrl+m",
+  "canvas.focus": "escape"
+}
+```
+
+Modifiers are `ctrl`, `shift`, and `alt`, separated by `+`. The key name is always last and matches [KeyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values) (case-insensitive).
+
+> See [userData/keybindings.example.json](userData/keybindings.example.json) for every configurable action.
 
 ---
 

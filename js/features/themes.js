@@ -17,14 +17,14 @@ import {
     EVENTS
 } from '../common/constants/events.js';
 import {
-    KEYS
-} from '../common/constants/keys.js';
-import {
     btnExportTheme,
     btnLoadThemes,
     emptyThemeElement,
     themeListElement
 } from '../common/elements.js';
+import {
+    matchesKeybinding
+} from '../common/keybindings.js';
 import {
     state
 } from '../common/store.js';
@@ -77,7 +77,9 @@ function _applyTheme(theme) {
 }
 
 function _applyThemeOnArrow(event, index) {
-    if (event.key !== KEYS.ARROW_UP && event.key !== KEYS.ARROW_DOWN) {
+    const navigateUp = matchesKeybinding(event, 'themes.navigateUp');
+    const navigateDown = matchesKeybinding(event, 'themes.navigateDown');
+    if (!navigateUp && !navigateDown) {
         return;
     }
 
@@ -85,15 +87,11 @@ function _applyThemeOnArrow(event, index) {
 
     let i;
     const themes = state.themes;
-    switch (event.key) {
-        case KEYS.ARROW_UP:
-            i = index - 1;
-            break;
-        case KEYS.ARROW_DOWN:
-            i = (index + 1) % themes.length;
-            break;
-        default:
-            return;
+
+    if (navigateUp) {
+        i = index - 1;
+    } else if (navigateDown) {
+        i = (index + 1) % themes.length;
     }
 
     _applyTheme(themes.at(i));
@@ -199,7 +197,7 @@ function _onExportTheme() {
 }
 
 function _onThemesFocus(event) {
-    if (event.code !== KEYS.TAB) {
+    if (!matchesKeybinding(event, 'themes.focus')) {
         return;
     }
 

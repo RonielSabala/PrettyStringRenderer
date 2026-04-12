@@ -18,15 +18,15 @@ import {
     EVENTS
 } from '../common/constants/events.js';
 import {
-    KEYS
-} from '../common/constants/keys.js';
-import {
     canvasWrapElement,
     editorElement,
     editorFontSizeElement,
     editorPanelElement,
     editorResizeHandleElement
 } from '../common/elements.js';
+import {
+    matchesKeybinding
+} from '../common/keybindings.js';
 import {
     state,
     tokenizer
@@ -157,8 +157,8 @@ function _onEditorMouseUp() {
     editorResizeHandleElement.classList.remove(CSS.DRAG);
 }
 
-function _onEscapeToCanvas(event) {
-    if (event.code !== KEYS.ESCAPE) {
+function _onCanvasFocus(event) {
+    if (!matchesKeybinding(event, 'canvas.focus')) {
         return;
     }
 
@@ -219,7 +219,7 @@ export function initEditorSection(signal) {
     document.addEventListener(EVENTS.MOUSE_UP, _onEditorMouseUp, {
         signal
     });
-    document.addEventListener(EVENTS.KEY_DOWN, _onEscapeToCanvas, {
+    document.addEventListener(EVENTS.KEY_DOWN, _onCanvasFocus, {
         signal
     })
 }

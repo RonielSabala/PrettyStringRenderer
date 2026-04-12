@@ -24,14 +24,14 @@ import {
     EVENTS
 } from '../common/constants/events.js';
 import {
-    KEYS
-} from '../common/constants/keys.js';
-import {
     btnExport,
     btnExportPNG,
     btnExportSVG,
     exportDialogElement
 } from '../common/elements.js';
+import {
+    matchesKeybinding
+} from '../common/keybindings.js';
 import {
     state
 } from '../common/store.js';
@@ -204,7 +204,7 @@ function _onClickExportCanvas() {
 }
 
 function _onKeyDownExportCanvas(event) {
-    if (!event.ctrlKey || event.code !== KEYS.S) {
+    if (!matchesKeybinding(event, 'export.open')) {
         return;
     }
 
@@ -213,9 +213,14 @@ function _onKeyDownExportCanvas(event) {
 }
 
 function _onDialogClose(event) {
-    if (event.target === exportDialogElement || event.code === KEYS.ESCAPE) {
-        _closeDialog();
+    if (
+        event.target !== exportDialogElement &&
+        !matchesKeybinding(event, 'export.close')
+    ) {
+        return;
     }
+
+    _closeDialog();
 }
 
 function _onExportPNG() {

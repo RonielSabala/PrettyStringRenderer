@@ -39,5 +39,5 @@
 
 | Action        | Shortcut / Input                                                     |
 | :------------ | :------------------------------------------------------------------- |
-| **Export**    | <kbd>Ctrl</kbd>+<kbd>S</kbd> or click the **Export** button          |
+| **Export**    | <kbd>Ctrl</kbd>+<kbd>M</kbd> or click the **Export** button          |
 | **Clear All** | `click` the **Reset** button to clear theme selection and view state |

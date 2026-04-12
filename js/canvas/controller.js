@@ -13,15 +13,15 @@ import {
     EVENTS
 } from '../common/constants/events.js';
 import {
-    KEYS
-} from '../common/constants/keys.js';
-import {
     canvasElement,
     canvasInnerElement,
     canvasWrapElement,
     editorElement,
     fitToContentElement
 } from '../common/elements.js';
+import {
+    matchesKeybinding
+} from '../common/keybindings.js';
 import {
     state
 } from '../common/store.js';
@@ -171,7 +171,7 @@ function _onFitToContent() {
 // Document listeners
 
 function _onSpace(event) {
-    if (event.code !== KEYS.SPACE || document.activeElement === editorElement) {
+    if (!matchesKeybinding(event, 'canvas.panHold') || document.activeElement === editorElement) {
         return;
     }
 
@@ -186,7 +186,7 @@ function _onSpace(event) {
 }
 
 function _onSpaceRelease(event) {
-    if (event.code !== KEYS.SPACE) {
+    if (!matchesKeybinding(event, 'canvas.panHold')) {
         return;
     }
 

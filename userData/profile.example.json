@@ -3,7 +3,7 @@
     "fontVariantLigatures": "normal"
   },
   "typography": {
-    "fontSize": 100,
+    "fontSize": 90,
     "lineHeight": 1,
     "letterSpacing": 1,
     "padX": 20,
@@ -12,14 +12,14 @@
   "editor": {
     "content": "Welcome to your custom workspace!",
     "height": 250,
-    "fontSize": 25,
+    "fontSize": 22,
     "padX": 12,
     "padY": 12
   },
   "canvas": {
     "width": 1920,
     "height": 1080,
-    "font": "Consolas",
+    "font": "Cascadia Code",
     "fontWeight": 500,
     "fitToContent": false
   },

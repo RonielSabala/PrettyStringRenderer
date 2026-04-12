@@ -1,9 +1,12 @@
 {
+  "app.fullReload": "ctrl+shift+r",
   "canvas.focus": "escape",
   "canvas.panHold": "space",
   "export.open": "ctrl+m",
   "export.close": "escape",
   "themes.focus": "tab",
+  "themes.import": "ctrl+i",
+  "themes.export": "ctrl+shift+e",
   "themes.navigateUp": "arrowup",
   "themes.navigateDown": "arrowdown"
 }

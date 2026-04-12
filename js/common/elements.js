@@ -17,7 +17,7 @@ export const btnExport = getElement('btn-export');
 export const resolutionBadgeElement = getElement('header-badge');
 
 // Theme section
-export const btnLoadThemes = getElement('btn-load-themes')
+export const btnImportThemes = getElement('btn-import-themes')
 export const btnExportTheme = getElement('btn-export-theme');
 export const emptyThemeElement = getElement('theme-empty');
 export const themeListElement = getElement('theme-list');

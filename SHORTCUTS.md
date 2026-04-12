@@ -25,19 +25,19 @@
 
 ## Themes
 
-| Action          | Shortcut / Input                                                     |
-| :-------------- | :------------------------------------------------------------------- |
-| **Focus**       | <kbd>Tab</kbd>                                                       |
-| **Navigate**    | <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>                            |
-| **Open Source** | `double-click` a theme                                               |
-| **Import**      | `click` the **Load themes** button; it can overwrite existing themes |
-| **Save**        | `click` the **Export theme** button                                  |
+| Action          | Shortcut / Input                                                                                       |
+| :-------------- | :----------------------------------------------------------------------------------------------------- |
+| **Focus**       | <kbd>Tab</kbd>                                                                                         |
+| **Navigate**    | <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>                                                              |
+| **Open Source** | `double-click` a theme                                                                                 |
+| **Import**      | <kbd>Ctrl</kbd>+<kbd>I</kbd> or `click` the **Import themes** button; it can overwrite existing themes |
+| **Export**      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> or `click` the **Export theme** button                   |
 
 ---
 
 ## Workspace
 
-| Action        | Shortcut / Input                                                     |
-| :------------ | :------------------------------------------------------------------- |
-| **Export**    | <kbd>Ctrl</kbd>+<kbd>M</kbd> or click the **Export** button          |
-| **Clear All** | `click` the **Reset** button to clear theme selection and view state |
+| Action          | Shortcut / Input                                                                                                      |
+| :-------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| **Export**      | <kbd>Ctrl</kbd>+<kbd>M</kbd> or click the **Export** button                                                           |
+| **Full Reload** | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> or `click` the **Reset** button to clear theme selection and view state |

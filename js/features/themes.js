@@ -18,7 +18,7 @@ import {
 } from '../common/constants/events.js';
 import {
     btnExportTheme,
-    btnLoadThemes,
+    btnImportThemes,
     emptyThemeElement,
     themeListElement
 } from '../common/elements.js';
@@ -154,7 +154,7 @@ function _mergeTheme(theme, themeName) {
     themes[i] = theme;
 }
 
-async function _loadThemes(files) {
+async function _importThemeFiles(files) {
     for (const file of files) {
         const theme = JSON.parse(await file.text());
         const themeName = file.name.replace(new RegExp(`${THEMES_EXTENSION}$`, 'i'), '');
@@ -174,16 +174,16 @@ async function _loadThemes(files) {
 
 // Listeners
 
-function _onLoadThemes() {
+function _importThemes() {
     const inputElement = document.createElement('input');
     inputElement.type = THEMES_FILE_TYPE;
     inputElement.accept = THEMES_EXTENSION;
     inputElement.multiple = true;
-    inputElement.addEventListener(EVENTS.CHANGE, () => _loadThemes(inputElement.files));
+    inputElement.addEventListener(EVENTS.CHANGE, () => _importThemeFiles(inputElement.files));
     inputElement.click();
 }
 
-function _onExportTheme() {
+function _exportTheme() {
     const filename = prompt(EXPORT_THEME_PROMPT_MESSAGE, state.activeThemeName || DEFAULT_EXPORT_THEME_FILENAME);
     if (!filename) {
         return;
@@ -194,6 +194,24 @@ function _onExportTheme() {
     anchorElement.download = filename.endsWith(THEMES_EXTENSION) ? filename : `${filename}${THEMES_EXTENSION}`;
     anchorElement.click();
     setTimeout(() => URL.revokeObjectURL(anchorElement.href), 1000);
+}
+
+function _onImportThemes(event) {
+    if (!matchesKeybinding(event, 'themes.import')) {
+        return;
+    }
+
+    event.preventDefault();
+    _importThemes();
+}
+
+function _onExportTheme(event) {
+    if (!matchesKeybinding(event, 'themes.export')) {
+        return;
+    }
+
+    event.preventDefault();
+    _exportTheme();
 }
 
 function _onThemesFocus(event) {
@@ -220,10 +238,16 @@ export function initThemesSection(signal) {
     }
 
     // Listeners
-    btnLoadThemes.addEventListener(EVENTS.CLICK, _onLoadThemes, {
+    btnImportThemes.addEventListener(EVENTS.CLICK, _importThemes, {
         signal
     });
-    btnExportTheme.addEventListener(EVENTS.CLICK, _onExportTheme, {
+    btnExportTheme.addEventListener(EVENTS.CLICK, _exportTheme, {
+        signal
+    });
+    document.addEventListener(EVENTS.KEY_DOWN, _onImportThemes, {
+        signal
+    });
+    document.addEventListener(EVENTS.KEY_DOWN, _onExportTheme, {
         signal
     });
     document.addEventListener(EVENTS.KEY_DOWN, _onThemesFocus, {

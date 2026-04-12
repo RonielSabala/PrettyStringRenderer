@@ -18,6 +18,9 @@ import {
     resetButtonElement
 } from './common/elements.js';
 import {
+    matchesKeybinding
+} from './common/keybindings.js';
+import {
     state,
     tokenizer
 } from './common/store.js';
@@ -52,7 +55,7 @@ import {
     updateResolutionBadge
 } from './utils/ui_sync.js';
 
-function hideSections() {
+function _hideSections() {
     // Hide default sections on start
     let collapsedSectionIds = state.collapsedSectionIds;
     if (isObjectEmpty(collapsedSectionIds)) {
@@ -73,6 +76,21 @@ function hideSections() {
     }
 }
 
+function _reloadApp() {
+    clearState();
+    location.reload();
+}
+
+function _onAppReload(event) {
+    if (!matchesKeybinding(event, 'app.fullReload')) {
+        return;
+    }
+
+    event.preventDefault();
+    _reloadApp();
+
+}
+
 function init() {
     // Abort any listeners from a previous HMR reload
     window._appListenersController?.abort();
@@ -88,7 +106,7 @@ function init() {
     initThemesSection(signal);
     initTypographySection(signal);
     initEditorSection(signal);
-    hideSections();
+    _hideSections();
 
     initCanvas(signal);
     initExport(signal);
@@ -107,15 +125,13 @@ function init() {
         })
     );
 
-    // Buttons listeners
-    resetButtonElement.addEventListener(EVENTS.CLICK, () => {
-        clearState();
-        location.reload();
-    }, {
+    // Window reload listeners
+    resetButtonElement.addEventListener(EVENTS.CLICK, _reloadApp, {
         signal
     });
-
-    // Window reload listener
+    document.addEventListener(EVENTS.KEY_DOWN, _onAppReload, {
+        signal
+    });
     window.addEventListener(EVENTS.WINDOW_RELOAD, () => {
         let id = document.activeElement.id;
         for (const element of RELOAD_FOCUS_EXCLUSIONS) {

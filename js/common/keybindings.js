@@ -5,10 +5,10 @@ const _userFile = import.meta.glob('../../userData/keybindings.json', {
 });
 const _user = _userFile['../../userData/keybindings.json']?.default ?? {};
 
-export const KEYBINDINGS = Object.freeze({
+const _raw = {
     ..._defaults,
     ..._user
-});
+};
 
 const KEY_ALIASES = {
     'space': ' ',
@@ -25,22 +25,21 @@ function _parse(binding) {
     };
 }
 
+// Pre-parsed map
+const _parsed = Object.freeze(
+    Object.fromEntries(Object.entries(_raw).map(([id, binding]) => [id, _parse(binding)]))
+);
+
 export function matchesKeybinding(event, bindingId) {
-    const binding = KEYBINDINGS[bindingId];
+    const binding = _parsed[bindingId];
     if (!binding) {
         return false;
     }
 
-    const {
-        ctrl,
-        shift,
-        alt,
-        key
-    } = _parse(binding);
     return (
-        event.key.toLowerCase() === key &&
-        !!event.ctrlKey === ctrl &&
-        !!event.shiftKey === shift &&
-        !!event.altKey === alt
+        event.key.toLowerCase() === binding.key &&
+        !!event.ctrlKey === binding.ctrl &&
+        !!event.shiftKey === binding.shift &&
+        !!event.altKey === binding.alt
     );
 }

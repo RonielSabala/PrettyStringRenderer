@@ -1,20 +1,20 @@
-import _defaults from '../../userData/keybindings.example.json';
+import _defaultsKeybindings from '../../userData/keybindings.example.json';
 
 const _userFile = import.meta.glob('../../userData/keybindings.json', {
     eager: true
 });
-const _user = _userFile['../../userData/keybindings.json']?.default ?? {};
+const _userKeybindings = _userFile['../../userData/keybindings.json']?.default ?? {};
 
 const _raw = {
-    ..._defaults,
-    ..._user
+    ..._defaultsKeybindings,
+    ..._userKeybindings
 };
 
 const KEY_ALIASES = {
     'space': ' ',
 };
 
-function _parse(binding) {
+function _parseBinding(binding) {
     const parts = binding.toLowerCase().split('+');
     const rawKey = parts.at(-1);
     return {
@@ -26,12 +26,12 @@ function _parse(binding) {
 }
 
 // Pre-parsed map
-const _parsed = Object.freeze(
-    Object.fromEntries(Object.entries(_raw).map(([id, binding]) => [id, _parse(binding)]))
+const _parsedKeybindings = Object.freeze(
+    Object.fromEntries(Object.entries(_raw).map(([id, binding]) => [id, _parseBinding(binding)]))
 );
 
 export function matchesKeybinding(event, bindingId) {
-    const binding = _parsed[bindingId];
+    const binding = _parsedKeybindings[bindingId];
     if (!binding) {
         return false;
     }

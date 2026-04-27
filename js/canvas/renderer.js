@@ -92,7 +92,9 @@ export function iterateTokens(width, height, config, onToken) {
         tokenizer.linesCount - 1
     );
 
-    if (maxRow < 0 || maxCol < 0) return;
+    if (maxRow < 0 || maxCol < 0) {
+        return;
+    }
 
     const tokenizedLines = tokenizer.tokenizedLines;
     for (let row = 0; row <= maxRow; row++) {
@@ -110,8 +112,8 @@ export function iterateTokens(width, height, config, onToken) {
             }
 
             const x = padX + startCol * charWidth;
-            const text = col > maxCol ? tokenValue.substring(0, maxCol - startCol) : tokenValue;
-            onToken(text, tokenColor, x, y);
+            const tokenText = col > maxCol ? tokenValue.substring(0, maxCol - startCol) : tokenValue;
+            onToken(tokenText, tokenColor, x, y);
 
             if (col > maxCol) {
                 break;
@@ -122,7 +124,7 @@ export function iterateTokens(width, height, config, onToken) {
 
 export function render(ctx, width, height, configOverride = null) {
     const config = configOverride ?? state.typographyConfig;
-    const isOptimizeSpeed = config.textRendering === CSS_TEXT_RENDERING.OPTIMIZE_SPEED;
+    const isSpeedOptimized = config.textRendering === CSS_TEXT_RENDERING.OPTIMIZE_SPEED;
 
     // Background
     ctx.fillStyle = state.colors.background;
@@ -132,10 +134,10 @@ export function render(ctx, width, height, configOverride = null) {
 
     iterateTokens(width, height, config, (text, color, x, y) => {
         ctx.fillStyle = color;
-        if (isOptimizeSpeed) {
-            ctx.fillText(text, x | 0, y | 0);
-        } else {
-            ctx.fillText(text, x, y);
-        }
+        ctx.fillText(
+            text,
+            isSpeedOptimized ? x | 0 : x,
+            isSpeedOptimized ? y | 0 : y
+        );
     });
 }

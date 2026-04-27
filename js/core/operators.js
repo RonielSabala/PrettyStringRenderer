@@ -1,11 +1,11 @@
-const ARITHMETIC = ['+', '-', '%', '*', '**'];
-const COMPARISON = ['=', '>', '<'];
-const BITWISE = ['&', '|', '^', '~'];
-const SPECIAL = ['!', '—', '·', '─'];
+const _ARITHMETIC = ['+', '-', '%', '*', '**'];
+const _COMPARISON = ['=', '>', '<'];
+const _BITWISE = ['&', '|', '^', '~'];
+const _OTHER = ['!', '—', '·', '─'];
 
 export const OPERATORS_SET = Object.freeze(new Set([
-    ...ARITHMETIC,
-    ...COMPARISON,
-    ...BITWISE,
-    ...SPECIAL
+    ..._ARITHMETIC,
+    ..._COMPARISON,
+    ..._BITWISE,
+    ..._OTHER
 ]));

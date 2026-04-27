@@ -1,47 +1,47 @@
-import _defaults from '../../userData/profile.example.json';
+import _defaultSettings from '../../userData/profile.example.json';
 import {
     editorTabsElement
 } from './elements.js';
 
 // User profile
-const _profile = import.meta.glob('../../userData/profile.json', {
+const _userFile = import.meta.glob('../../userData/profile.json', {
     eager: true
 });
-const _u = _profile['../../userData/profile.json']?.default ?? {};
+const _userSettings = _userFile['../../userData/profile.json']?.default ?? {};
 
 // App
 export const LINE_BREAK = '\n';
 export const SAVE_TIMEOUT_MS = 200;
 export const MAX_HEX_INPUT_LENGTH = 7;
-export const APP_FONT_VARIANT_LIGATURES = _u.app?.fontVariantLigatures ?? _defaults.app.fontVariantLigatures;
+export const APP_FONT_VARIANT_LIGATURES = _userSettings.app?.fontVariantLigatures ?? _defaultSettings.app.fontVariantLigatures;
 
 // Typography
-const _uTypography = _u.typography ?? {};
+const _typographySettings = _userSettings.typography ?? {};
 export const TYPOGRAPHY_DEFAULTS = {
     fontSize: {
-        value: _uTypography.fontSize ?? _defaults.typography.fontSize,
+        value: _typographySettings.fontSize ?? _defaultSettings.typography.fontSize,
         min: 5,
         max: 300,
     },
     lineHeight: {
-        value: _uTypography.lineHeight ?? _defaults.typography.lineHeight,
+        value: _typographySettings.lineHeight ?? _defaultSettings.typography.lineHeight,
         min: 0.8,
         max: 4,
         step: 0.01,
     },
     letterSpacing: {
-        value: _uTypography.letterSpacing ?? _defaults.typography.letterSpacing,
+        value: _typographySettings.letterSpacing ?? _defaultSettings.typography.letterSpacing,
         min: -10,
         max: 50,
         step: 0.5,
     },
     padX: {
-        value: _uTypography.padX ?? _defaults.typography.padX,
+        value: _typographySettings.padX ?? _defaultSettings.typography.padX,
         min: 0,
         max: 400,
     },
     padY: {
-        value: _uTypography.padY ?? _defaults.typography.padY,
+        value: _typographySettings.padY ?? _defaultSettings.typography.padY,
         min: 0,
         max: 400,
     }
@@ -54,14 +54,14 @@ export const EDITOR_LETTER_SPACING = 'auto';
 export const EDITOR_MAX_HEIGHT_PERCENTAGE = 0.8;
 export const EDITOR_MIN_HEIGHT_PX = editorTabsElement.offsetHeight;
 
-const _uEditor = _u.editor ?? {};
+const _editorSettings = _userSettings.editor ?? {};
 export const EDITOR_DEFAULTS = {
-    content: _uEditor.content ?? _defaults.editor.content,
-    height: _uEditor.height ?? _defaults.editor.height,
-    padX: _uEditor.padX ?? _defaults.editor.padX,
-    padY: _uEditor.padY ?? _defaults.editor.padY,
+    content: _editorSettings.content ?? _defaultSettings.editor.content,
+    height: _editorSettings.height ?? _defaultSettings.editor.height,
+    padX: _editorSettings.padX ?? _defaultSettings.editor.padX,
+    padY: _editorSettings.padY ?? _defaultSettings.editor.padY,
     fontSize: {
-        value: _uEditor.fontSize ?? _defaults.editor.fontSize,
+        value: _editorSettings.fontSize ?? _defaultSettings.editor.fontSize,
         min: 8,
         max: 36,
     },
@@ -78,9 +78,9 @@ export const CANVAS_MAX_PIXEL_SCALE = 5;
 export const CANVAS_VIEWPORT_PADDING_PX = 25;
 export const CANVAS_REDRAW_TIMEOUT_MS = 120;
 
-const _uCanvas = _u.canvas ?? {};
-const _canvasWidth = _uCanvas.width ?? _defaults.canvas.width;
-const _canvasHeight = _uCanvas.height ?? _defaults.canvas.height;
+const _canvasSettings = _userSettings.canvas ?? {};
+const _canvasWidth = _canvasSettings.width ?? _defaultSettings.canvas.width;
+const _canvasHeight = _canvasSettings.height ?? _defaultSettings.canvas.height;
 export const CANVAS_DEFAULTS = {
     zoom: 1,
     panX: 0,
@@ -88,9 +88,9 @@ export const CANVAS_DEFAULTS = {
     width: _canvasWidth,
     height: _canvasHeight,
     aspectRatio: _canvasWidth / _canvasHeight,
-    fitToContent: _uCanvas.fitToContent ?? _defaults.canvas.fitToContent,
-    font: _uCanvas.font ?? _defaults.canvas.font,
-    fontWeight: _uCanvas.fontWeight ?? _defaults.canvas.fontWeight,
+    fitToContent: _canvasSettings.fitToContent ?? _defaultSettings.canvas.fitToContent,
+    font: _canvasSettings.font ?? _defaultSettings.canvas.font,
+    fontWeight: _canvasSettings.fontWeight ?? _defaultSettings.canvas.fontWeight,
 };
 
 // Export
@@ -108,9 +108,9 @@ export const DEFAULT_PNG_SCALAR = 1;
 export const EXPORT_PNG_PROMPT_MESSAGE = 'Scale multiplier:';
 export const EXPORT_PNG_PROMPT_SCALAR_EXAMPLES = [1, 2, 0.5];
 
-const _uExport = _u.export ?? {};
-export const DEFAULT_EXPORT_IMAGE_FILENAME = _uExport.defaultImageFilename ?? _defaults.export.defaultImageFilename;
-export const DEFAULT_EXPORT_THEME_FILENAME = _uExport.defaultThemeFilename ?? _defaults.export.defaultThemeFilename;
+const _exportSettings = _userSettings.export ?? {};
+export const DEFAULT_EXPORT_IMAGE_FILENAME = _exportSettings.defaultImageFilename ?? _defaultSettings.export.defaultImageFilename;
+export const DEFAULT_EXPORT_THEME_FILENAME = _exportSettings.defaultThemeFilename ?? _defaultSettings.export.defaultThemeFilename;
 
 // Themes
 
@@ -121,6 +121,6 @@ export const THEME_BLOB_TYPE = {
     type: 'application/json'
 };
 
-const _theme = _u.theme ?? _defaults.theme;
-export const DEFAULT_THEME = Object.freeze(_theme);
-export const THEME_KEYS = Object.keys(_theme);
+const _defaultTheme = _userSettings.theme ?? _defaultSettings.theme;
+export const DEFAULT_THEME = Object.freeze(_defaultTheme);
+export const THEME_KEYS = Object.keys(_defaultTheme);

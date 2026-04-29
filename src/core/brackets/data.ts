@@ -1,10 +1,10 @@
-export interface BracketArm {
+interface BracketArm {
   top: string;
   mid: string;
   bottom: string;
 }
 
-export interface MultilineBracketShape {
+interface MultilineBracketShape {
   left: BracketArm;
   right: BracketArm;
 }
@@ -29,7 +29,11 @@ export const MULTILINE_BRACKETS: ReadonlyArray<MultilineBracketShape> =
     },
   ]);
 
-function buildInlineBracketSets() {
+function buildInlineBracketSets(): Readonly<{
+  inlineOpen: Set<string>;
+  inlineClose: Set<string>;
+  multilineOpen: Set<string>;
+}> {
   return Object.freeze({
     inlineOpen: new Set(Object.values(INLINE_BRACKETS)),
     inlineClose: new Set(Object.keys(INLINE_BRACKETS)),

@@ -6,6 +6,7 @@
   "cSpell.language": "en",
   "cSpell.caseSensitive": true,
   "vite.browserType": "system",
+  "vite.autoStart": false,
   "markdown.extension.toc.levels": "2..3",
   "markdown.extension.toc.omittedFromToc": {
     "README.md": ["## Table of Contents"]

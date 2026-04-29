@@ -99,7 +99,6 @@ export class Tokenizer {
     this._tokenizedLines = newTokenizedLines;
   }
 
-  /** Re-color all cached tokens without re-tokenizing. */
   recolor(colors: ThemeColors): void {
     for (const line of this._tokenizedLines) {
       for (const token of line) {

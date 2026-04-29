@@ -41,13 +41,17 @@ export interface CanvasConfig {
   fitToContent: boolean;
 }
 
+export interface CollapsedSections {
+  [key: string]: boolean;
+}
+
 export interface AppState {
   // Data
   colors: ThemeColors;
   themes: ThemeColors[];
   activeThemeName: string;
   activeElementId: string;
-  collapsedSectionIds: Record<string, boolean>;
+  collapsedSectionIds: CollapsedSections;
   // Configs
   typographyConfig: TypographyConfig;
   editorConfig: EditorConfig;
@@ -59,7 +63,7 @@ export interface AppState {
   setThemes: (themes: ThemeColors[]) => void;
   setActiveThemeName: (name: string) => void;
   setActiveElementId: (id: string) => void;
-  setCollapsedSectionIds: (ids: Record<string, boolean>) => void;
+  setCollapsedSectionIds: (ids: CollapsedSections) => void;
 
   setTypographyConfig: (config: Partial<TypographyConfig>) => void;
   setEditorConfig: (config: Partial<EditorConfig>) => void;

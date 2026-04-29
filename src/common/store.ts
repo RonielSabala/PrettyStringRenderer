@@ -7,6 +7,7 @@ import {
   EDITOR_DEFAULTS,
   TYPOGRAPHY_DEFAULTS,
 } from "./config";
+import type { CssTextRendering } from "./constants/css";
 import {
   CSS_FONT_VARIANT_LIGATURES,
   CSS_TEXT_RENDERING,
@@ -21,7 +22,7 @@ export interface TypographyConfig {
   letterSpacing: number;
   padX: number;
   padY: number;
-  textRendering: string;
+  textRendering: CssTextRendering;
 }
 
 export interface EditorConfig {

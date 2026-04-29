@@ -46,10 +46,5 @@ export const CSS_TEXT_RENDERING = Object.freeze({
 } as const);
 
 // Derived types
-export type CssCursor = (typeof CSS_CURSORS)[keyof typeof CSS_CURSORS];
-export type CssUserSelect =
-  (typeof CSS_USER_SELECT)[keyof typeof CSS_USER_SELECT];
 export type CssTextRendering =
   (typeof CSS_TEXT_RENDERING)[keyof typeof CSS_TEXT_RENDERING];
-export type CssLigatures =
-  (typeof CSS_FONT_VARIANT_LIGATURES)[keyof typeof CSS_FONT_VARIANT_LIGATURES];

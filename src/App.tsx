@@ -51,7 +51,6 @@ export default function App() {
 
       <main id="app-work-area">
         <CanvasView />
-        <div id="editor-resize-handle" />
         <EditorPanel />
       </main>
 

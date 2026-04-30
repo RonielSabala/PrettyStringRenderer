@@ -46,6 +46,8 @@ interface AppState {
   tokenize: (text: string) => void;
   recolor: () => void;
   redraw: () => void;
+
+  adjustCanvas: () => void;
 }
 
 // Store
@@ -125,6 +127,7 @@ export const useStore = create<AppState>((set, get) => ({
   },
 
   redraw: () => {},
+  adjustCanvas: () => {},
 }));
 
 export const getStore = () => useStore.getState();

@@ -1,9 +1,11 @@
 import { LINE_BREAK } from "../common/config";
-import type { Bracket, RawBracket, ThemeColors } from "../common/types";
+import type { ThemeColors } from "../common/types";
 import {
   BRACKET_SETS,
   INLINE_BRACKETS,
   ML_BRACKET_CHARS,
+  type Bracket,
+  type RawBracket,
 } from "./brackets/data";
 import { buildBracketsWithDepth, detectBrackets } from "./brackets/detector";
 import type { LineAnalysis } from "./brackets/line_analysis";

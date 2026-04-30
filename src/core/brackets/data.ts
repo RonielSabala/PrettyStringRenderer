@@ -1,3 +1,18 @@
+export interface Bracket {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  depth: number;
+}
+
+export interface RawBracket {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
 interface BracketArm {
   top: string;
   mid: string;

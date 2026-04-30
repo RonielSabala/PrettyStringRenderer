@@ -1,5 +1,10 @@
-import type { Bracket, RawBracket } from "../../common/types";
-import { BRACKET_SETS, ML_BRACKETS_COUNT, MULTILINE_BRACKETS } from "./data";
+import {
+  BRACKET_SETS,
+  ML_BRACKETS_COUNT,
+  MULTILINE_BRACKETS,
+  type Bracket,
+  type RawBracket,
+} from "./data";
 
 function _sortBrackets(a: RawBracket, b: RawBracket): number {
   const dy = a.y1 - b.y1;

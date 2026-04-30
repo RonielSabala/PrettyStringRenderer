@@ -1,5 +1,4 @@
-import type { Bracket } from "../../common/types";
-import { ML_BRACKET_CHARS } from "./data";
+import { ML_BRACKET_CHARS, type Bracket } from "./data";
 
 export class LineAnalysis {
   bracketArmDepths: (number | undefined)[];

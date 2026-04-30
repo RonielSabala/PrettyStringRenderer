@@ -21,6 +21,7 @@ import {
   saveThemesState,
 } from "../utils/persistence";
 import SidebarSection from "./SidebarSection";
+import { ThemeItem } from "./ThemeItem";
 
 const _scheduleSave = createSaveScheduler(saveColorsState);
 const _scheduleThemeNameSave = createSaveScheduler(saveActiveThemeNameState);
@@ -37,9 +38,7 @@ function _revokeAfter(url: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-// Theme section
-
-export default function ThemesSection() {
+function useThemes() {
   const colors = useStore((state) => state.colors);
   const themes = useStore((state) => state.themes) as Theme[];
   const activeThemeName = useStore((state) => state.activeThemeName);
@@ -59,7 +58,6 @@ export default function ThemesSection() {
   }, []);
 
   // Theme functions
-
   const applyTheme = useCallback(
     (theme: Theme) => {
       const patch: Partial<ThemeColors> = {};
@@ -165,8 +163,62 @@ export default function ThemesSection() {
 
     document.addEventListener(EVENTS.KEY_DOWN, handler);
     return () => document.removeEventListener(EVENTS.KEY_DOWN, handler);
-  }, [importThemes, exportTheme]);
+  }, [activeItem, importThemes, exportTheme]);
 
+  return {
+    themes,
+    activeThemeName,
+    activeItem,
+    applyTheme,
+    showInNewWindow,
+    importThemes,
+    exportTheme,
+  };
+}
+
+// Theme action buttons
+
+interface ThemeActionsProps {
+  onImport: () => void;
+  onExport: () => void;
+}
+
+function ThemeActions({ onImport, onExport }: ThemeActionsProps) {
+  return (
+    <>
+      <button
+        id="btn-import-themes"
+        className="theme-btn no-select"
+        onClick={onImport}
+      >
+        Import themes
+      </button>
+      <button
+        id="btn-export-theme"
+        className="theme-btn no-select"
+        onClick={onExport}
+      >
+        Export theme
+      </button>
+    </>
+  );
+}
+
+// Theme section
+
+export default function ThemesSection() {
+  const {
+    themes,
+    activeThemeName,
+    activeItem,
+    applyTheme,
+    showInNewWindow,
+    importThemes,
+    exportTheme,
+  } = useThemes();
+
+  const themesCount = themes.length;
+  const noThemes = themesCount === 0;
   return (
     <SidebarSection
       id="section-themes"
@@ -174,63 +226,29 @@ export default function ThemesSection() {
       title="Themes"
     >
       <div className="theme-list">
-        {themes.length === 0 ? (
+        {noThemes ? (
           <div id="theme-empty">No themes loaded.</div>
         ) : (
-          themes.map((theme, index) => {
-            const isActive = theme._name === activeThemeName;
-            return (
-              <div
-                key={theme._name}
-                ref={isActive ? activeItem : null}
-                className={`theme-item${isActive ? " active" : ""}`}
-                tabIndex={0}
-                onClick={() => applyTheme(theme)}
-                onDoubleClick={() => showInNewWindow(theme)}
-                onKeyDown={(event) => {
-                  if (
-                    matchesKeybinding(
-                      event as unknown as KeyboardEvent,
-                      "themes.navigateUp",
-                    )
-                  ) {
-                    event.preventDefault();
-                    applyTheme(themes.at(index - 1)!);
-                  } else if (
-                    matchesKeybinding(
-                      event as unknown as KeyboardEvent,
-                      "themes.navigateDown",
-                    )
-                  ) {
-                    event.preventDefault();
-                    applyTheme(themes.at((index + 1) % themes.length)!);
-                  }
-                }}
-              >
-                <span className="theme-name">{theme._name}</span>
-                <div
-                  className="theme-swatch"
-                  style={{ background: theme.background }}
-                />
-              </div>
-            );
-          })
+          themes.map((theme, index) => (
+            <ThemeItem
+              key={theme._name}
+              ref={theme._name === activeThemeName ? activeItem : null}
+              theme={theme}
+              isActive={theme._name === activeThemeName}
+              onApply={applyTheme}
+              onShow={showInNewWindow}
+              onNavigate={(upDirection) => {
+                const nextIdx = upDirection
+                  ? index - 1
+                  : (index + 1) % themesCount;
+                applyTheme(themes.at(nextIdx)!);
+              }}
+            />
+          ))
         )}
       </div>
-      <button
-        id="btn-import-themes"
-        className="theme-btn no-select"
-        onClick={importThemes}
-      >
-        Import themes
-      </button>
-      <button
-        id="btn-export-theme"
-        className="theme-btn no-select"
-        onClick={exportTheme}
-      >
-        Export theme
-      </button>
+
+      <ThemeActions onImport={importThemes} onExport={exportTheme} />
     </SidebarSection>
   );
 }

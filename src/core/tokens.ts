@@ -37,7 +37,7 @@ export class Token {
       return;
     }
 
-    const colorValue = colors[this.type as keyof ThemeColors];
+    const colorValue = colors[this.type];
     if (Array.isArray(colorValue)) {
       const colorIdx = (this.depth ?? 0) % colorValue.length;
       this.color = colorValue[colorIdx] ?? colors.unknown;

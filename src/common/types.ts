@@ -14,7 +14,8 @@ export interface RawBracket {
 }
 
 export interface ThemeColors {
-  bracket: string | string[];
+  [key: string]: string | string[];
+  bracket: string[];
   function: string;
   variable: string;
   operator: string;
@@ -23,5 +24,4 @@ export interface ThemeColors {
   comment: string;
   unknown: string;
   background: string;
-  [key: string]: string | string[];
 }

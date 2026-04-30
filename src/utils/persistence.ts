@@ -60,6 +60,9 @@ function _getObject<T>(key: string): T {
 
 // Public save functions
 
+export const saveColorsState = () =>
+  _saveObjectAsync(STORAGE_KEYS.COLORS, getStore().colors);
+
 export const saveThemesState = () =>
   _saveObjectAsync(STORAGE_KEYS.THEMES, getStore().themes);
 

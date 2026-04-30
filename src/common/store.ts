@@ -83,7 +83,7 @@ const _initialTextRendering =
 // Store
 
 export const useStore = create<AppState>((set, get) => ({
-  colors: { ...(DEFAULT_THEME as ThemeColors) },
+  colors: { ...DEFAULT_THEME },
   themes: [],
   activeThemeName: "",
   activeElementId: "",

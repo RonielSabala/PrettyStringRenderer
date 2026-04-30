@@ -1,6 +1,7 @@
 import { CANVAS_DEFAULTS } from "../common/config";
 import { CSS_TEXT_RENDERING } from "../common/constants/css";
-import { getStore, type TypographyConfig } from "../common/store";
+import { getStore } from "../common/store";
+import type { TypographyConfig } from "../common/types";
 import { toPx } from "../utils/resolution";
 
 const _CONTEXT_TYPE = "2d";

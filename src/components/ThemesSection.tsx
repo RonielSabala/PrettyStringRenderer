@@ -11,7 +11,7 @@ import {
 import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
 import { useStore } from "../common/store";
-import type { ThemeColors } from "../common/types";
+import type { Theme, ThemeColors } from "../common/types";
 import { applyThemeColors, setColor } from "../utils/color_sync";
 import { isObjectEmpty } from "../utils/parse";
 import {
@@ -24,8 +24,6 @@ import SidebarSection from "./SidebarSection";
 
 const _scheduleSave = createSaveScheduler(saveColorsState);
 const _scheduleThemeNameSave = createSaveScheduler(saveActiveThemeNameState);
-
-type Theme = ThemeColors & { _name: string };
 
 // Private helpers
 

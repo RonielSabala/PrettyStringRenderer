@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { TYPOGRAPHY_DEFAULTS } from "../common/config";
-import type { TypographyConfig } from "../common/store";
 import { useStore } from "../common/store";
-import type { InputRange } from "../common/types";
+import type { InputRange, TypographyConfig } from "../common/types";
 import { camelToKebab, camelToTitle } from "../utils/parse";
 import {
   createSaveScheduler,

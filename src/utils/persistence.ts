@@ -1,12 +1,12 @@
 import { SAVE_TIMEOUT_MS } from "../common/config";
-import {
-  getStore,
-  type CanvasConfig,
-  type CollapsedSections,
-  type EditorConfig,
-  type TypographyConfig,
-} from "../common/store";
-import type { ThemeColors } from "../common/types";
+import { getStore } from "../common/store";
+import type {
+  CanvasConfig,
+  CollapsedSections,
+  EditorConfig,
+  ThemeColors,
+  TypographyConfig,
+} from "../common/types";
 
 const STORAGE_KEYS = Object.freeze({
   COLORS: "psr:colors",

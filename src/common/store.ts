@@ -7,45 +7,19 @@ import {
   EDITOR_DEFAULTS,
   TYPOGRAPHY_DEFAULTS,
 } from "./config";
-import type { CssTextRendering } from "./constants/css";
 import {
   CSS_FONT_VARIANT_LIGATURES,
   CSS_TEXT_RENDERING,
 } from "./constants/css";
-import type { ThemeColors } from "./types";
+import type {
+  CanvasConfig,
+  CollapsedSections,
+  EditorConfig,
+  ThemeColors,
+  TypographyConfig,
+} from "./types";
 
-// State shape
-
-export interface TypographyConfig {
-  fontSize: number;
-  lineHeight: number;
-  letterSpacing: number;
-  padX: number;
-  padY: number;
-  textRendering: CssTextRendering;
-}
-
-export interface EditorConfig {
-  cursorSelection: number[];
-  height: number;
-  content: string;
-  fontSize: number;
-}
-
-export interface CanvasConfig {
-  zoom: number;
-  panX: number;
-  panY: number;
-  width: number;
-  height: number;
-  fitToContent: boolean;
-}
-
-export interface CollapsedSections {
-  [key: string]: boolean;
-}
-
-export interface AppState {
+interface AppState {
   // Data
   colors: ThemeColors;
   themes: ThemeColors[];
@@ -74,13 +48,6 @@ export interface AppState {
   redraw: () => void;
 }
 
-// Initial values
-
-const _initialTextRendering =
-  APP_FONT_VARIANT_LIGATURES === CSS_FONT_VARIANT_LIGATURES.NONE
-    ? CSS_TEXT_RENDERING.OPTIMIZE_SPEED
-    : CSS_TEXT_RENDERING.OPTIMIZE_LEGIBILITY;
-
 // Store
 
 export const useStore = create<AppState>((set, get) => ({
@@ -96,7 +63,10 @@ export const useStore = create<AppState>((set, get) => ({
     letterSpacing: TYPOGRAPHY_DEFAULTS.letterSpacing.value,
     padX: TYPOGRAPHY_DEFAULTS.padX.value,
     padY: TYPOGRAPHY_DEFAULTS.padY.value,
-    textRendering: _initialTextRendering,
+    textRendering:
+      APP_FONT_VARIANT_LIGATURES === CSS_FONT_VARIANT_LIGATURES.NONE
+        ? CSS_TEXT_RENDERING.OPTIMIZE_SPEED
+        : CSS_TEXT_RENDERING.OPTIMIZE_LEGIBILITY,
   },
 
   editorConfig: {

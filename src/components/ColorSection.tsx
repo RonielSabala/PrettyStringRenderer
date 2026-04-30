@@ -64,7 +64,7 @@ export function BracketColorSection() {
     (i: number, value: string) => {
       const next = [...brackets];
       next[i] = value;
-      setColor("bracket", next);
+      setColor(CSS.BRACKET, next);
       _scheduleSave();
     },
     [brackets],

@@ -25,13 +25,13 @@ export const CSS = Object.freeze({
 } as const);
 
 export const CSS_CURSORS = Object.freeze({
-  DEFAULT: "" as string,
+  DEFAULT: "",
   GRAB: "grab",
   GRABBING: "grabbing",
 } as const);
 
 export const CSS_USER_SELECT = Object.freeze({
-  AUTO: "" as string,
+  AUTO: "",
   NONE: "none",
 } as const);
 

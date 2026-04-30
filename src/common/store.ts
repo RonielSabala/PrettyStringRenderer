@@ -71,6 +71,7 @@ export interface AppState {
 
   tokenize: (text: string) => void;
   recolor: () => void;
+  redraw: () => void;
 }
 
 // Initial values
@@ -152,6 +153,8 @@ export const useStore = create<AppState>((set, get) => ({
     const { colors, tokenizer } = get();
     tokenizer.recolor(colors);
   },
+
+  redraw: () => {},
 }));
 
 export const getStore = () => useStore.getState();

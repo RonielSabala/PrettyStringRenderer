@@ -13,6 +13,13 @@ export interface RawBracket {
   y2: number;
 }
 
+export interface InputRange {
+  value: number;
+  min: number;
+  max: number;
+  step: number | undefined;
+}
+
 export interface ThemeColors {
   [key: string]: string | string[];
   bracket: string[];

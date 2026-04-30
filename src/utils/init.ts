@@ -1,4 +1,5 @@
 import { getStore } from "../common/store";
+import type { InputRange } from "../common/types";
 import { saveCollapsedSectionIdsState } from "./persistence";
 
 export function toggleSectionById(id: string): void {
@@ -6,13 +7,6 @@ export function toggleSectionById(id: string): void {
   sections[id] = !sections[id];
   getStore().setCollapsedSectionIds(sections);
   saveCollapsedSectionIdsState();
-}
-
-export interface InputRange {
-  value: number;
-  min: number;
-  max: number;
-  step: number;
 }
 
 export function getInputRange(

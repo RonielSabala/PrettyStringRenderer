@@ -1,10 +1,10 @@
-import _defaults from "../../public/userData/profile.example.json";
+import _defaults from "../../userData/profile.example.json";
 
-const _userFile = import.meta.glob("../../public/userData/profile.json", {
+const _userFile = import.meta.glob("../../userData/profile.json", {
   eager: true,
 }) as Record<string, { default: typeof _defaults }>;
 const _userDefaults =
-  _userFile["../../public/userData/profile.json"]?.default ??
+  _userFile["../../userData/profile.json"]?.default ??
   ({} as Partial<typeof _defaults>);
 
 // App

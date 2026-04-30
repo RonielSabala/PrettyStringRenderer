@@ -13,8 +13,8 @@ dist-ssr
 *.local
 
 # User data
-public/userData/profile.json
-public/userData/keybindings.json
+userData/profile.json
+userData/keybindings.json
 
 # Editor directories and files
 .idea

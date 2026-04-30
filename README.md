@@ -31,8 +31,8 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - **Structural Bracket Support**: Inline and multiline bracket families with automatic nesting color cycles.
 - **High-Resolution Export**: Export **PNG** at custom scale multipliers or editable **SVG** files.
 - **Persistent State**: Your progress and workspace settings are automatically cached to `localStorage`.
-- **Configurable Workflow**: Comprehensive theme system and gitignored `public/userData/profile.json` for deep personalization.
-- **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `public/userData/keybindings.json`.
+- **Configurable Workflow**: Comprehensive theme system and gitignored `userData/profile.json` for deep personalization.
+- **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `userData/keybindings.json`.
 
 ---
 
@@ -78,7 +78,7 @@ Start typing in the canvas editor to begin. See [SHORTCUTS.md](SHORTCUTS.md) for
 Create a local profile to override default settings:
 
 ```bash
-cp public/userData/profile.example.json public/userData/profile.json
+cp userData/profile.example.json userData/profile.json
 ```
 
 ---
@@ -91,7 +91,7 @@ cp public/userData/profile.example.json public/userData/profile.json
 | `typography.fontSize`      | Base font size for the renderer.                                                                                                                                                                                   |
 | `canvas.width` / `height`  | Default dimensions for the drawing area.                                                                                                                                                                           |
 
-> See [public/userData/profile.example.json](public/userData/profile.example.json) for the full list of overridable keys.
+> See [userData/profile.example.json](userData/profile.example.json) for the full list of overridable keys.
 
 ---
 
@@ -118,7 +118,7 @@ You can define as many colors (nesting levels) as you want in the `bracket` arra
 Create a local keybindings file to override the default shortcuts:
 
 ```bash
-cp public/userData/keybindings.example.json public/userData/keybindings.json
+cp userData/keybindings.example.json userData/keybindings.json
 ```
 
 Keys you omit keep their default. Each entry maps an action to a key combination string:
@@ -132,7 +132,7 @@ Keys you omit keep their default. Each entry maps an action to a key combination
 
 Modifiers are `ctrl`, `shift`, and `alt`, separated by `+`. The key name is always last and matches [KeyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values) (case-insensitive).
 
-> See [public/userData/keybindings.example.json](public/userData/keybindings.example.json) for every configurable action.
+> See [userData/keybindings.example.json](userData/keybindings.example.json) for every configurable action.
 
 ---
 

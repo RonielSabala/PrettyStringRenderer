@@ -1,10 +1,10 @@
-import _defaults from "../../public/userData/keybindings.example.json";
+import _defaults from "../../userData/keybindings.example.json";
 
-const _userFile = import.meta.glob("../../public/userData/keybindings.json", {
+const _userFile = import.meta.glob("../../userData/keybindings.json", {
   eager: true,
 }) as Record<string, { default: typeof _defaults }>;
 const _userBindings =
-  _userFile["../../public/userData/keybindings.json"]?.default ?? {};
+  _userFile["../../userData/keybindings.json"]?.default ?? {};
 
 const _rawBindings: Record<string, string> = {
   ..._defaults,

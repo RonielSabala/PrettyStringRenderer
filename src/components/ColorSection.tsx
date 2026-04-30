@@ -11,7 +11,7 @@ import SidebarSection from "./SidebarSection";
 const _scheduleSave = createSaveScheduler(saveColorsState);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { background, ...syntaxColors } = DEFAULT_THEME;
+const { bracket, background, ...syntaxColors } = DEFAULT_THEME;
 
 // Generic color section
 
@@ -46,6 +46,7 @@ export function ColorSection({
       {keys.map((key) => (
         <ColorRow
           key={key}
+          id={key}
           label={toTitle(key)}
           color={colors[key] as string}
           onChange={(value) => handleChange(key, value)}
@@ -78,7 +79,8 @@ export function BracketColorSection() {
     >
       {brackets.map((color, i) => (
         <ColorRow
-          key={`${CSS.BRACKET}${i}`}
+          key={i}
+          id={`${CSS.BRACKET}${i}`}
           label={`Level ${i + 1}`}
           color={color}
           onChange={(value) => handleChange(i, value)}

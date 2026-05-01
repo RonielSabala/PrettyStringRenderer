@@ -118,12 +118,10 @@ export function createBuffer(
 
     render(ctx, width, height);
 
-    if (!forceAdjust && (!sizeChanged || !fitToContent)) {
-      return;
+    if (forceAdjust || (sizeChanged && fitToContent)) {
+      adjustCanvas(pixelScale);
+      onDimensionsChange(width, height);
     }
-
-    adjustCanvas(pixelScale);
-    onDimensionsChange(width, height);
   }
 
   function destroy(): void {

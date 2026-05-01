@@ -14,6 +14,7 @@ export const ThemeItem = forwardRef<HTMLDivElement, Props>(
   ({ theme, isActive, onApply, onShow, onNavigate }, ref) => (
     <div
       ref={ref}
+      id={`theme-item-${theme._name}`.toLowerCase()}
       className={`theme-item${isActive ? " active" : ""}`}
       tabIndex={0}
       onClick={() => onApply(theme)}

@@ -44,7 +44,7 @@ interface AppState {
   setCanvasConfig: (config: Partial<CanvasConfig>) => void;
 
   tokenize: (text: string) => void;
-  recolor: () => void;
+  recolor: (changedKey?: string) => void;
 
   redraw: (forceAdjust?: boolean) => void;
   adjustCanvas: () => void;
@@ -127,9 +127,9 @@ export const useStore = create<AppState>((set, get) => ({
     tokenizer.tokenize(text, colors);
   },
 
-  recolor: () => {
+  recolor: (changedKey?: string) => {
     const { colors, tokenizer } = get();
-    tokenizer.recolor(colors);
+    tokenizer.recolor(colors, changedKey);
   },
 
   redraw: () => {},

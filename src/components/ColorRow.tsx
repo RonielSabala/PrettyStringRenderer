@@ -27,7 +27,7 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
           id={`color-picker-${id}`}
           type="color"
           value={color}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(event) => onChange(event.target.value)}
         />
       </div>
       <input
@@ -35,7 +35,7 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
         className="hex-input"
         defaultValue={color}
         maxLength={MAX_HEX_INPUT_LENGTH}
-        onChange={(e) => handleHex(e.target.value)}
+        onChange={(event) => handleHex(event.target.value)}
       />
     </div>
   );

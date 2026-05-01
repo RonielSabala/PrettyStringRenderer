@@ -31,10 +31,15 @@ export function ColorSection({
   defaultCollapsed,
 }: ColorSectionProps) {
   const colors = useStore((state) => state.colors);
-  const handleChange = useCallback((key: string, value: string) => {
-    setColor(key, value);
-    _scheduleSave();
-  }, []);
+  const redraw = useStore((state) => state.redraw);
+  const handleChange = useCallback(
+    (key: string, value: string) => {
+      setColor(key, value);
+      redraw();
+      _scheduleSave();
+    },
+    [redraw],
+  );
 
   return (
     <SidebarSection
@@ -59,15 +64,17 @@ export function ColorSection({
 // Pre-configured instances
 
 export function BracketColorSection() {
+  const redraw = useStore((state) => state.redraw);
   const brackets = useStore((state) => state.colors.bracket) as string[];
   const handleChange = useCallback(
     (i: number, value: string) => {
       const next = [...brackets];
       next[i] = value;
       setColor(CSS.BRACKET, next);
+      redraw();
       _scheduleSave();
     },
-    [brackets],
+    [redraw, brackets],
   );
 
   return (

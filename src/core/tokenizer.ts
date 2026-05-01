@@ -101,9 +101,16 @@ export class Tokenizer {
     this._tokenizedLines = newTokenizedLines;
   }
 
-  recolor(colors: ThemeColors): void {
+  recolor(colors: ThemeColors, changedKey?: string): void {
+    const updateAll = changedKey === undefined;
+
     for (const line of this._tokenizedLines) {
       for (const token of line) {
+        // Skip tokens unaffected by the changed key
+        if (!updateAll && token.type !== changedKey) {
+          continue;
+        }
+
         token.updateColor(colors);
       }
     }

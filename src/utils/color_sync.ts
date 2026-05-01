@@ -6,7 +6,7 @@ export function setColor(
   themeValue: string | string[],
 ): void {
   getStore().setColors({ [themeKey]: themeValue });
-  getStore().recolor();
+  getStore().recolor(themeKey);
 }
 
 export function applyThemeColors(theme: Partial<ThemeColors>): void {

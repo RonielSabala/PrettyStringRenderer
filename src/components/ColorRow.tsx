@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { MAX_HEX_INPUT_LENGTH } from "../common/config";
 
 interface Props {
@@ -8,6 +9,14 @@ interface Props {
 }
 
 export default function ColorRow({ id, label, color, onChange }: Props) {
+  const [hexValue, setHexValue] = useState(color);
+
+  // Sync external color changes
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHexValue(color);
+  }, [color]);
+
   const handleHex = (value: string) => {
     if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
       onChange(value);
@@ -33,7 +42,7 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
       <input
         id={`hex-input-${id}`}
         className="hex-input"
-        defaultValue={color}
+        value={hexValue}
         maxLength={MAX_HEX_INPUT_LENGTH}
         onChange={(event) => handleHex(event.target.value)}
       />

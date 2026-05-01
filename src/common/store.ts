@@ -45,9 +45,10 @@ interface AppState {
 
   tokenize: (text: string) => void;
   recolor: () => void;
-  redraw: () => void;
 
+  redraw: (forceAdjust?: boolean) => void;
   adjustCanvas: () => void;
+  scheduleRedraw: () => void;
 }
 
 // Store
@@ -128,6 +129,7 @@ export const useStore = create<AppState>((set, get) => ({
 
   redraw: () => {},
   adjustCanvas: () => {},
+  scheduleRedraw: () => {},
 }));
 
 export const getStore = () => useStore.getState();

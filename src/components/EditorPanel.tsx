@@ -14,11 +14,13 @@ import { useStore } from "../common/store";
 import { parseNumber } from "../utils/parse";
 import {
   createSaveScheduler,
+  saveCanvasConfigState,
   saveEditorConfigState,
 } from "../utils/persistence";
 import { toPx } from "../utils/resolution";
 
 const _scheduleSave = createSaveScheduler(saveEditorConfigState);
+const _scheduleCanvasSave = createSaveScheduler(saveCanvasConfigState);
 
 // Sub-components
 
@@ -35,8 +37,10 @@ function FitToContentCheckbox() {
       checked={isChecked}
       onChange={(event) => {
         setCanvasConfig({ fitToContent: event.target.checked });
+        _scheduleCanvasSave();
+
         adjustCanvas();
-        redraw();
+        redraw(true);
       }}
     />
   );

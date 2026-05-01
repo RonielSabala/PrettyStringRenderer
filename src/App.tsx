@@ -6,9 +6,12 @@ import EditorPanel from "./components/EditorPanel";
 import ExportDialog from "./components/ExportDialog";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import { restoreState } from "./utils/persistence";
+import { restoreState, saveActiveElementIdState } from "./utils/persistence";
 
-// Restore persisted state before any component mounts
+// Element IDs that should NOT restore focus after reload
+const FOCUS_EXCLUSIONS = new Set(["btn-reset", "btn-export"]);
+
+// Restore persisted state before any child component reads it
 restoreState();
 
 export default function App() {
@@ -16,28 +19,34 @@ export default function App() {
   const setActiveElementId = useStore((state) => state.setActiveElementId);
   const exportDialogRef = useRef<HTMLDialogElement>(null);
 
-  // Restore focus to the last active element after reload
+  // Restore focus after reload
   useEffect(() => {
-    if (!activeElementId) {
+    if (!activeElementId || FOCUS_EXCLUSIONS.has(activeElementId)) {
       return;
     }
 
-    const element = document.getElementById(activeElementId);
-    if (element) {
-      element.focus();
-    }
-  }, [activeElementId]);
+    document.getElementById(activeElementId)?.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Save active element id before page unloads
+  // Save active element on unload
   useEffect(() => {
     const handler = () => {
       const id = document.activeElement?.id ?? "";
-      setActiveElementId(id === "btn-reset" ? "" : id);
+      setActiveElementId(FOCUS_EXCLUSIONS.has(id) ? "" : id);
+      saveActiveElementIdState();
     };
 
     window.addEventListener(EVENTS.WINDOW_RELOAD, handler);
     return () => window.removeEventListener(EVENTS.WINDOW_RELOAD, handler);
   }, [setActiveElementId]);
+
+  // Font ready
+  useEffect(() => {
+    document.fonts.ready.then(() => {
+      useStore.getState().redraw(true);
+    });
+  }, []);
 
   return (
     <div id="app">

@@ -30,8 +30,8 @@ interface AppState {
   typographyConfig: TypographyConfig;
   editorConfig: EditorConfig;
   canvasConfig: CanvasConfig;
-  // Engine (not persisted)
-  tokenizer: Tokenizer;
+  // Engine
+  tokenizer: Tokenizer; // not persisted
   // Actions
   setColors: (colors: Partial<ThemeColors>) => void;
   setThemes: (themes: ThemeColors[]) => void;
@@ -92,7 +92,11 @@ export const useStore = create<AppState>((set, get) => ({
 
   // Actions
 
-  setColors: (colors) =>
+  setColors: (colors) => {
+    if (!colors) {
+      return;
+    }
+
     set((state) => ({
       colors: {
         ...state.colors,
@@ -100,7 +104,8 @@ export const useStore = create<AppState>((set, get) => ({
           Object.entries(colors).filter(([, value]) => value !== undefined),
         ),
       } as ThemeColors,
-    })),
+    }));
+  },
   setThemes: (themes) => set({ themes }),
   setActiveThemeName: (name) => set({ activeThemeName: name }),
   setActiveElementId: (id) => set({ activeElementId: id }),

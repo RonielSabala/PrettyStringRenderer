@@ -86,13 +86,17 @@ export default function EditorPanel() {
       return;
     }
 
-    // Only set cursor position and scroll on first load, not on every config change
+    // Imperatively set value AFTER store is restored
+    editor.value = editorConfig.content ?? EDITOR_DEFAULTS.content;
     editor.scrollTop = 0;
+
     const selection = editorConfig.cursorSelection;
     if (selection.length === 2) {
       editor.setSelectionRange(selection[0], selection[1]);
     }
 
+    tokenize(editor.value);
+    redraw();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -275,7 +279,6 @@ export default function EditorPanel() {
           id="editor"
           ref={editorRef}
           spellCheck={false}
-          defaultValue={editorConfig.content}
           style={{
             fontSize: toPx(fontSize),
             lineHeight: EDITOR_LINE_HEIGHT,

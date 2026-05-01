@@ -53,9 +53,13 @@ function _get(key: string): string | null {
   return localStorage.getItem(key);
 }
 
-function _getObject<T>(key: string): T {
+function _getObject<T>(key: string): T | null {
   const json = _get(key);
-  return JSON.parse(json!) as T;
+  if (json === null) {
+    return null;
+  }
+
+  return JSON.parse(json) as T;
 }
 
 // Public save functions
@@ -92,23 +96,29 @@ export const saveCanvasConfigState = () =>
 export function restoreState(): void {
   const set = getStore();
   try {
-    set.setColors(_getObject<ThemeColors>(STORAGE_KEYS.COLORS));
-    set.setThemes(_getObject<ThemeColors[]>(STORAGE_KEYS.THEMES));
-    set.setCollapsedSectionIds(
-      _getObject<CollapsedSections>(STORAGE_KEYS.COLLAPSED_SECTION_IDS),
-    );
-    set.setTypographyConfig(
-      _getObject<TypographyConfig>(STORAGE_KEYS.TYPOGRAPHY_CONFIG),
-    );
-    set.setEditorConfig(_getObject<EditorConfig>(STORAGE_KEYS.EDITOR_CONFIG));
-    set.setCanvasConfig(_getObject<CanvasConfig>(STORAGE_KEYS.CANVAS_CONFIG));
-
+    const colors = _getObject<ThemeColors>(STORAGE_KEYS.COLORS);
+    const themes = _getObject<ThemeColors[]>(STORAGE_KEYS.THEMES);
     const activeThemeName = _get(STORAGE_KEYS.ACTIVE_THEME_NAME);
     const activeElementId = _get(STORAGE_KEYS.ACTIVE_ELEMENT_ID);
+    const collapsedSectionIds = _getObject<CollapsedSections>(
+      STORAGE_KEYS.COLLAPSED_SECTION_IDS,
+    );
+    const typographyConfig = _getObject<TypographyConfig>(
+      STORAGE_KEYS.TYPOGRAPHY_CONFIG,
+    );
+    const editorConfig = _getObject<EditorConfig>(STORAGE_KEYS.EDITOR_CONFIG);
+    const canvasConfig = _getObject<CanvasConfig>(STORAGE_KEYS.CANVAS_CONFIG);
+
+    if (colors) set.setColors(colors);
+    if (themes) set.setThemes(themes);
     if (activeThemeName) set.setActiveThemeName(activeThemeName);
     if (activeElementId) set.setActiveElementId(activeElementId);
+    if (collapsedSectionIds) set.setCollapsedSectionIds(collapsedSectionIds);
+    if (typographyConfig) set.setTypographyConfig(typographyConfig);
+    if (editorConfig) set.setEditorConfig(editorConfig);
+    if (canvasConfig) set.setCanvasConfig(canvasConfig);
   } catch (e) {
-    console.warn("Could not restore state:", e);
+    console.warn("Could not restore state:\n", e);
   }
 }
 

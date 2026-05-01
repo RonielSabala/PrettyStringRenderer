@@ -8,15 +8,13 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import { restoreState } from "./utils/persistence";
 
+// Restore persisted state before any component mounts
+restoreState();
+
 export default function App() {
   const activeElementId = useStore((state) => state.activeElementId);
   const setActiveElementId = useStore((state) => state.setActiveElementId);
   const exportDialogRef = useRef<HTMLDialogElement>(null);
-
-  // Restore persisted state once before first render cycle completes
-  useEffect(() => {
-    restoreState();
-  }, []);
 
   // Restore focus to the last active element after reload
   useEffect(() => {

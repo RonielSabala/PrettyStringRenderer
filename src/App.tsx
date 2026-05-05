@@ -5,7 +5,7 @@ import CanvasView from "./components/CanvasView";
 import EditorPanel from "./components/EditorPanel";
 import ExportDialog from "./components/ExportDialog";
 import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/sidebar/Sidebar";
 import { restoreState, saveActiveElementIdState } from "./utils/persistence";
 
 // Element IDs that should NOT restore focus after reload

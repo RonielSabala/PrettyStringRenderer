@@ -1,14 +1,14 @@
 import { useCallback } from "react";
-import { TYPOGRAPHY_DEFAULTS } from "../common/config";
-import { useStore } from "../common/store";
-import type { InputRange, TypographyConfig } from "../common/types";
-import { camelToKebab, camelToTitle } from "../utils/parse";
+import { TYPOGRAPHY_DEFAULTS } from "../../../common/config";
+import { useStore } from "../../../common/store";
+import type { InputRange, TypographyConfig } from "../../../common/types";
+import { camelToKebab, camelToTitle } from "../../../utils/parse";
 import {
   createSaveScheduler,
   saveTypographyConfigState,
-} from "../utils/persistence";
+} from "../../../utils/persistence";
+import SidebarSection from "../SidebarSection";
 import NumberRow from "./NumberRow";
-import SidebarSection from "./SidebarSection";
 
 const _scheduleSave = createSaveScheduler(saveTypographyConfigState);
 

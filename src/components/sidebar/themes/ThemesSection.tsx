@@ -7,20 +7,20 @@ import {
   THEME_KEYS,
   THEMES_EXTENSION,
   THEMES_FILE_TYPE,
-} from "../common/config";
-import { EVENTS } from "../common/constants/events";
-import { matchesKeybinding } from "../common/keybindings";
-import { useStore } from "../common/store";
-import type { Theme, ThemeColors } from "../common/types";
-import { applyThemeColors, setColor } from "../utils/color_sync";
-import { isObjectEmpty } from "../utils/parse";
+} from "../../../common/config";
+import { EVENTS } from "../../../common/constants/events";
+import { matchesKeybinding } from "../../../common/keybindings";
+import { useStore } from "../../../common/store";
+import type { Theme, ThemeColors } from "../../../common/types";
+import { applyThemeColors, setColor } from "../../../utils/color_sync";
+import { isObjectEmpty } from "../../../utils/parse";
 import {
   createSaveScheduler,
   saveActiveThemeNameState,
   saveColorsState,
   saveThemesState,
-} from "../utils/persistence";
-import SidebarSection from "./SidebarSection";
+} from "../../../utils/persistence";
+import SidebarSection from "../SidebarSection";
 import { ThemeItem } from "./ThemeItem";
 
 const _scheduleSave = createSaveScheduler(saveColorsState);

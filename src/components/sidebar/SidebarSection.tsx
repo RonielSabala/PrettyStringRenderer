@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
-import { useStore } from "../common/store";
-import { saveCollapsedSectionIdsState } from "../utils/persistence";
+import { useStore } from "../../common/store";
+import { saveCollapsedSectionIdsState } from "../../utils/persistence";
 
 interface Props {
   id: string;

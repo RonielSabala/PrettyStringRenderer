@@ -1,12 +1,15 @@
 import { useCallback } from "react";
-import { DEFAULT_THEME } from "../common/config";
-import { CSS } from "../common/constants/css";
-import { useStore } from "../common/store";
-import { setColor } from "../utils/color_sync";
-import { toTitle } from "../utils/parse";
-import { createSaveScheduler, saveColorsState } from "../utils/persistence";
+import { DEFAULT_THEME } from "../../../common/config";
+import { CSS } from "../../../common/constants/css";
+import { useStore } from "../../../common/store";
+import { setColor } from "../../../utils/color_sync";
+import { toTitle } from "../../../utils/parse";
+import {
+  createSaveScheduler,
+  saveColorsState,
+} from "../../../utils/persistence";
+import SidebarSection from "../SidebarSection";
 import ColorRow from "./ColorRow";
-import SidebarSection from "./SidebarSection";
 
 const _scheduleSave = createSaveScheduler(saveColorsState);
 

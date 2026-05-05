@@ -2,9 +2,9 @@ import {
   BracketColorSection,
   CanvasColorSection,
   SyntaxColorSection,
-} from "./ColorSection";
-import ThemesSection from "./ThemesSection";
-import TypographySection from "./TypographySection";
+} from "./color/ColorSection";
+import ThemesSection from "./themes/ThemesSection";
+import TypographySection from "./typography/TypographySection";
 
 export default function Sidebar() {
   return (

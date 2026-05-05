@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
-import { matchesKeybinding } from "../common/keybindings";
-import type { Theme } from "../common/types";
+import { matchesKeybinding } from "../../../common/keybindings";
+import type { Theme } from "../../../common/types";
 
 interface Props {
   theme: Theme;

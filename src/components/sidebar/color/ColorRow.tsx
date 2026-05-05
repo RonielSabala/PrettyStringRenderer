@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MAX_HEX_INPUT_LENGTH } from "../common/config";
+import { MAX_HEX_INPUT_LENGTH } from "../../../common/config";
 
 interface Props {
   id: string;

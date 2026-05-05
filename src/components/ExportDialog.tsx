@@ -14,7 +14,7 @@ import {
   SVG_EXTENSION,
   SVG_NS,
 } from "../common/config";
-import { CSS_TEXT_RENDERING } from "../common/constants/css";
+import { CSS, CSS_TEXT_RENDERING } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
 import { useStore } from "../common/store";
@@ -24,7 +24,7 @@ import type {
   TypographyConfig,
 } from "../common/types";
 import { parseNumber, roundUp } from "../utils/parse";
-import { createResolution, getCanvasDimensions } from "../utils/resolution";
+import { createResolution, getScaledDimensions } from "../utils/resolution";
 
 // Private helpers
 
@@ -42,15 +42,27 @@ function _download(blob: Blob, filename: string): void {
 
 // PNG exporter
 
+function _formatScalarExample(
+  scalar: number,
+  width: number,
+  height: number,
+): string {
+  const resolution = createResolution(
+    ...getScaledDimensions(width, height, scalar),
+  );
+
+  return `* ${scalar} -> ${resolution}`;
+}
+
 function _exportPNG(
   canvasConfig: CanvasConfig,
   typographyConfig: TypographyConfig,
 ): void {
+  const { width, height } = canvasConfig;
   const promptMsg = [
     EXPORT_PNG_PROMPT_MESSAGE,
-    ...EXPORT_PNG_PROMPT_SCALAR_EXAMPLES.map(
-      (scalar) =>
-        `    ${scalar} -> ${createResolution(...getCanvasDimensions(canvasConfig.width, canvasConfig.height, scalar))}`,
+    ...EXPORT_PNG_PROMPT_SCALAR_EXAMPLES.map((scalar) =>
+      _formatScalarExample(scalar, width, height),
     ),
   ].join(LINE_BREAK);
 
@@ -59,9 +71,9 @@ function _exportPNG(
     return;
   }
 
-  const [exportWidth, exportHeight] = getCanvasDimensions(
-    canvasConfig.width,
-    canvasConfig.height,
+  const [exportWidth, exportHeight] = getScaledDimensions(
+    width,
+    height,
     scalar,
   );
   const scaledConfig = {
@@ -79,7 +91,7 @@ function _exportPNG(
   document.body.appendChild(offscreen);
   offscreen.width = exportWidth;
   offscreen.height = exportHeight;
-  offscreen.style.visibility = "hidden";
+  offscreen.style.visibility = CSS.HIDDEN;
   offscreen.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
   render(getDrawingContext(offscreen), exportWidth, exportHeight, scaledConfig);
@@ -187,12 +199,12 @@ function _exportSVG(
 
 // Component
 
-const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
+export const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
   const typographyConfig = useStore((state) => state.typographyConfig);
   const canvasConfig = useStore((state) => state.canvasConfig);
   const colors = useStore((state) => state.colors);
 
-  // Helpers
+  // Component helpers
 
   const openDialog = useCallback(() => {
     (ref as React.RefObject<HTMLDialogElement>).current?.showModal();
@@ -263,5 +275,4 @@ const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
   );
 });
 
-ExportDialog.displayName = "ExportDialog";
 export default ExportDialog;

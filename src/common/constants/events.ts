@@ -6,6 +6,7 @@ export const EVENTS = Object.freeze({
   MOUSE_MOVE: "mousemove",
   WHEEL: "wheel",
   DBL_CLICK: "dblclick",
+  CHANGE: "change",
   CONTEXT_MENU: "contextmenu",
   WINDOW_RELOAD: "beforeunload",
 } as const);

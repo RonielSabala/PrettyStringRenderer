@@ -25,8 +25,8 @@ export const isCommentPart = (char: string): boolean =>
 export const isSemicolon = (char: string): boolean => char === ";";
 
 export const isNumberStart = (
-  prevChar: string | undefined,
   char: string,
+  prevChar: string | undefined,
   nextChar: string | undefined,
 ): boolean => {
   if (isDigit(char)) {

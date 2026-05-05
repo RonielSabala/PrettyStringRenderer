@@ -132,7 +132,7 @@ export class Tokenizer {
     };
 
     const lineHasBrackets = (lineIdx: number) =>
-      lineHasBracketChars(newLines[lineIdx] ?? oldLines[lineIdx] ?? "");
+      lineHasBracketChars(newLines[lineIdx] ?? oldLines[lineIdx]);
 
     // Find range
     for (let i = 0; i < minHeight; i++) {
@@ -284,7 +284,7 @@ export class Tokenizer {
         consume(isCommentPart, TOKENS.COMMENT);
       } else if (isSemicolon(char)) {
         consume(isSemicolon, TOKENS.SEMICOLON);
-      } else if (isNumberStart(line[i - 1], char, line[i + 1])) {
+      } else if (isNumberStart(char, line[i - 1], line[i + 1])) {
         let j = i;
         let dotSeen = false;
 

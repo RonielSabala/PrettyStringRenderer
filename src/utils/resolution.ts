@@ -6,7 +6,7 @@ export function createResolution(width: number, height: number): string {
   return `${width}x${height}`;
 }
 
-export function getCanvasDimensions(
+export function getScaledDimensions(
   width: number,
   height: number,
   scalar: number | null = null,

@@ -40,7 +40,7 @@ function _saveAsync(key: string, value: string): void {
     try {
       localStorage.setItem(key, value);
     } catch (e) {
-      console.warn("Could not save state:", e);
+      console.warn("Could not save state:\n", e);
     }
   }, 0);
 }

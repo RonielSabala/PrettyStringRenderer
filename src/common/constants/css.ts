@@ -1,3 +1,7 @@
+export const CSS = Object.freeze({
+  HIDDEN: "hidden",
+} as const);
+
 export const CSS_CURSORS = Object.freeze({
   DEFAULT: "",
   DRAG: "drag",

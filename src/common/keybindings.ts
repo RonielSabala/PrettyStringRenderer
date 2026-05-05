@@ -11,24 +11,31 @@ const _rawBindings: Record<string, string> = {
   ..._userBindings,
 };
 
+const BINDING_SEPARATOR = "+";
+const MODIFIER_KEYS = ["ctrl", "shift", "alt"] as const;
+
+type ModifierKey = (typeof MODIFIER_KEYS)[number];
+
+type ParsedBinding = {
+  [K in ModifierKey]: boolean;
+} & {
+  key: string;
+};
+
 const KEY_ALIASES: Record<string, string> = {
   space: " ",
 };
 
-interface ParsedBinding {
-  ctrl: boolean;
-  shift: boolean;
-  alt: boolean;
-  key: string;
-}
-
 function _parseBinding(binding: string): ParsedBinding {
-  const parts = binding.toLowerCase().split("+");
+  const parts = binding.toLowerCase().split(BINDING_SEPARATOR);
   const rawKey = parts.at(-1)!;
+
+  const modifiers = Object.fromEntries(
+    MODIFIER_KEYS.map((key) => [key, parts.includes(key)]),
+  ) as Record<ModifierKey, boolean>;
+
   return {
-    ctrl: parts.includes("ctrl"),
-    shift: parts.includes("shift"),
-    alt: parts.includes("alt"),
+    ...modifiers,
     key: KEY_ALIASES[rawKey] ?? rawKey,
   };
 }

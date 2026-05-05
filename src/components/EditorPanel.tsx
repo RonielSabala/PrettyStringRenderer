@@ -7,7 +7,7 @@ import {
   EDITOR_MAX_HEIGHT_PERCENTAGE,
   EDITOR_MIN_HEIGHT_PX,
 } from "../common/config";
-import { CSS, CSS_USER_SELECT } from "../common/constants/css";
+import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
 import { useStore } from "../common/store";
@@ -163,7 +163,7 @@ export default function EditorPanel() {
       );
 
       document.body.style.userSelect = CSS_USER_SELECT.NONE;
-      handleRef.current?.classList.add(CSS.DRAG);
+      handleRef.current?.classList.add(CSS_CURSORS.DRAG);
     },
     [height],
   );
@@ -214,7 +214,7 @@ export default function EditorPanel() {
 
       dragging.current = false;
       document.body.style.userSelect = CSS_USER_SELECT.AUTO;
-      handleRef.current?.classList.remove(CSS.DRAG);
+      handleRef.current?.classList.remove(CSS_CURSORS.DRAG);
 
       setEditorConfig({ height: _getEditorHeight() ?? height });
       _scheduleSave();

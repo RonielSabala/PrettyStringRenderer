@@ -118,7 +118,7 @@ export function CanvasColorSection() {
       id="section-canvas-colors"
       headerId="section-header-canvas-colors"
       title="Canvas Colors"
-      keys={["background"]}
+      keys={[TOKENS.BACKGROUND]}
       defaultCollapsed
     />
   );

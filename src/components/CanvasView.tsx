@@ -159,7 +159,7 @@ export default function CanvasView() {
       _scheduleSave();
     };
 
-    // Panning start handler
+    // Panning-start handler
     const onMouseDown = (event: MouseEvent) => {
       if (!spaceHeld.current && event.button !== 2) {
         return;
@@ -198,7 +198,7 @@ export default function CanvasView() {
       scheduleTransform();
     };
 
-    // Panning end handler
+    // Panning-end handler
     const onMouseUp = () => {
       if (!panning.current) {
         return;
@@ -209,7 +209,7 @@ export default function CanvasView() {
         ? CSS_CURSORS.GRAB
         : CSS_CURSORS.DEFAULT;
 
-      saveCanvasConfigState();
+      _scheduleSave();
     };
 
     const onKeyDown = (event: KeyboardEvent) => {

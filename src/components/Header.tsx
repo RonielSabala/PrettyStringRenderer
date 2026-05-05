@@ -1,6 +1,7 @@
 import { useStore } from "../common/store";
+import { roundUp } from "../utils/parse";
 import { clearState } from "../utils/persistence";
-import { describeCanvasAspectRatio } from "../utils/resolution";
+import { createResolution } from "../utils/resolution";
 
 interface Props {
   onExportClick: () => void;
@@ -28,7 +29,7 @@ export default function Header({ onExportClick }: Props) {
       </button>
       <div className="header-title-separator" />
       <div className="badge" id="header-badge">
-        {describeCanvasAspectRatio(width, height)}
+        {`${createResolution(width, height)} / ${roundUp(width / height)}:1`}
       </div>
       <button className="btn no-select" id="btn-export" onClick={onExportClick}>
         ↓ Export

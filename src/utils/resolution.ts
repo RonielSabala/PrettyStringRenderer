@@ -1,5 +1,3 @@
-import { roundUp } from "./parse";
-
 export function toPx(amount: number): string {
   return `${amount}px`;
 }
@@ -18,11 +16,4 @@ export function getCanvasDimensions(
   }
 
   return [width, height];
-}
-
-export function describeCanvasAspectRatio(
-  width: number,
-  height: number,
-): string {
-  return `${createResolution(width, height)} / ${roundUp(width / height)}:1`;
 }

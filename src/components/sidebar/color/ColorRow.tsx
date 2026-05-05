@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { MAX_HEX_INPUT_LENGTH } from "../../../common/config";
+import { CSS_STYLE } from "../../../common/constants/css";
 import type { ThemeColor } from "../../../common/types";
+import { TransparentSwatchIcon } from "../TransparentSwatchIcon";
 
 interface Props {
   id: string;
@@ -31,8 +33,10 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
         <div
           id={`swatch-fill-${id}`}
           className="swatch-fill"
-          style={{ background: color }}
-        />
+          style={{ background: color || CSS_STYLE.TRANSPARENT }}
+        >
+          {!color && <TransparentSwatchIcon />}
+        </div>
         <input
           id={`color-picker-${id}`}
           type="color"

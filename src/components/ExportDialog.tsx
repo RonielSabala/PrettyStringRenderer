@@ -14,7 +14,7 @@ import {
   SVG_EXTENSION,
   SVG_NS,
 } from "../common/config";
-import { CSS, CSS_TEXT_RENDERING } from "../common/constants/css";
+import { CSS_STYLE, CSS_TEXT_RENDERING } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
 import { useStore } from "../common/store";
@@ -91,7 +91,7 @@ function _exportPNG(
   document.body.appendChild(offscreen);
   offscreen.width = exportWidth;
   offscreen.height = exportHeight;
-  offscreen.style.visibility = CSS.HIDDEN;
+  offscreen.style.visibility = CSS_STYLE.HIDDEN;
   offscreen.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
   render(getDrawingContext(offscreen), exportWidth, exportHeight, scaledConfig);

@@ -1,6 +1,8 @@
 import { forwardRef } from "react";
+import { CSS_STYLE } from "../../../common/constants/css";
 import { matchesKeybinding } from "../../../common/keybindings";
 import type { Theme } from "../../../common/types";
+import { TransparentSwatchIcon } from "../TransparentSwatchIcon";
 
 interface Props {
   theme: Theme;
@@ -40,7 +42,12 @@ export const ThemeItem = forwardRef<HTMLDivElement, Props>(
       }}
     >
       <span className="theme-name">{theme._name}</span>
-      <div className="theme-swatch" style={{ background: theme.background }} />
+      <div
+        className="theme-swatch"
+        style={{ background: theme.background ?? CSS_STYLE.TRANSPARENT }}
+      >
+        {!theme.background && <TransparentSwatchIcon />}
+      </div>
     </div>
   ),
 );

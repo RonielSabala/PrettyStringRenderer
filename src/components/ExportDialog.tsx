@@ -246,7 +246,11 @@ export const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
 
   // Global keybindings
   useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
+    const handler = (event: Event) => {
+      if (!(event instanceof KeyboardEvent)) {
+        return;
+      }
+
       if (matchesKeybinding(event, "export.open")) {
         event.preventDefault();
         openDialog();

@@ -231,8 +231,11 @@ export default function EditorPanel() {
   // Canvas focus keybinding
 
   useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
-      if (!matchesKeybinding(event, "canvas.focus")) {
+    const handler = (event: Event) => {
+      if (
+        !(event instanceof KeyboardEvent) ||
+        !matchesKeybinding(event, "canvas.focus")
+      ) {
         return;
       }
 

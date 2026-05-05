@@ -53,12 +53,8 @@ export const TYPOGRAPHY_DEFAULTS = {
 
 export const EDITOR_LINE_HEIGHT = "auto";
 export const EDITOR_LETTER_SPACING = "auto";
+export const EDITOR_MIN_HEIGHT_PX = 32;
 export const EDITOR_MAX_HEIGHT_PERCENTAGE = 0.8;
-
-export function getEditorMinHeight(): number {
-  const element = document.getElementById("editor-tabs");
-  return element?.offsetHeight ?? 32;
-}
 
 const _editorDefaults = _userDefaults.editor ?? {};
 export const EDITOR_DEFAULTS = {
@@ -111,10 +107,10 @@ export const EXPORT_PNG_PROMPT_MESSAGE = "Scale multiplier:";
 export const EXPORT_PNG_PROMPT_SCALAR_EXAMPLES = [1, 2, 0.5];
 
 const _exportDefaults = _userDefaults.export ?? {};
-export const DEFAULT_EXPORT_IMAGE_FILENAME =
-  _exportDefaults.defaultImageFilename ?? _defaults.export.defaultImageFilename;
 export const DEFAULT_EXPORT_THEME_FILENAME =
   _exportDefaults.defaultThemeFilename ?? _defaults.export.defaultThemeFilename;
+export const DEFAULT_EXPORT_IMAGE_FILENAME =
+  _exportDefaults.defaultImageFilename ?? _defaults.export.defaultImageFilename;
 
 // Themes
 

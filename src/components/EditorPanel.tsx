@@ -5,7 +5,7 @@ import {
   EDITOR_LETTER_SPACING,
   EDITOR_LINE_HEIGHT,
   EDITOR_MAX_HEIGHT_PERCENTAGE,
-  getEditorMinHeight,
+  EDITOR_MIN_HEIGHT_PX,
 } from "../common/config";
 import { CSS, CSS_USER_SELECT } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
@@ -106,6 +106,11 @@ export default function EditorPanel() {
 
   const _getEditorHeight = () => panelRef.current?.offsetHeight;
 
+  const _getEditorMinHeight = () => {
+    const element = document.getElementById("editor-tabs");
+    return element?.offsetHeight ?? EDITOR_MIN_HEIGHT_PX;
+  };
+
   const _getNormalizedHeight = (y: number) =>
     startHeight.current + (startY.current - y);
 
@@ -167,7 +172,7 @@ export default function EditorPanel() {
     const defaultHeight = EDITOR_DEFAULTS.height;
     const currentHeight = _getEditorHeight() ?? height;
     const newHeight =
-      currentHeight === defaultHeight ? getEditorMinHeight() : defaultHeight;
+      currentHeight === defaultHeight ? _getEditorMinHeight() : defaultHeight;
 
     setHeight(newHeight);
     setEditorConfig({ height: newHeight });
@@ -183,7 +188,7 @@ export default function EditorPanel() {
         return;
       }
 
-      const minHeight = getEditorMinHeight();
+      const minHeight = _getEditorMinHeight();
       const maxHeight = startMaxHeight.current;
 
       const currentHeight = _getEditorHeight() ?? 0;

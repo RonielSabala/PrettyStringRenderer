@@ -83,7 +83,6 @@ export default function CanvasView() {
     // Initial draw
     applyTransform();
     buffer.adjustCanvas();
-    buffer.redraw();
 
     return () => {
       buffer.destroy();

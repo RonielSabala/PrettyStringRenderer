@@ -41,13 +41,6 @@ export default function App() {
     return () => window.removeEventListener(EVENTS.WINDOW_RELOAD, handler);
   }, [setActiveElementId]);
 
-  // Font ready
-  useEffect(() => {
-    document.fonts.ready.then(() => {
-      useStore.getState().redraw(true);
-    });
-  }, []);
-
   return (
     <div id="app">
       <Header onExportClick={() => exportDialogRef.current?.showModal()} />

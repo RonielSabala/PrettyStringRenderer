@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { useStore } from "../../common/store";
-import { saveCollapsedSectionIdsState } from "../../utils/persistence";
+import { saveCollapsedSectionsState } from "../../utils/persistence";
 
 interface Props {
   id: string;
@@ -18,15 +18,15 @@ export default function SidebarSection({
   defaultCollapsed = false,
 }: Props) {
   const isCollapsed = useStore(
-    (state) => state.collapsedSectionIds[headerId] ?? defaultCollapsed,
+    (state) => state.collapsedSections[headerId] ?? defaultCollapsed,
   );
-  const setCollapsed = useStore((state) => state.setCollapsedSectionIds);
-  const allIds = useStore((state) => state.collapsedSectionIds);
+  const setCollapsed = useStore((state) => state.setCollapsedSections);
+  const allIds = useStore((state) => state.collapsedSections);
 
   const toggleCollapse = () => {
     const next = { ...allIds, [headerId]: !isCollapsed };
     setCollapsed(next);
-    saveCollapsedSectionIdsState();
+    saveCollapsedSectionsState();
   };
 
   return (

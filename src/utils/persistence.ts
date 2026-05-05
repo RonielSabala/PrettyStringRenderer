@@ -13,7 +13,7 @@ const STORAGE_KEYS = Object.freeze({
   THEMES: "psr:themes",
   ACTIVE_THEME_NAME: "psr:activeThemeName",
   ACTIVE_ELEMENT_ID: "psr:activeElementID",
-  COLLAPSED_SECTION_IDS: "psr:collapsedSectionIds",
+  COLLAPSED_SECTION_IDS: "psr:collapsedSections",
   TYPOGRAPHY_CONFIG: "psr:typographyConfig",
   EDITOR_CONFIG: "psr:editorConfig",
   CANVAS_CONFIG: "psr:canvasConfig",
@@ -76,10 +76,10 @@ export const saveActiveThemeNameState = () =>
 export const saveActiveElementIdState = () =>
   _saveAsync(STORAGE_KEYS.ACTIVE_ELEMENT_ID, getStore().activeElementId);
 
-export const saveCollapsedSectionIdsState = () =>
+export const saveCollapsedSectionsState = () =>
   _saveObjectAsync(
     STORAGE_KEYS.COLLAPSED_SECTION_IDS,
-    getStore().collapsedSectionIds,
+    getStore().collapsedSections,
   );
 
 export const saveTypographyConfigState = () =>
@@ -100,7 +100,7 @@ export function restoreState(): void {
     const themes = _getObject<ThemeColors[]>(STORAGE_KEYS.THEMES);
     const activeThemeName = _get(STORAGE_KEYS.ACTIVE_THEME_NAME);
     const activeElementId = _get(STORAGE_KEYS.ACTIVE_ELEMENT_ID);
-    const collapsedSectionIds = _getObject<CollapsedSections>(
+    const collapsedSections = _getObject<CollapsedSections>(
       STORAGE_KEYS.COLLAPSED_SECTION_IDS,
     );
     const typographyConfig = _getObject<TypographyConfig>(
@@ -113,7 +113,7 @@ export function restoreState(): void {
     if (themes) set.setThemes(themes);
     if (activeThemeName) set.setActiveThemeName(activeThemeName);
     if (activeElementId) set.setActiveElementId(activeElementId);
-    if (collapsedSectionIds) set.setCollapsedSectionIds(collapsedSectionIds);
+    if (collapsedSections) set.setCollapsedSections(collapsedSections);
     if (typographyConfig) set.setTypographyConfig(typographyConfig);
     if (editorConfig) set.setEditorConfig(editorConfig);
     if (canvasConfig) set.setCanvasConfig(canvasConfig);

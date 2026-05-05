@@ -25,7 +25,7 @@ interface AppState {
   themes: ThemeColors[];
   activeThemeName: string;
   activeElementId: string;
-  collapsedSectionIds: CollapsedSections;
+  collapsedSections: CollapsedSections;
   // Configs
   typographyConfig: TypographyConfig;
   editorConfig: EditorConfig;
@@ -37,7 +37,7 @@ interface AppState {
   setThemes: (themes: ThemeColors[]) => void;
   setActiveThemeName: (name: string) => void;
   setActiveElementId: (id: string) => void;
-  setCollapsedSectionIds: (ids: CollapsedSections) => void;
+  setCollapsedSections: (ids: CollapsedSections) => void;
 
   setTypographyConfig: (config: Partial<TypographyConfig>) => void;
   setEditorConfig: (config: Partial<EditorConfig>) => void;
@@ -58,7 +58,7 @@ export const useStore = create<AppState>((set, get) => ({
   themes: [],
   activeThemeName: "",
   activeElementId: "",
-  collapsedSectionIds: {},
+  collapsedSections: {},
 
   typographyConfig: {
     fontSize: TYPOGRAPHY_DEFAULTS.fontSize.value,
@@ -109,7 +109,7 @@ export const useStore = create<AppState>((set, get) => ({
   setThemes: (themes) => set({ themes }),
   setActiveThemeName: (name) => set({ activeThemeName: name }),
   setActiveElementId: (id) => set({ activeElementId: id }),
-  setCollapsedSectionIds: (ids) => set({ collapsedSectionIds: ids }),
+  setCollapsedSections: (ids) => set({ collapsedSections: ids }),
 
   setTypographyConfig: (config) =>
     set((state) => ({

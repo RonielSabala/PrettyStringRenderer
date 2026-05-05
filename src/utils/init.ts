@@ -1,12 +1,12 @@
 import { getStore } from "../common/store";
 import type { InputRange } from "../common/types";
-import { saveCollapsedSectionIdsState } from "./persistence";
+import { saveCollapsedSectionsState } from "./persistence";
 
 export function toggleSectionById(id: string): void {
-  const sections = { ...getStore().collapsedSectionIds };
+  const sections = { ...getStore().collapsedSections };
   sections[id] = !sections[id];
-  getStore().setCollapsedSectionIds(sections);
-  saveCollapsedSectionIdsState();
+  getStore().setCollapsedSections(sections);
+  saveCollapsedSectionsState();
 }
 
 export function getInputRange(

@@ -125,7 +125,7 @@ Keys you omit keep their default. Each entry maps an action to a key combination
 
 ```json
 {
-  "export.open": "ctrl+m",
+  "app.fullReload": "ctrl+shift+r",
   "canvas.focus": "escape"
 }
 ```

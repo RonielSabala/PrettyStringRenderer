@@ -149,15 +149,15 @@ function useThemes() {
   // Global keybindings
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
-      if (matchesKeybinding(event, "themes.import")) {
+      if (matchesKeybinding(event, "themes.focus")) {
+        event.preventDefault();
+        activeItem.current?.focus();
+      } else if (matchesKeybinding(event, "themes.import")) {
         event.preventDefault();
         importThemes();
       } else if (matchesKeybinding(event, "themes.export")) {
         event.preventDefault();
         exportTheme();
-      } else if (matchesKeybinding(event, "themes.focus")) {
-        event.preventDefault();
-        activeItem.current?.focus();
       }
     };
 

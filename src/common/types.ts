@@ -1,11 +1,17 @@
 import type { CssTextRendering } from "./constants/css";
 
+export interface CollapsedSections {
+  [key: string]: boolean;
+}
+
 export interface InputRange {
   value: number;
   min: number;
   max: number;
   step: number | undefined;
 }
+
+// Configs
 
 export interface TypographyConfig {
   fontSize: number;
@@ -32,21 +38,28 @@ export interface CanvasConfig {
   fitToContent: boolean;
 }
 
-export interface CollapsedSections {
-  [key: string]: boolean;
-}
+// Tokens
 
-export interface ThemeColors {
-  [key: string]: string | string[];
-  bracket: string[];
-  function: string;
-  variable: string;
-  operator: string;
-  semicolon: string;
-  number: string;
-  comment: string;
-  unknown: string;
-  background: string;
-}
+export const TOKENS = Object.freeze({
+  BRACKET: "bracket",
+  FUNCTION: "function",
+  VARIABLE: "variable",
+  OPERATOR: "operator",
+  SEMICOLON: "semicolon",
+  NUMBER: "number",
+  COMMENT: "comment",
+  UNKNOWN: "unknown",
+  BACKGROUND: "background",
+} as const);
+
+export type TokenType = (typeof TOKENS)[keyof typeof TOKENS];
+
+// Themes
+
+export const THEME_KEYS = Object.values(TOKENS) as readonly TokenType[];
+
+export type ThemeColors = {
+  [K in TokenType]: K extends "bracket" ? string[] : string;
+};
 
 export type Theme = ThemeColors & { _name: string };

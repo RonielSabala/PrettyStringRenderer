@@ -1,18 +1,4 @@
-import type { ThemeColors } from "../common/types";
-
-export const TOKENS = Object.freeze({
-  WHITE_SPACE: "white_space",
-  COMMENT: "comment",
-  NUMBER: "number",
-  OPERATOR: "operator",
-  VARIABLE: "variable",
-  FUNCTION: "function",
-  SEMICOLON: "semicolon",
-  BRACKET: "bracket",
-  UNKNOWN: "unknown",
-} as const);
-
-export type TokenType = (typeof TOKENS)[keyof typeof TOKENS];
+import { TOKENS, type ThemeColors, type TokenType } from "../common/types";
 
 export class Token {
   value: string;
@@ -33,7 +19,7 @@ export class Token {
   }
 
   updateColor(colors: ThemeColors): void {
-    if (this.type === TOKENS.WHITE_SPACE) {
+    if (this.type === TOKENS.BACKGROUND) {
       return;
     }
 

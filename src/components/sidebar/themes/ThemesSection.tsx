@@ -4,14 +4,14 @@ import {
   DEFAULT_THEME,
   EXPORT_THEME_PROMPT_MESSAGE,
   THEME_BLOB_TYPE,
-  THEME_KEYS,
   THEMES_EXTENSION,
   THEMES_FILE_TYPE,
 } from "../../../common/config";
 import { EVENTS } from "../../../common/constants/events";
 import { matchesKeybinding } from "../../../common/keybindings";
 import { useStore } from "../../../common/store";
-import type { Theme, ThemeColors } from "../../../common/types";
+import type { Theme, ThemeColors, TokenType } from "../../../common/types";
+import { THEME_KEYS, TOKENS } from "../../../common/types";
 import { applyThemeColors, setColor } from "../../../utils/color_sync";
 import { isObjectEmpty } from "../../../utils/parse";
 import {
@@ -53,7 +53,7 @@ function useThemes() {
     const themeToApply = isObjectEmpty(colors) ? DEFAULT_THEME : colors;
 
     for (const [themeKey, themeValue] of Object.entries(themeToApply))
-      setColor(themeKey, themeValue);
+      setColor(themeKey as TokenType, themeValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -61,10 +61,12 @@ function useThemes() {
   const applyTheme = useCallback(
     (theme: Theme) => {
       const patch: Partial<ThemeColors> = {};
+
       for (const key of THEME_KEYS) {
-        const value = theme[key];
-        if (value != null) {
-          patch[key] = value as string;
+        if (key === TOKENS.BRACKET) {
+          patch[key] = theme[key];
+        } else {
+          patch[key] = theme[key];
         }
       }
 

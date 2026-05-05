@@ -1,8 +1,8 @@
 import { getStore } from "../common/store";
-import type { ThemeColors } from "../common/types";
+import type { ThemeColors, TokenType } from "../common/types";
 
 export function setColor(
-  themeKey: string,
+  themeKey: TokenType,
   themeValue: string | string[],
 ): void {
   getStore().setColors({ [themeKey]: themeValue });

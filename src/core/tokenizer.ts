@@ -1,5 +1,5 @@
 import { LINE_BREAK } from "../common/config";
-import type { ThemeColors } from "../common/types";
+import { TOKENS, type ThemeColors, type TokenType } from "../common/types";
 import {
   BRACKET_SETS,
   INLINE_BRACKETS,
@@ -23,8 +23,8 @@ import {
   isSemicolon,
   isSpace,
 } from "./predicates";
-import type { Token, TokenType } from "./tokens";
-import { TOKENS, TokenResult } from "./tokens";
+import type { Token } from "./tokens";
+import { TokenResult } from "./tokens";
 
 function _consumeLine(
   line: string,
@@ -272,7 +272,7 @@ export class Tokenizer {
         tokens.add(char, tokenType, currentDepth, colors);
         i++;
       } else if (isSpace(char)) {
-        consume(isSpace, TOKENS.WHITE_SPACE);
+        consume(isSpace, TOKENS.BACKGROUND);
       } else if (isOperator(char)) {
         consume(isOperator, TOKENS.OPERATOR);
       } else if (isIdentifierStart(char)) {

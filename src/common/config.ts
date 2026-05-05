@@ -1,4 +1,5 @@
 import _defaults from "../../userData/profile.example.json";
+import type { ThemeColors } from "./types";
 
 const _userFile = import.meta.glob("../../userData/profile.json", {
   eager: true,
@@ -118,7 +119,6 @@ export const THEMES_EXTENSION = ".json";
 export const THEMES_FILE_TYPE = "file";
 export const EXPORT_THEME_PROMPT_MESSAGE = "Theme name:";
 export const THEME_BLOB_TYPE = { type: "application/json" } as const;
-
-const _rawTheme = _userDefaults.theme ?? _defaults.theme;
-export const DEFAULT_THEME = Object.freeze(_rawTheme);
-export const THEME_KEYS = Object.keys(_rawTheme);
+export const DEFAULT_THEME = Object.freeze(
+  (_userDefaults.theme ?? _defaults.theme) as ThemeColors,
+);

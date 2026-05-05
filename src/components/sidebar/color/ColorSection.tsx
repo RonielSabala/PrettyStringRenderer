@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { DEFAULT_THEME } from "../../../common/config";
-import { CSS } from "../../../common/constants/css";
 import { useStore } from "../../../common/store";
+import { TOKENS, type TokenType } from "../../../common/types";
 import { setColor } from "../../../utils/color_sync";
 import { toTitle } from "../../../utils/parse";
 import {
@@ -22,7 +22,7 @@ interface ColorSectionProps {
   id: string;
   headerId: string;
   title: string;
-  keys: string[];
+  keys: TokenType[];
   defaultCollapsed?: boolean;
 }
 
@@ -36,7 +36,7 @@ export function ColorSection({
   const colors = useStore((state) => state.colors);
   const redraw = useStore((state) => state.redraw);
   const handleChange = useCallback(
-    (key: string, value: string) => {
+    (key: TokenType, value: string) => {
       setColor(key, value);
       redraw();
       _scheduleSave();
@@ -73,7 +73,7 @@ export function BracketColorSection() {
     (i: number, value: string) => {
       const next = [...brackets];
       next[i] = value;
-      setColor(CSS.BRACKET, next);
+      setColor(TOKENS.BRACKET, next);
       redraw();
       _scheduleSave();
     },
@@ -90,7 +90,7 @@ export function BracketColorSection() {
       {brackets.map((color, i) => (
         <ColorRow
           key={i}
-          id={`${CSS.BRACKET}${i}`}
+          id={`$bracket${i}`}
           label={`Level ${i + 1}`}
           color={color}
           onChange={(value) => handleChange(i, value)}
@@ -106,7 +106,7 @@ export function SyntaxColorSection() {
       id="section-syntax-colors"
       headerId="section-header-syntax-colors"
       title="Syntax Colors"
-      keys={Object.keys(syntaxColors)}
+      keys={Object.keys(syntaxColors) as TokenType[]}
       defaultCollapsed
     />
   );

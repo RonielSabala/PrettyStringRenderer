@@ -30,7 +30,7 @@ export class Token {
     }
 
     const colorValue = colors[this.type];
-    if (!colorValue) {
+    if (colorValue === undefined) {
       return;
     }
 
@@ -44,7 +44,7 @@ export class Token {
     }
 
     const colorIdx = (this.depth ?? 0) % colorValue.length;
-    this.color = colorValue[colorIdx] ?? colors.unknown ?? null;
+    this.color = colorValue[colorIdx];
   }
 }
 

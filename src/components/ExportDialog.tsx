@@ -178,6 +178,10 @@ function _exportSVG(
   const batch = new Map<string, { text: string; x: number; y: number }[]>();
 
   iterateTokens(width, height, renderConfig, (text, color, x, y) => {
+    if (!color) {
+      return;
+    }
+
     if (!batch.has(color)) {
       batch.set(color, []);
     }

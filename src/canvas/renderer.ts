@@ -1,7 +1,11 @@
 import { CANVAS_DEFAULTS } from "../common/config";
 import { CSS_TEXT_RENDERING } from "../common/constants/css";
 import { getStore } from "../common/store";
-import type { TypographyConfig } from "../common/types";
+import {
+  TOKENS,
+  type ThemeColor,
+  type TypographyConfig,
+} from "../common/types";
 import { toPx } from "../utils/resolution";
 
 const _CONTEXT_TYPE = "2d";
@@ -21,7 +25,7 @@ const _measureCtx = getDrawingContext(document.createElement("canvas"));
 export function getDrawingContext(
   canvas: HTMLCanvasElement,
 ): CanvasRenderingContext2D {
-  return canvas.getContext(_CONTEXT_TYPE, { alpha: false })!;
+  return canvas.getContext(_CONTEXT_TYPE, { alpha: true })!;
 }
 
 function _setupContextFont(
@@ -79,7 +83,7 @@ export function iterateTokens(
   width: number,
   height: number,
   config: TypographyConfig,
-  onToken: (text: string, color: string, x: number, y: number) => void,
+  onToken: (text: string, color: ThemeColor, x: number, y: number) => void,
 ): void {
   const padX = config.padX;
   const maxWidth = width - padX;
@@ -109,17 +113,17 @@ export function iterateTokens(
     for (const token of lines[row]) {
       const startCol = col;
       const tokenValue = token.value;
-      const tokenColor = token.color;
 
       col += tokenValue.length;
-      if (tokenColor === null) {
+      if (token.type === TOKENS.BACKGROUND) {
         continue;
       }
 
       const x = padX + startCol * charWidth;
       const tokenText =
         col > maxCol ? tokenValue.substring(0, maxCol - startCol) : tokenValue;
-      onToken(tokenText, tokenColor, x, y);
+
+      onToken(tokenText, token.color, x, y);
 
       if (col > maxCol) {
         break;
@@ -136,6 +140,8 @@ export function render(
 ): void {
   const { typographyConfig, colors } = getStore();
   const config = configOverride ?? typographyConfig;
+  const { fontSize, letterSpacing } = config;
+
   const isSpeedOptimized =
     config.textRendering === CSS_TEXT_RENDERING.OPTIMIZE_SPEED;
 
@@ -144,11 +150,26 @@ export function render(
   if (backgroundColor) {
     ctx.fillStyle = backgroundColor;
     ctx.fillRect(0, 0, width, height);
+  } else {
+    ctx.clearRect(0, 0, width, height);
   }
 
   _setupContextFont(ctx, config);
-
   iterateTokens(width, height, config, (text, color, x, y) => {
+    // Clear text
+    if (!color) {
+      if (!backgroundColor) {
+        ctx.clearRect(
+          x,
+          y - fontSize,
+          ctx.measureText(text).width + letterSpacing,
+          fontSize,
+        );
+      }
+
+      return;
+    }
+
     ctx.fillStyle = color;
     ctx.fillText(
       text,

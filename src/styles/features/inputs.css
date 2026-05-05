@@ -10,6 +10,8 @@
 }
 
 .swatch-fill {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,4 +58,31 @@
 .number-input:focus {
   outline: none;
   border-color: var(--border-focus);
+}
+
+.clear-color-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.clear-color-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-focus);
+}
+
+.clear-color-btn:active {
+  background: var(--surface-active);
 }

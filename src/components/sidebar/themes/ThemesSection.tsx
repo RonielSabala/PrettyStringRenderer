@@ -53,10 +53,6 @@ function useThemes() {
     const themeToApply = isObjectEmpty(colors) ? DEFAULT_THEME : colors;
 
     for (const [themeKey, themeValue] of Object.entries(themeToApply)) {
-      if (!themeValue) {
-        continue;
-      }
-
       setColor(themeKey as TokenType, themeValue);
     }
 
@@ -156,7 +152,11 @@ function useThemes() {
 
   // Global keybindings
   useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
+    const handler = (event: Event) => {
+      if (!(event instanceof KeyboardEvent)) {
+        return;
+      }
+
       if (matchesKeybinding(event, "themes.focus")) {
         event.preventDefault();
         activeItem.current?.focus();

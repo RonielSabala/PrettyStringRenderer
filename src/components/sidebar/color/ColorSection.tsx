@@ -36,7 +36,7 @@ export function ColorSection({
   const colors = useStore((state) => state.colors);
   const redraw = useStore((state) => state.redraw);
   const handleChange = useCallback(
-    (key: TokenType, value: string) => {
+    (key: TokenType, value: ThemeColor) => {
       setColor(key, value);
       redraw();
       _scheduleSave();
@@ -70,11 +70,15 @@ export function BracketColorSection() {
   const redraw = useStore((state) => state.redraw);
   const brackets = useStore((state) => state.colors.bracket);
   const handleChange = useCallback(
-    (i: number, value: string) => {
+    (i: number, value: ThemeColor) => {
       if (!brackets) {
+        if (!value) {
+          return;
+        }
+
         setColor(TOKENS.BRACKET, [value]);
       } else {
-        const next = [...brackets];
+        const next = [...brackets] as ThemeColor[];
         next[i] = value;
         setColor(TOKENS.BRACKET, next);
       }

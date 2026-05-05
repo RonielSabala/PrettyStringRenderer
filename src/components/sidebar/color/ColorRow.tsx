@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Eraser } from "react-bootstrap-icons";
 import { MAX_HEX_INPUT_LENGTH } from "../../../common/config";
 import { CSS_STYLE } from "../../../common/constants/css";
 import type { ThemeColor } from "../../../common/types";
@@ -8,7 +9,7 @@ interface Props {
   id: string;
   label: string;
   color: ThemeColor;
-  onChange: (value: string) => void;
+  onChange: (value: ThemeColor) => void;
 }
 
 export default function ColorRow({ id, label, color, onChange }: Props) {
@@ -20,8 +21,8 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
     setHexValue(color);
   }, [color]);
 
-  const handleHex = (value: string) => {
-    if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+  const handleHex = (value: ThemeColor) => {
+    if (!value || /^#[0-9A-Fa-f]{6}$/.test(value)) {
       onChange(value);
     }
   };
@@ -51,6 +52,15 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
         maxLength={MAX_HEX_INPUT_LENGTH}
         onChange={(event) => handleHex(event.target.value)}
       />
+      {color && (
+        <button
+          id={`clear-color-${id}`}
+          className="clear-color-btn"
+          onClick={() => onChange(null)}
+        >
+          <Eraser />
+        </button>
+      )}
     </div>
   );
 }

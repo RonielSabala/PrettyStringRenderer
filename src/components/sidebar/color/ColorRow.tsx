@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { MAX_HEX_INPUT_LENGTH } from "../../../common/config";
+import type { ThemeColor } from "../../../common/types";
 
 interface Props {
   id: string;
   label: string;
-  color: string;
+  color: ThemeColor;
   onChange: (value: string) => void;
 }
 
@@ -35,14 +36,14 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
         <input
           id={`color-picker-${id}`}
           type="color"
-          value={color}
+          value={color || "#000000"}
           onChange={(event) => onChange(event.target.value)}
         />
       </div>
       <input
         id={`hex-input-${id}`}
         className="hex-input"
-        value={hexValue}
+        value={hexValue || ""}
         maxLength={MAX_HEX_INPUT_LENGTH}
         onChange={(event) => handleHex(event.target.value)}
       />

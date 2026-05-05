@@ -58,8 +58,10 @@ export type TokenType = (typeof TOKENS)[keyof typeof TOKENS];
 
 export const THEME_KEYS = Object.values(TOKENS) as readonly TokenType[];
 
+export type ThemeColor = string | null | undefined;
+
 export type ThemeColors = {
-  [K in TokenType]: K extends "bracket" ? string[] : string;
+  [K in TokenType]?: (K extends "bracket" ? string[] : string) | null;
 };
 
 export type Theme = ThemeColors & { _name: string };

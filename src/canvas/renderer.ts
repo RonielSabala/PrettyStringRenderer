@@ -140,8 +140,11 @@ export function render(
     config.textRendering === CSS_TEXT_RENDERING.OPTIMIZE_SPEED;
 
   // Background
-  ctx.fillStyle = colors.background;
-  ctx.fillRect(0, 0, width, height);
+  const backgroundColor = colors.background;
+  if (backgroundColor) {
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, width, height);
+  }
 
   _setupContextFont(ctx, config);
 

@@ -52,8 +52,14 @@ function useThemes() {
   useEffect(() => {
     const themeToApply = isObjectEmpty(colors) ? DEFAULT_THEME : colors;
 
-    for (const [themeKey, themeValue] of Object.entries(themeToApply))
+    for (const [themeKey, themeValue] of Object.entries(themeToApply)) {
+      if (!themeValue) {
+        continue;
+      }
+
       setColor(themeKey as TokenType, themeValue);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

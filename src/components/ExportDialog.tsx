@@ -148,10 +148,19 @@ function _exportSVG(
     height: height,
     viewBox: `0 0 ${width} ${height}`,
   });
-  const pathElement = _setAttrs(_svgElement("path"), {
-    fill: colors.background,
-    d: `M0 0h${width}v${height}H0z`,
-  });
+
+  // Background
+  const backgroundColor = colors.background;
+  if (backgroundColor) {
+    const pathElement = _setAttrs(_svgElement("path"), {
+      fill: backgroundColor,
+      d: `M0 0h${width}v${height}H0z`,
+    });
+
+    svgElement.append(pathElement);
+  }
+
+  // Group
   const groupElement = _setAttrs(_svgElement("g"), {
     "font-size": typographyConfig.fontSize,
     "font-family": CANVAS_DEFAULTS.font,
@@ -159,10 +168,10 @@ function _exportSVG(
     "letter-spacing": typographyConfig.letterSpacing,
   });
 
-  // Structure svg
   (groupElement as SVGElement).style.fontVariantLigatures =
     APP_FONT_VARIANT_LIGATURES;
-  svgElement.append(pathElement, groupElement);
+
+  svgElement.append(groupElement);
 
   // Build svg
 

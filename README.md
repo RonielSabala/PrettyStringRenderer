@@ -109,7 +109,7 @@ Themes are just simple JSON objects. Minimal theme example:
 
 You can define as many colors (nesting levels) as you want in the `bracket` array.
 
-> Check the [themes/](/themes/) folder for a collection of pre-bundled color palettes.
+> Check the [public/themes/](/public/themes/) folder for a collection of pre-bundled color palettes.
 
 ---
 
@@ -125,7 +125,7 @@ Keys you omit keep their default. Each entry maps an action to a key combination
 
 ```json
 {
-  "export.open": "ctrl+m",
+  "app.fullReload": "ctrl+shift+r",
   "canvas.focus": "escape"
 }
 ```
@@ -140,12 +140,12 @@ Modifiers are `ctrl`, `shift`, and `alt`, separated by `+`. The key name is alwa
 
 The tokenizer highlights the following categories:
 
-| Category        | Patterns                                                                       |
-| --------------- | ------------------------------------------------------------------------------ |
-| **Brackets**    | Inline (`()`, `[]`, `{}`) and Multiline (`/ \` `▏ ▕` `\ /`, `┌ ┐` `│ │` `└ ┘`) |
-| **Identifiers** | `variables` and `functions()`                                                  |
-| **Literals**    | Numbers (`7`, `3.14`, `.5`) and inline comments (`# comment`)                  |
-| **Operators**   | `+`, `-`, `*`, `>`, and semicolons `;`                                         |
+| Category        | Patterns                                                      |
+| --------------- | ------------------------------------------------------------- |
+| **Brackets**    | Inline (`()`, `[]`, `{}`) and Multiline (examples below)      |
+| **Identifiers** | `variables` and `functions()`                                 |
+| **Literals**    | Numbers (`0`, `3.14`, `.5`) and inline comments (`# comment`) |
+| **Operators**   | `+`, `-`, `*`, `>`, and semicolons `;`                        |
 
 ### Bracket Logic
 
@@ -161,11 +161,11 @@ Nesting depth automatically cycles through the colors defined in your theme's `b
 
 - **Comments**: `#` terminates early if it hits multiline bracket characters. This is done on purpose to avoid breaking shapes.
 
-- **Reserved Characters**: The `/` and `\` characters are reserved for multiline round-bracket arms.
+- **Reserved Characters**: Characters like `/` and `\` are reserved for multiline round-bracket arms.
 
 - **Pairing**: The tokenizer requires paired bracket families; orphaned or split vertical segments cannot be resolved.
 
-- **Structural Wrapping**: The program does not currently support "wrapping" multiline brackets around standard code blocks. This limitation applies to **both inline and multiline** brackets:
+- **Structural Wrapping**: The program does not currently support "wrapping" multiline brackets around standard code blocks.
 
 ```plain
 {

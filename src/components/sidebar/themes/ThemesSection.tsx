@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
+import { Download, FolderX, Upload } from "react-bootstrap-icons";
 import {
   DEFAULT_EXPORT_THEME_FILENAME,
   DEFAULT_THEME,
@@ -189,22 +190,26 @@ interface ThemeActionsProps {
 
 function ThemeActions({ onImport, onExport }: ThemeActionsProps) {
   return (
-    <>
+    <div className="theme-actions">
       <button
         id="btn-import-themes"
-        className="theme-btn no-select"
+        className="theme-btn theme-btn-import no-select"
         onClick={onImport}
+        title="Import theme files"
       >
-        Import themes
+        <Upload size={16} />
+        <span>Import</span>
       </button>
       <button
         id="btn-export-theme"
-        className="theme-btn no-select"
+        className="theme-btn theme-btn-export no-select"
         onClick={onExport}
+        title="Export current theme"
       >
-        Export theme
+        <Download size={16} />
+        <span>Export</span>
       </button>
-    </>
+    </div>
   );
 }
 
@@ -231,7 +236,11 @@ export default function ThemesSection() {
     >
       <div className="theme-list">
         {noThemes ? (
-          <div id="theme-empty">No themes loaded.</div>
+          <div id="theme-empty">
+            <FolderX size={32} />
+            <p>No themes loaded</p>
+            <span>Import or create a theme to get started</span>
+          </div>
         ) : (
           themes.map((theme, index) => (
             <ThemeItem

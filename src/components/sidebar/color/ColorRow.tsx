@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Eraser } from "react-bootstrap-icons";
+import { ArrowCounterclockwise, Eraser } from "react-bootstrap-icons";
 import { MAX_HEX_INPUT_LENGTH } from "../../../common/config";
 import { CSS_STYLE } from "../../../common/constants/css";
 import type { ThemeColor } from "../../../common/types";
@@ -14,6 +14,7 @@ interface Props {
 
 export default function ColorRow({ id, label, color, onChange }: Props) {
   const [hexValue, setHexValue] = useState(color);
+  const [previousColor, setPreviousColor] = useState<ThemeColor>(null);
 
   // Sync external color changes
   useEffect(() => {
@@ -25,6 +26,16 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
     if (!value || /^#[0-9A-Fa-f]{6}$/.test(value)) {
       onChange(value);
     }
+  };
+
+  const handleClear = () => {
+    setPreviousColor(color);
+    onChange(null);
+  };
+
+  const handleUndo = () => {
+    onChange(previousColor);
+    setPreviousColor(null);
   };
 
   return (
@@ -52,15 +63,25 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
         maxLength={MAX_HEX_INPUT_LENGTH}
         onChange={(event) => handleHex(event.target.value)}
       />
-      {color && (
+      {color ? (
         <button
           id={`clear-color-${id}`}
           className="clear-color-btn"
-          onClick={() => onChange(null)}
+          onClick={handleClear}
+          title="Clear color"
         >
-          <Eraser />
+          <Eraser size={16} />
         </button>
-      )}
+      ) : previousColor ? (
+        <button
+          id={`undo-clear-${id}`}
+          className="clear-color-btn"
+          onClick={handleUndo}
+          title="Undo clear"
+        >
+          <ArrowCounterclockwise size={16} />
+        </button>
+      ) : null}
     </div>
   );
 }

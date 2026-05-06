@@ -117,7 +117,6 @@ export const DEFAULT_EXPORT_IMAGE_FILENAME =
 
 export const THEMES_EXTENSION = ".json";
 export const THEMES_FILE_TYPE = "file";
-export const EXPORT_THEME_PROMPT_MESSAGE = "Theme name:";
 export const THEME_BLOB_TYPE = { type: "application/json" } as const;
 export const DEFAULT_THEME = Object.freeze(
   (_userDefaults.theme ?? _defaults.theme) as ThemeColors,

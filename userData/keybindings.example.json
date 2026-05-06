@@ -7,6 +7,8 @@
   "themes.focus": "tab",
   "themes.import": "ctrl+i",
   "themes.export": "ctrl+shift+e",
+  "themes.export.confirm": "enter",
+  "themes.export.cancel": "escape",
   "themes.navigateUp": "arrowup",
   "themes.navigateDown": "arrowdown"
 }

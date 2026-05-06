@@ -13,7 +13,7 @@ const STORAGE_KEYS = Object.freeze({
   THEMES: "psr:themes",
   ACTIVE_THEME_NAME: "psr:activeThemeName",
   ACTIVE_ELEMENT_ID: "psr:activeElementID",
-  COLLAPSED_SECTION_IDS: "psr:collapsedSections",
+  COLLAPSED_SECTIONS: "psr:collapsedSections",
   TYPOGRAPHY_CONFIG: "psr:typographyConfig",
   EDITOR_CONFIG: "psr:editorConfig",
   CANVAS_CONFIG: "psr:canvasConfig",
@@ -78,7 +78,7 @@ export const saveActiveElementIdState = () =>
 
 export const saveCollapsedSectionsState = () =>
   _saveObjectAsync(
-    STORAGE_KEYS.COLLAPSED_SECTION_IDS,
+    STORAGE_KEYS.COLLAPSED_SECTIONS,
     getStore().collapsedSections,
   );
 
@@ -101,7 +101,7 @@ export function restoreState(): void {
     const activeThemeName = _get(STORAGE_KEYS.ACTIVE_THEME_NAME);
     const activeElementId = _get(STORAGE_KEYS.ACTIVE_ELEMENT_ID);
     const collapsedSections = _getObject<CollapsedSections>(
-      STORAGE_KEYS.COLLAPSED_SECTION_IDS,
+      STORAGE_KEYS.COLLAPSED_SECTIONS,
     );
     const typographyConfig = _getObject<TypographyConfig>(
       STORAGE_KEYS.TYPOGRAPHY_CONFIG,

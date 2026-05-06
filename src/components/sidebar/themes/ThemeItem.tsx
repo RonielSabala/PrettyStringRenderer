@@ -3,6 +3,7 @@ import { CSS_STYLE } from "../../../common/constants/css";
 import { matchesKeybinding } from "../../../common/keybindings";
 import type { Theme } from "../../../common/types";
 import { TransparentSwatchIcon } from "../TransparentSwatchIcon";
+import "./ThemeItem.css";
 
 interface Props {
   theme: Theme;

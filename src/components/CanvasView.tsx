@@ -18,6 +18,7 @@ import {
   saveCanvasConfigState,
 } from "../utils/persistence";
 import { toPx } from "../utils/resolution";
+import "./CanvasView.css";
 
 const _scheduleSave = createSaveScheduler(saveCanvasConfigState);
 

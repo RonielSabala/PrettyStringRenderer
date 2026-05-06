@@ -2,6 +2,7 @@ import { useStore } from "../common/store";
 import { roundUp } from "../utils/parse";
 import { clearState } from "../utils/persistence";
 import { createResolution } from "../utils/resolution";
+import "./Header.css";
 
 interface Props {
   onExportClick: () => void;
@@ -17,23 +18,23 @@ export default function Header({ onExportClick }: Props) {
   };
 
   return (
-    <header id="app-header">
+    <>
       <span className="header-title">Pretty String Renderer</span>
       <button
-        className="btn no-select"
         id="btn-reset"
+        className="btn no-select"
         type="button"
         onClick={handleReset}
       >
         Reset
       </button>
       <div className="header-title-separator" />
-      <div className="badge" id="header-badge">
+      <div className="badge">
         {`${createResolution(width, height)} / ${roundUp(width / height)}:1`}
       </div>
-      <button className="btn no-select" id="btn-export" onClick={onExportClick}>
+      <button id="btn-export" className="btn no-select" onClick={onExportClick}>
         ↓ Export
       </button>
-    </header>
+    </>
   );
 }

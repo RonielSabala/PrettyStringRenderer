@@ -6,8 +6,6 @@
   height: 100vh;
 }
 
-/* Header */
-
 #app-header {
   grid-area: app-header;
   display: flex;
@@ -17,8 +15,6 @@
   background: var(--surface-panel);
   border-bottom: 1px solid var(--border);
 }
-
-/* Sidebar */
 
 #app-sidebar {
   grid-area: app-sidebar;
@@ -37,39 +33,10 @@
   border-radius: 4px;
 }
 
-/* Work area */
-
 #app-work-area {
   grid-area: app-work-area;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background: var(--surface-base);
-}
-
-.no-select {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.btn {
-  padding: 5px 10px;
-  border-radius: var(--radius);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid var(--btn-color);
-  background: var(--btn-color-dim);
-  color: var(--text-primary);
-  transition: background 0.12s;
-}
-
-.btn:hover {
-  background: var(--btn-color);
-  color: #fff;
 }

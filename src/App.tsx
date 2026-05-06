@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import "./App.css";
 import { EVENTS } from "./common/constants/events";
 import { useStore } from "./common/store";
 import CanvasView from "./components/CanvasView";
@@ -43,7 +44,9 @@ export default function App() {
 
   return (
     <div id="app">
-      <Header onExportClick={() => exportDialogRef.current?.showModal()} />
+      <header id="app-header">
+        <Header onExportClick={() => exportDialogRef.current?.showModal()} />
+      </header>
 
       <aside id="app-sidebar">
         <Sidebar />

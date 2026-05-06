@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { useStore } from "../../common/store";
 import { saveCollapsedSectionsState } from "../../utils/persistence";
+import "./SidebarSection.css";
 
 interface Props {
   id: string;
@@ -32,7 +33,7 @@ export default function SidebarSection({
   return (
     <div id={id}>
       <div
-        id={headerId}
+        id={`section-header-${headerId}`}
         className={`section-header no-select${isCollapsed ? " header-collapsed" : ""}`}
         onClick={toggleCollapse}
       >

@@ -92,7 +92,7 @@ export function BracketColorSection() {
   return (
     <SidebarSection
       id="section-bracket-colors"
-      headerId="section-header-bracket-colors"
+      headerId="bracket-colors"
       title="Bracket Colors"
       defaultCollapsed
     >
@@ -117,7 +117,7 @@ export function SyntaxColorSection() {
   return (
     <ColorSection
       id="section-syntax-colors"
-      headerId="section-header-syntax-colors"
+      headerId="syntax-colors"
       title="Syntax Colors"
       keys={Object.keys(syntaxColors) as TokenType[]}
       defaultCollapsed
@@ -129,7 +129,7 @@ export function CanvasColorSection() {
   return (
     <ColorSection
       id="section-canvas-colors"
-      headerId="section-header-canvas-colors"
+      headerId="canvas-colors"
       title="Canvas Colors"
       keys={[TOKENS.BACKGROUND]}
       defaultCollapsed

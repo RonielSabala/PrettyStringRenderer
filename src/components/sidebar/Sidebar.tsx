@@ -3,6 +3,7 @@ import {
   CanvasColorSection,
   SyntaxColorSection,
 } from "./color/ColorSection";
+import "./Sidebar.css";
 import ThemesSection from "./themes/ThemesSection";
 import TypographySection from "./typography/TypographySection";
 

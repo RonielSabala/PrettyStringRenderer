@@ -2,6 +2,7 @@ import { X } from "react-bootstrap-icons";
 import { THEME_BLOB_TYPE, THEMES_EXTENSION } from "../../../common/config";
 import type { Theme } from "../../../common/types";
 import { revokeAfter, urlFromObject } from "../../../utils/url";
+import "./ThemeViewDialog.css";
 
 interface ThemeViewDialogProps {
   theme: Theme | null;

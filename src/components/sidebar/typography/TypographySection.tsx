@@ -28,7 +28,7 @@ export default function TypographySection() {
   return (
     <SidebarSection
       id="section-typography"
-      headerId="section-header-typography"
+      headerId="typography"
       title="Typography"
     >
       {(

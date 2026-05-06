@@ -25,6 +25,7 @@ import type {
 } from "../common/types";
 import { parseNumber, roundUp } from "../utils/parse";
 import { createResolution, getScaledDimensions } from "../utils/resolution";
+import "./ExportDialog.css";
 
 // Private helpers
 

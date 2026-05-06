@@ -4,6 +4,7 @@ import {
   THEMES_EXTENSION,
 } from "../../../common/config";
 import { matchesKeybinding } from "../../../common/keybindings";
+import "./ThemeExportDialog.css";
 
 interface ThemeExportDialogProps {
   isOpen: boolean;

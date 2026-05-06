@@ -1,4 +1,5 @@
 import { Download, Upload } from "react-bootstrap-icons";
+import "./ThemeActions.css";
 
 interface ThemeActionsProps {
   onImport: () => void;

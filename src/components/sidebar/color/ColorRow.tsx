@@ -3,7 +3,9 @@ import { ArrowCounterclockwise, Eraser } from "react-bootstrap-icons";
 import { MAX_HEX_INPUT_LENGTH } from "../../../common/config";
 import { CSS_STYLE } from "../../../common/constants/css";
 import type { ThemeColor } from "../../../common/types";
+import "../SidebarRow.css";
 import { TransparentSwatchIcon } from "../TransparentSwatchIcon";
+import "./ColorRow.css";
 
 interface Props {
   id: string;
@@ -39,7 +41,7 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
   };
 
   return (
-    <div className="row">
+    <div className="sidebar-row">
       <label>{label}</label>
       <div className="swatch">
         <div

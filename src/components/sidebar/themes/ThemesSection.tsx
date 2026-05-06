@@ -26,6 +26,7 @@ import ThemeActions from "./ThemeActions";
 import ThemeExportDialog from "./ThemeExportDialog";
 import { ThemeItem } from "./ThemeItem";
 import ThemeViewDialog from "./ThemeViewDialog";
+import "./ThemesSection.css";
 
 const _scheduleSave = createSaveScheduler(saveColorsState);
 const _scheduleThemeNameSave = createSaveScheduler(saveActiveThemeNameState);
@@ -203,7 +204,7 @@ export default function ThemesSection() {
   return (
     <SidebarSection
       id="section-themes"
-      headerId="section-header-themes"
+      headerId="themes"
       title="Themes"
     >
       <div className="theme-list">

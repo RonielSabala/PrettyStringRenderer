@@ -1,3 +1,6 @@
+import "../SidebarRow.css";
+import "./NumberRow.css";
+
 interface Props {
   id: string;
   label: string;
@@ -18,7 +21,7 @@ export default function NumberRow({
   onChange,
 }: Props) {
   return (
-    <div className="row">
+    <div className="sidebar-row">
       <label htmlFor={id}>{label}</label>
       <input
         id={id}

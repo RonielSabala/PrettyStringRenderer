@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Download, FolderX, Upload } from "react-bootstrap-icons";
+import { FolderX } from "react-bootstrap-icons";
 import {
   DEFAULT_EXPORT_THEME_FILENAME,
   DEFAULT_THEME,
@@ -20,23 +20,15 @@ import {
   saveColorsState,
   saveThemesState,
 } from "../../../utils/persistence";
+import { revokeAfter, urlFromObject } from "../../../utils/url";
 import SidebarSection from "../SidebarSection";
+import ThemeActions from "./ThemeActions";
+import ThemeExportDialog from "./ThemeExportDialog";
 import { ThemeItem } from "./ThemeItem";
+import ThemeViewDialog from "./ThemeViewDialog";
 
 const _scheduleSave = createSaveScheduler(saveColorsState);
 const _scheduleThemeNameSave = createSaveScheduler(saveActiveThemeNameState);
-
-// Private helpers
-
-function _urlFromObject(obj: object): string {
-  return URL.createObjectURL(
-    new Blob([JSON.stringify(obj, null, 2)], THEME_BLOB_TYPE),
-  );
-}
-
-function _revokeAfter(url: string) {
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
 
 function useThemes() {
   const colors = useStore((state) => state.colors);
@@ -132,13 +124,13 @@ function useThemes() {
   const confirmExport = useCallback(
     (filename: string) => {
       const anchorElement = document.createElement("a");
-      anchorElement.href = _urlFromObject(colors);
+      anchorElement.href = urlFromObject(colors, THEME_BLOB_TYPE);
       anchorElement.download = filename.endsWith(THEMES_EXTENSION)
         ? filename
         : `${filename}${THEMES_EXTENSION}`;
 
       anchorElement.click();
-      _revokeAfter(anchorElement.href);
+      revokeAfter(anchorElement.href);
       setIsExporting(false);
     },
     [colors],
@@ -187,182 +179,6 @@ function useThemes() {
     closeViewingTheme: () => setViewingTheme(null),
   };
 }
-
-// Theme action buttons
-
-interface ThemeActionsProps {
-  onImport: () => void;
-  onExport: () => void;
-}
-
-function ThemeActions({ onImport, onExport }: ThemeActionsProps) {
-  return (
-    <div className="theme-actions">
-      <button
-        id="btn-import-themes"
-        className="theme-btn theme-btn-import no-select"
-        onClick={onImport}
-        title="Import theme files"
-      >
-        <Upload size={16} />
-        <span>Import</span>
-      </button>
-      <button
-        id="btn-export-theme"
-        className="theme-btn theme-btn-export no-select"
-        onClick={onExport}
-        title="Export current theme"
-      >
-        <Download size={16} />
-        <span>Export</span>
-      </button>
-    </div>
-  );
-}
-
-// Theme export dialog
-
-interface ThemeExportDialogProps {
-  isOpen: boolean;
-  filename: string | null;
-  onConfirm: (filename: string) => void;
-  onCancel: () => void;
-}
-
-function ThemeExportDialog({
-  isOpen,
-  filename,
-  onConfirm,
-  onCancel,
-}: ThemeExportDialogProps) {
-  const [inputValue, setInputValue] = useState(filename || "");
-
-  useEffect(() => {
-    if (filename) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setInputValue(filename);
-    }
-  }, [filename, isOpen]);
-
-  const handleSubmit = () => {
-    if (inputValue.trim()) {
-      onConfirm(inputValue);
-    }
-  };
-
-  if (!isOpen) {
-    return null;
-  }
-
-  return (
-    <div className="theme-export-overlay" onClick={onCancel}>
-      <div
-        className="theme-export-dialog"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <p className="theme-export-title">Export Theme</p>
-        <p className="theme-export-description">
-          Enter a name for your theme file:
-        </p>
-        <input
-          type="text"
-          className="theme-export-input"
-          value={inputValue}
-          onChange={(event) => setInputValue(event.target.value)}
-          onKeyDown={(event) => {
-            if (matchesKeybinding(event, "themes.export.confirm")) {
-              handleSubmit();
-            } else if (matchesKeybinding(event, "themes.export.cancel")) {
-              onCancel();
-            }
-          }}
-          placeholder={DEFAULT_EXPORT_THEME_FILENAME}
-          autoFocus
-        />
-        <p className="theme-export-preview">
-          File:{" "}
-          <strong>
-            {inputValue || DEFAULT_EXPORT_THEME_FILENAME}
-            {THEMES_EXTENSION}
-          </strong>
-        </p>
-        <div className="theme-export-actions">
-          <button className="theme-export-cancel" onClick={onCancel}>
-            Cancel
-          </button>
-          <button
-            className="theme-export-confirm"
-            onClick={handleSubmit}
-            disabled={!inputValue.trim()}
-          >
-            Export
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Theme view dialog
-
-interface ThemeViewDialogProps {
-  theme: Theme | null;
-  onClose: () => void;
-}
-
-function ThemeViewDialog({ theme, onClose }: ThemeViewDialogProps) {
-  if (!theme) {
-    return null;
-  }
-
-  const jsonString = JSON.stringify(theme, null, 2);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(jsonString);
-  };
-
-  const handleDownload = () => {
-    const url = _urlFromObject(theme);
-    const anchorElement = document.createElement("a");
-    anchorElement.href = url;
-    anchorElement.download = `${theme._name}${THEMES_EXTENSION}`;
-    anchorElement.click();
-    _revokeAfter(url);
-  };
-
-  return (
-    <div className="theme-view-overlay" onClick={onClose}>
-      <div
-        className="theme-view-dialog"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className="theme-view-header">
-          <p className="theme-view-title">{theme._name}</p>
-          <button className="theme-view-close" onClick={onClose}>
-            ×
-          </button>
-        </div>
-        <pre className="theme-view-content">{jsonString}</pre>
-        <div className="theme-view-actions">
-          <button className="theme-view-btn" onClick={handleCopy}>
-            Copy
-          </button>
-          <button className="theme-view-btn" onClick={handleDownload}>
-            Download
-          </button>
-          <button
-            className="theme-view-btn theme-view-btn-primary"
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Theme section
 
 export default function ThemesSection() {
   const {

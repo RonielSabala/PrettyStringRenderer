@@ -14,7 +14,7 @@ import {
   SVG_EXTENSION,
   SVG_NS,
 } from "../common/config";
-import { CSS, CSS_TEXT_RENDERING } from "../common/constants/css";
+import { CSS_STYLE, CSS_TEXT_RENDERING } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
 import { useStore } from "../common/store";
@@ -91,7 +91,7 @@ function _exportPNG(
   document.body.appendChild(offscreen);
   offscreen.width = exportWidth;
   offscreen.height = exportHeight;
-  offscreen.style.visibility = CSS.HIDDEN;
+  offscreen.style.visibility = CSS_STYLE.HIDDEN;
   offscreen.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
   render(getDrawingContext(offscreen), exportWidth, exportHeight, scaledConfig);
@@ -148,10 +148,19 @@ function _exportSVG(
     height: height,
     viewBox: `0 0 ${width} ${height}`,
   });
-  const pathElement = _setAttrs(_svgElement("path"), {
-    fill: colors.background,
-    d: `M0 0h${width}v${height}H0z`,
-  });
+
+  // Background
+  const backgroundColor = colors.background;
+  if (backgroundColor) {
+    const pathElement = _setAttrs(_svgElement("path"), {
+      fill: backgroundColor,
+      d: `M0 0h${width}v${height}H0z`,
+    });
+
+    svgElement.append(pathElement);
+  }
+
+  // Group
   const groupElement = _setAttrs(_svgElement("g"), {
     "font-size": typographyConfig.fontSize,
     "font-family": CANVAS_DEFAULTS.font,
@@ -159,16 +168,20 @@ function _exportSVG(
     "letter-spacing": typographyConfig.letterSpacing,
   });
 
-  // Structure svg
   (groupElement as SVGElement).style.fontVariantLigatures =
     APP_FONT_VARIANT_LIGATURES;
-  svgElement.append(pathElement, groupElement);
+
+  svgElement.append(groupElement);
 
   // Build svg
 
   const batch = new Map<string, { text: string; x: number; y: number }[]>();
 
   iterateTokens(width, height, renderConfig, (text, color, x, y) => {
+    if (!color) {
+      return;
+    }
+
     if (!batch.has(color)) {
       batch.set(color, []);
     }
@@ -237,7 +250,11 @@ export const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
 
   // Global keybindings
   useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
+    const handler = (event: Event) => {
+      if (!(event instanceof KeyboardEvent)) {
+        return;
+      }
+
       if (matchesKeybinding(event, "export.open")) {
         event.preventDefault();
         openDialog();

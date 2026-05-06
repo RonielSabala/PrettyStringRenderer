@@ -83,7 +83,6 @@ export default function CanvasView() {
     // Initial draw
     applyTransform();
     buffer.adjustCanvas();
-    buffer.redraw();
 
     return () => {
       buffer.destroy();
@@ -212,7 +211,11 @@ export default function CanvasView() {
       _scheduleSave();
     };
 
-    const onKeyDown = (event: KeyboardEvent) => {
+    const onKeyDown = (event: Event) => {
+      if (!(event instanceof KeyboardEvent)) {
+        return;
+      }
+
       const editor = document.getElementById("editor");
       if (
         matchesKeybinding(event, "canvas.panHold") &&
@@ -233,8 +236,11 @@ export default function CanvasView() {
       }
     };
 
-    const onKeyUp = (event: KeyboardEvent) => {
-      if (!matchesKeybinding(event, "canvas.panHold")) {
+    const onKeyUp = (event: Event) => {
+      if (
+        !(event instanceof KeyboardEvent) ||
+        !matchesKeybinding(event, "canvas.panHold")
+      ) {
         return;
       }
 

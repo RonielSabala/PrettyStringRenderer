@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { DEFAULT_THEME } from "../../../common/config";
 import { useStore } from "../../../common/store";
-import { TOKENS, type TokenType } from "../../../common/types";
+import { TOKENS, type ThemeColor, type TokenType } from "../../../common/types";
 import { setColor } from "../../../utils/color_sync";
 import { toTitle } from "../../../utils/parse";
 import {
@@ -36,7 +36,7 @@ export function ColorSection({
   const colors = useStore((state) => state.colors);
   const redraw = useStore((state) => state.redraw);
   const handleChange = useCallback(
-    (key: TokenType, value: string) => {
+    (key: TokenType, value: ThemeColor) => {
       setColor(key, value);
       redraw();
       _scheduleSave();
@@ -56,7 +56,7 @@ export function ColorSection({
           key={key}
           id={key}
           label={toTitle(key)}
-          color={colors[key] as string}
+          color={colors[key] as ThemeColor}
           onChange={(value) => handleChange(key, value)}
         />
       ))}
@@ -68,12 +68,21 @@ export function ColorSection({
 
 export function BracketColorSection() {
   const redraw = useStore((state) => state.redraw);
-  const brackets = useStore((state) => state.colors.bracket) as string[];
+  const brackets = useStore((state) => state.colors.bracket);
   const handleChange = useCallback(
-    (i: number, value: string) => {
-      const next = [...brackets];
-      next[i] = value;
-      setColor(TOKENS.BRACKET, next);
+    (i: number, value: ThemeColor) => {
+      if (!brackets) {
+        if (!value) {
+          return;
+        }
+
+        setColor(TOKENS.BRACKET, [value]);
+      } else {
+        const next = [...brackets] as ThemeColor[];
+        next[i] = value;
+        setColor(TOKENS.BRACKET, next);
+      }
+
       redraw();
       _scheduleSave();
     },
@@ -87,15 +96,19 @@ export function BracketColorSection() {
       title="Bracket Colors"
       defaultCollapsed
     >
-      {brackets.map((color, i) => (
-        <ColorRow
-          key={i}
-          id={`$bracket${i}`}
-          label={`Level ${i + 1}`}
-          color={color}
-          onChange={(value) => handleChange(i, value)}
-        />
-      ))}
+      {!brackets || brackets.length === 0 ? (
+        <p>No bracket colors to show.</p>
+      ) : (
+        brackets.map((color, i) => (
+          <ColorRow
+            key={i}
+            id={`bracket-${i}`}
+            label={`Level ${i + 1}`}
+            color={color}
+            onChange={(value) => handleChange(i, value)}
+          />
+        ))
+      )}
     </SidebarSection>
   );
 }

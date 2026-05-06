@@ -1,4 +1,5 @@
 import { TOKENS, type ThemeColors, type TokenType } from "../common/types";
+import { isObjectEmpty } from "../utils/parse";
 
 export class Token {
   value: string;
@@ -23,14 +24,27 @@ export class Token {
       return;
     }
 
-    const colorValue = colors[this.type];
-    if (Array.isArray(colorValue)) {
-      const colorIdx = (this.depth ?? 0) % colorValue.length;
-      this.color = colorValue[colorIdx] ?? colors.unknown;
+    if (!(this.type in colors)) {
+      this.color = colors.unknown ?? null;
       return;
     }
 
-    this.color = (colorValue as string | undefined) ?? colors.unknown;
+    const colorValue = colors[this.type];
+    if (colorValue === undefined) {
+      return;
+    }
+
+    if (!Array.isArray(colorValue)) {
+      this.color = colorValue;
+      return;
+    }
+
+    if (isObjectEmpty(colorValue)) {
+      return;
+    }
+
+    const colorIdx = (this.depth ?? 0) % colorValue.length;
+    this.color = colorValue[colorIdx];
   }
 }
 

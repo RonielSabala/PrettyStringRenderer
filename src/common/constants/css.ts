@@ -1,5 +1,6 @@
-export const CSS = Object.freeze({
+export const CSS_STYLE = Object.freeze({
   HIDDEN: "hidden",
+  TRANSPARENT: "transparent",
 } as const);
 
 export const CSS_CURSORS = Object.freeze({

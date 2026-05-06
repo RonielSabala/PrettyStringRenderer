@@ -19,8 +19,8 @@ export default function TypographySection() {
   const handleChange = useCallback(
     (key: keyof TypographyConfig, value: number) => {
       setConfig({ [key]: value } as Partial<TypographyConfig>);
-      _scheduleSave();
       redraw();
+      _scheduleSave();
     },
     [setConfig, redraw],
   );

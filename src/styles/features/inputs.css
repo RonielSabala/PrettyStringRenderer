@@ -1,19 +1,20 @@
 .swatch {
-  width: 26px;
+  width: 20px;
   height: 20px;
-  border-radius: 4px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
+  border-radius: 25%;
   flex-shrink: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
 }
 
 .swatch-fill {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: 3px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .swatch input[type="color"] {
@@ -57,4 +58,31 @@
 .number-input:focus {
   outline: none;
   border-color: var(--border-focus);
+}
+
+.clear-color-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.clear-color-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-focus);
+}
+
+.clear-color-btn:active {
+  background: var(--surface-active);
 }

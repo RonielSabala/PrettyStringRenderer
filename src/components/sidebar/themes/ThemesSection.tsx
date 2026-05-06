@@ -10,9 +10,9 @@ import {
 import { EVENTS } from "../../../common/constants/events";
 import { matchesKeybinding } from "../../../common/keybindings";
 import { useStore } from "../../../common/store";
-import type { Theme, ThemeColors, TokenType } from "../../../common/types";
+import type { Theme, ThemeColors } from "../../../common/types";
 import { THEME_KEYS, TOKENS } from "../../../common/types";
-import { applyThemeColors, setColor } from "../../../utils/color_sync";
+import { applyThemeColors } from "../../../utils/color_sync";
 import { isObjectEmpty } from "../../../utils/parse";
 import {
   createSaveScheduler,
@@ -51,9 +51,7 @@ function useThemes() {
   // Apply initial colors on mount
   useEffect(() => {
     const themeToApply = isObjectEmpty(colors) ? DEFAULT_THEME : colors;
-
-    for (const [themeKey, themeValue] of Object.entries(themeToApply))
-      setColor(themeKey as TokenType, themeValue);
+    applyThemeColors(themeToApply);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -150,7 +148,11 @@ function useThemes() {
 
   // Global keybindings
   useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
+    const handler = (event: Event) => {
+      if (!(event instanceof KeyboardEvent)) {
+        return;
+      }
+
       if (matchesKeybinding(event, "themes.focus")) {
         event.preventDefault();
         activeItem.current?.focus();

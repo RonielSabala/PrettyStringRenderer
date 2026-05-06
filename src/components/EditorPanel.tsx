@@ -90,9 +90,6 @@ export default function EditorPanel() {
     if (selection.length === 2) {
       editor.setSelectionRange(selection[0], selection[1]);
     }
-
-    tokenize(editor.value);
-    redraw();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -117,13 +114,10 @@ export default function EditorPanel() {
   const handleContent = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const content = event.target.value;
-      tokenize(content);
-      redraw();
-
       setEditorConfig({ content });
       _scheduleSave();
     },
-    [tokenize, redraw, setEditorConfig],
+    [setEditorConfig],
   );
 
   const handleCursorChange = useCallback(() => {
@@ -231,8 +225,11 @@ export default function EditorPanel() {
   // Canvas focus keybinding
 
   useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
-      if (!matchesKeybinding(event, "canvas.focus")) {
+    const handler = (event: Event) => {
+      if (
+        !(event instanceof KeyboardEvent) ||
+        !matchesKeybinding(event, "canvas.focus")
+      ) {
         return;
       }
 

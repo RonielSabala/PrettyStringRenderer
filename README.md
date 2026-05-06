@@ -97,7 +97,9 @@ cp userData/profile.example.json userData/profile.json
 
 ### Theme format
 
-Themes are just simple JSON objects. Minimal theme example:
+Themes are just simple JSON objects. Every theme key is **Nullable** and **can be omitted**; meaning that the color will be transparent.
+
+Minimal theme example:
 
 ```json
 {

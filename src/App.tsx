@@ -4,7 +4,7 @@ import { EVENTS } from "./common/constants/events";
 import { useStore } from "./common/store";
 import CanvasView from "./components/CanvasView";
 import EditorPanel from "./components/EditorPanel";
-import ExportDialog from "./components/ExportDialog/ExportDialog";
+import ExportDialog from "./components/export/ExportDialog";
 import Header from "./components/Header";
 import Sidebar from "./components/sidebar/Sidebar";
 import { restoreState, saveActiveElementIdState } from "./utils/persistence";

@@ -24,7 +24,7 @@ export default function ThemeExportDialog({
   useEffect(() => {
     if (filename) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setInputValue(filename);
+      setInputValue(filename + THEMES_EXTENSION);
     }
   }, [filename, isOpen]);
 
@@ -46,7 +46,7 @@ export default function ThemeExportDialog({
       >
         <p className="theme-export-title">Export Theme</p>
         <p className="theme-export-description">
-          Enter a name for your theme file:
+          Enter a filename for the theme export:
         </p>
         <input
           className="theme-export-input"
@@ -59,16 +59,9 @@ export default function ThemeExportDialog({
               onCancel();
             }
           }}
-          placeholder={DEFAULT_EXPORT_THEME_FILENAME}
+          placeholder={DEFAULT_EXPORT_THEME_FILENAME + THEMES_EXTENSION}
           autoFocus
         />
-        <p className="theme-export-preview">
-          File:{" "}
-          <strong>
-            {inputValue || DEFAULT_EXPORT_THEME_FILENAME}
-            {THEMES_EXTENSION}
-          </strong>
-        </p>
         <div className="theme-export-actions">
           <button className="theme-export-cancel" onClick={onCancel}>
             Cancel

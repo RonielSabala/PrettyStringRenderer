@@ -51,6 +51,7 @@ export default function SVGExportModal({
 
         <div className="svg-export-scalar-section">
           <input
+            className="svg-export-scalar-input"
             value={filename}
             onChange={(event) => setFilename(event.target.value)}
             onKeyDown={(event) => {
@@ -60,7 +61,7 @@ export default function SVGExportModal({
                 onCancel();
               }
             }}
-            className="svg-export-scalar-input"
+            placeholder={defaultFilename}
             autoFocus
           />
         </div>

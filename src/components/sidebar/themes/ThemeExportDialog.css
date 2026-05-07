@@ -67,21 +67,6 @@
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
-.theme-export-preview {
-  font-size: 11px;
-  color: var(--text-muted);
-  background: rgba(0, 0, 0, 0.2);
-  padding: 8px 10px;
-  border-radius: var(--radius);
-  margin: 0 0 16px 0;
-  font-family: var(--font-mono);
-}
-
-.theme-export-preview strong {
-  color: var(--text-primary);
-  font-weight: 500;
-}
-
 .theme-export-actions {
   display: flex;
   gap: 8px;

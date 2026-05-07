@@ -17,6 +17,7 @@ interface PNGExportModalProps {
   canvasHeight: number;
   onExport: (scalar: number, filename: string) => void;
   onCancel: () => void;
+  defaultFilename: string;
 }
 
 export default function PNGExportModal({
@@ -25,6 +26,7 @@ export default function PNGExportModal({
   canvasHeight,
   onExport,
   onCancel,
+  defaultFilename,
 }: PNGExportModalProps) {
   const [scalar, setScalar] = useState(DEFAULT_PNG_SCALAR);
   const [filename, setFilename] = useState("");
@@ -139,6 +141,7 @@ export default function PNGExportModal({
                   onCancel();
                 }
               }}
+              placeholder={defaultFilename}
             />
           </div>
         </div>

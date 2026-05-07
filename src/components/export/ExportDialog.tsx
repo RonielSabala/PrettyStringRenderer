@@ -10,6 +10,7 @@ import {
   CANVAS_DEFAULTS,
   DEFAULT_EXPORT_IMAGE_FILENAME,
   PNG_BLOB_TYPE,
+  PNG_EXTENSION,
   SVG_BLOB_TYPE,
   SVG_EXTENSION,
   SVG_NS,
@@ -304,6 +305,7 @@ export const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
         canvasHeight={height}
         onExport={handlePNGExport}
         onCancel={() => setIsPNGModalOpen(false)}
+        defaultFilename={_getFilename(width, height, PNG_EXTENSION)}
       />
 
       <SVGExportModal

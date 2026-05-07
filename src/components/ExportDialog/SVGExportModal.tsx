@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FileEarmarkRichtext, X } from "react-bootstrap-icons";
-import { EVENTS } from "../common/constants/events";
+import { EVENTS } from "../../common/constants/events";
 import "./SVGExportModal.css";
 
 interface SVGExportModalProps {

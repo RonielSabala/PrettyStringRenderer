@@ -5,10 +5,10 @@ import {
   DEFAULT_PNG_SCALAR,
   EXPORT_PNG_PROMPT_SCALAR_EXAMPLES,
   PNG_EXTENSION,
-} from "../common/config";
-import { EVENTS } from "../common/constants/events";
-import { parseNumber } from "../utils/parse";
-import { createResolution, getScaledDimensions } from "../utils/resolution";
+} from "../../common/config";
+import { EVENTS } from "../../common/constants/events";
+import { parseNumber } from "../../utils/parse";
+import { createResolution, getScaledDimensions } from "../../utils/resolution";
 import "./PNGExportModal.css";
 
 interface PNGExportModalProps {

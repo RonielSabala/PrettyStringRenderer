@@ -1,6 +1,10 @@
 import { forwardRef, useCallback, useEffect, useState } from "react";
 import { FileEarmarkImage, FileEarmarkRichtext } from "react-bootstrap-icons";
-import { getDrawingContext, iterateTokens, render } from "../canvas/renderer";
+import {
+  getDrawingContext,
+  iterateTokens,
+  render,
+} from "../../canvas/renderer";
 import {
   APP_FONT_VARIANT_LIGATURES,
   CANVAS_DEFAULTS,
@@ -9,18 +13,18 @@ import {
   SVG_BLOB_TYPE,
   SVG_EXTENSION,
   SVG_NS,
-} from "../common/config";
-import { CSS_STYLE, CSS_TEXT_RENDERING } from "../common/constants/css";
-import { EVENTS } from "../common/constants/events";
-import { matchesKeybinding } from "../common/keybindings";
-import { useStore } from "../common/store";
+} from "../../common/config";
+import { CSS_STYLE, CSS_TEXT_RENDERING } from "../../common/constants/css";
+import { EVENTS } from "../../common/constants/events";
+import { matchesKeybinding } from "../../common/keybindings";
+import { useStore } from "../../common/store";
 import type {
   CanvasConfig,
   ThemeColors,
   TypographyConfig,
-} from "../common/types";
-import { roundUp } from "../utils/parse";
-import { createResolution, getScaledDimensions } from "../utils/resolution";
+} from "../../common/types";
+import { roundUp } from "../../utils/parse";
+import { createResolution, getScaledDimensions } from "../../utils/resolution";
 import "./ExportDialog.css";
 import PNGExportModal from "./PNGExportModal";
 import SVGExportModal from "./SVGExportModal";

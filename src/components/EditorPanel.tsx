@@ -28,7 +28,6 @@ function FitToContentCheckbox() {
   const isChecked = useStore((state) => state.canvasConfig.fitToContent);
   const setCanvasConfig = useStore((state) => state.setCanvasConfig);
   const redraw = useStore((state) => state.redraw);
-  const adjustCanvas = useStore((state) => state.adjustCanvas);
 
   return (
     <input
@@ -37,7 +36,6 @@ function FitToContentCheckbox() {
       checked={isChecked}
       onChange={(event) => {
         setCanvasConfig({ fitToContent: event.target.checked });
-        adjustCanvas();
         redraw(true);
       }}
     />

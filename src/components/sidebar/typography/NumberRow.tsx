@@ -20,24 +20,41 @@ export default function NumberRow({
   step = 1,
   onChange,
 }: Props) {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(event.target.value);
+    if (!isNaN(value)) {
+      onChange(value);
+    }
+  };
+
   return (
     <div className="sidebar-row">
-      <label htmlFor={id}>{label}</label>
-      <input
-        id={id}
-        className="number-input"
-        type="number"
-        value={value}
-        min={min}
-        max={max}
-        step={step}
-        onChange={(event) => {
-          const value = parseFloat(event.target.value);
-          if (!isNaN(value)) {
-            onChange(value);
-          }
-        }}
-      />
+      <label htmlFor={id} className="row-label">
+        {label}
+      </label>
+      <div className="number-controls">
+        <input
+          type="range"
+          className="number-slider"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={handleChange}
+        />
+        <div className="number-input-wrapper">
+          <input
+            id={id}
+            className="number-input"
+            type="number"
+            value={value}
+            min={min}
+            max={max}
+            step={step}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
     </div>
   );
 }

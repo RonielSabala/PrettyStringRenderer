@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { ChevronDown } from "react-bootstrap-icons";
 import { useStore } from "../../common/store";
 import { saveCollapsedSectionsState } from "../../utils/persistence";
 import "./SidebarSection.css";
@@ -31,17 +32,17 @@ export default function SidebarSection({
   };
 
   return (
-    <div id={id}>
+    <div id={id} className="sidebar-section">
       <div
         id={`section-header-${headerId}`}
         className={`section-header no-select${isCollapsed ? " header-collapsed" : ""}`}
         onClick={toggleCollapse}
       >
-        {title}
-        <span className="accordion-control">▾</span>
+        <span className="section-title">{title}</span>
+        <ChevronDown className="accordion-icon" size={10} />
       </div>
-      <div className={`section-body${isCollapsed ? " body-hidden" : ""}`}>
-        {children}
+      <div className={`section-body-wrapper ${isCollapsed ? "collapsed" : ""}`}>
+        <div className="section-body">{children}</div>
       </div>
     </div>
   );

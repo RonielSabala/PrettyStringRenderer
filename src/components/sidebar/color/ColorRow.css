@@ -1,15 +1,34 @@
-.swatch {
-  width: 20px;
-  height: 20px;
-  border-radius: 25%;
-  flex-shrink: 0;
-  border: 1px solid var(--border);
-  overflow: hidden;
-  position: relative;
-  cursor: pointer;
+.color-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.swatch-fill {
+.input-group {
+  display: flex;
+  align-items: center;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px;
+  transition: border-color 0.2s;
+}
+
+.input-group:focus-within {
+  border-color: var(--border-focus);
+}
+
+.swatch-container {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.swatch-preview {
   width: 100%;
   height: 100%;
   display: flex;
@@ -17,55 +36,42 @@
   justify-content: center;
 }
 
-.swatch input[type="color"] {
+.hidden-color-picker {
   position: absolute;
   inset: -5px;
   opacity: 0;
   cursor: pointer;
-  width: calc(100% + 10px);
-  height: calc(100% + 10px);
+  width: 30px;
+  height: 30px;
 }
 
 .hex-input {
-  width: 76px;
-  background: var(--surface-card);
-  border: 1px solid var(--border);
+  width: 54px;
+  background: transparent;
+  border: none;
   color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 11.5px;
-  padding: 2px 6px;
-  border-radius: var(--radius);
-  letter-spacing: 0.04em;
-}
-
-.hex-input:focus {
+  font-size: 11px;
+  padding: 0 4px;
   outline: none;
-  border-color: var(--border-focus);
 }
 
-.clear-color-btn {
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  color: var(--text-primary);
-  border-radius: var(--radius);
-  cursor: pointer;
+.row-action-btn {
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition:
-    background-color 0.2s,
-    border-color 0.2s;
-  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0.6;
 }
 
-.clear-color-btn:hover {
+.row-action-btn:hover {
   background: var(--surface-hover);
-  border-color: var(--border-focus);
-}
-
-.clear-color-btn:active {
-  background: var(--surface-active);
+  opacity: 1;
+  color: var(--text-primary);
 }

@@ -24,7 +24,10 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
     setHexValue(color);
   }, [color]);
 
-  const handleHex = (value: ThemeColor) => {
+  const handleHexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+
+    setHexValue(value);
     if (!value || /^#[0-9A-Fa-f]{6}$/.test(value)) {
       onChange(value);
     }
@@ -42,46 +45,45 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
 
   return (
     <div className="sidebar-row">
-      <label>{label}</label>
-      <div className="swatch">
-        <div
-          id={`swatch-fill-${id}`}
-          className="swatch-fill"
-          style={{ background: color || CSS_STYLE.TRANSPARENT }}
-        >
-          {!color && <TransparentSwatchIcon />}
+      <label className="row-label">{label}</label>
+      <div className="color-controls">
+        <div className="input-group">
+          <div className="swatch-container">
+            <div
+              className="swatch-preview"
+              style={{ background: color || CSS_STYLE.TRANSPARENT }}
+            >
+              {!color && <TransparentSwatchIcon />}
+            </div>
+            <input
+              type="color"
+              className="hidden-color-picker"
+              value={color || "#000000"}
+              onChange={(event) => onChange(event.target.value)}
+            />
+          </div>
+          <input
+            id={`hex-input-${id}`}
+            className="hex-input"
+            value={hexValue || ""}
+            placeholder="None"
+            maxLength={MAX_HEX_INPUT_LENGTH}
+            onChange={handleHexChange}
+          />
         </div>
-        <input
-          id={`color-picker-${id}`}
-          type="color"
-          value={color || "#000000"}
-          onChange={(event) => onChange(event.target.value)}
-        />
+
+        <div className="action-container">
+          {color ? (
+            <button className="row-action-btn" onClick={handleClear}>
+              <Eraser size={14} />
+            </button>
+          ) : previousColor ? (
+            <button className="row-action-btn" onClick={handleUndo}>
+              <ArrowCounterclockwise size={14} />
+            </button>
+          ) : null}
+        </div>
       </div>
-      <input
-        id={`hex-input-${id}`}
-        className="hex-input"
-        value={hexValue || ""}
-        maxLength={MAX_HEX_INPUT_LENGTH}
-        onChange={(event) => handleHex(event.target.value)}
-      />
-      {color ? (
-        <button
-          id={`clear-color-${id}`}
-          className="clear-color-btn"
-          onClick={handleClear}
-        >
-          <Eraser size={16} />
-        </button>
-      ) : previousColor ? (
-        <button
-          id={`undo-clear-${id}`}
-          className="clear-color-btn"
-          onClick={handleUndo}
-        >
-          <ArrowCounterclockwise size={16} />
-        </button>
-      ) : null}
     </div>
   );
 }

@@ -39,7 +39,10 @@ export default function ThemeViewDialog({
         onClick={(event) => event.stopPropagation()}
       >
         <div className="theme-view-header">
-          <p className="theme-view-title">{theme._name}</p>
+          <p className="theme-view-title">
+            {theme._name}
+            {THEMES_EXTENSION}
+          </p>
           <button className="theme-view-close" onClick={onClose}>
             <X size={20} />
           </button>

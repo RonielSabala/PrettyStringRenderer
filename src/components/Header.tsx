@@ -1,3 +1,4 @@
+import { Download } from "react-bootstrap-icons";
 import { useStore } from "../common/store";
 import { roundUp } from "../utils/parse";
 import { clearState } from "../utils/persistence";
@@ -23,7 +24,6 @@ export default function Header({ onExportClick }: Props) {
       <button
         id="btn-reset"
         className="btn no-select"
-        type="button"
         onClick={handleReset}
       >
         Reset
@@ -32,8 +32,13 @@ export default function Header({ onExportClick }: Props) {
       <div className="badge">
         {`${createResolution(width, height)} / ${roundUp(width / height)}:1`}
       </div>
-      <button id="btn-export" className="btn no-select" onClick={onExportClick}>
-        ↓ Export
+      <button
+        id="btn-export"
+        className="btn btn-export no-select"
+        onClick={onExportClick}
+      >
+        <Download size={16} />
+        <span>Export</span>
       </button>
     </>
   );

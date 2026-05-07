@@ -25,15 +25,13 @@
 
 ## Themes
 
-| Action             | Shortcut / Input                                                                                       |
-| :----------------- | :----------------------------------------------------------------------------------------------------- |
-| **Focus**          | <kbd>Tab</kbd>                                                                                         |
-| **Navigate**       | <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>                                                              |
-| **Open Source**    | `double-click` a theme                                                                                 |
-| **Import**         | <kbd>Ctrl</kbd>+<kbd>I</kbd> or `click` the **Import themes** button; it can overwrite existing themes |
-| **Export**         | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> or `click` the **Export theme** button                   |
-| **Export Confirm** | <kbd>Enter</kbd>                                                                                       |
-| **Export Cancel**  | <kbd>Esc</kbd>                                                                                         |
+| Action          | Shortcut / Input                                                                                       |
+| :-------------- | :----------------------------------------------------------------------------------------------------- |
+| **Focus**       | <kbd>Tab</kbd>                                                                                         |
+| **Navigate**    | <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd>                                                              |
+| **Open Source** | `double-click` a theme                                                                                 |
+| **Import**      | <kbd>Ctrl</kbd>+<kbd>I</kbd> or `click` the **Import themes** button; it can overwrite existing themes |
+| **Export**      | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> or `click` the **Export theme** button                   |
 
 ---
 

@@ -41,7 +41,7 @@ export default function ThemeViewDialog({
         <div className="theme-view-header">
           <p className="theme-view-title">{theme._name}</p>
           <button className="theme-view-close" onClick={onClose}>
-            <X />
+            <X size={20} />
           </button>
         </div>
         <pre className="theme-view-content">{jsonString}</pre>

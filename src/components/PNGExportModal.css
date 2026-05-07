@@ -1,0 +1,240 @@
+.png-export-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 16px;
+}
+
+.png-export-modal-dialog {
+  background: var(--surface-base);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  animation: pngModalIn 0.2s ease-out;
+}
+
+@keyframes pngModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.png-export-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.png-export-modal-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.png-export-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+  border-radius: 4px;
+}
+
+.png-export-modal-close:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.png-export-modal-description {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0 0 16px 0;
+}
+
+.png-export-scalar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.png-export-scalar-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.png-export-scalar-input-group label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-width: 40px;
+}
+
+.png-export-scalar-input {
+  width: 70px;
+  padding: 6px 8px;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  text-align: center;
+}
+
+.png-export-scalar-input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.png-export-scalar-unit {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.png-export-scalar-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.png-export-preview-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin: 0;
+}
+
+.png-export-preview-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.png-export-preview-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 8px;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s;
+  flex: 1;
+  min-width: 60px;
+}
+
+.png-export-preview-item:hover {
+  border-color: var(--border-focus);
+  background: var(--surface-hover);
+}
+
+.png-export-preview-item.active {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.png-export-preview-item .png-export-preview-label {
+  font-size: 11px;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.png-export-preview-item .png-export-preview-res {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.png-export-filename-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.png-export-filename-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.png-export-filename-input {
+  width: 100%;
+  padding: 6px 10px;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+}
+
+.png-export-filename-input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+}
+
+.png-export-modal-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.png-export-modal-cancel,
+.png-export-modal-confirm {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+}
+
+.png-export-modal-cancel {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.png-export-modal-cancel:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-focus);
+  color: var(--text-primary);
+}
+
+.png-export-modal-confirm {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.png-export-modal-confirm:hover {
+  opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}

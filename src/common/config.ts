@@ -105,7 +105,7 @@ export const PNG_BLOB_TYPE = { type: "image/png" } as const;
 export const SVG_BLOB_TYPE = { type: "image/svg+xml" } as const;
 export const DEFAULT_PNG_SCALAR = 1;
 export const EXPORT_PNG_PROMPT_MESSAGE = "Scale multiplier:";
-export const EXPORT_PNG_PROMPT_SCALAR_EXAMPLES = [1, 2, 0.5];
+export const EXPORT_PNG_PROMPT_SCALAR_EXAMPLES = [0.5, 1, 2];
 
 const _exportDefaults = _userDefaults.export ?? {};
 export const DEFAULT_EXPORT_THEME_FILENAME =

@@ -3,7 +3,7 @@ import {
   DEFAULT_EXPORT_THEME_FILENAME,
   THEMES_EXTENSION,
 } from "../../../common/config";
-import { matchesKeybinding } from "../../../common/keybindings";
+import { EVENTS } from "../../../common/constants/events";
 import "./ThemeExportDialog.css";
 
 interface ThemeExportDialogProps {
@@ -49,14 +49,13 @@ export default function ThemeExportDialog({
           Enter a name for your theme file:
         </p>
         <input
-          type="text"
           className="theme-export-input"
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
           onKeyDown={(event) => {
-            if (matchesKeybinding(event, "themes.export.confirm")) {
+            if (event.key === EVENTS.ENTER) {
               handleSubmit();
-            } else if (matchesKeybinding(event, "themes.export.cancel")) {
+            } else if (event.key === EVENTS.ESCAPE) {
               onCancel();
             }
           }}

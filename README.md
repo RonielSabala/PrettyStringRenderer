@@ -68,7 +68,7 @@ Start typing in the canvas editor to begin. See [SHORTCUTS.md](SHORTCUTS.md) for
 
 ## Export Options
 
-- **PNG**: Raster export with custom scale multipliers (e.g., `1`, `2`, `0.5`)
+- **PNG**: Raster export with custom scale multipliers (e.g., `0.5`, `1`, `2`)
 - **SVG**: Vector export where tokens are grouped by color. Fonts are embedded as attributes, making files fully editable in Figma, Illustrator, or Inkscape.
 
 ---
@@ -128,7 +128,7 @@ Keys you omit keep their default. Each entry maps an action to a key combination
 ```json
 {
   "app.fullReload": "ctrl+shift+r",
-  "canvas.focus": "escape"
+  "workspace.export": "ctrl+m"
 }
 ```
 

@@ -70,7 +70,6 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
           id={`clear-color-${id}`}
           className="clear-color-btn"
           onClick={handleClear}
-          title="Clear color"
         >
           <Eraser size={16} />
         </button>
@@ -79,7 +78,6 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
           id={`undo-clear-${id}`}
           className="clear-color-btn"
           onClick={handleUndo}
-          title="Undo clear"
         >
           <ArrowCounterclockwise size={16} />
         </button>

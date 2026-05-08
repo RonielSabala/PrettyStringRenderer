@@ -38,7 +38,6 @@ export default function FilenameInput({
       </label>
       <input
         id="filename-input"
-        className="filename-input"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         onKeyDown={handleKeyDown}

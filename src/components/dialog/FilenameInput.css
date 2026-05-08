@@ -11,7 +11,7 @@
   color: var(--text-secondary);
 }
 
-.filename-input {
+#filename-input {
   width: 100%;
   padding: 8px 12px;
   border: 1px solid var(--border);
@@ -26,12 +26,12 @@
     box-shadow 0.15s;
 }
 
-.filename-input:focus {
+#filename-input:focus {
   outline: none;
   border-color: var(--border-focus);
   box-shadow: 0 0 0 2px var(--accent-subtle, rgba(0, 0, 0, 0.1));
 }
 
-.filename-input::placeholder {
+#filename-input::placeholder {
   color: var(--text-muted);
 }

@@ -26,11 +26,7 @@ export default function TypographySection() {
   );
 
   return (
-    <SidebarSection
-      id="section-typography"
-      headerId="typography"
-      title="Typography"
-    >
+    <SidebarSection title="Typography">
       {(
         Object.entries(TYPOGRAPHY_DEFAULTS) as [
           keyof TypographyConfig,

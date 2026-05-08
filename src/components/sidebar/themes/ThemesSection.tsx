@@ -203,7 +203,7 @@ export default function ThemesSection() {
   const noThemes = themesCount === 0;
 
   return (
-    <SidebarSection id="section-themes" headerId="themes" title="Themes">
+    <SidebarSection title="Themes">
       <div className="theme-list">
         {noThemes ? (
           <div id="theme-empty">

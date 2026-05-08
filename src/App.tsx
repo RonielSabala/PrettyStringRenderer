@@ -4,7 +4,10 @@ import { EVENTS } from "./common/constants/events";
 import { useStore } from "./common/store";
 import CanvasView from "./components/CanvasView";
 import EditorPanel from "./components/EditorPanel";
-import ExportDialog from "./components/export/ExportDialog";
+import {
+  ExportDialog,
+  type ExportDialogHandle,
+} from "./components/export/ExportDialog";
 import Header from "./components/Header";
 import Sidebar from "./components/sidebar/Sidebar";
 import { restoreState, saveActiveElementIdState } from "./utils/persistence";
@@ -18,7 +21,7 @@ restoreState();
 export default function App() {
   const activeElementId = useStore((state) => state.activeElementId);
   const setActiveElementId = useStore((state) => state.setActiveElementId);
-  const exportDialogRef = useRef<HTMLDialogElement>(null);
+  const exportDialogRef = useRef<ExportDialogHandle>(null);
 
   // Restore focus after reload
   useEffect(() => {
@@ -45,7 +48,7 @@ export default function App() {
   return (
     <div id="app">
       <header id="app-header">
-        <Header onExportClick={() => exportDialogRef.current?.showModal()} />
+        <Header onExportClick={() => exportDialogRef.current?.open()} />
       </header>
 
       <aside id="app-sidebar">

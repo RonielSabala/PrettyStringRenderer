@@ -4,6 +4,7 @@ import {
   THEMES_EXTENSION,
 } from "../../../common/config";
 import { EVENTS } from "../../../common/constants/events";
+import { Dialog, PrimaryButton, SecondaryButton } from "../../dialog";
 import "./ThemeExportDialog.css";
 
 interface ThemeExportDialogProps {
@@ -34,47 +35,37 @@ export default function ThemeExportDialog({
     }
   };
 
-  if (!isOpen) {
-    return null;
-  }
-
   return (
-    <div className="theme-export-overlay" onClick={onCancel}>
-      <div
-        className="theme-export-dialog"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <p className="theme-export-title">Export Theme</p>
-        <p className="theme-export-description">
-          Enter a filename for the theme export:
-        </p>
-        <input
-          className="theme-export-input"
-          value={inputValue}
-          onChange={(event) => setInputValue(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === EVENTS.ENTER) {
-              handleSubmit();
-            } else if (event.key === EVENTS.ESCAPE) {
-              onCancel();
-            }
-          }}
-          placeholder={DEFAULT_EXPORT_THEME_FILENAME + THEMES_EXTENSION}
-          autoFocus
-        />
-        <div className="theme-export-actions">
-          <button className="theme-export-cancel" onClick={onCancel}>
-            Cancel
-          </button>
-          <button
-            className="theme-export-confirm"
-            onClick={handleSubmit}
-            disabled={!inputValue.trim()}
-          >
+    <Dialog
+      isOpen={isOpen}
+      title="Export Theme"
+      onClose={onCancel}
+      actions={
+        <>
+          <SecondaryButton onClick={onCancel}>Cancel</SecondaryButton>
+          <PrimaryButton onClick={handleSubmit} disabled={!inputValue.trim()}>
             Export
-          </button>
-        </div>
-      </div>
-    </div>
+          </PrimaryButton>
+        </>
+      }
+    >
+      <p className="theme-export-description">
+        Enter a filename for the theme export:
+      </p>
+      <input
+        className="theme-export-input"
+        value={inputValue}
+        onChange={(event) => setInputValue(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === EVENTS.ENTER) {
+            handleSubmit();
+          } else if (event.key === EVENTS.ESCAPE) {
+            onCancel();
+          }
+        }}
+        placeholder={DEFAULT_EXPORT_THEME_FILENAME + THEMES_EXTENSION}
+        autoFocus
+      />
+    </Dialog>
   );
 }

@@ -1,4 +1,11 @@
-import { forwardRef, useCallback, useEffect, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+  type ReactNode,
+} from "react";
 import { FileEarmarkImage, FileEarmarkRichtext } from "react-bootstrap-icons";
 import {
   getDrawingContext,
@@ -26,6 +33,7 @@ import type {
 } from "../../common/types";
 import { roundUp } from "../../utils/parse";
 import { createResolution, getScaledDimensions } from "../../utils/resolution";
+import { Dialog } from "../dialog";
 import "./ExportDialog.css";
 import PNGExportModal from "./PNGExportModal";
 import SVGExportModal from "./SVGExportModal";
@@ -193,24 +201,66 @@ function _exportSVG(
   _download(blob, filename);
 }
 
-// Component
+// Sub-component
 
-export const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
+interface ExportFormatButtonProps {
+  label: string;
+  description: string;
+  icon: ReactNode;
+  onClick: () => void;
+}
+
+function ExportFormatButton({
+  label,
+  description,
+  icon,
+  onClick,
+}: ExportFormatButtonProps) {
+  return (
+    <button className="export-format-btn" onClick={onClick}>
+      {icon}
+      <div className="export-btn-content">
+        <p className="export-btn-label">{label}</p>
+        <p className="export-btn-desc">{description}</p>
+      </div>
+    </button>
+  );
+}
+
+// Main Component
+
+export interface ExportDialogHandle {
+  open: () => void;
+  close: () => void;
+}
+
+export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
   const typographyConfig = useStore((state) => state.typographyConfig);
   const canvasConfig = useStore((state) => state.canvasConfig);
   const colors = useStore((state) => state.colors);
+  const [isOpen, setIsOpen] = useState(false);
   const [isPNGModalOpen, setIsPNGModalOpen] = useState(false);
   const [isSVGModalOpen, setIsSVGModalOpen] = useState(false);
+
+  // Expose open/close methods
+  useImperativeHandle(
+    ref,
+    () => ({
+      open: () => setIsOpen(true),
+      close: () => setIsOpen(false),
+    }),
+    [],
+  );
 
   // Component helpers
 
   const openDialog = useCallback(() => {
-    (ref as React.RefObject<HTMLDialogElement>).current?.showModal();
-  }, [ref]);
+    setIsOpen(true);
+  }, []);
 
   const closeDialog = useCallback(() => {
-    (ref as React.RefObject<HTMLDialogElement>).current?.close();
-  }, [ref]);
+    setIsOpen(false);
+  }, []);
 
   // Handlers
 
@@ -240,15 +290,6 @@ export const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
     [canvasConfig, typographyConfig, colors],
   );
 
-  const handleDialogClick = useCallback(
-    (event: React.MouseEvent<HTMLDialogElement>) => {
-      if (event.target === event.currentTarget) {
-        closeDialog();
-      }
-    },
-    [closeDialog],
-  );
-
   // Global keybindings
   useEffect(() => {
     const handler = (event: Event) => {
@@ -271,33 +312,22 @@ export const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
   const { width, height } = canvasConfig;
   return (
     <>
-      <dialog id="dialog-export" ref={ref} onClick={handleDialogClick}>
-        <p className="export-dialog-title">Export</p>
+      <Dialog isOpen={isOpen} title="Export" onClose={closeDialog}>
         <div className="export-dialog-actions">
-          <button
-            id="btn-export-png"
-            className="export-format-btn"
+          <ExportFormatButton
+            label="PNG"
+            description="Raster image"
+            icon={<FileEarmarkImage size={20} />}
             onClick={handlePNGClick}
-          >
-            <FileEarmarkImage size={20} />
-            <div className="export-btn-content">
-              <p className="export-btn-label">PNG</p>
-              <p className="export-btn-desc">Raster image</p>
-            </div>
-          </button>
-          <button
-            id="btn-export-svg"
-            className="export-format-btn"
+          />
+          <ExportFormatButton
+            label="SVG"
+            description="Vector image"
+            icon={<FileEarmarkRichtext size={20} />}
             onClick={handleSVGClick}
-          >
-            <FileEarmarkRichtext size={20} />
-            <div className="export-btn-content">
-              <p className="export-btn-label">SVG</p>
-              <p className="export-btn-desc">Vector image</p>
-            </div>
-          </button>
+          />
         </div>
-      </dialog>
+      </Dialog>
 
       <PNGExportModal
         isOpen={isPNGModalOpen}

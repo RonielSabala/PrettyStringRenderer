@@ -1,7 +1,7 @@
-import { X } from "react-bootstrap-icons";
 import { THEME_BLOB_TYPE, THEMES_EXTENSION } from "../../../common/config";
 import type { Theme } from "../../../common/types";
 import { revokeAfter, urlFromObject } from "../../../utils/url";
+import { Dialog, PrimaryButton, SecondaryButton } from "../../dialog";
 import "./ThemeViewDialog.css";
 
 interface ThemeViewDialogProps {
@@ -33,36 +33,19 @@ export default function ThemeViewDialog({
   };
 
   return (
-    <div className="theme-view-overlay" onClick={onClose}>
-      <div
-        className="theme-view-dialog"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className="theme-view-header">
-          <p className="theme-view-title">
-            {theme._name}
-            {THEMES_EXTENSION}
-          </p>
-          <button className="theme-view-close" onClick={onClose}>
-            <X size={20} />
-          </button>
-        </div>
-        <pre className="theme-view-content">{jsonString}</pre>
-        <div className="theme-view-actions">
-          <button className="theme-view-btn" onClick={handleCopy}>
-            Copy
-          </button>
-          <button className="theme-view-btn" onClick={handleDownload}>
-            Download
-          </button>
-          <button
-            className="theme-view-btn theme-view-btn-primary"
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
+    <Dialog
+      isOpen={!!theme}
+      title={`${theme._name}${THEMES_EXTENSION}`}
+      onClose={onClose}
+      actions={
+        <>
+          <SecondaryButton onClick={handleCopy}>Copy</SecondaryButton>
+          <SecondaryButton onClick={handleDownload}>Download</SecondaryButton>
+          <PrimaryButton onClick={onClose}>Close</PrimaryButton>
+        </>
+      }
+    >
+      <pre className="theme-view-content">{jsonString}</pre>
+    </Dialog>
   );
 }

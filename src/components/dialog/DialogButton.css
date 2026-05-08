@@ -1,0 +1,47 @@
+.dialog-button {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+}
+
+/* Primary button */
+
+.dialog-button-primary {
+  background: var(--accent);
+  color: var(--accent-text, white);
+  border-color: var(--accent);
+}
+
+.dialog-button-primary:hover:not(:disabled) {
+  opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.dialog-button-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Secondary button */
+
+.dialog-button-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.dialog-button-secondary:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-focus);
+  color: var(--text-primary);
+}
+
+.dialog-button-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

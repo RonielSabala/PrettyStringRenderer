@@ -1,0 +1,78 @@
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 16px;
+}
+
+.dialog-container {
+  background: var(--surface-base);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 80vh;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  animation: dialogIn 0.2s ease-out;
+}
+
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin-bottom: 16px;
+}
+
+.dialog-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dialog-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0 4px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.dialog-close:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.dialog-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}

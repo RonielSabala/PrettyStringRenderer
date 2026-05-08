@@ -4,15 +4,12 @@ import { revokeAfter, urlFromObject } from "../../../utils/url";
 import { Dialog, PrimaryButton, SecondaryButton } from "../../dialog";
 import "./ThemeViewDialog.css";
 
-interface ThemeViewDialogProps {
+interface Props {
   theme: Theme | null;
   onClose: () => void;
 }
 
-export default function ThemeViewDialog({
-  theme,
-  onClose,
-}: ThemeViewDialogProps) {
+export default function ThemeViewDialog({ theme, onClose }: Props) {
   if (!theme) {
     return null;
   }

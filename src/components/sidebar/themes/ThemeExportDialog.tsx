@@ -7,7 +7,7 @@ import {
   SecondaryButton,
 } from "../../dialog";
 
-interface ThemeExportDialogProps {
+interface Props {
   isOpen: boolean;
   defaultFilename: string | null;
   onExport: (filename: string) => void;
@@ -19,7 +19,7 @@ export default function ThemeExportDialog({
   defaultFilename,
   onExport,
   onCancel,
-}: ThemeExportDialogProps) {
+}: Props) {
   const [filename, setFilename] = useState(defaultFilename || "");
 
   useEffect(() => {

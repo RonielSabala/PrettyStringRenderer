@@ -7,7 +7,7 @@ import {
   SecondaryButton,
 } from "../dialog";
 
-interface SVGExportModalProps {
+interface Props {
   isOpen: boolean;
   defaultFilename: string;
   onExport: (filename: string) => void;
@@ -19,7 +19,7 @@ export default function SVGExportModal({
   defaultFilename,
   onExport,
   onCancel,
-}: SVGExportModalProps) {
+}: Props) {
   const [filename, setFilename] = useState(defaultFilename);
 
   useEffect(() => {

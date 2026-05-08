@@ -1,15 +1,12 @@
 import { Download, Upload } from "react-bootstrap-icons";
 import "./ThemeActions.css";
 
-interface ThemeActionsProps {
+interface Props {
   onImport: () => void;
   onExport: () => void;
 }
 
-export default function ThemeActions({
-  onImport,
-  onExport,
-}: ThemeActionsProps) {
+export default function ThemeActions({ onImport, onExport }: Props) {
   return (
     <div className="theme-actions">
       <button

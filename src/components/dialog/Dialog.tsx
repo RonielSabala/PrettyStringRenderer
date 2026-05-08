@@ -1,7 +1,7 @@
 import { X } from "react-bootstrap-icons";
 import "./Dialog.css";
 
-interface DialogProps {
+interface Props {
   isOpen: boolean;
   title?: React.ReactNode;
   onClose: () => void;
@@ -19,7 +19,7 @@ export default function Dialog({
   actions,
   overlayClassName = "",
   dialogClassName = "",
-}: DialogProps) {
+}: Props) {
   if (!isOpen) {
     return null;
   }

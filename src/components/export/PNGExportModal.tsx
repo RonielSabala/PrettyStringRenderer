@@ -17,7 +17,7 @@ import {
 } from "../dialog";
 import "./PNGExportModal.css";
 
-interface PNGExportModalProps {
+interface Props {
   isOpen: boolean;
   canvasWidth: number;
   canvasHeight: number;
@@ -33,7 +33,7 @@ export default function PNGExportModal({
   defaultFilename,
   onExport,
   onCancel,
-}: PNGExportModalProps) {
+}: Props) {
   const [scalar, setScalar] = useState(DEFAULT_PNG_SCALAR);
   const [filename, setFilename] = useState(defaultFilename);
 

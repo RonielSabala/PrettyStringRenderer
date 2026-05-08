@@ -1,16 +1,12 @@
 import "./DialogButton.css";
 
-interface DialogButtonProps {
+interface Props {
   onClick: () => void;
   children: React.ReactNode;
   disabled?: boolean;
 }
 
-export function PrimaryButton({
-  onClick,
-  children,
-  disabled = false,
-}: DialogButtonProps) {
+export function PrimaryButton({ onClick, children, disabled = false }: Props) {
   return (
     <button
       className="dialog-button dialog-button-primary"
@@ -26,7 +22,7 @@ export function SecondaryButton({
   onClick,
   children,
   disabled = false,
-}: DialogButtonProps) {
+}: Props) {
   return (
     <button
       className="dialog-button dialog-button-secondary"

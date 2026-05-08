@@ -169,8 +169,10 @@ export default function EditorPanel() {
 
     setHeight(newHeight);
     setEditorConfig({ height: newHeight });
-    adjustCanvas();
     _scheduleSave();
+
+    // Defer adjustCanvas call until after DOM update from state changes
+    setTimeout(() => adjustCanvas(), 0);
   }, [height, setEditorConfig, adjustCanvas]);
 
   // Canvas mouse keybinding

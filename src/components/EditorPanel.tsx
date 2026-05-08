@@ -18,7 +18,6 @@ import {
 } from "../utils/persistence";
 import { toPx } from "../utils/resolution";
 import "./EditorPanel.css";
-import "./sidebar/typography/NumberRow.css";
 
 const _scheduleSave = createSaveScheduler(saveEditorConfigState);
 

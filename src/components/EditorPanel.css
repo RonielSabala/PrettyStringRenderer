@@ -1,14 +1,35 @@
 #editor-resize-handle {
-  height: 5px;
+  height: 4px;
   flex-shrink: 0;
   cursor: row-resize;
   background: var(--border);
-  transition: background 0.15s;
+  transition: background 0.2s;
+  position: relative;
+}
+
+#editor-resize-handle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: 32px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--text-muted);
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
 #editor-resize-handle:hover,
 #editor-resize-handle.drag {
   background: var(--accent);
+  height: 5px;
+}
+
+#editor-resize-handle:hover::after,
+#editor-resize-handle.drag::after {
+  opacity: 0.4;
 }
 
 #editor-panel {
@@ -22,55 +43,112 @@
   align-items: center;
   background: var(--surface-panel);
   border-top: 1px solid var(--border);
-  height: 32px;
+  height: 34px;
   flex-shrink: 0;
-  padding: 0 10px;
-  gap: 12px;
+  padding: 0 12px;
+  gap: 14px;
+  position: relative;
 }
 
 .tab {
-  padding: 0 10px;
+  padding: 0 4px;
   height: 100%;
   display: flex;
   align-items: center;
-  font-size: 12.5px;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   color: var(--text-primary);
-  border-top: 2px solid var(--accent);
+  position: relative;
+}
+
+.tab::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
 }
 
 .editor-font {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 11.5px;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+#editor-tabs .number-input {
+  width: 48px;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
   color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 5px;
+  border-radius: var(--radius);
+  text-align: center;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+#editor-tabs .number-input::-webkit-outer-spin-button,
+#editor-tabs .number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+#editor-tabs .number-input:hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+#editor-tabs .number-input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  color: var(--text-primary);
 }
 
 .editor-fit-label {
-  font-size: 11.5px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   gap: 6px;
   cursor: pointer;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  transition: color 0.15s;
+}
+
+.editor-fit-label:hover {
   color: var(--text-secondary);
 }
 
 .editor-fit-label input[type="checkbox"] {
-  width: 11.5px;
-  height: 11.5px;
+  width: 12px;
+  height: 12px;
   cursor: pointer;
   accent-color: var(--accent);
+  flex-shrink: 0;
 }
 
 #editor-status {
-  font-size: 10.5px;
+  font-size: 10px;
   color: var(--text-muted);
   margin-left: auto;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
 }
 
 #editor {
   flex: 1;
-  background: #0d1117;
+  background: var(--surface-base);
   border: none;
   color: #e6edf3;
   resize: none;
@@ -91,11 +169,19 @@
 }
 
 #editor::-webkit-scrollbar {
-  height: 4px;
   width: 6px;
+  height: 5px;
 }
-
+#editor::-webkit-scrollbar-track {
+  background: transparent;
+}
 #editor::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 4px;
+  border-radius: 3px;
+}
+#editor::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+#editor::-webkit-scrollbar-corner {
+  background: transparent;
 }

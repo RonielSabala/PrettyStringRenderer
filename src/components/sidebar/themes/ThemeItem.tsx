@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import { CSS_STYLE } from "../../../common/constants/css";
 import { matchesKeybinding } from "../../../common/keybindings";
 import type { Theme } from "../../../common/types";
+import { titleToKebab } from "../../../utils/parse";
 import { TransparentSwatchIcon } from "../TransparentSwatchIcon";
 import "./ThemeItem.css";
 
@@ -17,7 +18,7 @@ export const ThemeItem = forwardRef<HTMLDivElement, Props>(
   ({ theme, isActive, onApply, onShow, onNavigate }, ref) => (
     <div
       ref={ref}
-      id={`theme-item-${theme._name}`.toLowerCase()}
+      id={`theme-item-${titleToKebab(theme._name)}`}
       className={`theme-item no-user-select${isActive ? " active" : ""}`}
       tabIndex={0}
       onClick={() => onApply(theme)}

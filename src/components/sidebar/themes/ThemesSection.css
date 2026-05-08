@@ -1,7 +1,7 @@
 .theme-list {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 3.5px;
   padding: 2px 0 5px;
 }
 

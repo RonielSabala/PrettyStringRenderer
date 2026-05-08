@@ -46,8 +46,9 @@ function useThemes() {
 
   // Apply initial colors on mount
   useEffect(() => {
-    const themeToApply = isObjectEmpty(colors) ? DEFAULT_THEME : colors;
-    applyThemeColors(themeToApply);
+    if (isObjectEmpty(colors)) {
+      applyThemeColors(DEFAULT_THEME);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -202,11 +203,7 @@ export default function ThemesSection() {
   const noThemes = themesCount === 0;
 
   return (
-    <SidebarSection
-      id="section-themes"
-      headerId="themes"
-      title="Themes"
-    >
+    <SidebarSection id="section-themes" headerId="themes" title="Themes">
       <div className="theme-list">
         {noThemes ? (
           <div id="theme-empty">

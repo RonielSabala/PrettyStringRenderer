@@ -3,7 +3,6 @@ import { Tokenizer } from "../core/tokenizer";
 import {
   APP_FONT_VARIANT_LIGATURES,
   CANVAS_DEFAULTS,
-  DEFAULT_THEME,
   EDITOR_DEFAULTS,
   TYPOGRAPHY_DEFAULTS,
 } from "./config";
@@ -54,7 +53,7 @@ interface AppState {
 // Store
 
 export const useStore = create<AppState>((set, get) => ({
-  colors: { ...DEFAULT_THEME },
+  colors: {},
   themes: [],
   activeThemeName: "",
   activeElementId: "",
@@ -93,17 +92,11 @@ export const useStore = create<AppState>((set, get) => ({
   // Actions
 
   setColors: (colors) => {
-    if (!colors) {
-      return;
-    }
-
     set((state) => ({
       colors: {
         ...state.colors,
-        ...Object.fromEntries(
-          Object.entries(colors).filter(([, value]) => value !== undefined),
-        ),
-      } as ThemeColors,
+        ...Object.fromEntries(Object.entries(colors)),
+      },
     }));
   },
   setThemes: (themes) => set({ themes }),

@@ -30,7 +30,10 @@ export default function FilenameInput({
 
   return (
     <div className="filename-input-container">
-      <label htmlFor="filename-input" className="filename-input-label">
+      <label
+        htmlFor="filename-input"
+        className="filename-input-label no-user-select"
+      >
         {label}
       </label>
       <input

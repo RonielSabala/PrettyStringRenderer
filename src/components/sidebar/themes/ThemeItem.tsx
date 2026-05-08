@@ -18,7 +18,7 @@ export const ThemeItem = forwardRef<HTMLDivElement, Props>(
     <div
       ref={ref}
       id={`theme-item-${theme._name}`.toLowerCase()}
-      className={`theme-item${isActive ? " active" : ""}`}
+      className={`theme-item no-user-select${isActive ? " active" : ""}`}
       tabIndex={0}
       onClick={() => onApply(theme)}
       onDoubleClick={() => onShow(theme)}

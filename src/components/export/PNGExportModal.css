@@ -95,7 +95,7 @@
   margin: 0;
 }
 
-.png-export-preview-item .png-export-preview-res {
+.png-export-preview-item .png-export-preview-resolution {
   font-size: 10px;
   color: var(--text-muted);
 }

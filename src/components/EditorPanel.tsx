@@ -253,8 +253,8 @@ export default function EditorPanel() {
 
       <div id="editor-panel" ref={panelRef} style={{ height: toPx(height) }}>
         <div id="editor-tabs">
-          <div className="tab no-select">Editor</div>
-          <div className="editor-font no-select">
+          <div className="tab no-user-select">Editor</div>
+          <div className="editor-font no-user-select">
             <span>Font size</span>
             <input
               className="number-input"
@@ -266,11 +266,11 @@ export default function EditorPanel() {
               onChange={handleFontSize}
             />
           </div>
-          <label className="editor-fit-label no-select">
+          <label className="editor-fit-label no-user-select">
             <FitToContentCheckbox />
             Fit to content
           </label>
-          <span id="editor-status" className="no-select">
+          <span id="editor-status" className="no-user-select">
             <EditorStatus />
           </span>
         </div>

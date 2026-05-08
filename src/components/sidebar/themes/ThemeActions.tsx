@@ -11,7 +11,7 @@ export default function ThemeActions({ onImport, onExport }: Props) {
     <div className="theme-actions">
       <button
         id="btn-import-themes"
-        className="theme-btn no-select"
+        className="theme-btn no-user-select"
         onClick={onImport}
       >
         <Upload size={16} />
@@ -19,7 +19,7 @@ export default function ThemeActions({ onImport, onExport }: Props) {
       </button>
       <button
         id="btn-export-theme"
-        className="theme-btn no-select"
+        className="theme-btn no-user-select"
         onClick={onExport}
       >
         <Download size={16} />

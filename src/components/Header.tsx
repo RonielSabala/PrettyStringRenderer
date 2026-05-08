@@ -23,18 +23,18 @@ export default function Header({ onExportClick }: Props) {
       <span className="header-title">Pretty String Renderer</span>
       <button
         id="btn-reset"
-        className="btn no-select"
+        className="btn no-user-select"
         onClick={handleReset}
       >
         Reset
       </button>
       <div className="header-title-separator" />
-      <div className="badge">
+      <div className="badge no-user-select">
         {`${createResolution(width, height)} / ${roundUp(width / height)}:1`}
       </div>
       <button
         id="btn-export"
-        className="btn btn-export no-select"
+        className="btn btn-export no-user-select"
         onClick={onExportClick}
       >
         <Download size={16} />

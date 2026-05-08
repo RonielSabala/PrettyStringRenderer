@@ -1,30 +1,39 @@
 import { useEffect, useState } from "react";
 import { FileEarmarkRichtext } from "react-bootstrap-icons";
-import { EVENTS } from "../../common/constants/events";
-import { Dialog, PrimaryButton, SecondaryButton } from "../dialog";
-import "./SVGExportModal.css";
+import {
+  Dialog,
+  FilenameInput,
+  PrimaryButton,
+  SecondaryButton,
+} from "../dialog";
 
 interface SVGExportModalProps {
   isOpen: boolean;
+  defaultFilename: string;
   onExport: (filename: string) => void;
   onCancel: () => void;
-  defaultFilename: string;
 }
 
 export default function SVGExportModal({
   isOpen,
+  defaultFilename,
   onExport,
   onCancel,
-  defaultFilename,
 }: SVGExportModalProps) {
   const [filename, setFilename] = useState(defaultFilename);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && defaultFilename) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilename(defaultFilename);
     }
   }, [isOpen, defaultFilename]);
+
+  const handleSubmit = () => {
+    if (filename.trim()) {
+      onExport(filename);
+    }
+  };
 
   return (
     <Dialog
@@ -39,31 +48,21 @@ export default function SVGExportModal({
       actions={
         <>
           <SecondaryButton onClick={onCancel}>Cancel</SecondaryButton>
-          <PrimaryButton onClick={() => onExport(filename)}>
+          <PrimaryButton onClick={handleSubmit} disabled={!filename.trim()}>
             Export SVG
           </PrimaryButton>
         </>
       }
     >
-      <p className="svg-export-modal-description">
-        Enter a filename for the SVG export:
-      </p>
-      <div className="svg-export-scalar-section">
-        <input
-          className="svg-export-scalar-input"
-          value={filename}
-          onChange={(event) => setFilename(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === EVENTS.ENTER) {
-              onExport(filename);
-            } else if (event.key === EVENTS.ESCAPE) {
-              onCancel();
-            }
-          }}
-          placeholder={defaultFilename}
-          autoFocus
-        />
-      </div>
+      <FilenameInput
+        label="Enter a filename for the SVG export:"
+        value={filename}
+        placeholder={defaultFilename}
+        onChange={setFilename}
+        onSubmit={handleSubmit}
+        onCancel={onCancel}
+        autoFocus
+      />
     </Dialog>
   );
 }

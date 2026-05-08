@@ -8,7 +8,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 16px;
 }
 
 .png-export-scalar-input-group {
@@ -54,7 +53,7 @@
 
 .png-export-preview-label {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-weight: 500;
   margin: 0;
 }
@@ -99,32 +98,4 @@
 .png-export-preview-item .png-export-preview-res {
   font-size: 10px;
   color: var(--text-muted);
-}
-
-.png-export-filename-section {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.png-export-filename-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.png-export-filename-input {
-  width: 100%;
-  padding: 6px 10px;
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--text-primary);
-  font-size: 11.5px;
-  font-family: var(--font-mono);
-}
-
-.png-export-filename-input:focus {
-  outline: none;
-  border-color: var(--border-focus);
 }

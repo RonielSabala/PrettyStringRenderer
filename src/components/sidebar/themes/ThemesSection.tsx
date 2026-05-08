@@ -235,8 +235,8 @@ export default function ThemesSection() {
 
       <ThemeExportDialog
         isOpen={isExporting}
-        filename={exportFilename}
-        onConfirm={confirmExport}
+        defaultFilename={exportFilename}
+        onExport={confirmExport}
         onCancel={cancelExport}
       />
 

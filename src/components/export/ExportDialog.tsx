@@ -333,16 +333,16 @@ export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
         isOpen={isPNGModalOpen}
         canvasWidth={width}
         canvasHeight={height}
+        defaultFilename={_getFilename(width, height, PNG_EXTENSION)}
         onExport={handlePNGExport}
         onCancel={() => setIsPNGModalOpen(false)}
-        defaultFilename={_getFilename(width, height, PNG_EXTENSION)}
       />
 
       <SVGExportModal
         isOpen={isSVGModalOpen}
+        defaultFilename={_getFilename(width, height, SVG_EXTENSION)}
         onExport={handleSVGExport}
         onCancel={() => setIsSVGModalOpen(false)}
-        defaultFilename={_getFilename(width, height, SVG_EXTENSION)}
       />
     </>
   );

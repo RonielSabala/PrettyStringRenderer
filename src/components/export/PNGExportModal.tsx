@@ -9,7 +9,12 @@ import {
 import { EVENTS } from "../../common/constants/events";
 import { parseNumber } from "../../utils/parse";
 import { createResolution, getScaledDimensions } from "../../utils/resolution";
-import { Dialog, PrimaryButton, SecondaryButton } from "../dialog";
+import {
+  Dialog,
+  FilenameInput,
+  PrimaryButton,
+  SecondaryButton,
+} from "../dialog";
 import "./PNGExportModal.css";
 
 interface PNGExportModalProps {
@@ -25,14 +30,18 @@ export default function PNGExportModal({
   isOpen,
   canvasWidth,
   canvasHeight,
+  defaultFilename,
   onExport,
   onCancel,
-  defaultFilename,
 }: PNGExportModalProps) {
   const [scalar, setScalar] = useState(DEFAULT_PNG_SCALAR);
-  const [filename, setFilename] = useState("");
+  const [filename, setFilename] = useState(defaultFilename);
 
   useEffect(() => {
+    if (!isOpen || !defaultFilename) {
+      return;
+    }
+
     const [exportWidth, exportHeight] = getScaledDimensions(
       canvasWidth,
       canvasHeight,
@@ -44,11 +53,13 @@ export default function PNGExportModal({
     setFilename(
       `${DEFAULT_EXPORT_IMAGE_FILENAME}-${resolution}${PNG_EXTENSION}`,
     );
-  }, [scalar, canvasWidth, canvasHeight]);
+  }, [isOpen, defaultFilename, canvasWidth, canvasHeight, scalar]);
 
-  if (!isOpen) {
-    return null;
-  }
+  const handleSubmit = () => {
+    if (filename.trim()) {
+      onExport(scalar, filename);
+    }
+  };
 
   return (
     <Dialog
@@ -63,7 +74,7 @@ export default function PNGExportModal({
       actions={
         <>
           <SecondaryButton onClick={onCancel}>Cancel</SecondaryButton>
-          <PrimaryButton onClick={() => onExport(scalar, filename)}>
+          <PrimaryButton onClick={handleSubmit} disabled={!filename.trim()}>
             Export PNG
           </PrimaryButton>
         </>
@@ -72,7 +83,6 @@ export default function PNGExportModal({
       <p className="png-export-modal-description">
         Choose a scale factor for the export:
       </p>
-
       <div className="png-export-scalar-section">
         <div className="png-export-scalar-input-group">
           <label htmlFor="png-scalar">Scale:</label>
@@ -126,25 +136,14 @@ export default function PNGExportModal({
           </div>
         </div>
 
-        <div className="png-export-filename-section">
-          <label htmlFor="png-filename" className="png-export-filename-label">
-            Filename:
-          </label>
-          <input
-            id="png-filename"
-            className="png-export-filename-input"
-            value={filename}
-            onChange={(event) => setFilename(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === EVENTS.ENTER) {
-                onExport(scalar, filename);
-              } else if (event.key === EVENTS.ESCAPE) {
-                onCancel();
-              }
-            }}
-            placeholder={defaultFilename}
-          />
-        </div>
+        <FilenameInput
+          label="Filename:"
+          value={filename}
+          placeholder={defaultFilename}
+          onChange={setFilename}
+          onSubmit={handleSubmit}
+          onCancel={onCancel}
+        />
       </div>
     </Dialog>
   );

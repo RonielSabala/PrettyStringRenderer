@@ -1,37 +1,37 @@
 import { useEffect, useState } from "react";
+import { THEMES_EXTENSION } from "../../../common/config";
 import {
-  DEFAULT_EXPORT_THEME_FILENAME,
-  THEMES_EXTENSION,
-} from "../../../common/config";
-import { EVENTS } from "../../../common/constants/events";
-import { Dialog, PrimaryButton, SecondaryButton } from "../../dialog";
-import "./ThemeExportDialog.css";
+  Dialog,
+  FilenameInput,
+  PrimaryButton,
+  SecondaryButton,
+} from "../../dialog";
 
 interface ThemeExportDialogProps {
   isOpen: boolean;
-  filename: string | null;
-  onConfirm: (filename: string) => void;
+  defaultFilename: string | null;
+  onExport: (filename: string) => void;
   onCancel: () => void;
 }
 
 export default function ThemeExportDialog({
   isOpen,
-  filename,
-  onConfirm,
+  defaultFilename,
+  onExport,
   onCancel,
 }: ThemeExportDialogProps) {
-  const [inputValue, setInputValue] = useState(filename || "");
+  const [filename, setFilename] = useState(defaultFilename || "");
 
   useEffect(() => {
-    if (filename) {
+    if (isOpen && defaultFilename) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setInputValue(filename + THEMES_EXTENSION);
+      setFilename(defaultFilename + THEMES_EXTENSION);
     }
-  }, [filename, isOpen]);
+  }, [isOpen, defaultFilename]);
 
   const handleSubmit = () => {
-    if (inputValue.trim()) {
-      onConfirm(inputValue);
+    if (filename.trim()) {
+      onExport(filename);
     }
   };
 
@@ -43,27 +43,19 @@ export default function ThemeExportDialog({
       actions={
         <>
           <SecondaryButton onClick={onCancel}>Cancel</SecondaryButton>
-          <PrimaryButton onClick={handleSubmit} disabled={!inputValue.trim()}>
-            Export
+          <PrimaryButton onClick={handleSubmit} disabled={!filename.trim()}>
+            Export Theme
           </PrimaryButton>
         </>
       }
     >
-      <p className="theme-export-description">
-        Enter a filename for the theme export:
-      </p>
-      <input
-        className="theme-export-input"
-        value={inputValue}
-        onChange={(event) => setInputValue(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key === EVENTS.ENTER) {
-            handleSubmit();
-          } else if (event.key === EVENTS.ESCAPE) {
-            onCancel();
-          }
-        }}
-        placeholder={DEFAULT_EXPORT_THEME_FILENAME + THEMES_EXTENSION}
+      <FilenameInput
+        label="Enter a filename for the theme export:"
+        value={filename}
+        placeholder={defaultFilename + THEMES_EXTENSION}
+        onChange={setFilename}
+        onSubmit={handleSubmit}
+        onCancel={onCancel}
         autoFocus
       />
     </Dialog>

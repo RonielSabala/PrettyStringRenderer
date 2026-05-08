@@ -1,6 +1,6 @@
 export const EVENTS = Object.freeze({
-  ENTER: "enter",
-  ESCAPE: "escape",
+  ENTER: "Enter",
+  ESCAPE: "Escape",
   KEY_DOWN: "keydown",
   KEY_UP: "keyup",
   MOUSE_UP: "mouseup",

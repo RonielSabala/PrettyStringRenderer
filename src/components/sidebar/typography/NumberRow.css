@@ -50,36 +50,3 @@
   background: var(--accent);
   transform: scale(1.2);
 }
-
-.number-input-wrapper {
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 2px 4px;
-  transition: border-color 0.2s;
-  flex-shrink: 0;
-}
-
-.number-input-wrapper:focus-within {
-  border-color: var(--border-focus);
-}
-
-.number-input {
-  width: 38px;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 2px 0;
-  text-align: right;
-  outline: none;
-  appearance: textfield;
-  -moz-appearance: textfield;
-}
-
-.number-input::-webkit-outer-spin-button,
-.number-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}

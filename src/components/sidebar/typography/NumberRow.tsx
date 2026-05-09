@@ -42,18 +42,16 @@ export default function NumberRow({
           value={value}
           onChange={handleChange}
         />
-        <div className="number-input-wrapper">
-          <input
-            id={id}
-            className="number-input"
-            type="number"
-            value={value}
-            min={min}
-            max={max}
-            step={step}
-            onChange={handleChange}
-          />
-        </div>
+        <input
+          id={id}
+          className="number-input"
+          type="number"
+          value={value}
+          min={min}
+          max={max}
+          step={step}
+          onChange={handleChange}
+        />
       </div>
     </div>
   );

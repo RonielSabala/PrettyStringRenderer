@@ -82,40 +82,6 @@
   letter-spacing: 0.03em;
 }
 
-#editor-tabs .number-input {
-  width: 48px;
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 2px 5px;
-  border-radius: var(--radius);
-  text-align: center;
-  transition:
-    border-color 0.15s,
-    color 0.15s;
-  appearance: textfield;
-  -moz-appearance: textfield;
-}
-
-#editor-tabs .number-input::-webkit-outer-spin-button,
-#editor-tabs .number-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-#editor-tabs .number-input:hover {
-  border-color: var(--text-muted);
-  color: var(--text-primary);
-}
-
-#editor-tabs .number-input:focus {
-  outline: none;
-  border-color: var(--border-focus);
-  color: var(--text-primary);
-}
-
 .editor-fit-label {
   cursor: pointer;
   color: var(--text-muted);

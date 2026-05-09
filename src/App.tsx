@@ -13,7 +13,10 @@ import Sidebar from "./components/sidebar/Sidebar";
 import { restoreState, saveActiveElementIdState } from "./utils/persistence";
 
 // Element IDs that should NOT restore focus after reload
-const FOCUS_EXCLUSIONS = new Set(["btn-reset", "btn-export"]);
+const FOCUS_EXCLUSIONS = new Set([
+  "workspace-reset-btn",
+  "workspace-export-btn",
+]);
 
 // Restore persisted state before any child component reads it
 restoreState();

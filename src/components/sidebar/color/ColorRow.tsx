@@ -74,11 +74,11 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
 
         <div className="action-container">
           {color ? (
-            <button className="row-action-btn" onClick={handleClear}>
+            <button className="app-btn color-action-btn" onClick={handleClear}>
               <Eraser size={14} />
             </button>
           ) : previousColor ? (
-            <button className="row-action-btn" onClick={handleUndo}>
+            <button className="app-btn color-action-btn" onClick={handleUndo}>
               <ArrowCounterclockwise size={14} />
             </button>
           ) : null}

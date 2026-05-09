@@ -26,8 +26,6 @@
   --accent-dim: rgba(56, 139, 253, 0.2);
 
   /* Status */
-  --success: #3fb950;
-  --success-dim: color-mix(in srgb, var(--success) 15%, transparent);
   --danger: #e05555;
   --danger-dim: color-mix(in srgb, var(--danger) 15%, transparent);
 
@@ -47,6 +45,74 @@ body {
   line-height: 1.5;
 }
 
+/* Generic button properties */
+
+.app-btn,
+.action-btn,
+.static-action-btn {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: var(--radius);
+}
+
+.app-btn:hover,
+.action-btn:hover,
+.static-action-btn:hover {
+  color: var(--text-primary);
+  background: transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.app-btn:active,
+.action-btn:active,
+.static-action-btn:active {
+  transform: translateY(0);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Action button properties */
+
+.action-btn {
+  transition: all 0.15s ease-out;
+}
+
+.action-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Shared action button properties */
+
+.action-btn,
+.static-action-btn {
+  border: 1px solid var(--border);
+  flex: 1;
+}
+
+.action-btn:hover,
+.static-action-btn:hover {
+  border-color: var(--border-focus);
+}
+
+/* Disable user select */
+
+.app-btn,
+.action-btn,
+.static-action-btn,
 .no-user-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -54,22 +120,4 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-.btn {
-  padding: 5px 10px;
-  border-radius: var(--radius);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid var(--btn-color);
-  background: var(--btn-color-dim);
-  color: var(--text-primary);
-  transition: background 0.12s;
-}
-
-.btn:hover {
-  background: var(--btn-color);
-  color: #fff;
 }

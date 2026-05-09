@@ -33,7 +33,7 @@ export default function SidebarSection({
     <div id={`sidebar-section-${sectionId}`} className="sidebar-section">
       <div
         id={`section-header-${sectionId}`}
-        className={`section-header no-user-select${isCollapsed ? " header-collapsed" : ""}`}
+        className={`app-btn section-header${isCollapsed ? " header-collapsed" : ""}`}
         onClick={toggleCollapse}
       >
         <span className="section-title">{title}</span>

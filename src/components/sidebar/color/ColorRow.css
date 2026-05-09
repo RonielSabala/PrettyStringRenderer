@@ -37,10 +37,10 @@
 }
 
 .hidden-color-picker {
-  position: absolute;
-  inset: -5px;
   opacity: 0;
   cursor: pointer;
+  position: absolute;
+  inset: -5px;
   width: 30px;
   height: 30px;
 }
@@ -56,22 +56,14 @@
   outline: none;
 }
 
-.row-action-btn {
+.app-btn.color-action-btn {
   width: 22px;
   height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  border-radius: 4px;
-  opacity: 0.6;
+  opacity: 0.5;
+  padding: 0;
 }
 
-.row-action-btn:hover {
-  background: var(--surface-hover);
+.app-btn.color-action-btn:hover {
   opacity: 1;
-  color: var(--text-primary);
+  box-shadow: none;
 }

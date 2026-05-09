@@ -1,4 +1,4 @@
-import { Download } from "react-bootstrap-icons";
+import { ArrowClockwise, Download } from "react-bootstrap-icons";
 import { useStore } from "../common/store";
 import { roundUp } from "../utils/parse";
 import { clearState } from "../utils/persistence";
@@ -22,19 +22,20 @@ export default function Header({ onExportClick }: Props) {
     <>
       <span className="header-title">Pretty String Renderer</span>
       <button
-        id="btn-reset"
-        className="btn no-user-select"
+        id="workspace-reset-btn"
+        className="action-btn"
         onClick={handleReset}
       >
+        <ArrowClockwise size={16} />
         Reset
       </button>
       <div className="header-title-separator" />
-      <div className="badge no-user-select">
+      <div className="header-badge no-user-select">
         {`${createResolution(width, height)} / ${roundUp(width / height)}:1`}
       </div>
       <button
-        id="btn-export"
-        className="btn btn-export no-user-select"
+        id="workspace-export-btn"
+        className="action-btn"
         onClick={onExportClick}
       >
         <Download size={16} />

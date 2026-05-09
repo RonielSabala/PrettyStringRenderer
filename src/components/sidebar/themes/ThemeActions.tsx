@@ -9,11 +9,11 @@ interface Props {
 export default function ThemeActions({ onImport, onExport }: Props) {
   return (
     <div className="theme-actions">
-      <button className="theme-btn no-user-select" onClick={onImport}>
+      <button className="action-btn theme-action-btn" onClick={onImport}>
         <Upload size={16} />
         <span>Import</span>
       </button>
-      <button className="theme-btn no-user-select" onClick={onExport}>
+      <button className="action-btn theme-action-btn" onClick={onExport}>
         <Download size={16} />
         <span>Export</span>
       </button>

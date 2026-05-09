@@ -50,7 +50,7 @@
   position: relative;
 }
 
-.tab {
+.editor-tab {
   padding: 0 4px;
   height: 100%;
   display: flex;
@@ -62,7 +62,7 @@
   position: relative;
 }
 
-.tab::before {
+.editor-tab::before {
   content: "";
   position: absolute;
   bottom: 0;
@@ -102,6 +102,7 @@
 #editor-tabs .number-input::-webkit-outer-spin-button,
 #editor-tabs .number-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
+  margin: 0;
 }
 
 #editor-tabs .number-input:hover {
@@ -116,13 +117,12 @@
 }
 
 .editor-fit-label {
+  cursor: pointer;
+  color: var(--text-muted);
   font-size: 11px;
   display: flex;
   align-items: center;
   gap: 6px;
-  cursor: pointer;
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
   transition: color 0.15s;
 }
 

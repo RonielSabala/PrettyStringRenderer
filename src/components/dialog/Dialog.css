@@ -50,25 +50,16 @@
   gap: 8px;
 }
 
-.dialog-close {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 0 4px;
+.app-btn.dialog-close-btn {
   width: 32px;
   height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.15s;
-  border-radius: 4px;
-  line-height: 1;
+  color: var(--text-muted);
+  padding: 0;
 }
 
-.dialog-close:hover {
-  color: var(--text-primary);
-  background: var(--surface-hover);
+.app-btn.dialog-close-btn:hover {
+  color: var(--text-secondary);
+  box-shadow: none;
 }
 
 .dialog-actions {

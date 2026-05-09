@@ -2,19 +2,19 @@
   border-bottom: 1px solid var(--border);
 }
 
-.section-header {
-  display: flex;
-  align-items: center;
+.app-btn.section-header {
   padding: 10px 12px;
-  cursor: pointer;
+  border-radius: 0;
   transition: background-color 0.15s ease;
 }
 
-.section-header:hover {
-  background-color: rgba(255, 255, 255, 0.03);
+.app-btn.section-header:hover {
+  box-shadow: none;
+  border-radius: 0;
+  background: var(--surface-card);
 }
 
-.section-header:hover .accordion-icon {
+.app-btn.section-header:hover .accordion-icon {
   color: var(--text-secondary);
 }
 

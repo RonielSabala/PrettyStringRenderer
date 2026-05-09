@@ -253,7 +253,7 @@ export default function EditorPanel() {
 
       <div id="editor-panel" ref={panelRef} style={{ height: toPx(height) }}>
         <div id="editor-tabs">
-          <div className="tab no-user-select">Editor</div>
+          <div className="editor-tab no-user-select">Editor</div>
           <div className="editor-font no-user-select">
             <span>Font size</span>
             <input

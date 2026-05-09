@@ -19,7 +19,7 @@ export const ThemeItem = forwardRef<HTMLDivElement, Props>(
     <div
       ref={ref}
       id={`theme-item-${titleToKebab(theme._name)}`}
-      className={`theme-item no-user-select${isActive ? " active" : ""}`}
+      className={`action-btn theme-item${isActive ? " active" : ""}`}
       tabIndex={0}
       onClick={() => onApply(theme)}
       onDoubleClick={() => onShow(theme)}

@@ -9,7 +9,8 @@ interface Props {
 export function PrimaryButton({ onClick, children, disabled = false }: Props) {
   return (
     <button
-      className="dialog-button dialog-button-primary no-user-select"
+      id="dialog-btn-primary"
+      className="action-btn"
       onClick={onClick}
       disabled={disabled}
     >
@@ -24,11 +25,7 @@ export function SecondaryButton({
   disabled = false,
 }: Props) {
   return (
-    <button
-      className="dialog-button dialog-button-secondary no-user-select"
-      onClick={onClick}
-      disabled={disabled}
-    >
+    <button className="static-action-btn" onClick={onClick} disabled={disabled}>
       {children}
     </button>
   );

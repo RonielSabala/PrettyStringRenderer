@@ -64,38 +64,27 @@
   gap: 6px;
 }
 
-.png-export-preview-item {
-  display: flex;
+.static-action-btn.png-export-preview-btn {
+  min-width: 60px;
+  font-weight: 400;
+  background: var(--surface-card);
   flex-direction: column;
-  align-items: center;
   gap: 3px;
   padding: 6px 8px;
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: all 0.15s;
-  flex: 1;
-  min-width: 60px;
 }
 
-.png-export-preview-item:hover {
-  border-color: var(--border-focus);
-  background: var(--surface-hover);
-}
-
-.png-export-preview-item.active {
+.static-action-btn.png-export-preview-btn.active {
   border-color: var(--accent);
   background: var(--accent-dim);
 }
 
-.png-export-preview-item .png-export-preview-label {
+.png-export-preview-btn .png-export-preview-label {
   font-size: 11px;
   color: var(--text-primary);
   margin: 0;
 }
 
-.png-export-preview-item .png-export-preview-resolution {
+.png-export-preview-btn .png-export-preview-resolution {
   font-size: 10px;
   color: var(--text-muted);
 }

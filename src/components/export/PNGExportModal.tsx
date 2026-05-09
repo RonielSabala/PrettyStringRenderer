@@ -124,7 +124,7 @@ export default function PNGExportModal({
               return (
                 <button
                   key={scalarExample}
-                  className={`png-export-preview-item ${scalar === scalarExample ? "active" : ""}`}
+                  className={`static-action-btn png-export-preview-btn ${scalar === scalarExample ? "active" : ""}`}
                   onClick={() => setScalar(scalarExample)}
                 >
                   <span className="png-export-preview-label no-user-select">

@@ -17,6 +17,7 @@
   --border-focus: #58a6ff;
 
   /* Text */
+  --text-accent: white;
   --text-primary: #e6edf3;
   --text-secondary: #8b949e;
   --text-muted: #484f58;

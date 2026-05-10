@@ -1,5 +1,5 @@
 #dialog-btn-primary {
-  color: white;
+  color: var(--text-accent);
   border-color: var(--accent);
   background: var(--accent);
   padding: 8px 12px;

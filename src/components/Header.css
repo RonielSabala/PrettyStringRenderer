@@ -21,14 +21,13 @@
 /* Reset button */
 
 #workspace-reset-btn {
-  color: white;
+  color: var(--text-accent);
   border-color: var(--danger);
   background: var(--danger-dim);
   flex: 0;
 }
 
 #workspace-reset-btn:hover {
-  color: white;
   border-color: var(--danger);
   background: var(--danger);
 }
@@ -36,14 +35,13 @@
 /* Export button */
 
 #workspace-export-btn {
-  color: white;
+  color: var(--text-accent);
   border-color: var(--accent);
   background: var(--accent-dim);
   flex: 0;
 }
 
 #workspace-export-btn:hover {
-  color: white;
   border-color: var(--accent);
   background: var(--accent);
 }

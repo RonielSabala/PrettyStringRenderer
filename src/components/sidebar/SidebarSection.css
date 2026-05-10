@@ -20,7 +20,7 @@
 
 .section-title {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;

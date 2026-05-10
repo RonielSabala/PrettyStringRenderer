@@ -1,5 +1,5 @@
 .action-btn.theme-item {
-  font-size: 11.5px;
+  font-size: var(--text-sm-tight);
   font-weight: 400;
   background: var(--surface-card);
   justify-content: space-between;

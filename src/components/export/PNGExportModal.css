@@ -1,5 +1,5 @@
 .png-export-modal-description {
-  font-size: 12px;
+  font-size: var(--text-md);
   color: var(--text-secondary);
   margin: 0 0 16px 0;
 }
@@ -17,7 +17,7 @@
 }
 
 .png-export-scalar-input-group label {
-  font-size: 12px;
+  font-size: var(--text-md);
   color: var(--text-secondary);
   min-width: 40px;
 }
@@ -29,7 +29,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--text-primary);
-  font-size: 12px;
+  font-size: var(--text-md);
   font-family: var(--font-mono);
   text-align: center;
 }
@@ -41,7 +41,7 @@
 }
 
 .png-export-scalar-unit {
-  font-size: 12px;
+  font-size: var(--text-md);
   color: var(--text-secondary);
 }
 
@@ -52,7 +52,7 @@
 }
 
 .png-export-preview-label {
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--text-secondary);
   font-weight: 500;
   margin: 0;
@@ -79,12 +79,12 @@
 }
 
 .png-export-preview-btn .png-export-preview-label {
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--text-primary);
   margin: 0;
 }
 
 .png-export-preview-btn .png-export-preview-resolution {
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--text-muted);
 }

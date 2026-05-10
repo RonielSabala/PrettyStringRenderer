@@ -6,7 +6,7 @@
   border-radius: var(--radius);
   padding: 12px;
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: var(--text-sm-tight);
   color: var(--text-primary);
   line-height: 1.6;
   margin-bottom: 16px;

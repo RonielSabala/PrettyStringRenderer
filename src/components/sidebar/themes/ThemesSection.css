@@ -22,14 +22,14 @@
 }
 
 #theme-empty p {
-  font-size: 12px;
+  font-size: var(--text-md);
   font-weight: 500;
   color: var(--text-secondary);
   margin: 0;
 }
 
 #theme-empty span {
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--text-muted);
   line-height: 1.3;
 }

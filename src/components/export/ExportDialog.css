@@ -20,14 +20,14 @@
 }
 
 .export-btn-label {
-  font-size: 12px;
+  font-size: var(--text-md);
   font-weight: 500;
   margin: 0;
   color: var(--text-primary);
 }
 
 .export-btn-description {
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--text-muted);
   margin: 0;
 }

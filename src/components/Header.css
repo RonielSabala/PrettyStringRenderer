@@ -1,5 +1,5 @@
 .header-title {
-  font-size: 13px;
+  font-size: var(--text-lg);
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--text-primary);
@@ -10,7 +10,7 @@
 }
 
 .header-badge {
-  font-size: 10.5px;
+  font-size: var(--text-xs);
   color: var(--text-secondary);
   background: var(--accent-dim);
   border: 1px solid var(--border);

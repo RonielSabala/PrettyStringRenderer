@@ -55,7 +55,7 @@
   height: 100%;
   display: flex;
   align-items: center;
-  font-size: 11.5px;
+  font-size: var(--text-sm-tight);
   font-weight: 500;
   letter-spacing: 0.02em;
   color: var(--text-primary);
@@ -77,7 +77,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--text-muted);
   letter-spacing: 0.03em;
 }
@@ -85,7 +85,7 @@
 .editor-fit-label {
   cursor: pointer;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: var(--text-sm);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -105,7 +105,7 @@
 }
 
 #editor-status {
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--text-muted);
   margin-left: auto;
   letter-spacing: 0.04em;

@@ -1,12 +1,14 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 :root {
+  --radius: 5px;
+  --base-font-size: 12px;
+  --font-mono: "Cascadia Code";
+
+  --text-xs: 0.875rem;
+  --text-sm: 0.916rem;
+  --text-sm-tight: 0.958rem;
+  --text-md: 1rem;
+  --text-lg: 1.166rem;
+
   /* Surfaces */
   --surface-base: #0d1117;
   --surface-panel: #161b22;
@@ -24,25 +26,31 @@
 
   /* Accent */
   --accent: #388bfd;
-  --accent-dim: rgba(56, 139, 253, 0.2);
-
-  /* Status */
   --danger: #e05555;
+  --accent-dim: rgba(56, 139, 253, 0.2);
   --danger-dim: color-mix(in srgb, var(--danger) 15%, transparent);
-
-  /* Misc */
-  --radius: 5px;
-  --font-mono: "Cascadia Code";
 }
 
-html,
+html {
+  font-size: var(--base-font-size);
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   height: 100%;
   overflow: hidden;
   background: var(--surface-base);
   color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: var(--text-md);
   line-height: 1.5;
 }
 
@@ -52,7 +60,7 @@ body {
 .action-btn,
 .static-action-btn {
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--text-md);
   font-weight: 500;
   font-family: var(--font-mono);
   color: var(--text-secondary);
@@ -127,8 +135,8 @@ body {
 
 .number-input {
   width: 40px;
-  font-size: 11px;
-  font-weight: 400px;
+  font-size: var(--text-sm);
+  font-weight: 400;
   font-family: var(--font-mono);
   color: var(--text-secondary);
   outline: none;

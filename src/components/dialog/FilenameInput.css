@@ -15,7 +15,7 @@
   width: 100%;
   padding: 10px 15px;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--base-radius);
   background: var(--surface-card);
   color: var(--text-primary);
   font-size: var(--text-md);

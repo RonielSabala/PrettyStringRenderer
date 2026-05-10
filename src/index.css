@@ -1,8 +1,14 @@
 :root {
-  --font-mono: "Cascadia Code";
-  --base-font-size: 15px;
-  --radius: 6.25px;
+  --base-unit: 15px;
+  --base-radius: 6.25px;
 
+  --font-mono: "Cascadia Code";
+
+  /* Layout */
+  --sidebar-width: 22rem;
+  --header-height: 3.5rem;
+
+  /* Text size */
   --text-xs: 0.875rem;
   --text-sm: 0.916rem;
   --text-sm-tight: 0.958rem;
@@ -32,7 +38,7 @@
 }
 
 html {
-  font-size: var(--base-font-size);
+  font-size: var(--base-unit);
   box-sizing: border-box;
 }
 
@@ -70,7 +76,7 @@ body {
   justify-content: center;
   gap: 7.5px;
   padding: 6.25px 12.5px;
-  border-radius: var(--radius);
+  border-radius: var(--base-radius);
 }
 
 .app-btn:hover,
@@ -145,7 +151,7 @@ body {
   color: var(--text-secondary);
   outline: none;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--base-radius);
   background: var(--surface-card);
   text-align: left;
   padding: 2.5px 6.25px;

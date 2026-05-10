@@ -3,7 +3,7 @@
   overflow-y: auto;
   background: var(--surface-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--base-radius);
   padding: 15px;
   font-size: var(--text-sm-tight);
   color: var(--text-primary);

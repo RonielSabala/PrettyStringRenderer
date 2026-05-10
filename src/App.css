@@ -1,7 +1,7 @@
 #app {
   display: grid;
-  grid-template-columns: 345px 1fr;
-  grid-template-rows: 55px 1fr;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-rows: var(--header-height) 1fr;
   grid-template-areas: "app-header app-header" "app-sidebar app-workspace";
   height: 100vh;
 }
@@ -30,7 +30,7 @@
 
 #app-sidebar::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--base-radius);
 }
 
 #app-workspace {

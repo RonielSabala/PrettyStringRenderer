@@ -207,7 +207,7 @@ export default function ThemesSection() {
       <div className="theme-list">
         {noThemes ? (
           <div id="theme-empty">
-            <FolderX size={32} />
+            <FolderX className="app-icon" />
             <p className="no-user-select">No themes loaded</p>
             <span className="no-user-select">
               Import or create a theme to get started

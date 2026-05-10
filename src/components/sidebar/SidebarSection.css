@@ -3,7 +3,7 @@
 }
 
 .app-btn.section-header {
-  padding: 10px 12px;
+  padding: 12.5px 15px;
   border-radius: 0;
   transition: background-color 0.15s ease;
 }
@@ -55,5 +55,5 @@
 
 .section-body {
   overflow: hidden;
-  padding: 0 12px 12px 12px;
+  padding: 0 15px 15px 15px;
 }

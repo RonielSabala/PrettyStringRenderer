@@ -66,7 +66,7 @@ export default function PNGExportModal({
       isOpen={isOpen}
       title={
         <>
-          <FileEarmarkImage size={16} />
+          <FileEarmarkImage className="app-icon" />
           Export PNG
         </>
       }
@@ -141,7 +141,6 @@ export default function PNGExportModal({
         </div>
 
         <FilenameInput
-          label="Filename:"
           value={filename}
           placeholder={defaultFilename}
           onChange={setFilename}

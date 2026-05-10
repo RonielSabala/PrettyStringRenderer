@@ -26,7 +26,7 @@ export default function Header({ onExportClick }: Props) {
         className="action-btn"
         onClick={handleReset}
       >
-        <ArrowClockwise size={16} />
+        <ArrowClockwise className="app-icon" />
         Reset
       </button>
       <div className="header-title-separator" />
@@ -38,7 +38,7 @@ export default function Header({ onExportClick }: Props) {
         className="action-btn"
         onClick={onExportClick}
       >
-        <Download size={16} />
+        <Download className="app-icon" />
         <span>Export</span>
       </button>
     </>

@@ -1,5 +1,5 @@
 #editor-resize-handle {
-  height: 4px;
+  height: 5px;
   flex-shrink: 0;
   cursor: row-resize;
   background: var(--border);
@@ -13,9 +13,9 @@
   left: 50%;
   top: 50%;
   translate: -50% -50%;
-  width: 32px;
-  height: 2px;
-  border-radius: 2px;
+  width: 40px;
+  height: 2.5px;
+  border-radius: 2.5px;
   background: var(--text-muted);
   opacity: 0;
   transition: opacity 0.2s;
@@ -24,7 +24,7 @@
 #editor-resize-handle:hover,
 #editor-resize-handle.drag {
   background: var(--accent);
-  height: 5px;
+  height: 6.25px;
 }
 
 #editor-resize-handle:hover::after,
@@ -43,15 +43,15 @@
   align-items: center;
   background: var(--surface-panel);
   border-top: 1px solid var(--border);
-  height: 34px;
+  height: 42.5px;
   flex-shrink: 0;
-  padding: 0 12px;
-  gap: 14px;
+  padding: 0 15px;
+  gap: 17.5px;
   position: relative;
 }
 
 .editor-tab {
-  padding: 0 4px;
+  padding: 0 5px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -68,15 +68,15 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 2.5px;
   background: var(--accent);
-  border-radius: 2px 2px 0 0;
+  border-radius: 2.5px 2.5px 0 0;
 }
 
 .editor-font {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7.5px;
   font-size: var(--text-sm);
   color: var(--text-muted);
   letter-spacing: 0.03em;
@@ -88,7 +88,7 @@
   font-size: var(--text-sm);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7.5px;
   transition: color 0.15s;
 }
 
@@ -97,8 +97,8 @@
 }
 
 .editor-fit-label input[type="checkbox"] {
-  width: 12px;
-  height: 12px;
+  width: 15px;
+  height: 15px;
   cursor: pointer;
   accent-color: var(--accent);
   flex-shrink: 0;
@@ -135,15 +135,15 @@
 }
 
 #editor::-webkit-scrollbar {
-  width: 6px;
-  height: 5px;
+  width: 7.5px;
+  height: 6.25px;
 }
 #editor::-webkit-scrollbar-track {
   background: transparent;
 }
 #editor::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 3px;
+  border-radius: 3.75px;
 }
 #editor::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);

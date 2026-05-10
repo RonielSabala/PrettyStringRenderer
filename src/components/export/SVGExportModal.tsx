@@ -40,7 +40,7 @@ export default function SVGExportModal({
       isOpen={isOpen}
       title={
         <>
-          <FileEarmarkRichtext size={16} />
+          <FileEarmarkRichtext className="app-icon" />
           Export SVG
         </>
       }
@@ -55,7 +55,6 @@ export default function SVGExportModal({
       }
     >
       <FilenameInput
-        label="Enter a filename for the SVG export:"
         value={filename}
         placeholder={defaultFilename}
         onChange={setFilename}

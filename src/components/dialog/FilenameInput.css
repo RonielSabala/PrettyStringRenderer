@@ -1,8 +1,8 @@
 .filename-input-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 10px;
+  margin-bottom: 17.5px;
 }
 
 .filename-input-label {
@@ -13,7 +13,7 @@
 
 #filename-input {
   width: 100%;
-  padding: 8px 12px;
+  padding: 10px 15px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface-card);
@@ -28,7 +28,7 @@
 #filename-input:focus {
   outline: none;
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 2px var(--accent-subtle, rgba(0, 0, 0, 0.1));
+  box-shadow: 0 0 0 2.5px var(--accent-subtle, rgba(0, 0, 0, 0.1));
 }
 
 #filename-input::placeholder {

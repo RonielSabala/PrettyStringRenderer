@@ -3,7 +3,7 @@
   font-weight: 400;
   background: var(--surface-card);
   justify-content: space-between;
-  padding: 6px 10px;
+  padding: 7.5px 12.5px;
 }
 
 .action-btn.theme-item:hover {
@@ -16,7 +16,7 @@
   border-color: var(--accent);
   background: var(--accent-dim);
   box-shadow:
-    0 0 0 2px rgba(0, 0, 0, 0.1),
+    0 0 0 2.5px rgba(0, 0, 0, 0.1),
     inset 0 0 0 1px var(--accent);
 }
 
@@ -28,11 +28,11 @@
 }
 
 .theme-swatch {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   border-radius: 25%;
   flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   overflow: hidden;
   display: flex;
   align-items: center;

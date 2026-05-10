@@ -37,7 +37,7 @@ export default function SidebarSection({
         onClick={toggleCollapse}
       >
         <span className="section-title">{title}</span>
-        <ChevronDown className="accordion-icon" size={10} />
+        <ChevronDown className="app-icon accordion-icon" />
       </div>
       <div className={`section-body-wrapper ${isCollapsed ? "collapsed" : ""}`}>
         <div className="section-body">{children}</div>

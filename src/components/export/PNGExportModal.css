@@ -1,30 +1,30 @@
 .png-export-modal-description {
   font-size: var(--text-md);
   color: var(--text-secondary);
-  margin: 0 0 16px 0;
+  margin: 0 0 20px 0;
 }
 
 .png-export-scalar-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .png-export-scalar-input-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .png-export-scalar-input-group label {
   font-size: var(--text-md);
   color: var(--text-secondary);
-  min-width: 40px;
+  min-width: 50px;
 }
 
 .png-export-scalar-input {
-  width: 70px;
-  padding: 6px 8px;
+  width: 87.5px;
+  padding: 7.5px 10px;
   background: var(--surface-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -37,7 +37,7 @@
 .png-export-scalar-input:focus {
   outline: none;
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 2.5px rgba(0, 0, 0, 0.1);
 }
 
 .png-export-scalar-unit {
@@ -48,7 +48,7 @@
 .png-export-scalar-preview {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .png-export-preview-label {
@@ -61,16 +61,16 @@
 .png-export-preview-items {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 7.5px;
 }
 
 .static-action-btn.png-export-preview-btn {
-  min-width: 60px;
+  min-width: 75px;
   font-weight: 400;
   background: var(--surface-card);
   flex-direction: column;
-  gap: 3px;
-  padding: 6px 8px;
+  gap: 3.75px;
+  padding: 7.5px 10px;
 }
 
 .static-action-btn.png-export-preview-btn.active {

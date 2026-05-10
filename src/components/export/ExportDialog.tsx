@@ -317,13 +317,13 @@ export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
           <ExportFormatButton
             label="PNG"
             description="Raster image"
-            icon={<FileEarmarkImage size={20} />}
+            icon={<FileEarmarkImage className="app-icon" />}
             onClick={handlePNGClick}
           />
           <ExportFormatButton
             label="SVG"
             description="Vector image"
-            icon={<FileEarmarkRichtext size={20} />}
+            icon={<FileEarmarkRichtext className="app-icon" />}
             onClick={handleSVGClick}
           />
         </div>

@@ -50,7 +50,6 @@ export default function ThemeExportDialog({
       }
     >
       <FilenameInput
-        label="Enter a filename for the theme export:"
         value={filename}
         placeholder={defaultFilename + THEMES_EXTENSION}
         onChange={setFilename}

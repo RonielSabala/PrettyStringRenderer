@@ -10,11 +10,11 @@ export default function ThemeActions({ onImport, onExport }: Props) {
   return (
     <div className="theme-actions">
       <button className="action-btn theme-action-btn" onClick={onImport}>
-        <Upload size={16} />
+        <Upload className="app-icon" />
         <span>Import</span>
       </button>
       <button className="action-btn theme-action-btn" onClick={onExport}>
-        <Download size={16} />
+        <Download className="app-icon" />
         <span>Export</span>
       </button>
     </div>

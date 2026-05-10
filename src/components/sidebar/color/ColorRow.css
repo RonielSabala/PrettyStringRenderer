@@ -1,7 +1,7 @@
 .color-controls {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .input-group {
@@ -9,8 +9,8 @@
   align-items: center;
   background: var(--surface-card);
   border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 2px;
+  border-radius: 5px;
+  padding: 2.5px;
   transition: border-color 0.2s;
 }
 
@@ -19,9 +19,9 @@
 }
 
 .swatch-container {
-  width: 18px;
-  height: 18px;
-  border-radius: 3px;
+  width: 22.5px;
+  height: 22.5px;
+  border-radius: 3.75px;
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
@@ -40,25 +40,25 @@
   opacity: 0;
   cursor: pointer;
   position: absolute;
-  inset: -5px;
-  width: 30px;
-  height: 30px;
+  inset: -6.25px;
+  width: 37.5px;
+  height: 37.5px;
 }
 
 .hex-input {
-  width: 54px;
+  width: 67.5px;
   background: transparent;
   border: none;
   color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  padding: 0 4px;
+  padding: 0 5px;
   outline: none;
 }
 
 .app-btn.color-action-btn {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   opacity: 0.5;
   padding: 0;
 }

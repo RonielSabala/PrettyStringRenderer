@@ -34,7 +34,7 @@ export default function Dialog({
           <div className="dialog-header">
             <p className="dialog-title no-user-select">{title}</p>
             <button className="app-btn dialog-close-btn" onClick={onClose}>
-              <X size={20} />
+              <X className="app-icon" />
             </button>
           </div>
         )}

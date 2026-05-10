@@ -2,7 +2,6 @@ import { EVENTS } from "../../common/constants/events";
 import "./FilenameInput.css";
 
 interface Props {
-  label: string;
   value: string;
   placeholder: string;
   onChange: (value: string) => void;
@@ -12,7 +11,6 @@ interface Props {
 }
 
 export default function FilenameInput({
-  label,
   value,
   placeholder,
   onChange,
@@ -34,7 +32,7 @@ export default function FilenameInput({
         htmlFor="filename-input"
         className="filename-input-label no-user-select"
       >
-        {label}
+        Filename:
       </label>
       <input
         id="filename-input"

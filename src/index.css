@@ -39,6 +39,7 @@ html {
 *,
 *::before,
 *::after {
+  font-family: var(--font-mono);
   box-sizing: inherit;
   margin: 0;
   padding: 0;
@@ -49,7 +50,6 @@ body {
   overflow: hidden;
   background: var(--surface-base);
   color: var(--text-primary);
-  font-family: var(--font-mono);
   font-size: var(--text-md);
   line-height: 1.5;
 }
@@ -62,7 +62,6 @@ body {
   cursor: pointer;
   font-size: var(--text-md);
   font-weight: 500;
-  font-family: var(--font-mono);
   color: var(--text-secondary);
   border: none;
   background: transparent;
@@ -143,8 +142,6 @@ body {
 .number-input {
   width: 50px;
   font-size: var(--text-sm);
-  font-weight: 400;
-  font-family: var(--font-mono);
   color: var(--text-secondary);
   outline: none;
   border: 1px solid var(--border);

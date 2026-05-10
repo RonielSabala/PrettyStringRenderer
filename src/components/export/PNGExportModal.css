@@ -30,7 +30,6 @@
   border-radius: var(--radius);
   color: var(--text-primary);
   font-size: var(--text-md);
-  font-family: var(--font-mono);
   text-align: center;
 }
 

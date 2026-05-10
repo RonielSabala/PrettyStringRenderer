@@ -19,7 +19,6 @@
   background: var(--surface-card);
   color: var(--text-primary);
   font-size: var(--text-md);
-  font-family: var(--font-mono);
   transition:
     border-color 0.15s,
     box-shadow 0.15s;

@@ -50,7 +50,6 @@
   background: transparent;
   border: none;
   color: var(--text-primary);
-  font-family: var(--font-mono);
   font-size: var(--text-sm);
   padding: 0 5px;
   outline: none;

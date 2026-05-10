@@ -123,7 +123,6 @@
   tab-size: 2;
   caret-shape: block;
   caret-color: #58a6ff;
-  font-family: var(--font-mono);
 }
 
 #editor:focus {

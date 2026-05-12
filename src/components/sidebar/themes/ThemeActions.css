@@ -1,7 +1,7 @@
 .theme-actions {
   display: flex;
   gap: var(--space-3);
-  margin-top: 7.5px;
+  margin-top: var(--space-3);
 }
 
 .action-btn.theme-action-btn {

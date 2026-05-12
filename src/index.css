@@ -5,16 +5,26 @@
   --font-mono: "Cascadia Code";
 
   /* Layout */
-  --sidebar-width: 22rem;
   --header-height: 3.5rem;
+  --sidebar-width: 22rem;
   --scrollbar-size: 0.5rem;
 
-  /* Text size */
+  /* Text Scale */
   --text-xs: 0.875rem;
   --text-sm: 0.916rem;
   --text-sm-tight: 0.958rem;
   --text-md: 1rem;
-  --text-lg: 1.166rem;
+  --text-lg: 1.167rem;
+
+  /* Gap Scale */
+  --gap-1: 0.233rem;
+  --gap-2: 0.333rem;
+  --gap-3: 0.5rem;
+  --gap-4: 0.667rem;
+  --gap-5: 0.833rem;
+  --gap-6: 1rem;
+  --gap-7: 1.167rem;
+  --gap-8: 1.333rem;
 
   /* Surfaces */
   --surface-base: #0d1117;
@@ -75,7 +85,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7.5px;
+  gap: var(--gap-3);
   padding: 6.25px 12.5px;
   border-radius: var(--base-radius);
 }

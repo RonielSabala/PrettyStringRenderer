@@ -1,7 +1,7 @@
 .export-dialog-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--gap-4);
 }
 
 .action-btn.export-format-btn {
@@ -9,7 +9,7 @@
   color: var(--text-primary);
   background: var(--surface-card);
   justify-content: left;
-  gap: 15px;
+  gap: var(--gap-6);
   padding: 15px 20px;
 }
 
@@ -21,7 +21,7 @@
 .export-btn-content {
   display: flex;
   flex-direction: column;
-  gap: 2.5px;
+  gap: var(--gap-1);
 }
 
 .export-btn-label {

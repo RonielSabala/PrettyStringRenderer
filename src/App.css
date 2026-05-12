@@ -10,7 +10,7 @@
   grid-area: app-header;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: var(--gap-6);
   padding: 0 20px;
   background: var(--surface-panel);
   border-bottom: 1px solid var(--border);

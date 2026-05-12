@@ -1,7 +1,7 @@
 .theme-list {
   display: flex;
   flex-direction: column;
-  gap: 4.375px;
+  gap: var(--gap-2);
   padding: 2.5px 0 6.25px;
 }
 
@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--gap-4);
   padding: 25px 15px;
   color: var(--text-muted);
   text-align: center;

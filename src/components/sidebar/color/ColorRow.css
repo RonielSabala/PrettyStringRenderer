@@ -1,7 +1,7 @@
 .color-controls {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: var(--gap-2);
 }
 
 .input-group {

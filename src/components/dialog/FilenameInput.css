@@ -1,7 +1,7 @@
 .filename-input-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--gap-4);
   margin-bottom: 17.5px;
 }
 

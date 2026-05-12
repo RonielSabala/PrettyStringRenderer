@@ -7,13 +7,13 @@
 .png-export-scalar-section {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--gap-8);
 }
 
 .png-export-scalar-input-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--gap-4);
 }
 
 .png-export-scalar-input-group label {
@@ -47,7 +47,7 @@
 .png-export-scalar-preview {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--gap-4);
 }
 
 .png-export-preview-label {
@@ -60,7 +60,7 @@
 .png-export-preview-items {
   display: flex;
   flex-wrap: wrap;
-  gap: 7.5px;
+  gap: var(--gap-3);
 }
 
 .static-action-btn.png-export-preview-btn {
@@ -68,7 +68,7 @@
   font-weight: 400;
   background: var(--surface-card);
   flex-direction: column;
-  gap: 3.75px;
+  gap: var(--gap-2);
   padding: 7.5px 10px;
 }
 

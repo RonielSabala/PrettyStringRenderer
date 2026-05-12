@@ -1,6 +1,6 @@
 .theme-actions {
   display: flex;
-  gap: 7.5px;
+  gap: var(--gap-3);
   margin-top: 7.5px;
 }
 

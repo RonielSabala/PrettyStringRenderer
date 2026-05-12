@@ -1,7 +1,7 @@
 .number-controls {
   display: flex;
   align-items: center;
-  gap: 12.5px;
+  gap: var(--gap-5);
   flex: 2;
 }
 

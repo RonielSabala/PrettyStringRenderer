@@ -22,21 +22,8 @@
   min-width: 50px;
 }
 
-.png-export-scalar-input {
-  width: 87.5px;
+.number-input.png-export-scalar-input {
   padding: 7.5px 10px;
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  border-radius: var(--base-radius);
-  color: var(--text-primary);
-  font-size: var(--text-md);
-  text-align: center;
-}
-
-.png-export-scalar-input:focus {
-  outline: none;
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 2.5px rgba(0, 0, 0, 0.1);
 }
 
 .png-export-scalar-unit {

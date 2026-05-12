@@ -90,6 +90,7 @@ export default function PNGExportModal({
           </label>
           <input
             id="png-scalar"
+            className="number-input png-export-scalar-input"
             type="number"
             min="0.5"
             max="10"
@@ -106,7 +107,6 @@ export default function PNGExportModal({
                 onCancel();
               }
             }}
-            className="png-export-scalar-input"
           />
           <span className="png-export-scalar-unit"></span>
         </div>

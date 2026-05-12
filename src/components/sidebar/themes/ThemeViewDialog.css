@@ -4,7 +4,7 @@
   background: var(--surface-card);
   border: 1px solid var(--border);
   border-radius: var(--base-radius);
-  padding: 15px;
+  padding: var(--space-6);
   font-size: var(--text-sm-tight);
   color: var(--text-primary);
   line-height: 1.6;

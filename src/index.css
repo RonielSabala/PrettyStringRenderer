@@ -26,6 +26,18 @@
   --gap-7: 1.167rem;
   --gap-8: 1.333rem;
 
+  /* Padding Scale */
+  --space-1: 0.167rem;
+  --space-1-5: 0.233rem;
+  --space-2: 0.333rem;
+  --space-3: 0.5rem;
+  --space-4: 0.667rem;
+  --space-5: 0.833rem;
+  --space-6: 1rem;
+  --space-7: 1.167rem;
+  --space-8: 1.333rem;
+  --space-12: 2rem;
+
   /* Surfaces */
   --surface-base: #0d1117;
   --surface-panel: #161b22;
@@ -86,7 +98,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: var(--gap-3);
-  padding: 6.25px 12.5px;
+  padding: var(--space-3) var(--space-5);
   border-radius: var(--base-radius);
 }
 
@@ -165,7 +177,7 @@ body {
   border-radius: var(--base-radius);
   background: var(--surface-card);
   text-align: left;
-  padding: 2.5px 6.25px;
+  padding: var(--space-1-5) var(--space-3);
   appearance: textfield;
   -moz-appearance: textfield;
 }

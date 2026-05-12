@@ -10,7 +10,7 @@
   background: var(--surface-card);
   border: 1px solid var(--border);
   border-radius: 5px;
-  padding: 2.5px;
+  padding: var(--space-1);
   transition: border-color 0.2s;
 }
 
@@ -51,7 +51,7 @@
   border: none;
   color: var(--text-primary);
   font-size: var(--text-sm);
-  padding: 0 5px;
+  padding: 0 var(--space-2);
   outline: none;
 }
 

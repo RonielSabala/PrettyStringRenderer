@@ -10,7 +10,7 @@
   background: var(--surface-card);
   justify-content: left;
   gap: var(--gap-6);
-  padding: 15px 20px;
+  padding: var(--space-6) var(--space-8);
 }
 
 .export-format-btn .app-icon {

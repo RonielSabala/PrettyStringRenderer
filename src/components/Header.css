@@ -14,7 +14,7 @@
   color: var(--text-secondary);
   background: var(--accent-dim);
   border: 1px solid var(--border);
-  padding: 2px 11px;
+  padding: var(--space-1-5) var(--space-4);
   border-radius: 25px;
 }
 

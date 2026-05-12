@@ -2,7 +2,7 @@
   color: var(--text-accent);
   border-color: var(--accent);
   background: var(--accent);
-  padding: 10px 15px;
+  padding: var(--space-4) var(--space-6);
 }
 
 #dialog-btn-primary:hover:not(:disabled) {

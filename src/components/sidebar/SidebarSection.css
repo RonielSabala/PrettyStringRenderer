@@ -3,7 +3,7 @@
 }
 
 .app-btn.section-header {
-  padding: 12.5px 15px;
+  padding: var(--space-5) var(--space-6);
   border-radius: 0;
   transition: background-color 0.15s ease;
 }
@@ -54,5 +54,5 @@
 
 .section-body {
   overflow: hidden;
-  padding: 0 var(--scrollbar-size) 15px 15px;
+  padding: 0 var(--scrollbar-size) var(--space-6) var(--space-6);
 }

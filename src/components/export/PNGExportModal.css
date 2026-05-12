@@ -23,7 +23,7 @@
 }
 
 .number-input.png-export-scalar-input {
-  padding: 7.5px 10px;
+  padding: var(--space-3) var(--space-4);
 }
 
 .png-export-scalar-unit {
@@ -56,7 +56,7 @@
   background: var(--surface-card);
   flex-direction: column;
   gap: var(--gap-2);
-  padding: 7.5px 10px;
+  padding: var(--space-3) var(--space-4);
 }
 
 .static-action-btn.png-export-preview-btn.active {

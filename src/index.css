@@ -7,6 +7,7 @@
   /* Layout */
   --sidebar-width: 22rem;
   --header-height: 3.5rem;
+  --scrollbar-size: 0.5rem;
 
   /* Text size */
   --text-xs: 0.875rem;
@@ -143,7 +144,7 @@ body {
   height: 1.25em;
 }
 
-/* Number inputs */
+/* Number input */
 
 .number-input {
   width: 50px;
@@ -173,4 +174,31 @@ body {
 .number-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+/* Scrollbar */
+
+.scroll-container {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+.scroll-container::-webkit-scrollbar-track,
+.scroll-container::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--base-radius);
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+  cursor: default;
 }

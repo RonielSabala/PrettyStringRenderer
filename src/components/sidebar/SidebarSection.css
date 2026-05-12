@@ -54,5 +54,5 @@
 
 .section-body {
   overflow: hidden;
-  padding: 0 15px 15px 15px;
+  padding: 0 var(--scrollbar-size) 15px 15px;
 }

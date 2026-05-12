@@ -19,18 +19,8 @@
 #app-sidebar {
   grid-area: app-sidebar;
   background: var(--surface-panel);
+  padding: var(--scrollbar-size) 0;
   border-right: 1px solid var(--border);
-  overflow-y: auto;
-  padding: 7.5px 0;
-}
-
-#app-sidebar::-webkit-scrollbar {
-  width: 7.5px;
-}
-
-#app-sidebar::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: var(--base-radius);
 }
 
 #app-workspace {

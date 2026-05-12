@@ -55,6 +55,10 @@
   outline: none;
 }
 
+.action-container {
+  min-width: 28px;
+}
+
 .app-btn.color-action-btn {
   width: 28px;
   height: 28px;

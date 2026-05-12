@@ -122,7 +122,7 @@
   overflow: auto;
   tab-size: 2;
   caret-shape: block;
-  caret-color: #58a6ff;
+  caret-color: var(--accent);
 }
 
 #editor:focus {
@@ -130,23 +130,5 @@
 }
 
 #editor::selection {
-  background: rgba(56, 139, 253, 0.3);
-}
-
-#editor::-webkit-scrollbar {
-  width: 7.5px;
-  height: 6.25px;
-}
-#editor::-webkit-scrollbar-track {
-  background: transparent;
-}
-#editor::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3.75px;
-}
-#editor::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
-#editor::-webkit-scrollbar-corner {
-  background: transparent;
+  background: var(--accent-dim);
 }

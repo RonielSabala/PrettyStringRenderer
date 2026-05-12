@@ -276,6 +276,7 @@ export default function EditorPanel() {
         </div>
         <textarea
           id="editor"
+          className="scroll-container"
           ref={editorRef}
           spellCheck={false}
           style={{

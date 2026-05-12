@@ -54,7 +54,7 @@ export default function App() {
         <Header onExportClick={() => exportDialogRef.current?.open()} />
       </header>
 
-      <aside id="app-sidebar">
+      <aside id="app-sidebar" className="scroll-container">
         <Sidebar />
       </aside>
 

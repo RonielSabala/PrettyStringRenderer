@@ -16,17 +16,7 @@
   --text-md: 1rem;
   --text-lg: 1.167rem;
 
-  /* Gap Scale */
-  --gap-1: 0.233rem;
-  --gap-2: 0.333rem;
-  --gap-3: 0.5rem;
-  --gap-4: 0.667rem;
-  --gap-5: 0.833rem;
-  --gap-6: 1rem;
-  --gap-7: 1.167rem;
-  --gap-8: 1.333rem;
-
-  /* Padding Scale */
+  /* Space Scale */
   --space-1: 0.167rem;
   --space-1-5: 0.233rem;
   --space-2: 0.333rem;
@@ -97,7 +87,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-3);
+  gap: var(--space-3);
   padding: var(--space-3) var(--space-5);
   border-radius: var(--base-radius);
 }

@@ -46,7 +46,7 @@
   height: 42.5px;
   flex-shrink: 0;
   padding: 0 var(--space-6);
-  gap: var(--gap-7);
+  gap: var(--space-7);
   position: relative;
 }
 
@@ -76,7 +76,7 @@
 .editor-font {
   display: flex;
   align-items: center;
-  gap: var(--gap-3);
+  gap: var(--space-3);
   font-size: var(--text-sm);
   color: var(--text-muted);
   letter-spacing: 0.03em;
@@ -88,7 +88,7 @@
   font-size: var(--text-sm);
   display: flex;
   align-items: center;
-  gap: var(--gap-3);
+  gap: var(--space-3);
   transition: color 0.15s;
 }
 

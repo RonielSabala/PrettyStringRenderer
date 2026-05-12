@@ -96,7 +96,7 @@
   color: var(--text-secondary);
 }
 
-.editor-fit-label input[type="checkbox"] {
+#editor-fit-to-content {
   width: 15px;
   height: 15px;
   cursor: pointer;

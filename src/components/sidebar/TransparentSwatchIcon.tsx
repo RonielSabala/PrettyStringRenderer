@@ -1,16 +1,11 @@
 import { useId } from "react";
 
-interface Props {
-  className?: string;
-}
-
-export function TransparentSwatchIcon({ className }: Props) {
+export function TransparentSwatchIcon() {
   const patternId = useId();
 
   return (
     <svg
       viewBox="0 0 14 14"
-      className={className}
       aria-hidden="true"
       focusable="false"
       style={{ width: "100%", height: "100%", display: "block" }}

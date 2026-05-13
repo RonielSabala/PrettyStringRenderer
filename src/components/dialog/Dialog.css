@@ -12,7 +12,7 @@
 .dialog-container {
   background: var(--surface-base);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-4);
   padding: var(--space-12);
   max-width: 525px;
   width: 100%;

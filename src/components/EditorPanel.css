@@ -7,20 +7,6 @@
   position: relative;
 }
 
-#editor-resize-handle::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  width: 40px;
-  height: 2.5px;
-  border-radius: 2.5px;
-  background: var(--text-muted);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
 #editor-resize-handle:hover,
 #editor-resize-handle.drag {
   background: var(--accent);
@@ -70,7 +56,7 @@
   right: 0;
   height: 2.5px;
   background: var(--accent);
-  border-radius: 2.5px 2.5px 0 0;
+  border-radius: var(--radius-1) var(--radius-1) 0 0;
 }
 
 .editor-font {

@@ -9,7 +9,7 @@
   align-items: center;
   background: var(--surface-card);
   border: 1px solid var(--border);
-  border-radius: 5px;
+  border-radius: var(--radius-3);
   padding: var(--space-1);
   transition: border-color 0.2s;
 }
@@ -21,7 +21,7 @@
 .swatch-container {
   width: 22.5px;
   height: 22.5px;
-  border-radius: 3.75px;
+  border-radius: calc(var(--radius-3) - var(--space-1));
   overflow: hidden;
   position: relative;
   flex-shrink: 0;

@@ -1,13 +1,17 @@
 :root {
   --base-unit: 15px;
-  --base-radius: 6.25px;
-
   --font-mono: "Cascadia Code";
 
   /* Layout */
   --header-height: 3.5rem;
   --sidebar-width: 22rem;
   --scrollbar-size: 0.5rem;
+
+  /* Radius Scale */
+  --radius-1: 0.167rem;
+  --radius-3: 0.5rem;
+  --radius-4: 0.667rem;
+  --radius-10: 1.667rem;
 
   /* Text Scale */
   --text-xs: 0.875rem;
@@ -89,7 +93,7 @@ body {
   justify-content: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-5);
-  border-radius: var(--base-radius);
+  border-radius: var(--radius-3);
 }
 
 .app-btn:hover,
@@ -164,7 +168,7 @@ body {
   color: var(--text-secondary);
   outline: none;
   border: 1px solid var(--border);
-  border-radius: var(--base-radius);
+  border-radius: var(--radius-3);
   background: var(--surface-card);
   text-align: left;
   padding: var(--space-1-5) var(--space-3);
@@ -206,7 +210,7 @@ body {
 
 .scroll-container::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: var(--base-radius);
+  border-radius: var(--radius-3);
 }
 
 .scroll-container::-webkit-scrollbar-thumb:hover {

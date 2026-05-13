@@ -3,7 +3,6 @@
   font-weight: 400;
   background: var(--surface-card);
   justify-content: space-between;
-  padding: var(--space-3) var(--space-5);
 }
 
 .action-btn.theme-item:hover {

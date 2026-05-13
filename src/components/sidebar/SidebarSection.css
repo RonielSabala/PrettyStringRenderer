@@ -10,7 +10,6 @@
 
 .app-btn.section-header:hover {
   box-shadow: none;
-  border-radius: 0;
   background: var(--surface-card);
 }
 

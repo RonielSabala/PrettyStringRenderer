@@ -14,8 +14,8 @@
 }
 
 .export-format-btn .app-icon {
-  width: 25px;
-  height: 25px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
 }
 
 .export-btn-content {

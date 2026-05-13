@@ -12,7 +12,6 @@
 }
 
 #filename-input {
-  width: 100%;
   padding: var(--space-4) var(--space-6);
   border: 1px solid var(--border);
   border-radius: var(--radius-3);

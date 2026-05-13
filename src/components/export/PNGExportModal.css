@@ -19,7 +19,6 @@
 .png-export-scalar-input-group label {
   font-size: var(--text-md);
   color: var(--text-secondary);
-  min-width: 50px;
 }
 
 .number-input.png-export-scalar-input {
@@ -50,7 +49,6 @@
 }
 
 .static-action-btn.png-export-preview-btn {
-  min-width: 75px;
   font-weight: 400;
   background: var(--surface-card);
   flex-direction: column;

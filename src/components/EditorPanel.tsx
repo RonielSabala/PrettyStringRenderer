@@ -103,7 +103,7 @@ export default function EditorPanel() {
   const _getEditorHeight = () => panelRef.current?.offsetHeight;
 
   const _getEditorMinHeight = () => {
-    const element = document.getElementById("editor-tabs");
+    const element = document.getElementById("editor-header");
     return element?.offsetHeight ?? EDITOR_MIN_HEIGHT_PX;
   };
 
@@ -252,7 +252,7 @@ export default function EditorPanel() {
       />
 
       <div id="editor-panel" ref={panelRef} style={{ height: toPx(height) }}>
-        <div id="editor-tabs">
+        <div id="editor-header">
           <div className="editor-tab no-user-select">Editor</div>
           <div className="editor-font no-user-select">
             <span>Font size</span>

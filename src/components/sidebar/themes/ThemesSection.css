@@ -17,8 +17,8 @@
 }
 
 #theme-empty .app-icon {
-  width: 40px;
-  height: 40px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   opacity: 0.5;
   margin-bottom: var(--space-2);
 }

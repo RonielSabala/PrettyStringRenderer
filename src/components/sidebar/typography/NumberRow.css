@@ -9,7 +9,7 @@
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 3.75px;
+  height: var(--space-1-5);
   background: var(--border);
   border-radius: var(--radius-1);
   outline: none;
@@ -19,8 +19,8 @@
 .number-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 12.5px;
-  height: 12.5px;
+  width: var(--space-5);
+  height: var(--space-5);
   background: var(--text-secondary);
   border-radius: 50%;
   cursor: pointer;
@@ -35,8 +35,8 @@
 }
 
 .number-slider::-moz-range-thumb {
-  width: 12.5px;
-  height: 12.5px;
+  width: var(--space-5);
+  height: var(--space-5);
   background: var(--text-secondary);
   border: none;
   border-radius: 50%;

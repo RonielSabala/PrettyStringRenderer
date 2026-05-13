@@ -100,14 +100,14 @@ body {
 /* Icons */
 
 .app-icon {
-  width: 1.25em;
-  height: 1.25em;
+  width: var(--icon-xs);
+  height: var(--icon-xs);
 }
 
 /* Number input */
 
 .number-input {
-  width: 50px;
+  width: var(--number-input-width);
   font-size: var(--text-sm);
   color: var(--text-secondary);
   outline: none;

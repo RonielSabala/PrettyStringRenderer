@@ -27,8 +27,8 @@
 }
 
 .theme-swatch {
-  width: 20px;
-  height: 20px;
+  width: var(--space-8);
+  height: var(--space-8);
   border-radius: 25%;
   flex-shrink: 0;
   border: 1px solid var(--white-a20);

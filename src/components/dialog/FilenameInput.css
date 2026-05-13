@@ -27,7 +27,7 @@
 #filename-input:focus {
   outline: none;
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 2.5px var(--accent-subtle, rgba(0, 0, 0, 0.1));
+  box-shadow: 0 0 0 2.5px var(--black-a10);
 }
 
 #filename-input::placeholder {

@@ -11,9 +11,7 @@
 #canvas-inner {
   transform-origin: center center;
   display: inline-block;
-  box-shadow:
-    0 5px 40px rgba(0, 0, 0, 0.85),
-    0 0 0 1px rgba(255, 255, 255, 0.01);
+  box-shadow: 0 5px 40px var(--black-a70);
   background-image:
     linear-gradient(45deg, var(--checker-light) 25%, transparent 25%),
     linear-gradient(-45deg, var(--checker-light) 25%, transparent 25%),

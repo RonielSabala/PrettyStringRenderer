@@ -32,7 +32,14 @@
   --space-8: 1.333rem;
   --space-12: 2rem;
 
-  /* Colors */
+  /* White Alpha Scale */
+  --white-a20: rgba(255, 255, 255, 0.2);
+
+  /* Black Alpha Scale */
+  --black-a10: rgba(0, 0, 0, 0.1);
+  --black-a30: rgba(0, 0, 0, 0.3);
+  --black-a50: rgba(0, 0, 0, 0.5);
+  --black-a70: rgba(0, 0, 0, 0.7);
 
   /* Surfaces */
   --surface-base: #0d1117;

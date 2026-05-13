@@ -15,7 +15,7 @@
   border-color: var(--accent);
   background: var(--accent-dim);
   box-shadow:
-    0 0 0 2.5px rgba(0, 0, 0, 0.1),
+    0 0 0 2.5px var(--black-a10),
     inset 0 0 0 1px var(--accent);
 }
 
@@ -31,7 +31,7 @@
   height: 20px;
   border-radius: 25%;
   flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--white-a20);
   overflow: hidden;
   display: flex;
   align-items: center;

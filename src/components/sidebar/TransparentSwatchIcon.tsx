@@ -33,7 +33,7 @@ export function TransparentSwatchIcon() {
         y1="12"
         x2="12"
         y2="2"
-        stroke="rgb(220, 30, 30, 0.9)"
+        stroke="rgba(220, 30, 30, 0.9)"
         strokeWidth="1.3"
         strokeLinecap="square"
       />

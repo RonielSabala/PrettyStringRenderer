@@ -7,7 +7,6 @@
   padding: var(--space-6);
   font-size: var(--text-sm-tight);
   color: var(--text-primary);
-  line-height: 1.6;
   margin-bottom: var(--space-8);
   white-space: pre;
 }

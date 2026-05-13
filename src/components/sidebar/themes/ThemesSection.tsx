@@ -210,7 +210,7 @@ export default function ThemesSection() {
             <FolderX className="app-icon" />
             <p className="no-user-select">No themes loaded</p>
             <span className="no-user-select">
-              Import or create a theme to get started
+              Import or create a theme to get started.
             </span>
           </div>
         ) : (

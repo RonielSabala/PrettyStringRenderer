@@ -24,7 +24,7 @@
 @keyframes dialogIn {
   from {
     opacity: 0;
-    transform: translateY(var(--space-5));
+    transform: translateY(calc(var(--space-5) * -1));
   }
   to {
     opacity: 1;

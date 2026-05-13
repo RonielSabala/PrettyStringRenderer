@@ -48,7 +48,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 ### Installation
 
 ```bash
-npm install
+pnpm install
 ```
 
 ---
@@ -56,7 +56,7 @@ npm install
 ### Run Locally
 
 - **Via VS Code**: Click the **Vite** button in the status bar.
-- **Via Terminal**: Run `npm run dev` and access at `http://localhost:5173`.
+- **Via Terminal**: Run `pnpm run dev` and access at `http://localhost:5173`.
 
 ---
 

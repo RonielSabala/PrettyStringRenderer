@@ -38,6 +38,8 @@
   --surface-base: #0d1117;
   --surface-panel: #161b22;
   --surface-card: #21262d;
+  --checker-light: #c8c8c8;
+  --checker-dark: #969696;
 
   /* Borders */
   --border: #30363d;

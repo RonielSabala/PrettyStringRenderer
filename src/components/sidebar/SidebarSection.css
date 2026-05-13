@@ -1,5 +1,5 @@
 .sidebar-section {
-  border-bottom: 1px solid var(--border);
+  border-bottom: var(--border-standard);
 }
 
 .app-btn.section-header {

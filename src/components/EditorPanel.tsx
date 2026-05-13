@@ -5,7 +5,6 @@ import {
   EDITOR_LETTER_SPACING,
   EDITOR_LINE_HEIGHT,
   EDITOR_MAX_HEIGHT_PERCENTAGE,
-  EDITOR_MIN_HEIGHT_PX,
 } from "../common/config";
 import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
@@ -104,7 +103,7 @@ export default function EditorPanel() {
 
   const _getEditorMinHeight = () => {
     const element = document.getElementById("editor-header");
-    return element?.offsetHeight ?? EDITOR_MIN_HEIGHT_PX;
+    return element?.offsetHeight;
   };
 
   const _getNormalizedHeight = (y: number) =>
@@ -165,7 +164,9 @@ export default function EditorPanel() {
     const defaultHeight = EDITOR_DEFAULTS.height;
     const currentHeight = _getEditorHeight() ?? height;
     const newHeight =
-      currentHeight === defaultHeight ? _getEditorMinHeight() : defaultHeight;
+      currentHeight === defaultHeight
+        ? (_getEditorMinHeight() ?? height)
+        : defaultHeight;
 
     setHeight(newHeight);
     setEditorConfig({ height: newHeight });
@@ -183,7 +184,7 @@ export default function EditorPanel() {
         return;
       }
 
-      const minHeight = _getEditorMinHeight();
+      const minHeight = _getEditorMinHeight() ?? height;
       const maxHeight = startMaxHeight.current;
 
       const currentHeight = _getEditorHeight() ?? 0;

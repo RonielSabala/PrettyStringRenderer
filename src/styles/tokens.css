@@ -64,9 +64,12 @@
   --checker-light: #c8c8c8;
   --checker-dark: #969696;
 
-  /* Borders */
-  --border: #30363d;
-  --border-focus: #58a6ff;
+  /* Border */
+  --color-border: #30363d;
+  --color-border-focus: #58a6ff;
+
+  /* Compound Token */
+  --border-standard: 1px solid var(--color-border);
 
   /* Text */
   --text-accent: white;

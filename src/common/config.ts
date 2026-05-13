@@ -54,7 +54,6 @@ export const TYPOGRAPHY_DEFAULTS = {
 
 export const EDITOR_LINE_HEIGHT = "auto";
 export const EDITOR_LETTER_SPACING = "auto";
-export const EDITOR_MIN_HEIGHT_PX = 32;
 export const EDITOR_MAX_HEIGHT_PERCENTAGE = 0.8;
 
 const _editorDefaults = _userDefaults.editor ?? {};

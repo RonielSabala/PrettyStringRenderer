@@ -11,7 +11,7 @@
 
 .dialog-container {
   background: var(--surface-base);
-  border: 1px solid var(--border);
+  border: var(--border-standard);
   border-radius: var(--radius-4);
   padding: var(--space-12);
   max-width: var(--dialog-width);

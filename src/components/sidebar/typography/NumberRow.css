@@ -10,7 +10,7 @@
   appearance: none;
   width: 100%;
   height: var(--space-1-5);
-  background: var(--border);
+  background: var(--color-border);
   border-radius: var(--radius-1);
   outline: none;
   cursor: pointer;

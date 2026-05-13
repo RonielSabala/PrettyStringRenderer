@@ -74,13 +74,13 @@ body {
 
 .action-btn,
 .static-action-btn {
-  border: 1px solid var(--border);
+  border: var(--border-standard);
   flex: 1;
 }
 
 .action-btn:hover,
 .static-action-btn:hover {
-  border-color: var(--border-focus);
+  border-color: var(--color-border-focus);
 }
 
 /* Disable user select */
@@ -111,7 +111,7 @@ body {
   font-size: var(--text-sm);
   color: var(--text-secondary);
   outline: none;
-  border: 1px solid var(--border);
+  border: var(--border-standard);
   border-radius: var(--radius-3);
   background: var(--surface-card);
   text-align: left;
@@ -127,7 +127,7 @@ body {
 
 .number-input:focus {
   color: var(--text-primary);
-  border-color: var(--border-focus);
+  border-color: var(--color-border-focus);
 }
 
 .number-input::-webkit-outer-spin-button,
@@ -153,7 +153,7 @@ body {
 }
 
 .scroll-container::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: var(--color-border);
   border-radius: var(--radius-3);
 }
 

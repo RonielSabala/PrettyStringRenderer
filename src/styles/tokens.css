@@ -1,38 +1,42 @@
 :root {
+  /* --- CORE CONFIG --- */
   --base-unit: 15px;
   --font-mono: "Cascadia Code";
 
-  /* Layout */
+  /* --- SEMANTIC COLOR PALETTE --- */
+  /* Surfaces */
+  --surface-base: #0d0f14;
+  --surface-panel: #141922;
+  --surface-card: #1f2430;
 
-  --dialog-width: 35rem;
+  /* Content */
+  --text-primary: #e1e6f0;
+  --text-secondary: #a3acbf;
+  --text-muted: #565f73;
+  --text-accent: #ffffff;
+
+  /* Accents & UI States */
+  --accent: #388bfd;
+  --accent-dim: rgba(56, 139, 253, 0.2);
+  --danger: #e05555;
+  --danger-dim: color-mix(in srgb, var(--danger) 20%, transparent);
+
+  /* Borders */
+  --color-border: #2d3343;
+  --color-border-focus: #38bdf8;
+
+  /* --- GEOMETRIC SCALES --- */
+  /* Layout Dimensions */
   --sidebar-width: 22rem;
-  --scrollbar-size: 0.5rem;
-
+  --dialog-width: 35rem;
   --app-header-height: 3.5rem;
   --editor-header-height: 2.833rem;
   --dialog-header-height: 2.667rem;
+  --scrollbar-size: 0.5rem;
 
+  /* Input Sizing */
   --hex-input-width: 4.4rem;
   --number-input-width: 3.333rem;
-
-  /* Icon Scale */
-  --icon-xs: 1.25em;
-  --icon-sm: 1.667rem;
-  --icon-md: 2rem;
-  --icon-lg: 2.833rem;
-
-  /* Radius Scale */
-  --radius-1: 0.167rem;
-  --radius-3: 0.5rem;
-  --radius-4: 0.667rem;
-  --radius-10: 1.667rem;
-
-  /* Text Scale */
-  --text-xs: 0.875rem;
-  --text-sm: 0.916rem;
-  --text-sm-tight: 0.958rem;
-  --text-md: 1rem;
-  --text-lg: 1.167rem;
 
   /* Space Scale */
   --space-1: 0.167rem;
@@ -48,38 +52,35 @@
   --space-10: 1.667rem;
   --space-12: 2rem;
 
-  /* White Alpha Scale */
-  --white-a20: rgba(255, 255, 255, 0.2);
+  /* Radius Scale */
+  --radius-1: 0.167rem;
+  --radius-3: 0.5rem;
+  --radius-4: 0.667rem;
+  --radius-10: 1.667rem;
 
-  /* Black Alpha Scale */
+  /* Icon Scale */
+  --icon-xs: 1.25em;
+  --icon-sm: 1.667rem;
+  --icon-md: 2rem;
+  --icon-lg: 2.833rem;
+
+  /* --- TYPOGRAPHY --- */
+  --text-xs: 0.875rem;
+  --text-sm: 0.916rem;
+  --text-sm-tight: 0.958rem;
+  --text-md: 1rem;
+  --text-lg: 1.167rem;
+
+  /* --- MISC & UTILITIES --- */
+  --checker-light: #c8c8c8;
+  --checker-dark: #969696;
+
+  --white-a20: rgba(255, 255, 255, 0.2);
   --black-a10: rgba(0, 0, 0, 0.1);
   --black-a30: rgba(0, 0, 0, 0.3);
   --black-a50: rgba(0, 0, 0, 0.5);
   --black-a70: rgba(0, 0, 0, 0.7);
 
-  /* Surfaces */
-  --surface-base: #0d1117;
-  --surface-panel: #161b22;
-  --surface-card: #21262d;
-  --checker-light: #c8c8c8;
-  --checker-dark: #969696;
-
-  /* Border */
-  --color-border: #30363d;
-  --color-border-focus: #58a6ff;
-
-  /* Compound Token */
+  /* --- COMPOUND TOKENS --- */
   --border-standard: 1px solid var(--color-border);
-
-  /* Text */
-  --text-accent: white;
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --text-muted: #484f58;
-
-  /* Accent */
-  --accent: #388bfd;
-  --danger: #e05555;
-  --accent-dim: rgba(56, 139, 253, 0.2);
-  --danger-dim: color-mix(in srgb, var(--danger) 15%, transparent);
 }

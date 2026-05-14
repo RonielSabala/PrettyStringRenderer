@@ -2,9 +2,9 @@
   "bracket": ["#f47067", "#d29922", "#58a6ff"],
   "function": "#d2a8ff",
   "variable": "#ffa657",
+  "number": "#79c0ff",
   "operator": "#ff7b72",
   "semicolon": "#c9d1d9",
-  "number": "#79c0ff",
   "comment": "#8b949e",
   "unknown": "#7ee787",
   "background": "#0d1117"

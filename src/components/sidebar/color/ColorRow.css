@@ -13,7 +13,8 @@
   padding: var(--space-1);
 }
 
-.label-row:hover + .input-group:not(:focus-within) {
+.input-group:hover,
+.row-label:hover + .color-controls .input-group:not(:focus-within) {
   border-color: var(--text-muted);
 }
 

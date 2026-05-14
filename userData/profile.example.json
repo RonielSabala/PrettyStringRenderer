@@ -28,14 +28,14 @@
     "defaultImageFilename": "workspace-capture"
   },
   "theme": {
-    "bracket": ["#569cd6", "#ffd700", "#c586c0"],
-    "function": "#dcdcaa",
-    "variable": "#9cdcfe",
-    "operator": "#d4d4d4",
-    "semicolon": "#808080",
-    "number": "#b5cea8",
-    "comment": "#6a9955",
-    "unknown": "#ce9178",
-    "background": "#1e1e1e"
+    "bracket": ["#bb9af7", "#ff9e64", "#7dcfff"],
+    "function": "#7aa2f7",
+    "variable": "#e0af68",
+    "number": "#f7768e",
+    "operator": "#89ddff",
+    "semicolon": "#444b6a",
+    "comment": "#565f89",
+    "unknown": "#cfc9c2",
+    "background": "#1a1b26"
   }
 }

@@ -18,6 +18,8 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
   const [hexValue, setHexValue] = useState(color);
   const [previousColor, setPreviousColor] = useState<ThemeColor>(null);
 
+  const hexInputId = `hex-input-${id}`;
+
   // Sync external color changes
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -45,7 +47,9 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
 
   return (
     <div className="sidebar-row">
-      <label className="row-label">{label}</label>
+      <label htmlFor={hexInputId} className="row-label">
+        {label}
+      </label>
       <div className="color-controls">
         <div className="input-group">
           <div className="swatch-container">
@@ -63,7 +67,7 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
             />
           </div>
           <input
-            id={`hex-input-${id}`}
+            id={hexInputId}
             className="hex-input"
             value={hexValue || ""}
             placeholder="None"

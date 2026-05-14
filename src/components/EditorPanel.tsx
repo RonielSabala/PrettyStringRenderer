@@ -267,7 +267,10 @@ export default function EditorPanel() {
               onChange={handleFontSize}
             />
           </div>
-          <label className="editor-fit-label no-user-select">
+          <label
+            htmlFor="editor-fit-to-content"
+            className="editor-fit-label no-user-select"
+          >
             <FitToContentCheckbox />
             Fit to content
           </label>

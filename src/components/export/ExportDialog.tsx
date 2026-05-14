@@ -219,7 +219,7 @@ function ExportFormatButton({
   return (
     <button className="action-btn export-format-btn" onClick={onClick}>
       {icon}
-      <div className="export-btn-content no-user-select">
+      <div className="export-btn-container no-user-select">
         <p className="export-btn-label">{label}</p>
         <p className="export-btn-description">{description}</p>
       </div>

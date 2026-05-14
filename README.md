@@ -31,6 +31,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - **Structural Bracket Support**: Inline and multiline bracket families with automatic nesting color cycles.
 - **High-Resolution Export**: Export **PNG** at custom scale multipliers or editable **SVG** files.
 - **Persistent State**: Your progress and workspace settings are automatically cached to `localStorage`.
+- **Light & Dark App Themes**: Native light and dark modes for the application UI.
 - **Configurable Workflow**: Comprehensive theme system and gitignored `userData/profile.json` for deep personalization.
 - **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `userData/keybindings.json`.
 

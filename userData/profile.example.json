@@ -1,5 +1,6 @@
 {
   "app": {
+    "defaultTheme": "dark",
     "fontVariantLigatures": "normal"
   },
   "typography": {

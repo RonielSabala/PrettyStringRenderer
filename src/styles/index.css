@@ -158,6 +158,6 @@ body {
 }
 
 .scroll-container::-webkit-scrollbar-thumb:hover {
+  cursor: all-scroll;
   background: var(--text-muted);
-  cursor: default;
 }

@@ -8,6 +8,10 @@
   justify-content: center;
 }
 
+#canvas-wrap:focus {
+  outline: none;
+}
+
 #canvas-inner {
   transform-origin: center center;
   display: inline-block;

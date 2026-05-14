@@ -3,27 +3,11 @@
   --base-unit: 15px;
   --font-mono: "Cascadia Code";
 
-  /* --- SEMANTIC COLOR PALETTE --- */
-  /* Surfaces */
-  --surface-base: #0d0f14;
-  --surface-panel: #141922;
-  --surface-card: #1f2430;
-
-  /* Content */
-  --text-primary: #e1e6f0;
-  --text-secondary: #a3acbf;
-  --text-muted: #565f73;
-  --text-accent: #ffffff;
-
-  /* Accents & UI States */
+  /* --- ACCENTS & UI STATES --- */
   --accent: #388bfd;
   --accent-dim: rgba(56, 139, 253, 0.2);
   --danger: #e05555;
   --danger-dim: color-mix(in srgb, var(--danger) 20%, transparent);
-
-  /* Borders */
-  --color-border: #2d3343;
-  --color-border-focus: #38bdf8;
 
   /* --- GEOMETRIC SCALES --- */
   /* Layout Dimensions */
@@ -72,9 +56,6 @@
   --text-lg: 1.167rem;
 
   /* --- MISC & UTILITIES --- */
-  --checker-light: #c8c8c8;
-  --checker-dark: #969696;
-
   --white-a20: rgba(255, 255, 255, 0.2);
   --black-a10: rgba(0, 0, 0, 0.1);
   --black-a30: rgba(0, 0, 0, 0.3);
@@ -83,4 +64,46 @@
 
   /* --- COMPOUND TOKENS --- */
   --border-standard: 1px solid var(--color-border);
+}
+
+[data-theme="dark"] {
+  /* Surfaces */
+  --surface-base: #0d0f14;
+  --surface-panel: #141922;
+  --surface-card: #1f2430;
+
+  /* Content */
+  --text-primary: #e1e6f0;
+  --text-secondary: #a3acbf;
+  --text-muted: #565f73;
+  --text-accent: #ffffff;
+
+  /* Borders */
+  --color-border: #2d3343;
+  --color-border-focus: #38bdf8;
+
+  /* Misc & Utilities */
+  --checker-light: #c8c8c8;
+  --checker-dark: #969696;
+}
+
+[data-theme="light"] {
+  /* Surfaces */
+  --surface-base: #f6f8fa;
+  --surface-panel: #ffffff;
+  --surface-card: #eaeef2;
+
+  /* Content */
+  --text-primary: #1a1d23;
+  --text-secondary: #4b5563;
+  --text-muted: #838da1;
+  --text-accent: #000000;
+
+  /* Borders */
+  --color-border: #d0d7de;
+  --color-border-focus: #0969da;
+
+  /* Misc & Utilities */
+  --checker-light: #e0e0e0;
+  --checker-dark: #b8b8b8;
 }

@@ -45,3 +45,17 @@
   border-color: var(--accent);
   background: var(--accent);
 }
+
+/* App theme button */
+
+#app-theme-btn {
+  flex: 0;
+  padding: var(--space-3);
+  color: var(--text-muted);
+  border: none;
+}
+
+#app-theme-btn:hover {
+  color: var(--text-accent);
+  box-shadow: none;
+}

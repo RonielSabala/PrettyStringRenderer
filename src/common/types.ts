@@ -65,3 +65,12 @@ export type ThemeColors = {
 };
 
 export type Theme = ThemeColors & { _name: string };
+
+// App themes
+
+export const APP_THEMES = Object.freeze({
+  LIGHT: "light",
+  DARK: "dark",
+} as const);
+
+export type AppThemeType = (typeof APP_THEMES)[keyof typeof APP_THEMES];

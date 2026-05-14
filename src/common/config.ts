@@ -1,5 +1,5 @@
 import _defaults from "../../userData/profile.example.json";
-import type { ThemeColors } from "./types";
+import type { AppThemeType, ThemeColors } from "./types";
 
 const _userFile = import.meta.glob("../../userData/profile.json", {
   eager: true,
@@ -13,6 +13,10 @@ const _userDefaults =
 export const LINE_BREAK = "\n";
 export const SAVE_TIMEOUT_MS = 200;
 export const MAX_HEX_INPUT_LENGTH = 7;
+
+export const APP_DEFAULT_THEME = (_userDefaults.app?.defaultTheme ??
+  _defaults.app.defaultTheme) as AppThemeType;
+
 export const APP_FONT_VARIANT_LIGATURES =
   _userDefaults.app?.fontVariantLigatures ?? _defaults.app.fontVariantLigatures;
 

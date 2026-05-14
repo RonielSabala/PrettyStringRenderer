@@ -1,6 +1,7 @@
 import { SAVE_TIMEOUT_MS } from "../common/config";
 import { getStore } from "../common/store";
 import type {
+  AppThemeType,
   CanvasConfig,
   CollapsedSections,
   EditorConfig,
@@ -11,6 +12,7 @@ import type {
 const STORAGE_KEYS = Object.freeze({
   COLORS: "psr:colors",
   THEMES: "psr:themes",
+  APP_THEME: "psr:appTheme",
   ACTIVE_THEME_NAME: "psr:activeThemeName",
   ACTIVE_ELEMENT_ID: "psr:activeElementID",
   COLLAPSED_SECTIONS: "psr:collapsedSections",
@@ -70,6 +72,9 @@ export const saveColorsState = () =>
 export const saveThemesState = () =>
   _saveObjectAsync(STORAGE_KEYS.THEMES, getStore().themes);
 
+export const saveAppThemeState = () =>
+  _saveAsync(STORAGE_KEYS.APP_THEME, getStore().appTheme);
+
 export const saveActiveThemeNameState = () =>
   _saveAsync(STORAGE_KEYS.ACTIVE_THEME_NAME, getStore().activeThemeName);
 
@@ -98,6 +103,7 @@ export function restoreState(): void {
   try {
     const colors = _getObject<ThemeColors>(STORAGE_KEYS.COLORS);
     const themes = _getObject<ThemeColors[]>(STORAGE_KEYS.THEMES);
+    const appTheme = _get(STORAGE_KEYS.APP_THEME) as AppThemeType | null;
     const activeThemeName = _get(STORAGE_KEYS.ACTIVE_THEME_NAME);
     const activeElementId = _get(STORAGE_KEYS.ACTIVE_ELEMENT_ID);
     const collapsedSections = _getObject<CollapsedSections>(
@@ -111,6 +117,7 @@ export function restoreState(): void {
 
     if (colors) set.setColors(colors);
     if (themes) set.setThemes(themes);
+    if (appTheme) set.setAppTheme(appTheme);
     if (activeThemeName) set.setActiveThemeName(activeThemeName);
     if (activeElementId) set.setActiveElementId(activeElementId);
     if (collapsedSections) set.setCollapsedSections(collapsedSections);

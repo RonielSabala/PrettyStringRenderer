@@ -37,7 +37,7 @@
   height: var(--space-8);
   border-radius: 25%;
   flex-shrink: 0;
-  border: 1px solid var(--white-a20);
+  border: var(--space-1) solid var(--white-a20);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -55,6 +55,7 @@
 
 .app-btn.theme-delete-btn:hover {
   color: var(--danger);
+  box-shadow: none;
   opacity: 1;
 }
 

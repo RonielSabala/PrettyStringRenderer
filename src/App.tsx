@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import "./App.css";
+import { APP_DEFAULT_THEME } from "./common/config";
 import { EVENTS } from "./common/constants/events";
 import { useStore } from "./common/store";
 import CanvasView from "./components/CanvasView";
@@ -14,9 +15,12 @@ import { restoreState, saveActiveElementIdState } from "./utils/persistence";
 
 // Element IDs that should NOT restore focus after reload
 const FOCUS_EXCLUSIONS = new Set([
+  "app-theme-btn",
   "workspace-reset-btn",
   "workspace-export-btn",
 ]);
+
+document.documentElement.dataset.theme = APP_DEFAULT_THEME;
 
 // Restore persisted state before any child component reads it
 restoreState();

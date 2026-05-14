@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { Tokenizer } from "../core/tokenizer";
 import {
+  APP_DEFAULT_THEME,
   APP_FONT_VARIANT_LIGATURES,
   CANVAS_DEFAULTS,
   EDITOR_DEFAULTS,
@@ -10,18 +11,20 @@ import {
   CSS_FONT_VARIANT_LIGATURES,
   CSS_TEXT_RENDERING,
 } from "./constants/css";
-import type {
-  CanvasConfig,
-  CollapsedSections,
-  EditorConfig,
-  ThemeColors,
-  TypographyConfig,
+import {
+  type AppThemeType,
+  type CanvasConfig,
+  type CollapsedSections,
+  type EditorConfig,
+  type ThemeColors,
+  type TypographyConfig,
 } from "./types";
 
 interface AppState {
   // Data
   colors: ThemeColors;
   themes: ThemeColors[];
+  appTheme: AppThemeType;
   activeThemeName: string;
   activeElementId: string;
   collapsedSections: CollapsedSections;
@@ -34,6 +37,7 @@ interface AppState {
   // Actions
   setColors: (colors: Partial<ThemeColors>) => void;
   setThemes: (themes: ThemeColors[]) => void;
+  setAppTheme: (appTheme: AppThemeType) => void;
   setActiveThemeName: (name: string) => void;
   setActiveElementId: (id: string) => void;
   setCollapsedSections: (sections: CollapsedSections) => void;
@@ -55,6 +59,7 @@ interface AppState {
 export const useStore = create<AppState>((set, get) => ({
   colors: {},
   themes: [],
+  appTheme: APP_DEFAULT_THEME,
   activeThemeName: "",
   activeElementId: "",
   collapsedSections: {},
@@ -100,6 +105,10 @@ export const useStore = create<AppState>((set, get) => ({
     }));
   },
   setThemes: (themes) => set({ themes }),
+  setAppTheme: (appTheme) => {
+    document.documentElement.dataset.theme = appTheme;
+    set({ appTheme });
+  },
   setActiveThemeName: (name) => set({ activeThemeName: name }),
   setActiveElementId: (id) => set({ activeElementId: id }),
   setCollapsedSections: (sections) => set({ collapsedSections: sections }),

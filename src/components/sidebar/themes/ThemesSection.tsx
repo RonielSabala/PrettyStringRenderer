@@ -93,12 +93,10 @@ function useThemes() {
       if (next.length > 0) {
         applyTheme(next[0]);
       } else {
-        applyThemeColors(DEFAULT_THEME);
-        _scheduleSave();
-        redraw();
+        applyTheme({ ...DEFAULT_THEME, _name: "" });
       }
     },
-    [themes, setThemes, activeThemeName, applyTheme, redraw],
+    [themes, setThemes, activeThemeName, applyTheme],
   );
 
   const importThemes = useCallback(() => {

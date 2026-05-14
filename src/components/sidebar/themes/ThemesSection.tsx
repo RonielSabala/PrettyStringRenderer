@@ -53,6 +53,7 @@ function useThemes() {
   }, []);
 
   // Theme functions
+
   const applyTheme = useCallback(
     (theme: Theme) => {
       const patch: Partial<ThemeColors> = {};
@@ -75,6 +76,21 @@ function useThemes() {
       requestAnimationFrame(() => activeItem.current?.focus());
     },
     [setActiveName, redraw],
+  );
+
+  const deleteTheme = useCallback(
+    (themeToDelete: Theme) => {
+      const themeToDeleteName = themeToDelete._name;
+      const next = themes.filter((t) => t._name !== themeToDeleteName);
+      setThemes(next);
+      saveThemesState();
+
+      // If the active theme is deleted, apply the first available one
+      if (activeThemeName === themeToDeleteName && next.length > 0) {
+        applyTheme(next[0]);
+      }
+    },
+    [themes, setThemes, activeThemeName, applyTheme],
   );
 
   const importThemes = useCallback(() => {
@@ -138,7 +154,7 @@ function useThemes() {
     [colors],
   );
 
-  const showInNewWindow = useCallback((theme: Theme) => {
+  const showInModal = useCallback((theme: Theme) => {
     setViewingTheme(theme);
   }, []);
 
@@ -170,7 +186,8 @@ function useThemes() {
     activeThemeName,
     activeItem,
     applyTheme,
-    showInNewWindow,
+    deleteTheme,
+    showInModal,
     importThemes,
     exportTheme,
     isExporting,
@@ -188,7 +205,8 @@ export default function ThemesSection() {
     activeThemeName,
     activeItem,
     applyTheme,
-    showInNewWindow,
+    deleteTheme,
+    showInModal,
     importThemes,
     exportTheme,
     isExporting,
@@ -219,7 +237,8 @@ export default function ThemesSection() {
               theme={theme}
               isActive={theme._name === activeThemeName}
               onApply={applyTheme}
-              onShow={showInNewWindow}
+              onDelete={deleteTheme}
+              onShow={showInModal}
               onNavigate={(upDirection) => {
                 const nextIdx = upDirection
                   ? index - 1

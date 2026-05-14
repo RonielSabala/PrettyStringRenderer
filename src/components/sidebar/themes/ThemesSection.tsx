@@ -10,8 +10,8 @@ import {
 import { EVENTS } from "../../../common/constants/events";
 import { matchesKeybinding } from "../../../common/keybindings";
 import { useStore } from "../../../common/store";
-import type { Theme, ThemeColors } from "../../../common/types";
-import { THEME_KEYS, TOKENS } from "../../../common/types";
+import type { Theme } from "../../../common/types";
+import { THEME_KEYS } from "../../../common/types";
 import { applyThemeColors } from "../../../utils/color_sync";
 import { isObjectEmpty } from "../../../utils/parse";
 import {
@@ -56,17 +56,10 @@ function useThemes() {
 
   const applyTheme = useCallback(
     (theme: Theme) => {
-      const patch: Partial<ThemeColors> = {};
+      applyThemeColors(
+        Object.fromEntries(THEME_KEYS.map((key) => [key, theme[key]])),
+      );
 
-      for (const key of THEME_KEYS) {
-        if (key === TOKENS.BRACKET) {
-          patch[key] = theme[key];
-        } else {
-          patch[key] = theme[key];
-        }
-      }
-
-      applyThemeColors(patch);
       setActiveName(theme._name);
       _scheduleThemeNameSave();
       _scheduleSave();
@@ -85,15 +78,9 @@ function useThemes() {
       setThemes(next);
       saveThemesState();
 
-      if (activeThemeName !== themeToDeleteName) {
-        return;
-      }
-
       // If the active theme is deleted, apply the first available one
-      if (next.length > 0) {
-        applyTheme(next[0]);
-      } else {
-        applyTheme({ ...DEFAULT_THEME, _name: "" });
+      if (activeThemeName === themeToDeleteName) {
+        applyTheme(next.length > 0 ? next[0] : { ...DEFAULT_THEME, _name: "" });
       }
     },
     [themes, setThemes, activeThemeName, applyTheme],

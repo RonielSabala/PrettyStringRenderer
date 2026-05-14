@@ -22,7 +22,11 @@ const _scheduleSave = createSaveScheduler(saveEditorConfigState);
 
 // Sub-components
 
-function FitToContentCheckbox() {
+interface FitToContentProps {
+  id: string;
+}
+
+function FitToContentCheckbox({ id }: FitToContentProps) {
   const isChecked = useStore((state) => state.canvasConfig.fitToContent);
   const setCanvasConfig = useStore((state) => state.setCanvasConfig);
   const redraw = useStore((state) => state.redraw);
@@ -30,7 +34,7 @@ function FitToContentCheckbox() {
   return (
     <input
       type="checkbox"
-      id="editor-fit-to-content"
+      id={id}
       checked={isChecked}
       onChange={(event) => {
         setCanvasConfig({ fitToContent: event.target.checked });
@@ -253,28 +257,32 @@ export default function EditorPanel() {
       />
 
       <div id="editor-panel" ref={panelRef} style={{ height: toPx(height) }}>
-        <div id="editor-header">
-          <div className="editor-tab no-user-select">Editor</div>
-          <div className="editor-font no-user-select">
-            <span>Font size</span>
+        <div id="editor-header" className="no-user-select">
+          <span id="editor-tab">Editor</span>
+
+          <div className="editor-tab-container">
+            <label id="editor-font-label" htmlFor="editor-font-size">
+              Font size
+            </label>
             <input
+              id="editor-font-size"
               className="number-input"
               type="number"
-              id="editor-font-size"
               value={fontSize}
               min={EDITOR_DEFAULTS.fontSize.min}
               max={EDITOR_DEFAULTS.fontSize.max}
               onChange={handleFontSize}
             />
           </div>
-          <label
-            htmlFor="editor-fit-to-content"
-            className="editor-fit-label no-user-select"
-          >
-            <FitToContentCheckbox />
-            Fit to content
-          </label>
-          <span id="editor-status" className="no-user-select">
+
+          <div className="editor-tab-container">
+            <FitToContentCheckbox id={"editor-fit-to-content"} />
+            <label id="editor-fit-label" htmlFor="editor-fit-to-content">
+              Fit to content
+            </label>
+          </div>
+
+          <span id="editor-status">
             <EditorStatus />
           </span>
         </div>

@@ -11,7 +11,10 @@
   border: var(--border-standard);
   border-radius: var(--radius-3);
   padding: var(--space-1);
-  transition: border-color 0.2s;
+}
+
+.label-row:hover + .input-group:not(:focus-within) {
+  border-color: var(--text-muted);
 }
 
 .input-group:focus-within {
@@ -46,10 +49,15 @@
   width: var(--hex-input-width);
   background: transparent;
   border: none;
-  color: var(--text-primary);
+  color: var(--text-secondary);
   font-size: var(--text-sm);
   padding: 0 var(--space-2);
   outline: none;
+}
+
+.hex-input:hover,
+.hex-input:focus {
+  color: var(--text-primary);
 }
 
 .action-container {

@@ -59,6 +59,7 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
             >
               {!color && <TransparentSwatchIcon />}
             </div>
+
             <input
               type="color"
               className="hidden-color-picker"
@@ -66,11 +67,13 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
               onChange={(event) => onChange(event.target.value)}
             />
           </div>
+
           <input
             id={hexInputId}
             className="hex-input"
             value={hexValue || ""}
             placeholder="None"
+            autoComplete="off"
             maxLength={MAX_HEX_INPUT_LENGTH}
             onChange={handleHexChange}
           />

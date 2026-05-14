@@ -27,11 +27,8 @@ export default function FilenameInput({
   };
 
   return (
-    <div className="filename-input-container">
-      <label
-        htmlFor="filename-input"
-        className="filename-input-label no-user-select"
-      >
+    <div className="filename-input-container no-user-select">
+      <label htmlFor="filename-input" className="filename-input-label">
         Filename:
       </label>
       <input

@@ -83,11 +83,9 @@ export default function PNGExportModal({
       <p className="png-export-modal-description no-user-select">
         Choose a scale factor for the export:
       </p>
-      <div className="png-export-scalar-section">
+      <div className="png-export-scalar-section no-user-select">
         <div className="png-export-scalar-input-group">
-          <label htmlFor="png-scalar" className="no-user-select">
-            Scale:
-          </label>
+          <label htmlFor="png-scalar">Scale:</label>
           <input
             id="png-scalar"
             className="number-input png-export-scalar-input"
@@ -112,7 +110,7 @@ export default function PNGExportModal({
         </div>
 
         <div className="png-export-scalar-preview">
-          <p className="png-export-preview-label no-user-select">Preview:</p>
+          <p className="png-export-preview-label">Preview:</p>
           <div className="png-export-preview-items">
             {EXPORT_PNG_PROMPT_SCALAR_EXAMPLES.map((scalarExample) => {
               const [width, height] = getScaledDimensions(
@@ -127,11 +125,11 @@ export default function PNGExportModal({
                   className={`static-action-btn png-export-preview-btn ${scalar === scalarExample ? "active" : ""}`}
                   onClick={() => setScalar(scalarExample)}
                 >
-                  <span className="png-export-preview-label no-user-select">
+                  <span className="png-export-preview-label">
                     {scalarExample}
                     <X />
                   </span>
-                  <span className="png-export-preview-resolution no-user-select">
+                  <span className="png-export-preview-resolution">
                     {resolution}
                   </span>
                 </button>

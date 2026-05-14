@@ -7,8 +7,6 @@ interface Props {
   onClose: () => void;
   children: React.ReactNode;
   actions?: React.ReactNode;
-  overlayClassName?: string;
-  dialogClassName?: string;
 }
 
 export default function Dialog({
@@ -17,22 +15,20 @@ export default function Dialog({
   onClose,
   children,
   actions,
-  overlayClassName = "",
-  dialogClassName = "",
 }: Props) {
   if (!isOpen) {
     return null;
   }
 
   return (
-    <div className={`dialog-overlay ${overlayClassName}`} onClick={onClose}>
+    <div className="dialog-overlay" onClick={onClose}>
       <div
-        className={`dialog-container ${dialogClassName}`}
+        className="dialog-container"
         onClick={(event) => event.stopPropagation()}
       >
         {title && (
-          <div className="dialog-header">
-            <p className="dialog-title no-user-select">{title}</p>
+          <div className="dialog-header no-user-select">
+            <p className="dialog-title">{title}</p>
             <button className="app-btn dialog-close-btn" onClick={onClose}>
               <X className="app-icon" />
             </button>

@@ -204,14 +204,12 @@ export default function ThemesSection() {
 
   return (
     <SidebarSection title="Themes">
-      <div className="theme-list">
+      <div className="theme-list no-user-select">
         {noThemes ? (
           <div id="theme-empty">
             <FolderX className="app-icon" />
-            <p className="no-user-select">No themes loaded</p>
-            <span className="no-user-select">
-              Import or create a theme to get started.
-            </span>
+            <p>No themes loaded</p>
+            <span>Import or create a theme to get started.</span>
           </div>
         ) : (
           themes.map((theme, index) => (

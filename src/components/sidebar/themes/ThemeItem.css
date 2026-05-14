@@ -47,6 +47,7 @@
 .app-btn.theme-delete-btn {
   color: var(--text-muted);
   padding: 0;
+  opacity: 0;
   transition:
     opacity 0.1s,
     color 0.1s;
@@ -54,5 +55,9 @@
 
 .app-btn.theme-delete-btn:hover {
   color: var(--danger);
+  opacity: 1;
+}
+
+.theme-item:hover .theme-delete-btn:not(:hover) {
   opacity: 1;
 }

@@ -85,12 +85,20 @@ function useThemes() {
       setThemes(next);
       saveThemesState();
 
+      if (activeThemeName !== themeToDeleteName) {
+        return;
+      }
+
       // If the active theme is deleted, apply the first available one
-      if (activeThemeName === themeToDeleteName && next.length > 0) {
+      if (next.length > 0) {
         applyTheme(next[0]);
+      } else {
+        applyThemeColors(DEFAULT_THEME);
+        _scheduleSave();
+        redraw();
       }
     },
-    [themes, setThemes, activeThemeName, applyTheme],
+    [themes, setThemes, activeThemeName, applyTheme, redraw],
   );
 
   const importThemes = useCallback(() => {

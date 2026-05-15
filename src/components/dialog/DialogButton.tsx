@@ -9,7 +9,7 @@ interface Props {
 export function PrimaryButton({ onClick, children, disabled = false }: Props) {
   return (
     <button
-      id="dialog-btn-primary"
+      id="dialog-primary-btn"
       className="action-btn"
       onClick={onClick}
       disabled={disabled}

@@ -38,6 +38,7 @@ export default function FilenameInput({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         autoFocus={autoFocus}
+        autoComplete="off"
       />
     </div>
   );

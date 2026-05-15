@@ -26,7 +26,6 @@
 #filename-input:focus {
   outline: none;
   border-color: var(--color-border-focus);
-  box-shadow: 0 0 0 var(--space-1) var(--black-a10);
 }
 
 #filename-input::placeholder {

@@ -44,7 +44,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 ### Requirements
 
 - [Node.js](https://nodejs.org/)
-- **Recommended**: [Visual Studio Code](https://code.visualstudio.com/) with the [Vite extension](https://marketplace.visualstudio.com/items?itemName=antfu.vite).
+- [Visual Studio Code](https://code.visualstudio.com/) (Recommended)
 
 ---
 
@@ -58,8 +58,11 @@ pnpm install
 
 ### Run Locally
 
-- **Via VS Code**: Click the **Vite** button in the status bar.
-- **Via Terminal**: Run `pnpm run dev` and access at `http://localhost:5173`.
+```bash
+pnpm run dev
+```
+
+Access at `http://localhost:5173`.
 
 ---
 

@@ -6,6 +6,7 @@
   "themes.focus": "tab",
   "themes.import": "ctrl+i",
   "themes.export": "ctrl+shift+e",
+  "themes.delete": "ctrl+shift+backspace",
   "themes.navigateUp": "arrowup",
   "themes.navigateDown": "arrowdown"
 }

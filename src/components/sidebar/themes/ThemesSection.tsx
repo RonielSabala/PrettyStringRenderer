@@ -167,12 +167,25 @@ function useThemes() {
       } else if (matchesKeybinding(event, "themes.export")) {
         event.preventDefault();
         exportTheme();
+      } else if (matchesKeybinding(event, "themes.delete")) {
+        event.preventDefault();
+        const active = themes.find((t) => t._name === activeThemeName);
+        if (active) {
+          deleteTheme(active);
+        }
       }
     };
 
     document.addEventListener(EVENTS.KEY_DOWN, handler);
     return () => document.removeEventListener(EVENTS.KEY_DOWN, handler);
-  }, [activeItem, importThemes, exportTheme]);
+  }, [
+    activeItem,
+    importThemes,
+    exportTheme,
+    themes,
+    activeThemeName,
+    deleteTheme,
+  ]);
 
   return {
     themes,

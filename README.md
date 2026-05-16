@@ -2,7 +2,7 @@
 
 A high-fidelity monospace canvas engine for symbolic math art and code visualization. Transforms ASCII / Unicode text into colorized, high-resolution string-art suitable for screenshots, illustrations, or vector export.
 
-![App screenshot - light mode](docs/screenshots/hero-light-mode.png)
+![App screenshot - light mode](docs/screenshots/hero_light_mode.png)
 
 ---
 
@@ -35,7 +35,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - **Persistent State**: Workspace settings are automatically cached to `localStorage`.
 - **Light & Dark Modes**: Native light and dark modes for the application UI.
 
-![App screenshot - dark mode](docs/screenshots/hero-dark-mode.png)
+![App screenshot - dark mode](docs/screenshots/hero_dark_mode.png)
 
 - **Deep Personalization**: Comprehensive theme system and a gitignored `userData/profile.json` for local overrides.
 - **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `userData/keybindings.json`.
@@ -167,7 +167,7 @@ The tokenizer highlights the following token categories:
 | Info                                                                                                     | Image                                                                                        |
 | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | Brackets scale dynamically; top and bottom rows are fixed, while middle arms repeat to form tall shapes. | ![Bracket families: round vs square](examples/02_bracket_families/round_vs_square_1080p.png) |
-| Nesting depth cycles through the colors defined in your theme's `bracket` array.                         | ![Nesting depth color cycle](examples/03_nesting_depth/color_cycle_demo_1080p.png)           |
+| Nesting depth cycles through the colors defined in your theme's `bracket` array.                         | ![Nesting depth color cycle](examples/03_nesting_depth/color_cycle_1080p.png)                |
 
 ### Limitations
 

@@ -162,12 +162,16 @@ The tokenizer highlights the following token categories:
 | **Literals**    | Numbers (`0`, `3.14`, `.5`) and inline comments (`# comment`) |
 | **Operators**   | `+`, `-`, `*`, `>`, and semicolons `;`                        |
 
+---
+
 ### Bracket Logic
 
 | Feature                                                                                                  | Examples                                                                                     |
 | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | Brackets scale dynamically; top and bottom rows are fixed, while middle arms repeat to form tall shapes. | ![Bracket families: round vs square](examples/02_bracket_families/round_vs_square_1080p.png) |
 | Nesting depth cycles through the colors defined in your theme's `bracket` array.                         | ![Nesting depth color cycle](examples/03_nesting_depth/color_cycle_1080p.png)                |
+
+---
 
 ### Limitations
 

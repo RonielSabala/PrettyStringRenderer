@@ -33,7 +33,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - **Structural Bracket Support**: Inline and multiline bracket families with automatic nesting color cycles.
 - **High-Resolution Export**: Export **PNG** at custom scale multipliers or editable **SVG** files.
 - **Persistent State**: Workspace settings are automatically cached to `localStorage`.
-- **Light & Dark Themes**: Native light and dark modes for the application UI.
+- **Light & Dark Modes**: Native light and dark modes for the application UI.
 - **Deep Personalization**: Comprehensive theme system and a gitignored `userData/profile.json` for local overrides.
 - **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `userData/keybindings.json`.
 
@@ -123,7 +123,7 @@ The `bracket` array accepts any number of colors; nesting depth cycles through t
 
 ### Keybindings
 
-Create a local keybindings file to override the default shortcuts:
+Create a local keybindings file to override default shortcuts:
 
 ```bash
 cp userData/keybindings.example.json userData/keybindings.json

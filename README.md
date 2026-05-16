@@ -17,7 +17,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - [Export Options](#export-options)
 - [Personalization](#personalization)
   - [Overridable Keys](#overridable-keys)
-  - [Theme format](#theme-format)
+  - [Theme Format](#theme-format)
   - [Keybindings](#keybindings)
 - [String-Art Syntax](#string-art-syntax)
   - [Bracket Logic](#bracket-logic)
@@ -32,9 +32,9 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - **Incremental Tokenizer**: High-performance engine that only re-tokenizes changed lines.
 - **Structural Bracket Support**: Inline and multiline bracket families with automatic nesting color cycles.
 - **High-Resolution Export**: Export **PNG** at custom scale multipliers or editable **SVG** files.
-- **Persistent State**: Your progress and workspace settings are automatically cached to `localStorage`.
-- **Light & Dark App Themes**: Native light and dark modes for the application UI.
-- **Configurable Workflow**: Comprehensive theme system and gitignored `userData/profile.json` for deep personalization.
+- **Persistent State**: Workspace settings are automatically cached to `localStorage`.
+- **Light & Dark Themes**: Native light and dark modes for the application UI.
+- **Deep Personalization**: Comprehensive theme system and a gitignored `userData/profile.json` for local overrides.
 - **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `userData/keybindings.json`.
 
 ---
@@ -74,8 +74,10 @@ Start typing in the canvas editor to begin. See [SHORTCUTS.md](SHORTCUTS.md) for
 
 ## Export Options
 
-- **PNG**: Raster export with custom scale multipliers (e.g., `0.5`, `1`, `2`)
-- **SVG**: Vector export where tokens are grouped by color. Fonts are embedded as attributes, making files fully editable in Figma, Illustrator, or Inkscape.
+| format  | details                                                                                                                                            |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **PNG** | Raster export with custom scale multipliers (e.g., `0.5`, `1`, `2`)                                                                                |
+| **SGV** | Vector export where tokens are grouped by color. Fonts are embedded as attributes, making files fully editable in Figma, Illustrator, or Inkscape. |
 
 ---
 
@@ -91,21 +93,19 @@ cp userData/profile.example.json userData/profile.json
 
 ### Overridable Keys
 
-| Key                        | Description                                                                                                                                                                                                        |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `app.fontVariantLigatures` | **"normal"** (enable) or **"none"** (disable). See [MDN: font-variant-ligatures](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-variant-ligatures) for a full list of accepted values. |
-| `typography.fontSize`      | Base font size for the renderer.                                                                                                                                                                                   |
-| `canvas.width` / `height`  | Default dimensions for the drawing area.                                                                                                                                                                           |
+| Key                        | Description                                                                                                                                                                                                    |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app.fontVariantLigatures` | `"normal"` (enable) or `"none"` (disable). See [MDN: font-variant-ligatures](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-variant-ligatures) for a full list of accepted values. |
+| `typography.fontSize`      | Base font size for the renderer.                                                                                                                                                                               |
+| `canvas.width` / `height`  | Default dimensions for the drawing area.                                                                                                                                                                       |
 
 > See [userData/profile.example.json](userData/profile.example.json) for the full list of overridable keys.
 
 ---
 
-### Theme format
+### Theme Format
 
-Themes are just simple JSON objects. Every theme key is **Nullable** and **can be omitted**; meaning that the color will be transparent.
-
-Minimal theme example:
+Themes are plain JSON objects. Every key is **nullable** and can be omitted; missing colors render as transparent.
 
 ```json
 {
@@ -115,9 +115,9 @@ Minimal theme example:
 }
 ```
 
-You can define as many colors (nesting levels) as you want in the `bracket` array.
+The `bracket` array accepts any number of colors; nesting depth cycles through them automatically.
 
-> Check the [public/themes/](/public/themes/) folder for a collection of pre-bundled color palettes.
+> Browse the [public/themes/](/public/themes/) folder for pre-bundled palettes.
 
 ---
 
@@ -129,7 +129,7 @@ Create a local keybindings file to override the default shortcuts:
 cp userData/keybindings.example.json userData/keybindings.json
 ```
 
-Keys you omit keep their default. Each entry maps an action to a key combination string:
+Keys you omit keep their defaults. Each entry maps an action to a key combination:
 
 ```json
 {
@@ -146,34 +146,34 @@ Modifiers are `ctrl`, `shift`, and `alt`, separated by `+`. The key name is alwa
 
 ## String-Art Syntax
 
-The tokenizer highlights the following categories:
+The tokenizer highlights the following token categories:
 
 | Category        | Patterns                                                      |
 | --------------- | ------------------------------------------------------------- |
-| **Brackets**    | Inline (`()`, `[]`, `{}`) and Multiline (examples below)      |
+| **Brackets**    | Inline (`()`, `[]`, `{}`) and multiline (examples below)      |
 | **Identifiers** | `variables` and `functions()`                                 |
 | **Literals**    | Numbers (`0`, `3.14`, `.5`) and inline comments (`# comment`) |
 | **Operators**   | `+`, `-`, `*`, `>`, and semicolons `;`                        |
 
 ### Bracket Logic
 
-Brackets scale dynamically. Top and bottom rows remain fixed, while middle "arms" repeat to form tall shapes:
+Brackets scale dynamically; top and bottom rows are fixed, while middle arms repeat to form tall shapes:
 
-![bracket-families](examples/01_bracket_families/round_vs_square_1080p.png)
+![Bracket families: round vs square](examples/01_bracket_families/round_vs_square_1080p.png)
 
-Nesting depth automatically cycles through the colors defined in your theme's `bracket` array.
+Nesting depth cycles through the colors defined in your theme's `bracket` array:
 
-![nesting-depth](examples/02_nesting_depth/color_cycle_demo_1080p.png)
+![Nesting depth color cycle](examples/02_nesting_depth/color_cycle_demo_1080p.png)
 
 ### Limitations
 
-- **Comments**: `#` terminates early if it hits multiline bracket characters. This is done on purpose to avoid breaking shapes.
+- **Comments**: `#` terminates early if it encounters multiline bracket characters, intentionally, to avoid breaking shapes.
 
-- **Reserved Characters**: Characters like `/` and `\` are reserved for multiline round-bracket arms.
+- **Reserved Characters**: `/` and `\` are reserved for multiline round-bracket arms.
 
 - **Pairing**: The tokenizer requires paired bracket families; orphaned or split vertical segments cannot be resolved.
 
-- **Structural Wrapping**: The program does not currently support "wrapping" multiline brackets around standard code blocks.
+- **Structural Wrapping**: Wrapping multiline brackets around standard code blocks is not currently supported:
 
 ```plain
 {
@@ -190,20 +190,20 @@ Contributions are welcome. Suggested workflow:
 
 1. Fork the repository.
 2. Create a feature branch: `feat/my-change`.
-3. Make your changes, ensuring they follow the existing code style.
+3. Make your changes following the existing code style.
 4. Include appropriate documentation or tests.
 5. Commit, push, and open a pull request describing the change and the reason for it.
 
 ### Pre-commit Hooks <!-- omit in toc -->
 
-This project uses [pre-commit](https://pre-commit.com/) to enforce code quality checks automatically before each commit. Run the following once from the **repo root** to set it up:
+This project uses [pre-commit](https://pre-commit.com/) to enforce code quality checks before each commit. Run once from the **repo root** to set it up:
 
 ```bash
 pip install pre-commit
 pre-commit install
 ```
 
-After that, checks will run automatically on every `git commit`. To run them manually across all files:
+Checks run automatically on every `git commit`. To run them manually:
 
 ```bash
 pre-commit run --all-files

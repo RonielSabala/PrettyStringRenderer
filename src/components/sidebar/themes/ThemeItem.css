@@ -14,6 +14,10 @@
   color: var(--text-primary);
   border-color: var(--accent);
   background: var(--accent-dim);
+}
+
+.action-btn.theme-item.active,
+.action-btn.theme-item.active:hover {
   box-shadow: inset 0 0 0 1px var(--accent);
 }
 
@@ -35,11 +39,21 @@
   height: var(--space-8);
   border-radius: 25%;
   flex-shrink: 0;
-  border: var(--space-1) solid var(--white-a20);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.theme-swatch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--space-1) solid var(--white-a20);
+  border-radius: inherit;
+  mix-blend-mode: difference;
+  pointer-events: none;
 }
 
 .app-btn.theme-delete-btn {

@@ -2,7 +2,7 @@
 
 A high-fidelity monospace canvas engine for symbolic math art and code visualization. Transforms ASCII / Unicode text into colorized, high-resolution string-art suitable for screenshots, illustrations, or vector export.
 
-![Hero Screenshot](examples/app/hero_screenshot.png)
+![App screenshot - light mode](docs/screenshots/hero-light-mode.png)
 
 ---
 
@@ -34,6 +34,9 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - **High-Resolution Export**: Export **PNG** at custom scale multipliers or editable **SVG** files.
 - **Persistent State**: Workspace settings are automatically cached to `localStorage`.
 - **Light & Dark Modes**: Native light and dark modes for the application UI.
+
+![App screenshot - dark mode](docs/screenshots/hero-dark-mode.png)
+
 - **Deep Personalization**: Comprehensive theme system and a gitignored `userData/profile.json` for local overrides.
 - **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `userData/keybindings.json`.
 
@@ -79,6 +82,8 @@ Start typing in the canvas editor to begin. See [SHORTCUTS.md](SHORTCUTS.md) for
 | **PNG** | Raster export with custom scale multipliers (e.g., `0.5`, `1`, `2`)                                                                                |
 | **SGV** | Vector export where tokens are grouped by color. Fonts are embedded as attributes, making files fully editable in Figma, Illustrator, or Inkscape. |
 
+![Export options](docs/screenshots/export_options.png)
+
 ---
 
 ## Personalization
@@ -114,6 +119,8 @@ Themes are plain JSON objects. Every key is **nullable** and can be omitted; mis
   "variable": "#9cdcfe"
 }
 ```
+
+![Theme example](docs/screenshots/theme_source.png)
 
 The `bracket` array accepts any number of colors; nesting depth cycles through them automatically.
 
@@ -157,13 +164,10 @@ The tokenizer highlights the following token categories:
 
 ### Bracket Logic
 
-Brackets scale dynamically; top and bottom rows are fixed, while middle arms repeat to form tall shapes:
-
-![Bracket families: round vs square](examples/01_bracket_families/round_vs_square_1080p.png)
-
-Nesting depth cycles through the colors defined in your theme's `bracket` array:
-
-![Nesting depth color cycle](examples/02_nesting_depth/color_cycle_demo_1080p.png)
+| Info                                                                                                     | Image                                                                                        |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Brackets scale dynamically; top and bottom rows are fixed, while middle arms repeat to form tall shapes. | ![Bracket families: round vs square](examples/02_bracket_families/round_vs_square_1080p.png) |
+| Nesting depth cycles through the colors defined in your theme's `bracket` array.                         | ![Nesting depth color cycle](examples/03_nesting_depth/color_cycle_demo_1080p.png)           |
 
 ### Limitations
 

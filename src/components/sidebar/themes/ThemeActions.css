@@ -1,0 +1,17 @@
+.theme-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.action-btn.theme-action-btn {
+  background: var(--surface-card);
+}
+
+.theme-action-btn:hover {
+  background: transparent;
+}
+
+.theme-action-btn span {
+  white-space: nowrap;
+}

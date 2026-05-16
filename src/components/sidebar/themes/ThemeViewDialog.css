@@ -1,0 +1,12 @@
+.theme-view-content {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--surface-card);
+  border: var(--border-standard);
+  border-radius: var(--radius-3);
+  padding: var(--space-6);
+  font-size: var(--text-sm-tight);
+  color: var(--text-primary);
+  margin-bottom: var(--space-8);
+  white-space: pre;
+}

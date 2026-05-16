@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { Tokenizer } from "../core/tokenizer";
 import {
+  APP_DEFAULT_THEME,
   APP_FONT_VARIANT_LIGATURES,
   CANVAS_DEFAULTS,
-  DEFAULT_THEME,
   EDITOR_DEFAULTS,
   TYPOGRAPHY_DEFAULTS,
 } from "./config";
@@ -11,18 +11,20 @@ import {
   CSS_FONT_VARIANT_LIGATURES,
   CSS_TEXT_RENDERING,
 } from "./constants/css";
-import type {
-  CanvasConfig,
-  CollapsedSections,
-  EditorConfig,
-  ThemeColors,
-  TypographyConfig,
+import {
+  type AppThemeType,
+  type CanvasConfig,
+  type CollapsedSections,
+  type EditorConfig,
+  type ThemeColors,
+  type TypographyConfig,
 } from "./types";
 
 interface AppState {
   // Data
   colors: ThemeColors;
   themes: ThemeColors[];
+  appTheme: AppThemeType;
   activeThemeName: string;
   activeElementId: string;
   collapsedSections: CollapsedSections;
@@ -35,9 +37,10 @@ interface AppState {
   // Actions
   setColors: (colors: Partial<ThemeColors>) => void;
   setThemes: (themes: ThemeColors[]) => void;
+  setAppTheme: (appTheme: AppThemeType) => void;
   setActiveThemeName: (name: string) => void;
   setActiveElementId: (id: string) => void;
-  setCollapsedSections: (ids: CollapsedSections) => void;
+  setCollapsedSections: (sections: CollapsedSections) => void;
 
   setTypographyConfig: (config: Partial<TypographyConfig>) => void;
   setEditorConfig: (config: Partial<EditorConfig>) => void;
@@ -54,8 +57,9 @@ interface AppState {
 // Store
 
 export const useStore = create<AppState>((set, get) => ({
-  colors: { ...DEFAULT_THEME },
+  colors: {},
   themes: [],
+  appTheme: APP_DEFAULT_THEME,
   activeThemeName: "",
   activeElementId: "",
   collapsedSections: {},
@@ -93,23 +97,21 @@ export const useStore = create<AppState>((set, get) => ({
   // Actions
 
   setColors: (colors) => {
-    if (!colors) {
-      return;
-    }
-
     set((state) => ({
       colors: {
         ...state.colors,
-        ...Object.fromEntries(
-          Object.entries(colors).filter(([, value]) => value !== undefined),
-        ),
-      } as ThemeColors,
+        ...Object.fromEntries(Object.entries(colors)),
+      },
     }));
   },
   setThemes: (themes) => set({ themes }),
+  setAppTheme: (appTheme) => {
+    document.documentElement.dataset.theme = appTheme;
+    set({ appTheme });
+  },
   setActiveThemeName: (name) => set({ activeThemeName: name }),
   setActiveElementId: (id) => set({ activeElementId: id }),
-  setCollapsedSections: (ids) => set({ collapsedSections: ids }),
+  setCollapsedSections: (sections) => set({ collapsedSections: sections }),
 
   setTypographyConfig: (config) =>
     set((state) => ({

@@ -1,30 +1,42 @@
-import { forwardRef, useCallback, useEffect } from "react";
-import { getDrawingContext, iterateTokens, render } from "../canvas/renderer";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+  type ReactNode,
+} from "react";
+import { FileEarmarkImage, FileEarmarkRichtext } from "react-bootstrap-icons";
+import {
+  getDrawingContext,
+  iterateTokens,
+  render,
+} from "../../canvas/renderer";
 import {
   APP_FONT_VARIANT_LIGATURES,
   CANVAS_DEFAULTS,
   DEFAULT_EXPORT_IMAGE_FILENAME,
-  DEFAULT_PNG_SCALAR,
-  EXPORT_PNG_PROMPT_MESSAGE,
-  EXPORT_PNG_PROMPT_SCALAR_EXAMPLES,
-  LINE_BREAK,
   PNG_BLOB_TYPE,
   PNG_EXTENSION,
   SVG_BLOB_TYPE,
   SVG_EXTENSION,
   SVG_NS,
-} from "../common/config";
-import { CSS_STYLE, CSS_TEXT_RENDERING } from "../common/constants/css";
-import { EVENTS } from "../common/constants/events";
-import { matchesKeybinding } from "../common/keybindings";
-import { useStore } from "../common/store";
+} from "../../common/config";
+import { CSS_STYLE, CSS_TEXT_RENDERING } from "../../common/constants/css";
+import { EVENTS } from "../../common/constants/events";
+import { matchesKeybinding } from "../../common/keybindings";
+import { useStore } from "../../common/store";
 import type {
   CanvasConfig,
   ThemeColors,
   TypographyConfig,
-} from "../common/types";
-import { parseNumber, roundUp } from "../utils/parse";
-import { createResolution, getScaledDimensions } from "../utils/resolution";
+} from "../../common/types";
+import { roundUp } from "../../utils/parse";
+import { createResolution, getScaledDimensions } from "../../utils/resolution";
+import { Dialog } from "../dialog";
+import "./ExportDialog.css";
+import PNGExportModal from "./PNGExportModal";
+import SVGExportModal from "./SVGExportModal";
 
 // Private helpers
 
@@ -42,35 +54,13 @@ function _download(blob: Blob, filename: string): void {
 
 // PNG exporter
 
-function _formatScalarExample(
-  scalar: number,
-  width: number,
-  height: number,
-): string {
-  const resolution = createResolution(
-    ...getScaledDimensions(width, height, scalar),
-  );
-
-  return `* ${scalar} -> ${resolution}`;
-}
-
 function _exportPNG(
   canvasConfig: CanvasConfig,
   typographyConfig: TypographyConfig,
+  scalar: number,
+  filename: string,
 ): void {
   const { width, height } = canvasConfig;
-  const promptMsg = [
-    EXPORT_PNG_PROMPT_MESSAGE,
-    ...EXPORT_PNG_PROMPT_SCALAR_EXAMPLES.map((scalar) =>
-      _formatScalarExample(scalar, width, height),
-    ),
-  ].join(LINE_BREAK);
-
-  const scalar = parseNumber(prompt(promptMsg, String(DEFAULT_PNG_SCALAR)), 0);
-  if (scalar <= 0) {
-    return;
-  }
-
   const [exportWidth, exportHeight] = getScaledDimensions(
     width,
     height,
@@ -98,7 +88,7 @@ function _exportPNG(
 
   offscreen.toBlob((blob) => {
     if (blob) {
-      _download(blob, _getFilename(exportWidth, exportHeight, PNG_EXTENSION));
+      _download(blob, filename);
     }
 
     document.body.removeChild(offscreen);
@@ -133,6 +123,7 @@ function _exportSVG(
   canvasConfig: CanvasConfig,
   typographyConfig: TypographyConfig,
   colors: ThemeColors,
+  filename: string,
 ): void {
   const { width, height } = canvasConfig;
   const renderConfig = {
@@ -207,45 +198,96 @@ function _exportSVG(
 
   const svg = (svgElement as Element).outerHTML;
   const blob = new Blob([svg], SVG_BLOB_TYPE);
-  _download(blob, _getFilename(width, height, SVG_EXTENSION));
+  _download(blob, filename);
 }
 
-// Component
+// Sub-component
 
-export const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
+interface ExportFormatButtonProps {
+  label: string;
+  description: string;
+  icon: ReactNode;
+  onClick: () => void;
+}
+
+function ExportFormatButton({
+  label,
+  description,
+  icon,
+  onClick,
+}: ExportFormatButtonProps) {
+  return (
+    <button className="action-btn export-format-btn" onClick={onClick}>
+      {icon}
+      <div className="export-btn-container no-user-select">
+        <p className="export-btn-label">{label}</p>
+        <p className="export-btn-description">{description}</p>
+      </div>
+    </button>
+  );
+}
+
+// Main Component
+
+export interface ExportDialogHandle {
+  open: () => void;
+  close: () => void;
+}
+
+export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
   const typographyConfig = useStore((state) => state.typographyConfig);
   const canvasConfig = useStore((state) => state.canvasConfig);
   const colors = useStore((state) => state.colors);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isPNGModalOpen, setIsPNGModalOpen] = useState(false);
+  const [isSVGModalOpen, setIsSVGModalOpen] = useState(false);
+
+  // Expose open/close methods
+  useImperativeHandle(
+    ref,
+    () => ({
+      open: () => setIsOpen(true),
+      close: () => setIsOpen(false),
+    }),
+    [],
+  );
 
   // Component helpers
 
   const openDialog = useCallback(() => {
-    (ref as React.RefObject<HTMLDialogElement>).current?.showModal();
-  }, [ref]);
+    setIsOpen(true);
+  }, []);
 
   const closeDialog = useCallback(() => {
-    (ref as React.RefObject<HTMLDialogElement>).current?.close();
-  }, [ref]);
+    setIsOpen(false);
+  }, []);
 
   // Handlers
 
-  const handlePNG = useCallback(() => {
+  const handlePNGClick = useCallback(() => {
     closeDialog();
-    _exportPNG(canvasConfig, typographyConfig);
-  }, [closeDialog, canvasConfig, typographyConfig]);
+    setIsPNGModalOpen(true);
+  }, [closeDialog]);
 
-  const handleSVG = useCallback(() => {
+  const handleSVGClick = useCallback(() => {
     closeDialog();
-    _exportSVG(canvasConfig, typographyConfig, colors);
-  }, [closeDialog, canvasConfig, typographyConfig, colors]);
+    setIsSVGModalOpen(true);
+  }, [closeDialog]);
 
-  const handleDialogClick = useCallback(
-    (event: React.MouseEvent<HTMLDialogElement>) => {
-      if (event.target === event.currentTarget) {
-        closeDialog();
-      }
+  const handlePNGExport = useCallback(
+    (scalar: number, filename: string) => {
+      setIsPNGModalOpen(false);
+      _exportPNG(canvasConfig, typographyConfig, scalar, filename);
     },
-    [closeDialog],
+    [canvasConfig, typographyConfig],
+  );
+
+  const handleSVGExport = useCallback(
+    (filename: string) => {
+      setIsSVGModalOpen(false);
+      _exportSVG(canvasConfig, typographyConfig, colors, filename);
+    },
+    [canvasConfig, typographyConfig, colors],
   );
 
   // Global keybindings
@@ -255,10 +297,10 @@ export const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
         return;
       }
 
-      if (matchesKeybinding(event, "export.open")) {
+      if (matchesKeybinding(event, "workspace.export")) {
         event.preventDefault();
         openDialog();
-      } else if (matchesKeybinding(event, "export.close")) {
+      } else if (event.key === EVENTS.ESCAPE) {
         closeDialog();
       }
     };
@@ -267,28 +309,42 @@ export const ExportDialog = forwardRef<HTMLDialogElement>((_, ref) => {
     return () => document.removeEventListener(EVENTS.KEY_DOWN, handler);
   }, [openDialog, closeDialog]);
 
+  const { width, height } = canvasConfig;
   return (
-    <dialog id="dialog-export" ref={ref} onClick={handleDialogClick}>
-      <p className="dialog-title no-select">Export canvas as</p>
-      <div className="dialog-actions">
-        <button
-          id="btn-export-png"
-          className="btn no-select"
-          type="button"
-          onClick={handlePNG}
-        >
-          PNG
-        </button>
-        <button
-          id="btn-export-svg"
-          className="btn no-select"
-          type="button"
-          onClick={handleSVG}
-        >
-          SVG
-        </button>
-      </div>
-    </dialog>
+    <>
+      <Dialog isOpen={isOpen} title="Export" onClose={closeDialog}>
+        <div className="export-dialog-actions">
+          <ExportFormatButton
+            label="PNG"
+            description="Raster image"
+            icon={<FileEarmarkImage className="app-icon" />}
+            onClick={handlePNGClick}
+          />
+          <ExportFormatButton
+            label="SVG"
+            description="Vector image"
+            icon={<FileEarmarkRichtext className="app-icon" />}
+            onClick={handleSVGClick}
+          />
+        </div>
+      </Dialog>
+
+      <PNGExportModal
+        isOpen={isPNGModalOpen}
+        canvasWidth={width}
+        canvasHeight={height}
+        defaultFilename={_getFilename(width, height, PNG_EXTENSION)}
+        onExport={handlePNGExport}
+        onCancel={() => setIsPNGModalOpen(false)}
+      />
+
+      <SVGExportModal
+        isOpen={isSVGModalOpen}
+        defaultFilename={_getFilename(width, height, SVG_EXTENSION)}
+        onExport={handleSVGExport}
+        onCancel={() => setIsSVGModalOpen(false)}
+      />
+    </>
   );
 });
 

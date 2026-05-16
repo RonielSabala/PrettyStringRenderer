@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { FolderX } from "react-bootstrap-icons";
 import {
   DEFAULT_EXPORT_THEME_FILENAME,
   DEFAULT_THEME,
-  EXPORT_THEME_PROMPT_MESSAGE,
   THEME_BLOB_TYPE,
   THEMES_EXTENSION,
   THEMES_FILE_TYPE,
@@ -10,8 +10,8 @@ import {
 import { EVENTS } from "../../../common/constants/events";
 import { matchesKeybinding } from "../../../common/keybindings";
 import { useStore } from "../../../common/store";
-import type { Theme, ThemeColors } from "../../../common/types";
-import { THEME_KEYS, TOKENS } from "../../../common/types";
+import type { Theme } from "../../../common/types";
+import { THEME_KEYS } from "../../../common/types";
 import { applyThemeColors } from "../../../utils/color_sync";
 import { isObjectEmpty } from "../../../utils/parse";
 import {
@@ -20,29 +20,25 @@ import {
   saveColorsState,
   saveThemesState,
 } from "../../../utils/persistence";
+import { revokeAfter, urlFromObject } from "../../../utils/url";
 import SidebarSection from "../SidebarSection";
+import ThemeActions from "./ThemeActions";
+import ThemeExportDialog from "./ThemeExportDialog";
 import { ThemeItem } from "./ThemeItem";
+import ThemeViewDialog from "./ThemeViewDialog";
+import "./ThemesSection.css";
 
 const _scheduleSave = createSaveScheduler(saveColorsState);
 const _scheduleThemeNameSave = createSaveScheduler(saveActiveThemeNameState);
-
-// Private helpers
-
-function _urlFromObject(obj: object): string {
-  return URL.createObjectURL(
-    new Blob([JSON.stringify(obj, null, 2)], THEME_BLOB_TYPE),
-  );
-}
-
-function _revokeAfter(url: string) {
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
 
 function useThemes() {
   const colors = useStore((state) => state.colors);
   const themes = useStore((state) => state.themes) as Theme[];
   const activeThemeName = useStore((state) => state.activeThemeName);
   const activeItem = useRef<HTMLDivElement | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportFilename, setExportFilename] = useState<string | null>(null);
+  const [viewingTheme, setViewingTheme] = useState<Theme | null>(null);
 
   const setThemes = useStore((state) => state.setThemes);
   const setActiveName = useStore((state) => state.setActiveThemeName);
@@ -50,25 +46,20 @@ function useThemes() {
 
   // Apply initial colors on mount
   useEffect(() => {
-    const themeToApply = isObjectEmpty(colors) ? DEFAULT_THEME : colors;
-    applyThemeColors(themeToApply);
+    if (isObjectEmpty(colors)) {
+      applyThemeColors(DEFAULT_THEME);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Theme functions
+
   const applyTheme = useCallback(
     (theme: Theme) => {
-      const patch: Partial<ThemeColors> = {};
+      applyThemeColors(
+        Object.fromEntries(THEME_KEYS.map((key) => [key, theme[key]])),
+      );
 
-      for (const key of THEME_KEYS) {
-        if (key === TOKENS.BRACKET) {
-          patch[key] = theme[key];
-        } else {
-          patch[key] = theme[key];
-        }
-      }
-
-      applyThemeColors(patch);
       setActiveName(theme._name);
       _scheduleThemeNameSave();
       _scheduleSave();
@@ -78,6 +69,21 @@ function useThemes() {
       requestAnimationFrame(() => activeItem.current?.focus());
     },
     [setActiveName, redraw],
+  );
+
+  const deleteTheme = useCallback(
+    (themeToDelete: Theme) => {
+      const themeToDeleteName = themeToDelete._name;
+      const next = themes.filter((t) => t._name !== themeToDeleteName);
+      setThemes(next);
+      saveThemesState();
+
+      // If the active theme is deleted, apply the first available one
+      if (activeThemeName === themeToDeleteName) {
+        applyTheme(next.length > 0 ? next[0] : { ...DEFAULT_THEME, _name: "" });
+      }
+    },
+    [themes, setThemes, activeThemeName, applyTheme],
   );
 
   const importThemes = useCallback(() => {
@@ -122,28 +128,27 @@ function useThemes() {
   }, [themes, setThemes, applyTheme]);
 
   const exportTheme = useCallback(() => {
-    const filename = prompt(
-      EXPORT_THEME_PROMPT_MESSAGE,
-      activeThemeName || DEFAULT_EXPORT_THEME_FILENAME,
-    );
-    if (!filename) {
-      return;
-    }
+    setExportFilename(activeThemeName || DEFAULT_EXPORT_THEME_FILENAME);
+    setIsExporting(true);
+  }, [activeThemeName]);
 
-    const anchorElement = document.createElement("a");
-    anchorElement.href = _urlFromObject(colors);
-    anchorElement.download = filename.endsWith(THEMES_EXTENSION)
-      ? filename
-      : `${filename}${THEMES_EXTENSION}`;
+  const confirmExport = useCallback(
+    (filename: string) => {
+      const anchorElement = document.createElement("a");
+      anchorElement.href = urlFromObject(colors, THEME_BLOB_TYPE);
+      anchorElement.download = filename.endsWith(THEMES_EXTENSION)
+        ? filename
+        : `${filename}${THEMES_EXTENSION}`;
 
-    anchorElement.click();
-    _revokeAfter(anchorElement.href);
-  }, [colors, activeThemeName]);
+      anchorElement.click();
+      revokeAfter(anchorElement.href);
+      setIsExporting(false);
+    },
+    [colors],
+  );
 
-  const showInNewWindow = useCallback((theme: Theme) => {
-    const url = _urlFromObject(theme);
-    window.open(url, "_blank");
-    _revokeAfter(url);
+  const showInModal = useCallback((theme: Theme) => {
+    setViewingTheme(theme);
   }, []);
 
   // Global keybindings
@@ -162,53 +167,43 @@ function useThemes() {
       } else if (matchesKeybinding(event, "themes.export")) {
         event.preventDefault();
         exportTheme();
+      } else if (matchesKeybinding(event, "themes.delete")) {
+        event.preventDefault();
+        const active = themes.find((t) => t._name === activeThemeName);
+        if (active) {
+          deleteTheme(active);
+        }
       }
     };
 
     document.addEventListener(EVENTS.KEY_DOWN, handler);
     return () => document.removeEventListener(EVENTS.KEY_DOWN, handler);
-  }, [activeItem, importThemes, exportTheme]);
+  }, [
+    activeItem,
+    importThemes,
+    exportTheme,
+    themes,
+    activeThemeName,
+    deleteTheme,
+  ]);
 
   return {
     themes,
     activeThemeName,
     activeItem,
     applyTheme,
-    showInNewWindow,
+    deleteTheme,
+    showInModal,
     importThemes,
     exportTheme,
+    isExporting,
+    exportFilename,
+    confirmExport,
+    cancelExport: () => setIsExporting(false),
+    viewingTheme,
+    closeViewingTheme: () => setViewingTheme(null),
   };
 }
-
-// Theme action buttons
-
-interface ThemeActionsProps {
-  onImport: () => void;
-  onExport: () => void;
-}
-
-function ThemeActions({ onImport, onExport }: ThemeActionsProps) {
-  return (
-    <>
-      <button
-        id="btn-import-themes"
-        className="theme-btn no-select"
-        onClick={onImport}
-      >
-        Import themes
-      </button>
-      <button
-        id="btn-export-theme"
-        className="theme-btn no-select"
-        onClick={onExport}
-      >
-        Export theme
-      </button>
-    </>
-  );
-}
-
-// Theme section
 
 export default function ThemesSection() {
   const {
@@ -216,22 +211,30 @@ export default function ThemesSection() {
     activeThemeName,
     activeItem,
     applyTheme,
-    showInNewWindow,
+    deleteTheme,
+    showInModal,
     importThemes,
     exportTheme,
+    isExporting,
+    exportFilename,
+    confirmExport,
+    cancelExport,
+    viewingTheme,
+    closeViewingTheme,
   } = useThemes();
 
   const themesCount = themes.length;
   const noThemes = themesCount === 0;
+
   return (
-    <SidebarSection
-      id="section-themes"
-      headerId="section-header-themes"
-      title="Themes"
-    >
-      <div className="theme-list">
+    <SidebarSection title="Themes">
+      <div className="theme-list no-user-select">
         {noThemes ? (
-          <div id="theme-empty">No themes loaded.</div>
+          <div id="theme-empty">
+            <FolderX className="app-icon" />
+            <p>No themes loaded</p>
+            <span>Import or create a theme to get started.</span>
+          </div>
         ) : (
           themes.map((theme, index) => (
             <ThemeItem
@@ -240,7 +243,8 @@ export default function ThemesSection() {
               theme={theme}
               isActive={theme._name === activeThemeName}
               onApply={applyTheme}
-              onShow={showInNewWindow}
+              onDelete={deleteTheme}
+              onShow={showInModal}
               onNavigate={(upDirection) => {
                 const nextIdx = upDirection
                   ? index - 1
@@ -253,6 +257,15 @@ export default function ThemesSection() {
       </div>
 
       <ThemeActions onImport={importThemes} onExport={exportTheme} />
+
+      <ThemeExportDialog
+        isOpen={isExporting}
+        defaultFilename={exportFilename}
+        onExport={confirmExport}
+        onCancel={cancelExport}
+      />
+
+      <ThemeViewDialog theme={viewingTheme} onClose={closeViewingTheme} />
     </SidebarSection>
   );
 }

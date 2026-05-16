@@ -1,0 +1,52 @@
+.number-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  flex: 2;
+}
+
+.number-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: var(--space-1-5);
+  background: var(--color-border);
+  border-radius: var(--radius-1);
+  outline: none;
+  cursor: pointer;
+}
+
+.number-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--space-5);
+  height: var(--space-5);
+  background: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
+}
+
+.number-slider:hover::-webkit-slider-thumb {
+  background: var(--accent);
+  transform: scale(1.2);
+}
+
+.number-slider::-moz-range-thumb {
+  width: var(--space-5);
+  height: var(--space-5);
+  background: var(--text-secondary);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
+}
+
+.number-slider:hover::-moz-range-thumb {
+  background: var(--accent);
+  transform: scale(1.2);
+}

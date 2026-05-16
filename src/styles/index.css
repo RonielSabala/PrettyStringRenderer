@@ -1,0 +1,171 @@
+html {
+  font-size: var(--base-unit);
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  font-family: var(--font-mono);
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--surface-base);
+  color: var(--text-primary);
+  font-size: var(--text-md);
+  line-height: 1.5;
+}
+
+/* Generic button properties */
+
+.app-btn,
+.action-btn,
+.static-action-btn {
+  cursor: pointer;
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-3);
+}
+
+.app-btn:hover,
+.action-btn:hover,
+.static-action-btn:hover {
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.app-btn:hover,
+.action-btn:hover:not(:disabled) {
+  box-shadow: 0 var(--space-2) var(--space-4) var(--black-a10);
+}
+
+.app-btn:active,
+.action-btn:active,
+.static-action-btn:active {
+  transform: translateY(0);
+}
+
+.app-btn:active,
+.action-btn:active {
+  box-shadow: inset 0 var(--space-1) var(--space-2) var(--black-a10);
+}
+
+/* Action button properties */
+
+.action-btn {
+  transition: all 0.15s ease-out;
+}
+
+.action-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Shared action button properties */
+
+.action-btn,
+.static-action-btn {
+  border: var(--border-standard);
+  flex: 1;
+}
+
+.action-btn:hover,
+.static-action-btn:hover {
+  border-color: var(--color-border-focus);
+}
+
+/* Disable user select */
+
+.app-btn,
+.action-btn,
+.static-action-btn,
+.no-user-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Icons */
+
+.app-icon {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+}
+
+/* Number input */
+
+.number-input {
+  width: var(--number-input-width);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  outline: none;
+  border: var(--border-standard);
+  border-radius: var(--radius-3);
+  background: var(--surface-card);
+  text-align: left;
+  padding: var(--space-1-5) var(--space-3);
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.number-input:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.number-input:focus {
+  color: var(--text-primary);
+  border-color: var(--color-border-focus);
+}
+
+.number-input::-webkit-outer-spin-button,
+.number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+/* Scrollbar */
+
+.scroll-container {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+.scroll-container::-webkit-scrollbar-track,
+.scroll-container::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-3);
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  cursor: all-scroll;
+  background: var(--text-muted);
+}

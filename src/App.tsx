@@ -1,15 +1,26 @@
 import { useEffect, useRef } from "react";
+import "./App.css";
+import { APP_DEFAULT_THEME } from "./common/config";
 import { EVENTS } from "./common/constants/events";
 import { useStore } from "./common/store";
 import CanvasView from "./components/CanvasView";
 import EditorPanel from "./components/EditorPanel";
-import ExportDialog from "./components/ExportDialog";
+import {
+  ExportDialog,
+  type ExportDialogHandle,
+} from "./components/export/ExportDialog";
 import Header from "./components/Header";
 import Sidebar from "./components/sidebar/Sidebar";
 import { restoreState, saveActiveElementIdState } from "./utils/persistence";
 
 // Element IDs that should NOT restore focus after reload
-const FOCUS_EXCLUSIONS = new Set(["btn-reset", "btn-export"]);
+const FOCUS_EXCLUSIONS = new Set([
+  "app-theme-btn",
+  "workspace-reset-btn",
+  "workspace-export-btn",
+]);
+
+document.documentElement.dataset.theme = APP_DEFAULT_THEME;
 
 // Restore persisted state before any child component reads it
 restoreState();
@@ -17,7 +28,7 @@ restoreState();
 export default function App() {
   const activeElementId = useStore((state) => state.activeElementId);
   const setActiveElementId = useStore((state) => state.setActiveElementId);
-  const exportDialogRef = useRef<HTMLDialogElement>(null);
+  const exportDialogRef = useRef<ExportDialogHandle>(null);
 
   // Restore focus after reload
   useEffect(() => {
@@ -29,7 +40,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Save active element on unload
+  // Save active element id on unload
   useEffect(() => {
     const handler = () => {
       const id = document.activeElement?.id ?? "";
@@ -43,13 +54,15 @@ export default function App() {
 
   return (
     <div id="app">
-      <Header onExportClick={() => exportDialogRef.current?.showModal()} />
+      <header id="app-header">
+        <Header onExportClick={() => exportDialogRef.current?.open()} />
+      </header>
 
-      <aside id="app-sidebar">
+      <aside id="app-sidebar" className="scroll-container">
         <Sidebar />
       </aside>
 
-      <main id="app-work-area">
+      <main id="app-workspace">
         <CanvasView />
         <EditorPanel />
       </main>

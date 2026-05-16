@@ -14,6 +14,13 @@ const _rawBindings: Record<string, string> = {
 const BINDING_SEPARATOR = "+";
 const MODIFIER_KEYS = ["ctrl", "shift", "alt"] as const;
 
+interface KeyEvent {
+  key: string;
+  ctrlKey: boolean;
+  shiftKey: boolean;
+  altKey: boolean;
+}
+
 type ModifierKey = (typeof MODIFIER_KEYS)[number];
 
 type ParsedBinding = {
@@ -50,10 +57,7 @@ const _parsed: Readonly<Record<string, ParsedBinding>> = Object.freeze(
   ),
 );
 
-export function matchesKeybinding(
-  event: KeyboardEvent,
-  bindingId: string,
-): boolean {
+export function matchesKeybinding(event: KeyEvent, bindingId: string): boolean {
   const binding = _parsed[bindingId];
   if (!binding) {
     return false;

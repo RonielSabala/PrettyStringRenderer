@@ -1,0 +1,32 @@
+#app {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-rows: var(--app-header-height) 1fr;
+  grid-template-areas: "app-header app-header" "app-sidebar app-workspace";
+  height: 100vh;
+}
+
+#app-header {
+  grid-area: app-header;
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: 0 var(--space-8);
+  background: var(--surface-panel);
+  border-bottom: var(--border-standard);
+}
+
+#app-sidebar {
+  grid-area: app-sidebar;
+  background: var(--surface-panel);
+  padding: var(--scrollbar-size) 0;
+  border-right: var(--border-standard);
+}
+
+#app-workspace {
+  grid-area: app-workspace;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface-base);
+}

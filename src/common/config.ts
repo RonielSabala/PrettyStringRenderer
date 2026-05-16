@@ -1,5 +1,5 @@
 import _defaults from "../../userData/profile.example.json";
-import type { ThemeColors } from "./types";
+import type { AppThemeType, ThemeColors } from "./types";
 
 const _userFile = import.meta.glob("../../userData/profile.json", {
   eager: true,
@@ -13,6 +13,10 @@ const _userDefaults =
 export const LINE_BREAK = "\n";
 export const SAVE_TIMEOUT_MS = 200;
 export const MAX_HEX_INPUT_LENGTH = 7;
+
+export const APP_DEFAULT_THEME = (_userDefaults.app?.defaultTheme ??
+  _defaults.app.defaultTheme) as AppThemeType;
+
 export const APP_FONT_VARIANT_LIGATURES =
   _userDefaults.app?.fontVariantLigatures ?? _defaults.app.fontVariantLigatures;
 
@@ -54,7 +58,6 @@ export const TYPOGRAPHY_DEFAULTS = {
 
 export const EDITOR_LINE_HEIGHT = "auto";
 export const EDITOR_LETTER_SPACING = "auto";
-export const EDITOR_MIN_HEIGHT_PX = 32;
 export const EDITOR_MAX_HEIGHT_PERCENTAGE = 0.8;
 
 const _editorDefaults = _userDefaults.editor ?? {};
@@ -105,7 +108,7 @@ export const PNG_BLOB_TYPE = { type: "image/png" } as const;
 export const SVG_BLOB_TYPE = { type: "image/svg+xml" } as const;
 export const DEFAULT_PNG_SCALAR = 1;
 export const EXPORT_PNG_PROMPT_MESSAGE = "Scale multiplier:";
-export const EXPORT_PNG_PROMPT_SCALAR_EXAMPLES = [1, 2, 0.5];
+export const EXPORT_PNG_PROMPT_SCALAR_EXAMPLES = [0.5, 1, 2];
 
 const _exportDefaults = _userDefaults.export ?? {};
 export const DEFAULT_EXPORT_THEME_FILENAME =
@@ -117,7 +120,6 @@ export const DEFAULT_EXPORT_IMAGE_FILENAME =
 
 export const THEMES_EXTENSION = ".json";
 export const THEMES_FILE_TYPE = "file";
-export const EXPORT_THEME_PROMPT_MESSAGE = "Theme name:";
 export const THEME_BLOB_TYPE = { type: "application/json" } as const;
 export const DEFAULT_THEME = Object.freeze(
   (_userDefaults.theme ?? _defaults.theme) as ThemeColors,

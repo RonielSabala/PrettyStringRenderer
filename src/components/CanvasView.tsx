@@ -18,6 +18,7 @@ import {
   saveCanvasConfigState,
 } from "../utils/persistence";
 import { toPx } from "../utils/resolution";
+import "./CanvasView.css";
 
 const _scheduleSave = createSaveScheduler(saveCanvasConfigState);
 
@@ -86,7 +87,11 @@ export default function CanvasView() {
 
     return () => {
       buffer.destroy();
-      zustand.setState({ redraw: () => {}, adjustCanvas: () => {} });
+      zustand.setState({
+        redraw: () => {},
+        adjustCanvas: () => {},
+        scheduleRedraw: () => {},
+      });
     };
   }, []);
 
@@ -119,9 +124,15 @@ export default function CanvasView() {
   };
 
   const resetZoom = () => {
-    const cfg = zustand.getState().canvasConfig;
-    if (cfg.zoom === CANVAS_DEFAULTS.zoom && cfg.panX === 0 && cfg.panY === 0)
+    const config = zustand.getState().canvasConfig;
+    if (
+      config.zoom === CANVAS_DEFAULTS.zoom &&
+      config.panX === 0 &&
+      config.panY === 0
+    ) {
       return;
+    }
+
     setCanvasConfig({ zoom: CANVAS_DEFAULTS.zoom, panX: 0, panY: 0 });
 
     scheduleTransform();

@@ -5,7 +5,6 @@ import {
   EDITOR_LETTER_SPACING,
   EDITOR_LINE_HEIGHT,
   EDITOR_MAX_HEIGHT_PERCENTAGE,
-  EDITOR_MIN_HEIGHT_PX,
 } from "../common/config";
 import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
@@ -17,25 +16,28 @@ import {
   saveEditorConfigState,
 } from "../utils/persistence";
 import { toPx } from "../utils/resolution";
+import "./EditorPanel.css";
 
 const _scheduleSave = createSaveScheduler(saveEditorConfigState);
 
 // Sub-components
 
-function FitToContentCheckbox() {
+interface FitToContentProps {
+  id: string;
+}
+
+function FitToContentCheckbox({ id }: FitToContentProps) {
   const isChecked = useStore((state) => state.canvasConfig.fitToContent);
   const setCanvasConfig = useStore((state) => state.setCanvasConfig);
   const redraw = useStore((state) => state.redraw);
-  const adjustCanvas = useStore((state) => state.adjustCanvas);
 
   return (
     <input
       type="checkbox"
-      id="editor-fit-to-content"
+      id={id}
       checked={isChecked}
       onChange={(event) => {
         setCanvasConfig({ fitToContent: event.target.checked });
-        adjustCanvas();
         redraw(true);
       }}
     />
@@ -104,8 +106,8 @@ export default function EditorPanel() {
   const _getEditorHeight = () => panelRef.current?.offsetHeight;
 
   const _getEditorMinHeight = () => {
-    const element = document.getElementById("editor-tabs");
-    return element?.offsetHeight ?? EDITOR_MIN_HEIGHT_PX;
+    const element = document.getElementById("editor-header");
+    return element?.offsetHeight;
   };
 
   const _getNormalizedHeight = (y: number) =>
@@ -166,12 +168,16 @@ export default function EditorPanel() {
     const defaultHeight = EDITOR_DEFAULTS.height;
     const currentHeight = _getEditorHeight() ?? height;
     const newHeight =
-      currentHeight === defaultHeight ? _getEditorMinHeight() : defaultHeight;
+      currentHeight === defaultHeight
+        ? (_getEditorMinHeight() ?? height)
+        : defaultHeight;
 
     setHeight(newHeight);
     setEditorConfig({ height: newHeight });
-    adjustCanvas();
     _scheduleSave();
+
+    // Defer adjustCanvas call until after DOM update from state changes
+    setTimeout(() => adjustCanvas(), 0);
   }, [height, setEditorConfig, adjustCanvas]);
 
   // Canvas mouse keybinding
@@ -182,7 +188,7 @@ export default function EditorPanel() {
         return;
       }
 
-      const minHeight = _getEditorMinHeight();
+      const minHeight = _getEditorMinHeight() ?? height;
       const maxHeight = startMaxHeight.current;
 
       const currentHeight = _getEditorHeight() ?? 0;
@@ -251,30 +257,38 @@ export default function EditorPanel() {
       />
 
       <div id="editor-panel" ref={panelRef} style={{ height: toPx(height) }}>
-        <div id="editor-tabs">
-          <div className="tab no-select">Editor</div>
-          <div className="editor-font no-select">
-            <span>Font size</span>
+        <div id="editor-header" className="no-user-select">
+          <span id="editor-tab">Editor</span>
+
+          <div className="editor-tab-container">
+            <label id="editor-font-label" htmlFor="editor-font-size">
+              Font size
+            </label>
             <input
+              id="editor-font-size"
               className="number-input"
               type="number"
-              id="editor-font-size"
               value={fontSize}
               min={EDITOR_DEFAULTS.fontSize.min}
               max={EDITOR_DEFAULTS.fontSize.max}
               onChange={handleFontSize}
             />
           </div>
-          <label className="editor-fit-label no-select">
-            <FitToContentCheckbox />
-            Fit to content
-          </label>
-          <span id="editor-status" className="no-select">
+
+          <div className="editor-tab-container">
+            <FitToContentCheckbox id={"editor-fit-to-content"} />
+            <label id="editor-fit-label" htmlFor="editor-fit-to-content">
+              Fit to content
+            </label>
+          </div>
+
+          <span id="editor-status">
             <EditorStatus />
           </span>
         </div>
         <textarea
           id="editor"
+          className="scroll-container"
           ref={editorRef}
           spellCheck={false}
           style={{

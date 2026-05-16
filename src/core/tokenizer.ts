@@ -299,7 +299,7 @@ export class Tokenizer {
           j++;
         }
 
-        addSlice(j, TOKENS.NUMBER);
+        addSlice(j, isDot(line[j - 1]) ? TOKENS.UNKNOWN : TOKENS.NUMBER);
       } else {
         tokens.add(char, TOKENS.UNKNOWN, null, colors);
         i++;

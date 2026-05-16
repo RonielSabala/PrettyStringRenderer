@@ -2,6 +2,8 @@
 
 A high-fidelity monospace canvas engine for symbolic math art and code visualization. Transforms ASCII / Unicode text into colorized, high-resolution string-art suitable for screenshots, illustrations, or vector export.
 
+![app-screenshot](examples/app_screenshot.png)
+
 ---
 
 ## Table of Contents
@@ -31,6 +33,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - **Structural Bracket Support**: Inline and multiline bracket families with automatic nesting color cycles.
 - **High-Resolution Export**: Export **PNG** at custom scale multipliers or editable **SVG** files.
 - **Persistent State**: Your progress and workspace settings are automatically cached to `localStorage`.
+- **Light & Dark App Themes**: Native light and dark modes for the application UI.
 - **Configurable Workflow**: Comprehensive theme system and gitignored `userData/profile.json` for deep personalization.
 - **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `userData/keybindings.json`.
 
@@ -41,22 +44,25 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 ### Requirements
 
 - [Node.js](https://nodejs.org/)
-- **Recommended**: [Visual Studio Code](https://code.visualstudio.com/) with the [Vite extension](https://marketplace.visualstudio.com/items?itemName=antfu.vite).
+- [Visual Studio Code](https://code.visualstudio.com/) (Recommended)
 
 ---
 
 ### Installation
 
 ```bash
-npm install
+pnpm install
 ```
 
 ---
 
 ### Run Locally
 
-- **Via VS Code**: Click the **Vite** button in the status bar.
-- **Via Terminal**: Run `npm run dev` and access at `http://localhost:5173`.
+```bash
+pnpm run dev
+```
+
+Access at `http://localhost:5173`.
 
 ---
 
@@ -68,7 +74,7 @@ Start typing in the canvas editor to begin. See [SHORTCUTS.md](SHORTCUTS.md) for
 
 ## Export Options
 
-- **PNG**: Raster export with custom scale multipliers (e.g., `1`, `2`, `0.5`)
+- **PNG**: Raster export with custom scale multipliers (e.g., `0.5`, `1`, `2`)
 - **SVG**: Vector export where tokens are grouped by color. Fonts are embedded as attributes, making files fully editable in Figma, Illustrator, or Inkscape.
 
 ---
@@ -128,7 +134,7 @@ Keys you omit keep their default. Each entry maps an action to a key combination
 ```json
 {
   "app.fullReload": "ctrl+shift+r",
-  "canvas.focus": "escape"
+  "workspace.export": "ctrl+m"
 }
 ```
 

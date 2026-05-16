@@ -18,21 +18,13 @@ const { bracket, background, ...syntaxColors } = DEFAULT_THEME;
 
 // Generic color section
 
-interface ColorSectionProps {
-  id: string;
-  headerId: string;
+interface Props {
   title: string;
   keys: TokenType[];
   defaultCollapsed?: boolean;
 }
 
-export function ColorSection({
-  id,
-  headerId,
-  title,
-  keys,
-  defaultCollapsed,
-}: ColorSectionProps) {
+export function ColorSection({ title, keys, defaultCollapsed }: Props) {
   const colors = useStore((state) => state.colors);
   const redraw = useStore((state) => state.redraw);
   const handleChange = useCallback(
@@ -45,12 +37,7 @@ export function ColorSection({
   );
 
   return (
-    <SidebarSection
-      id={id}
-      headerId={headerId}
-      title={title}
-      defaultCollapsed={defaultCollapsed}
-    >
+    <SidebarSection title={title} defaultCollapsed={defaultCollapsed}>
       {keys.map((key) => (
         <ColorRow
           key={key}
@@ -90,12 +77,7 @@ export function BracketColorSection() {
   );
 
   return (
-    <SidebarSection
-      id="section-bracket-colors"
-      headerId="section-header-bracket-colors"
-      title="Bracket Colors"
-      defaultCollapsed
-    >
+    <SidebarSection title="Bracket Colors" defaultCollapsed>
       {!brackets || brackets.length === 0 ? (
         <p>No bracket colors to show.</p>
       ) : (
@@ -116,8 +98,6 @@ export function BracketColorSection() {
 export function SyntaxColorSection() {
   return (
     <ColorSection
-      id="section-syntax-colors"
-      headerId="section-header-syntax-colors"
       title="Syntax Colors"
       keys={Object.keys(syntaxColors) as TokenType[]}
       defaultCollapsed
@@ -128,8 +108,6 @@ export function SyntaxColorSection() {
 export function CanvasColorSection() {
   return (
     <ColorSection
-      id="section-canvas-colors"
-      headerId="section-header-canvas-colors"
       title="Canvas Colors"
       keys={[TOKENS.BACKGROUND]}
       defaultCollapsed

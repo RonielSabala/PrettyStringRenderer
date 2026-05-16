@@ -1,0 +1,19 @@
+.sidebar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-1-5) 0;
+}
+
+.row-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  user-select: none;
+  flex: 1;
+}
+
+.sidebar-row:hover .row-label {
+  color: var(--text-primary);
+}

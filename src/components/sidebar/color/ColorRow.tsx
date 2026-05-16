@@ -3,7 +3,9 @@ import { ArrowCounterclockwise, Eraser } from "react-bootstrap-icons";
 import { MAX_HEX_INPUT_LENGTH } from "../../../common/config";
 import { CSS_STYLE } from "../../../common/constants/css";
 import type { ThemeColor } from "../../../common/types";
+import "../SidebarRow.css";
 import { TransparentSwatchIcon } from "../TransparentSwatchIcon";
+import "./ColorRow.css";
 
 interface Props {
   id: string;
@@ -16,13 +18,18 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
   const [hexValue, setHexValue] = useState(color);
   const [previousColor, setPreviousColor] = useState<ThemeColor>(null);
 
+  const hexInputId = `hex-input-${id}`;
+
   // Sync external color changes
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHexValue(color);
   }, [color]);
 
-  const handleHex = (value: ThemeColor) => {
+  const handleHexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+
+    setHexValue(value);
     if (!value || /^#[0-9A-Fa-f]{6}$/.test(value)) {
       onChange(value);
     }
@@ -39,49 +46,51 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
   };
 
   return (
-    <div className="row">
-      <label>{label}</label>
-      <div className="swatch">
-        <div
-          id={`swatch-fill-${id}`}
-          className="swatch-fill"
-          style={{ background: color || CSS_STYLE.TRANSPARENT }}
-        >
-          {!color && <TransparentSwatchIcon />}
+    <div className="sidebar-row">
+      <label htmlFor={hexInputId} className="row-label">
+        {label}
+      </label>
+      <div className="color-controls">
+        <div className="input-group">
+          <div className="swatch-container">
+            <div
+              className="swatch-preview"
+              style={{ background: color || CSS_STYLE.TRANSPARENT }}
+            >
+              {!color && <TransparentSwatchIcon />}
+            </div>
+
+            <input
+              type="color"
+              className="hidden-color-picker"
+              value={color || "#000000"}
+              onChange={(event) => onChange(event.target.value)}
+            />
+          </div>
+
+          <input
+            id={hexInputId}
+            className="hex-input"
+            value={hexValue || ""}
+            placeholder="None"
+            autoComplete="off"
+            maxLength={MAX_HEX_INPUT_LENGTH}
+            onChange={handleHexChange}
+          />
         </div>
-        <input
-          id={`color-picker-${id}`}
-          type="color"
-          value={color || "#000000"}
-          onChange={(event) => onChange(event.target.value)}
-        />
+
+        <div className="action-container">
+          {color ? (
+            <button className="app-btn color-action-btn" onClick={handleClear}>
+              <Eraser className="app-icon" />
+            </button>
+          ) : previousColor ? (
+            <button className="app-btn color-action-btn" onClick={handleUndo}>
+              <ArrowCounterclockwise className="app-icon" />
+            </button>
+          ) : null}
+        </div>
       </div>
-      <input
-        id={`hex-input-${id}`}
-        className="hex-input"
-        value={hexValue || ""}
-        maxLength={MAX_HEX_INPUT_LENGTH}
-        onChange={(event) => handleHex(event.target.value)}
-      />
-      {color ? (
-        <button
-          id={`clear-color-${id}`}
-          className="clear-color-btn"
-          onClick={handleClear}
-          title="Clear color"
-        >
-          <Eraser size={16} />
-        </button>
-      ) : previousColor ? (
-        <button
-          id={`undo-clear-${id}`}
-          className="clear-color-btn"
-          onClick={handleUndo}
-          title="Undo clear"
-        >
-          <ArrowCounterclockwise size={16} />
-        </button>
-      ) : null}
     </div>
   );
 }

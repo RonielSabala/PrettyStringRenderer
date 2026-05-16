@@ -1,0 +1,57 @@
+.sidebar-section {
+  border-bottom: var(--border-standard);
+}
+
+.app-btn.section-header {
+  padding: var(--space-5) var(--space-6);
+  border-radius: 0;
+  transition: background-color 0.15s ease;
+}
+
+.app-btn.section-header:hover {
+  box-shadow: none;
+  background: var(--surface-card);
+}
+
+.app-btn.section-header:hover .accordion-icon {
+  color: var(--text-secondary);
+}
+
+.section-title {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex: 1;
+}
+
+.accordion-icon {
+  color: var(--text-muted);
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.header-collapsed .accordion-icon {
+  transform: rotate(-90deg);
+}
+
+.section-body-wrapper {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition:
+    grid-template-rows 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.section-body-wrapper.collapsed {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.section-body {
+  overflow: hidden;
+  padding: 0 var(--scrollbar-size) var(--space-6) var(--space-6);
+}

@@ -1,0 +1,33 @@
+.filename-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-7);
+}
+
+.filename-input-label {
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+#filename-input {
+  padding: var(--space-4) var(--space-6);
+  border: var(--border-standard);
+  border-radius: var(--radius-3);
+  background: var(--surface-card);
+  color: var(--text-primary);
+  font-size: var(--text-md);
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+#filename-input:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+}
+
+#filename-input::placeholder {
+  color: var(--text-muted);
+}

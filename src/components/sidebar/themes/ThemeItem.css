@@ -1,0 +1,76 @@
+.action-btn.theme-item {
+  font-size: var(--text-sm-tight);
+  font-weight: 400;
+  background: var(--surface-card);
+  justify-content: space-between;
+}
+
+.action-btn.theme-item:hover {
+  border-color: var(--accent);
+}
+
+.action-btn.theme-item.active {
+  font-weight: 500;
+  color: var(--text-primary);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.action-btn.theme-item.active,
+.action-btn.theme-item.active:hover {
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.theme-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.theme-item-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.theme-swatch {
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: 25%;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.theme-swatch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--space-1) solid var(--white-a20);
+  border-radius: inherit;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.app-btn.theme-delete-btn {
+  color: var(--text-muted);
+  padding: 0;
+  opacity: 0;
+  transition:
+    opacity 0.1s,
+    color 0.1s;
+}
+
+.app-btn.theme-delete-btn:hover {
+  color: var(--danger);
+  box-shadow: none;
+  opacity: 1;
+}
+
+.theme-item:hover .theme-delete-btn:not(:hover) {
+  opacity: 1;
+}

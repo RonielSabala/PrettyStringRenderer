@@ -1,0 +1,60 @@
+.header-title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+
+.header-title-separator {
+  flex: 1;
+}
+
+.header-badge {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  background: var(--accent-dim);
+  border: var(--border-standard);
+  padding: var(--space-1-5) var(--space-4);
+  border-radius: var(--radius-10);
+}
+
+/* Reset button */
+
+#workspace-reset-btn {
+  color: var(--text-accent);
+  border-color: var(--danger);
+  background: var(--danger-dim);
+  flex: 0;
+}
+
+#workspace-reset-btn:hover {
+  border-color: var(--danger);
+  background: var(--danger);
+}
+
+/* Export button */
+
+#workspace-export-btn {
+  color: var(--text-accent);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  flex: 0;
+}
+
+#workspace-export-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+/* App theme button */
+
+#app-theme-btn {
+  flex: 0;
+  padding: var(--space-3);
+  color: var(--text-muted);
+  border: none;
+}
+
+#app-theme-btn:hover {
+  color: var(--text-accent);
+}

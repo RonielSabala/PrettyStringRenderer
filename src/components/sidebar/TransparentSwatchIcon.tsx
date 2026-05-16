@@ -1,16 +1,11 @@
 import { useId } from "react";
 
-interface Props {
-  className?: string;
-}
-
-export function TransparentSwatchIcon({ className }: Props) {
+export function TransparentSwatchIcon() {
   const patternId = useId();
 
   return (
     <svg
       viewBox="0 0 14 14"
-      className={className}
       aria-hidden="true"
       focusable="false"
       style={{ width: "100%", height: "100%", display: "block" }}
@@ -21,24 +16,28 @@ export function TransparentSwatchIcon({ className }: Props) {
           width="4"
           height="4"
           patternUnits="userSpaceOnUse"
+          shapeRendering="crispEdges"
         >
-          <rect width="2" height="2" fill="rgba(255, 255, 255, 0.2)" />
-          <rect
-            x="2"
-            y="2"
-            width="2"
-            height="2"
-            fill="rgba(255, 255, 255, 0.15)"
-          />
+          <rect width="2" height="2" fill="white" opacity="0.2" />
+          <rect x="2" y="2" width="2" height="2" fill="white" opacity="0.15" />
         </pattern>
       </defs>
-      <rect width="14" height="14" fill={`url(#${patternId})`} />
+
+      <rect
+        width="14"
+        height="14"
+        fill={`url(#${patternId})`}
+        style={{
+          mixBlendMode: "difference",
+        }}
+      />
+
       <line
         x1="2"
         y1="12"
         x2="12"
         y2="2"
-        stroke="rgb(220, 30, 30, 0.9)"
+        stroke="rgba(220, 30, 30, 0.95)"
         strokeWidth="1.3"
         strokeLinecap="square"
       />

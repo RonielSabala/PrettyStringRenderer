@@ -1,0 +1,10 @@
+#dialog-primary-btn {
+  color: var(--text-accent);
+  border-color: var(--accent);
+  background: var(--accent);
+  padding: var(--space-4) var(--space-6);
+}
+
+#dialog-primary-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}

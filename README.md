@@ -2,7 +2,7 @@
 
 A high-fidelity monospace canvas engine for symbolic math art and code visualization. Transforms ASCII / Unicode text into colorized, high-resolution string-art suitable for screenshots, illustrations, or vector export.
 
-![app-screenshot](examples/app_screenshot.png)
+![Hero Screenshot](examples/app/hero_screenshot.png)
 
 ---
 

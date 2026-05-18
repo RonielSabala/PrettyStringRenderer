@@ -65,7 +65,7 @@ pnpm install
 pnpm run dev
 ```
 
-Access at `http://localhost:5173`.
+Access at `http://localhost:5173`. Use `Ctrl+C` to stop.
 
 ---
 

@@ -9,7 +9,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 ## Table of Contents
 
 - [Features](#features)
-- [Getting Started](#getting-started)
+- [Quick Start](#quick-start)
   - [Requirements](#requirements)
   - [Installation](#installation)
   - [Run Locally](#run-locally)
@@ -42,7 +42,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 
 ---
 
-## Getting Started
+## Quick Start
 
 ### Requirements
 

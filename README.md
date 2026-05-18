@@ -34,11 +34,10 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - **High-Resolution Export**: Export **PNG** at custom scale multipliers or editable **SVG** files.
 - **Persistent State**: Workspace settings are automatically cached to `localStorage`.
 - **Light & Dark Modes**: Native light and dark modes for the application UI.
-
-![App screenshot - dark mode](docs/screenshots/hero_dark_mode.png)
-
 - **Deep Personalization**: Comprehensive theme system and a gitignored `userData/profile.json` for local overrides.
 - **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `userData/keybindings.json`.
+
+![App screenshot - dark mode](docs/screenshots/hero_dark_mode.png)
 
 ---
 

@@ -79,7 +79,7 @@ Start typing in the canvas editor to begin. See [SHORTCUTS.md](SHORTCUTS.md) for
 | format  | details                                                                                                                                            |
 | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **PNG** | Raster export with custom scale multipliers (e.g., `0.5`, `1`, `2`)                                                                                |
-| **SGV** | Vector export where tokens are grouped by color. Fonts are embedded as attributes, making files fully editable in Figma, Illustrator, or Inkscape. |
+| **SVG** | Vector export where tokens are grouped by color. Fonts are embedded as attributes, making files fully editable in Figma, Illustrator, or Inkscape. |
 
 ![Export options](docs/screenshots/export_options.png)
 

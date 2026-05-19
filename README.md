@@ -2,7 +2,7 @@
 
 A high-fidelity monospace canvas engine for symbolic math art and code visualization. Transforms ASCII / Unicode text into colorized, high-resolution string-art suitable for screenshots, illustrations, or vector export.
 
-![App screenshot - light mode](docs/screenshots/hero_light_mode.png)
+![Hero light](docs/screenshots/hero_light.png)
 
 ---
 
@@ -37,7 +37,7 @@ A high-fidelity monospace canvas engine for symbolic math art and code visualiza
 - **Deep Personalization**: Comprehensive theme system and a gitignored `userData/profile.json` for local overrides.
 - **Keyboard-first Workflow**: Most actions have keyboard shortcuts, all configurable via `userData/keybindings.json`.
 
-![App screenshot - dark mode](docs/screenshots/hero_dark_mode.png)
+![Hero dark](docs/screenshots/hero_dark.png)
 
 ---
 
@@ -119,7 +119,7 @@ Themes are plain JSON objects. Every key is **nullable** and can be omitted; mis
 }
 ```
 
-![Theme example](docs/screenshots/theme_source.png)
+![Theme preview](docs/screenshots/theme_preview.png)
 
 The `bracket` array accepts any number of colors; nesting depth cycles through them automatically.
 

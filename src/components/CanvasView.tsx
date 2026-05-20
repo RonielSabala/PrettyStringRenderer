@@ -307,7 +307,7 @@ export default function CanvasView() {
     };
 
     const updateBackgroundPattern = () => {
-      if (!innerRef.current) {
+      if (backgroundColor || !innerRef.current) {
         return;
       }
 
@@ -322,7 +322,6 @@ export default function CanvasView() {
     };
 
     // Initial sync
-    syncCanvasInnerSize();
     updateBackgroundPattern();
 
     // Watch for canvas size changes

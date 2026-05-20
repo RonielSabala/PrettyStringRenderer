@@ -75,7 +75,7 @@ export const EDITOR_DEFAULTS = {
 
 // Canvas
 
-export const CANVAS_MIN_ZOOM = 0.3;
+export const CANVAS_MIN_ZOOM = 0.01;
 export const CANVAS_MAX_ZOOM = 10;
 export const CANVAS_ZOOM_FACTOR = 1.15;
 export const CANVAS_PAN_SCROLL_SPEED = 0.5;

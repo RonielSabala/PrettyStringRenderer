@@ -27,6 +27,7 @@ export default function CanvasView() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
 
+  const zoom = useStore((state) => state.canvasConfig.zoom);
   const setCanvasConfig = useStore((state) => state.setCanvasConfig);
 
   // Imperative state
@@ -281,6 +282,22 @@ export default function CanvasView() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Keep background pattern size constant regardless of zoom
+  useEffect(() => {
+    if (!innerRef.current) {
+      return;
+    }
+
+    const inverseZoom = 1 / zoom;
+    const scaledSize = `calc(var(--space-6) * ${inverseZoom})`;
+    const scaledOffset = `calc(var(--space-3) * ${inverseZoom})`;
+    const minusScaledOffset = `calc(${scaledOffset} * -1)`;
+    const innerRefStyle = innerRef.current.style;
+
+    innerRefStyle.backgroundSize = `${scaledSize} ${scaledSize}`;
+    innerRefStyle.backgroundPosition = `0 0, 0 ${scaledOffset}, ${scaledOffset} ${minusScaledOffset}, ${minusScaledOffset} 0`;
+  }, [zoom]);
 
   return (
     <div id="canvas-wrap" ref={wrapRef} tabIndex={-1}>

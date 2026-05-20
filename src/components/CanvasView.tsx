@@ -29,6 +29,7 @@ export default function CanvasView() {
 
   const zoom = useStore((state) => state.canvasConfig.zoom);
   const setCanvasConfig = useStore((state) => state.setCanvasConfig);
+  const backgroundColor = useStore((state) => state.colors.background);
 
   // Imperative state
   const spaceHeld = useRef(false);
@@ -39,12 +40,14 @@ export default function CanvasView() {
   // CSS transform helpers
 
   const applyTransform = () => {
-    if (!innerRef.current) {
+    if (!canvasRef.current || !innerRef.current) {
       return;
     }
 
     const { zoom, panX, panY } = zustand.getState().canvasConfig;
-    innerRef.current.style.transform = `translate(${toPx(panX)},${toPx(panY)}) scale(${zoom})`;
+    const transform = `translate(${toPx(panX)},${toPx(panY)}) scale(${zoom})`;
+    canvasRef.current.style.transform = transform;
+    innerRef.current.style.transform = transform;
   };
 
   const scheduleTransform = () => {
@@ -285,25 +288,55 @@ export default function CanvasView() {
 
   // Keep background pattern size constant regardless of zoom
   useEffect(() => {
-    if (!innerRef.current) {
+    if (!innerRef.current || !canvasRef.current) {
       return;
     }
 
-    const inverseZoom = 1 / zoom;
-    const scaledSize = `calc(var(--space-6) * ${inverseZoom})`;
-    const scaledOffset = `calc(var(--space-3) * ${inverseZoom})`;
-    const minusScaledOffset = `calc(${scaledOffset} * -1)`;
-    const innerRefStyle = innerRef.current.style;
+    const syncCanvasInnerSize = () => {
+      if (!innerRef.current || !canvasRef.current) {
+        return;
+      }
 
-    innerRefStyle.backgroundSize = `${scaledSize} ${scaledSize}`;
-    innerRefStyle.backgroundPosition = `0 0, 0 ${scaledOffset}, ${scaledOffset} ${minusScaledOffset}, ${minusScaledOffset} 0`;
-  }, [zoom]);
+      const innerRefStyle = innerRef.current.style;
+      innerRefStyle.opacity = `${Number(!backgroundColor)}`;
+      innerRefStyle.width = toPx(canvasRef.current.offsetWidth);
+      innerRefStyle.height = toPx(canvasRef.current.offsetHeight);
+    };
+
+    const updateBackgroundPattern = () => {
+      if (!innerRef.current) {
+        return;
+      }
+
+      const inverseZoom = 1 / zoom;
+      const scaledSize = `calc(var(--space-6) * ${inverseZoom})`;
+      const scaledOffset = `calc(var(--space-3) * ${inverseZoom})`;
+      const minusScaledOffset = `calc(${scaledOffset} * -1)`;
+
+      const innerRefStyle = innerRef.current.style;
+      innerRefStyle.backgroundSize = `${scaledSize} ${scaledSize}`;
+      innerRefStyle.backgroundPosition = `0 0, 0 ${scaledOffset}, ${scaledOffset} ${minusScaledOffset}, ${minusScaledOffset} 0`;
+    };
+
+    // Initial sync
+    syncCanvasInnerSize();
+    updateBackgroundPattern();
+
+    // Watch for canvas size changes
+    const resizeObserver = new ResizeObserver(() => {
+      syncCanvasInnerSize();
+    });
+
+    resizeObserver.observe(canvasRef.current);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [zoom, backgroundColor]);
 
   return (
     <div id="canvas-wrap" ref={wrapRef} tabIndex={-1}>
-      <div id="canvas-inner" ref={innerRef}>
-        <canvas id="canvas" ref={canvasRef} />
-      </div>
+      <div id="canvas-inner" ref={innerRef} />
+      <canvas id="canvas" ref={canvasRef} />
     </div>
   );
 }

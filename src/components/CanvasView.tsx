@@ -68,7 +68,10 @@ export default function CanvasView() {
       return;
     }
 
-    canvasRef.current.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
+    const canvasStyle = canvasRef.current.style;
+    canvasStyle.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
+    canvasStyle.boxShadow = "0 var(--space-2) var(--space-12) var(--black-a70)";
+
     const buffer = createBuffer(
       canvasRef.current,
       wrapRef.current,

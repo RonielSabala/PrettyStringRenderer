@@ -31,5 +31,4 @@
   transform-origin: center center;
   z-index: 1;
   will-change: transform;
-  box-shadow: 0 var(--space-2) var(--space-12) var(--black-a70);
 }

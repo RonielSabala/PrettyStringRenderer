@@ -141,7 +141,6 @@ export default function CanvasView() {
     }
 
     setCanvasConfig({ zoom: CANVAS_DEFAULTS.zoom, panX: 0, panY: 0 });
-
     scheduleTransform();
     zustand.getState().scheduleRedraw();
     _scheduleSave();

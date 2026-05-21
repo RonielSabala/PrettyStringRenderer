@@ -4,6 +4,7 @@ import {
   CANVAS_MIN_PIXEL_SCALE,
   CANVAS_REDRAW_TIMEOUT_MS,
   CANVAS_VIEWPORT_PADDING_PX,
+  TYPOGRAPHY_DEFAULTS,
 } from "../common/config";
 import { getStore } from "../common/store";
 import { toPx } from "../utils/resolution";
@@ -17,15 +18,32 @@ import {
 // Private helpers
 
 function _getPixelScale(): number {
-  const zoom = Math.ceil(getStore().canvasConfig.zoom);
-  return Math.min(
+  const zoom = getStore().canvasConfig.zoom;
+  const fontSize = getStore().typographyConfig.fontSize;
+  const minFontSize = TYPOGRAPHY_DEFAULTS.fontSize.min;
+  const defaultFontSize = TYPOGRAPHY_DEFAULTS.fontSize.value;
+
+  // Intervals
+  const fontRange = defaultFontSize - minFontSize;
+  const pixelScaleRange = CANVAS_MAX_PIXEL_SCALE - CANVAS_MIN_PIXEL_SCALE;
+
+  // Base pixel scale determined by font size
+  const fontProgress = Math.min(1, (fontSize - minFontSize) / fontRange);
+  const basePixelScale =
+    CANVAS_MAX_PIXEL_SCALE - fontProgress * pixelScaleRange;
+
+  // Apply zoom factor
+  const pixelScale = Math.ceil(basePixelScale * zoom);
+  const normalizedPixelScale = Math.min(
     CANVAS_MAX_PIXEL_SCALE,
-    Math.max(CANVAS_MIN_PIXEL_SCALE, zoom),
+    Math.max(CANVAS_MIN_PIXEL_SCALE, pixelScale),
   );
+
+  return normalizedPixelScale;
 }
 
 function _getNormalizedDimension(n: number): string {
-  return toPx(Math.max(1, Math.round(n)));
+  return toPx(Math.max(1, Math.ceil(n)));
 }
 
 function _calculateFitDimensions(): { width: number; height: number } {
@@ -72,11 +90,10 @@ export function createBuffer(
     let displayHeight: number;
 
     if (getStore().canvasConfig.fitToContent) {
-      const pixelS = pixelScale ?? _getPixelScale();
-      const bufferWidth = canvasElement.width / pixelS;
-      const bufferHeight = canvasElement.height / pixelS;
+      const canvasPixelScale = pixelScale ?? _getPixelScale();
+      const bufferWidth = canvasElement.width / canvasPixelScale;
+      const bufferHeight = canvasElement.height / canvasPixelScale;
       const scale = Math.min(
-        1,
         availableWidth / bufferWidth,
         availableHeight / bufferHeight,
       );

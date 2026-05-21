@@ -176,7 +176,6 @@ export default function EditorPanel() {
     setEditorConfig({ height: newHeight });
     _scheduleSave();
 
-    // Defer adjustCanvas call until after DOM update from state changes
     setTimeout(() => adjustCanvas(), 0);
   }, [height, setEditorConfig, adjustCanvas]);
 

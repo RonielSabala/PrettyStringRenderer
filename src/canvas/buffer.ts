@@ -15,46 +15,98 @@ import {
   updateTextMetrics,
 } from "./renderer";
 
+type Dimensions = {
+  width: number;
+  height: number;
+};
+
 // Private helpers
-
-function _getPixelScale(): number {
-  const zoom = getStore().canvasConfig.zoom;
-  const fontSize = getStore().typographyConfig.fontSize;
-  const minFontSize = TYPOGRAPHY_DEFAULTS.fontSize.min;
-  const defaultFontSize = TYPOGRAPHY_DEFAULTS.fontSize.value;
-
-  // Intervals
-  const fontRange = defaultFontSize - minFontSize;
-  const pixelScaleRange = CANVAS_MAX_PIXEL_SCALE - CANVAS_MIN_PIXEL_SCALE;
-
-  // Base pixel scale determined by font size
-  const fontProgress = Math.min(1, (fontSize - minFontSize) / fontRange);
-  const basePixelScale =
-    CANVAS_MAX_PIXEL_SCALE - fontProgress * pixelScaleRange;
-
-  // Apply zoom factor
-  const pixelScale = Math.ceil(basePixelScale * zoom);
-  const normalizedPixelScale = Math.min(
-    CANVAS_MAX_PIXEL_SCALE,
-    Math.max(CANVAS_MIN_PIXEL_SCALE, pixelScale),
-  );
-
-  return normalizedPixelScale;
-}
 
 function _getNormalizedDimension(n: number): string {
   return toPx(Math.max(1, Math.ceil(n)));
 }
 
-function _calculateFitDimensions(): { width: number; height: number } {
+function _getOptimalFontSize(
+  availableWidth: number,
+  availableHeight: number,
+): number {
   const config = getStore().typographyConfig;
-  updateTextMetrics(config);
-
+  const fontDefaults = TYPOGRAPHY_DEFAULTS.fontSize;
   const { tokenizer } = getStore();
-  const lineHeight = config.fontSize * config.lineHeight;
+  const linesCount = tokenizer.linesCount;
+  const longestLine = tokenizer.longestLine;
+
+  if (linesCount === 0 || longestLine === 0) {
+    return fontDefaults.value;
+  }
+
+  // Compute character width metric at unit font size
+  updateTextMetrics({ ...config, fontSize: 1 });
+
+  const widthCoefficient = longestLine * charWidthMetric!;
+  const heightCoefficient = linesCount * config.lineHeight;
+
+  const optimalFontSizeByWidth = Math.ceil(
+    (availableWidth - 2 * config.padX) / widthCoefficient,
+  );
+  const optimalFontSizeByHeight = Math.ceil(
+    (availableHeight - 2 * config.padY) / heightCoefficient,
+  );
+
+  const optimalFontSize = Math.min(
+    optimalFontSizeByWidth,
+    optimalFontSizeByHeight,
+  );
+
+  return Math.min(
+    fontDefaults.max,
+    Math.max(fontDefaults.min, optimalFontSize),
+  );
+}
+
+function _getPixelScale(
+  availableWidth: number,
+  availableHeight: number,
+  fitToContent: boolean,
+): number {
+  const zoom = getStore().canvasConfig.zoom;
+  let pixelScale = zoom;
+
+  // Apply font size factor
+  if (fitToContent) {
+    const minFontSize = TYPOGRAPHY_DEFAULTS.fontSize.min;
+    const fontSize = getStore().typographyConfig.fontSize;
+    const optimalFontSize = _getOptimalFontSize(
+      availableWidth,
+      availableHeight,
+    );
+
+    const fontRange = optimalFontSize - minFontSize;
+    const pixelScaleRange = CANVAS_MAX_PIXEL_SCALE - CANVAS_MIN_PIXEL_SCALE;
+    const fontProgress = Math.min(1, (fontSize - minFontSize) / fontRange);
+
+    pixelScale *= CANVAS_MAX_PIXEL_SCALE - fontProgress * pixelScaleRange;
+  }
+
+  return Math.min(
+    CANVAS_MAX_PIXEL_SCALE,
+    Math.max(CANVAS_MIN_PIXEL_SCALE, Math.ceil(pixelScale)),
+  );
+}
+
+function _calculateFitDimensions(): Dimensions {
+  const config = getStore().typographyConfig;
+  const { tokenizer } = getStore();
+
+  updateTextMetrics(config);
   return {
-    width: Math.ceil(config.padX * 2 + tokenizer.maxLine * charWidthMetric!),
-    height: Math.ceil(config.padY * 2 + tokenizer.linesCount * lineHeight),
+    width: Math.ceil(
+      2 * config.padX + tokenizer.longestLine * charWidthMetric!,
+    ),
+    height: Math.ceil(
+      2 * config.padY +
+        tokenizer.linesCount * config.lineHeight * config.fontSize,
+    ),
   };
 }
 
@@ -80,17 +132,23 @@ export function createBuffer(
   let _lastBufferWidth: number | null = null;
   let _lastBufferHeight: number | null = null;
 
+  function getAvailableDimensions(): Dimensions {
+    return {
+      width: canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX,
+      height: canvasWrapElement.clientHeight - CANVAS_VIEWPORT_PADDING_PX,
+    };
+  }
+
   function adjustCanvas(pixelScale: number | null = null): void {
-    const availableWidth =
-      canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX;
-    const availableHeight =
-      canvasWrapElement.clientHeight - CANVAS_VIEWPORT_PADDING_PX;
+    const { width: availableWidth, height: availableHeight } =
+      getAvailableDimensions();
 
     let displayWidth: number;
     let displayHeight: number;
 
     if (getStore().canvasConfig.fitToContent) {
-      const canvasPixelScale = pixelScale ?? _getPixelScale();
+      const canvasPixelScale =
+        pixelScale ?? _getPixelScale(availableWidth, availableHeight, true);
       const bufferWidth = canvasElement.width / canvasPixelScale;
       const bufferHeight = canvasElement.height / canvasPixelScale;
       const scale = Math.min(
@@ -110,14 +168,25 @@ export function createBuffer(
     canvasElement.style.height = _getNormalizedDimension(displayHeight);
   }
 
-  function redraw(forceAdjust = false): void {
+  function redraw(forceAdjust = false, pixelScale?: number): void {
     const { canvasConfig } = getStore();
     const fitToContent = canvasConfig.fitToContent;
+
     const { width, height } = fitToContent
       ? _calculateFitDimensions()
       : CANVAS_DEFAULTS;
 
-    const pixelScale = _getPixelScale();
+    if (pixelScale === undefined) {
+      const { width: availableWidth, height: availableHeight } =
+        getAvailableDimensions();
+
+      pixelScale = _getPixelScale(
+        availableWidth,
+        availableHeight,
+        fitToContent,
+      );
+    }
+
     _currentPixelScale = pixelScale;
 
     const bufferWidth = pixelScale * width;
@@ -148,12 +217,19 @@ export function createBuffer(
   }
 
   function scheduleRedraw(): void {
-    if (_currentPixelScale === _getPixelScale()) {
+    const fitToContent = getStore().canvasConfig.fitToContent;
+    const { width, height } = getAvailableDimensions();
+    const pixelScale = _getPixelScale(width, height, fitToContent);
+
+    if (pixelScale === _currentPixelScale) {
       return;
     }
 
     destroy();
-    _redrawTimer = setTimeout(redraw, CANVAS_REDRAW_TIMEOUT_MS);
+    _redrawTimer = setTimeout(
+      () => redraw(undefined, pixelScale),
+      CANVAS_REDRAW_TIMEOUT_MS,
+    );
   }
 
   return { redraw, scheduleRedraw, adjustCanvas, destroy };

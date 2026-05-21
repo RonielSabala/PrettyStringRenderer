@@ -51,7 +51,7 @@ export default function Header({ onExportClick }: Props) {
         )}
       </button>
       <div className="header-title-separator" />
-      <div className="header-badge no-user-select">
+      <div className="header-badge">
         {`${createResolution(width, height)} / ${roundUp(width / height)}:1`}
       </div>
       <button

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createBuffer } from "../canvas/buffer";
 import {
   APP_FONT_VARIANT_LIGATURES,
@@ -22,14 +22,160 @@ import "./CanvasView.css";
 
 const _scheduleSave = createSaveScheduler(saveCanvasConfigState);
 
+const MIN_THUMB_SIZE_FRACTION = 0.04;
+
+const SCROLLBAR_ORIENTATION = Object.freeze({
+  HORIZONTAL: "horizontal",
+  VERTICAL: "vertical",
+} as const);
+
+type ScrollbarOrientation =
+  (typeof SCROLLBAR_ORIENTATION)[keyof typeof SCROLLBAR_ORIENTATION];
+
+interface ScrollbarProps {
+  orientation: ScrollbarOrientation;
+  zoom: number;
+  displaySize: number;
+  viewportSize: number;
+  pan: number;
+  onPan: (pan: number) => void;
+}
+
+function CanvasScrollbar({
+  orientation,
+  zoom,
+  displaySize,
+  viewportSize,
+  pan,
+  onPan,
+}: ScrollbarProps) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const dragStartState = useRef({ clientPos: 0, panAtDragStart: 0 });
+  const isHorizontal = orientation === SCROLLBAR_ORIENTATION.HORIZONTAL;
+
+  // Calculate dimensions
+  const scaledContentSize = zoom * displaySize;
+  const visiblePortionFraction = viewportSize / scaledContentSize;
+
+  // No scrollbar needed
+  if (visiblePortionFraction >= 1) {
+    return null;
+  }
+
+  // Calculate scrollbar proportions
+  const thumbSizeFraction = Math.max(
+    MIN_THUMB_SIZE_FRACTION,
+    visiblePortionFraction,
+  );
+  const maxPanDistance = (scaledContentSize - viewportSize) / 2;
+  const minPanDistance = -maxPanDistance;
+  const totalPanRange = maxPanDistance - minPanDistance;
+
+  // Calculate thumb position and size
+  const normalizedPan = (maxPanDistance - pan) / totalPanRange;
+  const thumbPositionFraction = normalizedPan * (1 - thumbSizeFraction);
+
+  const clampPanValue = (panValue: number) =>
+    Math.max(minPanDistance, Math.min(maxPanDistance, panValue));
+
+  const handleTrackClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!trackRef.current || isDragging.current) {
+      return;
+    }
+
+    const rect = trackRef.current.getBoundingClientRect();
+    const clickPosition = isHorizontal
+      ? (event.clientX - rect.left) / rect.width
+      : (event.clientY - rect.top) / rect.height;
+
+    const normalizedClickPos = Math.max(
+      0,
+      Math.min(1, clickPosition - thumbSizeFraction / 2),
+    );
+    const newPan =
+      maxPanDistance -
+      (normalizedClickPos / (1 - thumbSizeFraction)) * totalPanRange;
+
+    onPan(clampPanValue(newPan));
+  };
+
+  const handleThumbMouseDown = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+    isDragging.current = true;
+    dragStartState.current = {
+      clientPos: isHorizontal ? event.clientX : event.clientY,
+      panAtDragStart: pan,
+    };
+
+    const handleMouseMove = (mouseEvent: MouseEvent) => {
+      if (!trackRef.current) {
+        return;
+      }
+
+      const rect = trackRef.current.getBoundingClientRect();
+      const trackSize = isHorizontal ? rect.width : rect.height;
+      const dragDelta =
+        (isHorizontal ? mouseEvent.clientX : mouseEvent.clientY) -
+        dragStartState.current.clientPos;
+      const panDelta =
+        -(dragDelta / (trackSize * (1 - thumbSizeFraction))) * totalPanRange;
+
+      onPan(clampPanValue(dragStartState.current.panAtDragStart + panDelta));
+    };
+
+    const handleMouseUp = () => {
+      isDragging.current = false;
+      document.removeEventListener(EVENTS.MOUSE_MOVE, handleMouseMove);
+      document.removeEventListener(EVENTS.MOUSE_UP, handleMouseUp);
+    };
+
+    document.addEventListener(EVENTS.MOUSE_MOVE, handleMouseMove);
+    document.addEventListener(EVENTS.MOUSE_UP, handleMouseUp);
+  };
+
+  return (
+    <div
+      className={`canvas-scrollbar canvas-scrollbar-${orientation}`}
+      ref={trackRef}
+      onClick={handleTrackClick}
+    >
+      <div
+        className="canvas-scrollbar-thumb"
+        style={
+          isHorizontal
+            ? {
+                width: `${thumbSizeFraction * 100}%`,
+                left: `${thumbPositionFraction * 100}%`,
+              }
+            : {
+                height: `${thumbSizeFraction * 100}%`,
+                top: `${thumbPositionFraction * 100}%`,
+              }
+        }
+        onMouseDown={handleThumbMouseDown}
+        onClick={(event) => event.stopPropagation()}
+      />
+    </div>
+  );
+}
+
 export default function CanvasView() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
 
   const zoom = useStore((state) => state.canvasConfig.zoom);
-  const setCanvasConfig = useStore((state) => state.setCanvasConfig);
+  const panX = useStore((state) => state.canvasConfig.panX);
+  const panY = useStore((state) => state.canvasConfig.panY);
+  const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
+  const [canvasRenderSize, setCanvasRenderSize] = useState({
+    width: 0,
+    height: 0,
+  });
   const backgroundColor = useStore((state) => state.colors.background);
+  const setCanvasConfig = useStore((state) => state.setCanvasConfig);
 
   // Imperative state
   const spaceHeld = useRef(false);
@@ -37,7 +183,7 @@ export default function CanvasView() {
   const panStart = useRef({ x: 0, y: 0 });
   const rafId = useRef<number | null>(null);
 
-  // CSS transform helpers
+  // Transform helpers
 
   const applyTransform = () => {
     if (!canvasRef.current || !innerRef.current) {
@@ -62,7 +208,6 @@ export default function CanvasView() {
   };
 
   // Buffer mount
-
   useEffect(() => {
     if (!canvasRef.current || !wrapRef.current) {
       return;
@@ -92,14 +237,49 @@ export default function CanvasView() {
     applyTransform();
     buffer.adjustCanvas();
 
+    const resizeObserver = new ResizeObserver(() => {
+      if (!wrapRef.current || !canvasRef.current) {
+        return;
+      }
+
+      setViewportSize({
+        width: wrapRef.current.clientWidth,
+        height: wrapRef.current.clientHeight,
+      });
+      setCanvasRenderSize({
+        width: canvasRef.current.offsetWidth,
+        height: canvasRef.current.offsetHeight,
+      });
+    });
+
+    resizeObserver.observe(wrapRef.current);
+    resizeObserver.observe(canvasRef.current);
+
     return () => {
       buffer.destroy();
+      resizeObserver.disconnect();
       zustand.setState({
         redraw: () => {},
         adjustCanvas: () => {},
         scheduleRedraw: () => {},
       });
     };
+  }, []);
+
+  // Pan helpers
+
+  const handlePanX = useCallback((pan: number) => {
+    zustand.getState().setCanvasConfig({ panX: pan });
+    scheduleTransform();
+    _scheduleSave();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePanY = useCallback((pan: number) => {
+    zustand.getState().setCanvasConfig({ panY: pan });
+    scheduleTransform();
+    _scheduleSave();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Zoom helpers
@@ -147,11 +327,9 @@ export default function CanvasView() {
   };
 
   // Canvas event handlers
-
   useEffect(() => {
     const wrap = wrapRef.current!;
 
-    // Zoom handler
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
       const canvasConfig = zustand.getState().canvasConfig;
@@ -175,7 +353,6 @@ export default function CanvasView() {
       _scheduleSave();
     };
 
-    // Panning-start handler
     const onMouseDown = (event: MouseEvent) => {
       if (!spaceHeld.current && event.button !== 2) {
         return;
@@ -193,14 +370,6 @@ export default function CanvasView() {
       wrap.style.cursor = CSS_CURSORS.GRABBING;
     };
 
-    wrap.addEventListener(EVENTS.CONTEXT_MENU, (event) =>
-      event.preventDefault(),
-    );
-    wrap.addEventListener(EVENTS.WHEEL, onWheel, { passive: false });
-    wrap.addEventListener(EVENTS.DBL_CLICK, resetZoom);
-    wrap.addEventListener(EVENTS.MOUSE_DOWN, onMouseDown);
-
-    // Panning handler
     const onMouseMove = (event: MouseEvent) => {
       if (!panning.current) {
         return;
@@ -214,7 +383,6 @@ export default function CanvasView() {
       scheduleTransform();
     };
 
-    // Panning-end handler
     const onMouseUp = () => {
       if (!panning.current) {
         return;
@@ -266,6 +434,13 @@ export default function CanvasView() {
         wrap.style.cursor = CSS_CURSORS.DEFAULT;
       }
     };
+
+    wrap.addEventListener(EVENTS.CONTEXT_MENU, (event) =>
+      event.preventDefault(),
+    );
+    wrap.addEventListener(EVENTS.WHEEL, onWheel, { passive: false });
+    wrap.addEventListener(EVENTS.DBL_CLICK, resetZoom);
+    wrap.addEventListener(EVENTS.MOUSE_DOWN, onMouseDown);
 
     document.addEventListener(EVENTS.MOUSE_MOVE, onMouseMove);
     document.addEventListener(EVENTS.MOUSE_UP, onMouseUp);
@@ -338,6 +513,22 @@ export default function CanvasView() {
     <div id="canvas-wrap" ref={wrapRef} tabIndex={-1}>
       <div id="canvas-inner" ref={innerRef} />
       <canvas id="canvas" ref={canvasRef} />
+      <CanvasScrollbar
+        orientation={SCROLLBAR_ORIENTATION.HORIZONTAL}
+        zoom={zoom}
+        displaySize={canvasRenderSize.width}
+        viewportSize={viewportSize.width}
+        pan={panX}
+        onPan={handlePanX}
+      />
+      <CanvasScrollbar
+        orientation={SCROLLBAR_ORIENTATION.VERTICAL}
+        zoom={zoom}
+        displaySize={canvasRenderSize.height}
+        viewportSize={viewportSize.height}
+        pan={panY}
+        onPan={handlePanY}
+      />
     </div>
   );
 }

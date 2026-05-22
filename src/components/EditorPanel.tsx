@@ -49,7 +49,7 @@ function EditorStatus() {
   return <>{`Zoom level: ${(zoom * 100).toFixed(0)}%`}</>;
 }
 
-// Main component
+// Editor component
 
 export default function EditorPanel() {
   const editorConfig = useStore((state) => state.editorConfig);
@@ -101,17 +101,19 @@ export default function EditorPanel() {
     redraw();
   }, [editorConfig.content, tokenize, redraw]);
 
-  // Handlers
+  // Helpers
+
+  const getEditorMinHeight = useCallback(() => {
+    const element = document.getElementById("editor-header");
+    return element?.offsetHeight ?? height;
+  }, [height]);
 
   const _getEditorHeight = () => panelRef.current?.offsetHeight;
 
-  const _getEditorMinHeight = () => {
-    const element = document.getElementById("editor-header");
-    return element?.offsetHeight;
-  };
-
   const _getNormalizedHeight = (y: number) =>
     startHeight.current + (startY.current - y);
+
+  // Handlers
 
   const handleContent = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -168,26 +170,23 @@ export default function EditorPanel() {
     const defaultHeight = EDITOR_DEFAULTS.height;
     const currentHeight = _getEditorHeight() ?? height;
     const newHeight =
-      currentHeight === defaultHeight
-        ? (_getEditorMinHeight() ?? height)
-        : defaultHeight;
+      currentHeight === defaultHeight ? getEditorMinHeight() : defaultHeight;
 
     setHeight(newHeight);
     setEditorConfig({ height: newHeight });
     _scheduleSave();
 
     setTimeout(() => adjustCanvas(), 0);
-  }, [height, setEditorConfig, adjustCanvas]);
+  }, [height, getEditorMinHeight, setEditorConfig, adjustCanvas]);
 
   // Canvas mouse keybinding
-
   useEffect(() => {
     const onMouseMove = (event: MouseEvent) => {
       if (!dragging.current) {
         return;
       }
 
-      const minHeight = _getEditorMinHeight() ?? height;
+      const minHeight = getEditorMinHeight();
       const maxHeight = startMaxHeight.current;
 
       const currentHeight = _getEditorHeight() ?? 0;
@@ -225,10 +224,9 @@ export default function EditorPanel() {
       document.removeEventListener(EVENTS.MOUSE_MOVE, onMouseMove);
       document.removeEventListener(EVENTS.MOUSE_UP, onMouseUp);
     };
-  }, [adjustCanvas, setEditorConfig, height]);
+  }, [adjustCanvas, setEditorConfig, height, getEditorMinHeight]);
 
   // Canvas focus keybinding
-
   useEffect(() => {
     const handler = (event: Event) => {
       if (

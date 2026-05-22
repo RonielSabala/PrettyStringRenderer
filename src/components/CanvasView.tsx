@@ -419,18 +419,17 @@ export default function CanvasView() {
         return;
       }
 
-      event.preventDefault();
-      const editor = document.getElementById("editor");
-
       if (
         !spaceHeld.current &&
-        document.activeElement !== editor &&
+        document.activeElement !== document.getElementById("editor") &&
         matchesKeybinding(event, "canvas.panHold") &&
         zustand.getState().canvasConfig.zoom > CANVAS_CENTERING_ZOOM_THRESHOLD
       ) {
+        event.preventDefault();
         spaceHeld.current = true;
         wrap.style.cursor = CSS_CURSORS.GRAB;
       } else if (matchesKeybinding(event, "app.fullReload")) {
+        event.preventDefault();
         clearState();
         location.reload();
       }

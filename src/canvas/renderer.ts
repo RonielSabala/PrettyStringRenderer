@@ -37,10 +37,7 @@ function _setupContextFont(
   ctx.textRendering = config.textRendering;
 }
 
-export function updateTextMetrics(
-  config: TypographyConfig,
-  maxWidth?: number,
-): void {
+export function updateTextMetrics(config: TypographyConfig): void {
   const { fontSize, letterSpacing, textRendering } = config;
   const metricsChanged =
     fontSize !== _lastFontSize ||
@@ -56,21 +53,8 @@ export function updateTextMetrics(
     charWidthMetric = _measureCtx.measureText(_FONT_REFERENCE_GLYPH).width;
   }
 
-  const { tokenizer } = getStore();
-  let firstLine = tokenizer.lines[0] || _FONT_REFERENCE_GLYPH;
-
-  // Optimize first line
-  if (
-    maxWidth !== undefined &&
-    firstLine !== _FONT_REFERENCE_GLYPH &&
-    charWidthMetric
-  ) {
-    const maxChars = Math.ceil(maxWidth / charWidthMetric);
-
-    if (firstLine.length > maxChars) {
-      firstLine = firstLine.slice(0, maxChars);
-    }
-  }
+  const tokenizer = getStore().tokenizer;
+  const firstLine = tokenizer.lines[0] || _FONT_REFERENCE_GLYPH;
 
   // Measure ascent
   if (metricsChanged || _lastMeasuredLine !== firstLine) {
@@ -85,17 +69,16 @@ export function iterateTokens(
   config: TypographyConfig,
   onToken: (text: string, color: ThemeColor, x: number, y: number) => void,
 ): void {
-  const padX = config.padX;
-  const maxWidth = width - padX;
-  const { tokenizer } = getStore();
-  updateTextMetrics(config, maxWidth);
+  updateTextMetrics(config);
+  const tokenizer = getStore().tokenizer;
 
-  const charWidth = charWidthMetric!;
+  const padX = config.padX;
   const padY = config.padY + _ascentMetric!;
+  const charWidth = charWidthMetric!;
   const lineHeight = config.fontSize * config.lineHeight;
 
   // Calculate visible bounds
-  const maxCol = Math.ceil(maxWidth / charWidth);
+  const maxCol = Math.ceil((width - padX) / charWidth);
   const maxRow = Math.min(
     Math.ceil((height - padY) / lineHeight) + 1,
     tokenizer.linesCount - 1,

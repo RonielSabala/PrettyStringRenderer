@@ -81,6 +81,7 @@ export const CANVAS_ZOOM_FACTOR = 1.15;
 export const CANVAS_PAN_SCROLL_SPEED = 0.5;
 export const CANVAS_VIEWPORT_PADDING_PX = 25;
 export const CANVAS_REDRAW_TIMEOUT_MS = 120;
+export const CANVAS_CENTERING_ZOOM_THRESHOLD = 1.0;
 export const MAX_CANVAS_BUFFER_PIXELS = 64_000_000;
 
 const _canvasDefaults = _userDefaults.canvas ?? {};

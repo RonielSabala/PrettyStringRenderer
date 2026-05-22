@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createBuffer } from "../canvas/buffer";
 import {
   APP_FONT_VARIANT_LIGATURES,
+  CANVAS_CENTERING_ZOOM_THRESHOLD,
   CANVAS_DEFAULTS,
   CANVAS_MAX_ZOOM,
   CANVAS_MIN_ZOOM,
@@ -23,7 +24,6 @@ import "./CanvasView.css";
 const _scheduleSave = createSaveScheduler(saveCanvasConfigState);
 
 const MIN_THUMB_SIZE_FRACTION = 0.04;
-
 const SCROLLBAR_ORIENTATION = Object.freeze({
   HORIZONTAL: "horizontal",
   VERTICAL: "vertical",
@@ -190,7 +190,17 @@ export default function CanvasView() {
       return;
     }
 
-    const { zoom, panX, panY } = zustand.getState().canvasConfig;
+    const config = zustand.getState().canvasConfig;
+    const zoom = config.zoom;
+    let { panX, panY } = config;
+
+    // Force centering
+    if (zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD && (panX !== 0 || panY !== 0)) {
+      panX = 0;
+      panY = 0;
+      zustand.getState().setCanvasConfig({ panX, panY });
+    }
+
     const transform = `translate(${toPx(panX)},${toPx(panY)}) scale(${zoom})`;
     canvasRef.current.style.transform = transform;
     innerRef.current.style.transform = transform;
@@ -336,31 +346,39 @@ export default function CanvasView() {
 
       if (event.altKey) {
         applyZoom(event);
-      } else if (event.ctrlKey) {
-        zustand.getState().setCanvasConfig({
-          panX: canvasConfig.panX - event.deltaY * CANVAS_PAN_SCROLL_SPEED,
-        });
-
-        scheduleTransform();
-      } else {
-        zustand.getState().setCanvasConfig({
-          panY: canvasConfig.panY - event.deltaY * CANVAS_PAN_SCROLL_SPEED,
-        });
-
-        scheduleTransform();
+        _scheduleSave();
+        return;
       }
 
+      if (canvasConfig.zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD) {
+        return;
+      }
+
+      const panDelta = event.deltaY * CANVAS_PAN_SCROLL_SPEED;
+      if (event.ctrlKey) {
+        zustand.getState().setCanvasConfig({
+          panX: canvasConfig.panX - panDelta,
+        });
+      } else {
+        zustand.getState().setCanvasConfig({
+          panY: canvasConfig.panY - panDelta,
+        });
+      }
+
+      scheduleTransform();
       _scheduleSave();
     };
 
     const onMouseDown = (event: MouseEvent) => {
-      if (!spaceHeld.current && event.button !== 2) {
+      const canvasConfig = zustand.getState().canvasConfig;
+      if (
+        canvasConfig.zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD ||
+        (!spaceHeld.current && event.button !== 2)
+      ) {
         return;
       }
 
       event.preventDefault();
-      const canvasConfig = zustand.getState().canvasConfig;
-
       panning.current = true;
       panStart.current = {
         x: event.clientX - canvasConfig.panX,
@@ -401,21 +419,18 @@ export default function CanvasView() {
         return;
       }
 
+      event.preventDefault();
       const editor = document.getElementById("editor");
-      if (
-        matchesKeybinding(event, "canvas.panHold") &&
-        document.activeElement !== editor
-      ) {
-        event.preventDefault();
-        if (spaceHeld.current) {
-          return;
-        }
 
+      if (
+        !spaceHeld.current &&
+        document.activeElement !== editor &&
+        matchesKeybinding(event, "canvas.panHold") &&
+        zustand.getState().canvasConfig.zoom > CANVAS_CENTERING_ZOOM_THRESHOLD
+      ) {
         spaceHeld.current = true;
         wrap.style.cursor = CSS_CURSORS.GRAB;
-      }
-      if (matchesKeybinding(event, "app.fullReload")) {
-        event.preventDefault();
+      } else if (matchesKeybinding(event, "app.fullReload")) {
         clearState();
         location.reload();
       }
@@ -423,6 +438,7 @@ export default function CanvasView() {
 
     const onKeyUp = (event: Event) => {
       if (
+        !spaceHeld.current ||
         !(event instanceof KeyboardEvent) ||
         !matchesKeybinding(event, "canvas.panHold")
       ) {

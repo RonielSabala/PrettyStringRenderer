@@ -1,10 +1,8 @@
 import {
   CANVAS_DEFAULTS,
-  CANVAS_MAX_PIXEL_SCALE,
-  CANVAS_MIN_PIXEL_SCALE,
   CANVAS_REDRAW_TIMEOUT_MS,
   CANVAS_VIEWPORT_PADDING_PX,
-  TYPOGRAPHY_DEFAULTS,
+  MAX_CANVAS_BUFFER_PIXELS,
 } from "../common/config";
 import { getStore } from "../common/store";
 import { toPx } from "../utils/resolution";
@@ -15,86 +13,16 @@ import {
   updateTextMetrics,
 } from "./renderer";
 
-type Dimensions = {
-  width: number;
-  height: number;
-};
-
 // Private helpers
 
 function _getNormalizedDimension(n: number): string {
-  return toPx(Math.max(1, Math.ceil(n)));
+  return toPx(Math.ceil(n));
 }
 
-function _getOptimalFontSize(
-  availableWidth: number,
-  availableHeight: number,
-): number {
-  const config = getStore().typographyConfig;
-  const fontDefaults = TYPOGRAPHY_DEFAULTS.fontSize;
-  const { tokenizer } = getStore();
-  const linesCount = tokenizer.linesCount;
-  const longestLine = tokenizer.longestLine;
-
-  if (linesCount === 0 || longestLine === 0) {
-    return fontDefaults.value;
-  }
-
-  // Compute character width metric at unit font size
-  updateTextMetrics({ ...config, fontSize: 1 });
-
-  const widthCoefficient = longestLine * charWidthMetric!;
-  const heightCoefficient = linesCount * config.lineHeight;
-
-  const optimalFontSizeByWidth = Math.ceil(
-    (availableWidth - 2 * config.padX) / widthCoefficient,
-  );
-  const optimalFontSizeByHeight = Math.ceil(
-    (availableHeight - 2 * config.padY) / heightCoefficient,
-  );
-
-  const optimalFontSize = Math.min(
-    optimalFontSizeByWidth,
-    optimalFontSizeByHeight,
-  );
-
-  return Math.min(
-    fontDefaults.max,
-    Math.max(fontDefaults.min, optimalFontSize),
-  );
-}
-
-function _getPixelScale(
-  availableWidth: number,
-  availableHeight: number,
-  fitToContent: boolean,
-): number {
-  const zoom = getStore().canvasConfig.zoom;
-  let pixelScale = zoom;
-
-  // Apply font size factor
-  if (fitToContent) {
-    const minFontSize = TYPOGRAPHY_DEFAULTS.fontSize.min;
-    const fontSize = getStore().typographyConfig.fontSize;
-    const optimalFontSize = _getOptimalFontSize(
-      availableWidth,
-      availableHeight,
-    );
-
-    const fontRange = optimalFontSize - minFontSize;
-    const pixelScaleRange = CANVAS_MAX_PIXEL_SCALE - CANVAS_MIN_PIXEL_SCALE;
-    const fontProgress = Math.min(1, (fontSize - minFontSize) / fontRange);
-
-    pixelScale *= CANVAS_MAX_PIXEL_SCALE - fontProgress * pixelScaleRange;
-  }
-
-  return Math.min(
-    CANVAS_MAX_PIXEL_SCALE,
-    Math.max(CANVAS_MIN_PIXEL_SCALE, Math.ceil(pixelScale)),
-  );
-}
-
-function _calculateFitDimensions(): Dimensions {
+function _calculateFitDimensions(): {
+  width: number;
+  height: number;
+} {
   const config = getStore().typographyConfig;
   const { tokenizer } = getStore();
 
@@ -115,7 +43,7 @@ function _calculateFitDimensions(): Dimensions {
 export interface CanvasBuffer {
   redraw: (forceAdjust?: boolean) => void;
   scheduleRedraw: () => void;
-  adjustCanvas: (pixelScale?: number | null) => void;
+  adjustCanvas: (pixelScale?: number) => void;
   destroy: () => void;
 }
 
@@ -132,25 +60,38 @@ export function createBuffer(
   let _lastBufferWidth: number | null = null;
   let _lastBufferHeight: number | null = null;
 
-  function getAvailableDimensions(): Dimensions {
-    return {
-      width: canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX,
-      height: canvasWrapElement.clientHeight - CANVAS_VIEWPORT_PADDING_PX,
-    };
+  function _getPixelScale(logicalWidth: number, logicalHeight: number): number {
+    const zoom = getStore().canvasConfig.zoom;
+    const displayScale = Math.min(
+      canvasElement.offsetWidth / logicalWidth || Infinity,
+      canvasElement.offsetHeight / logicalHeight,
+    );
+
+    const needed = Math.ceil(zoom * displayScale);
+    const maxByMemory = Math.floor(
+      Math.sqrt(MAX_CANVAS_BUFFER_PIXELS / (logicalWidth * logicalHeight)),
+    );
+
+    return Math.max(1, Math.min(needed, maxByMemory));
   }
 
-  function adjustCanvas(pixelScale: number | null = null): void {
-    const { width: availableWidth, height: availableHeight } =
-      getAvailableDimensions();
+  function adjustCanvas(pixelScale?: number): void {
+    const availableWidth =
+      canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX;
+    const availableHeight =
+      canvasWrapElement.clientHeight - CANVAS_VIEWPORT_PADDING_PX;
 
     let displayWidth: number;
     let displayHeight: number;
 
     if (getStore().canvasConfig.fitToContent) {
-      const canvasPixelScale =
-        pixelScale ?? _getPixelScale(availableWidth, availableHeight, true);
-      const bufferWidth = canvasElement.width / canvasPixelScale;
-      const bufferHeight = canvasElement.height / canvasPixelScale;
+      if (pixelScale === undefined) {
+        const { width, height } = _calculateFitDimensions();
+        pixelScale = _getPixelScale(width, height);
+      }
+
+      const bufferWidth = canvasElement.width / pixelScale;
+      const bufferHeight = canvasElement.height / pixelScale;
       const scale = Math.min(
         availableWidth / bufferWidth,
         availableHeight / bufferHeight,
@@ -177,14 +118,7 @@ export function createBuffer(
       : CANVAS_DEFAULTS;
 
     if (pixelScale === undefined) {
-      const { width: availableWidth, height: availableHeight } =
-        getAvailableDimensions();
-
-      pixelScale = _getPixelScale(
-        availableWidth,
-        availableHeight,
-        fitToContent,
-      );
+      pixelScale = _getPixelScale(width, height);
     }
 
     _currentPixelScale = pixelScale;
@@ -217,10 +151,11 @@ export function createBuffer(
   }
 
   function scheduleRedraw(): void {
-    const fitToContent = getStore().canvasConfig.fitToContent;
-    const { width, height } = getAvailableDimensions();
-    const pixelScale = _getPixelScale(width, height, fitToContent);
+    const { width, height } = getStore().canvasConfig.fitToContent
+      ? _calculateFitDimensions()
+      : CANVAS_DEFAULTS;
 
+    const pixelScale = _getPixelScale(width, height);
     if (pixelScale === _currentPixelScale) {
       return;
     }

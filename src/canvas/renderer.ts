@@ -39,7 +39,7 @@ function _setupContextFont(
 
 export function updateTextMetrics(
   config: TypographyConfig,
-  maxWidth: number | null = null,
+  maxWidth?: number,
 ): void {
   const { fontSize, letterSpacing, textRendering } = config;
   const metricsChanged =
@@ -61,7 +61,7 @@ export function updateTextMetrics(
 
   // Optimize first line
   if (
-    maxWidth !== null &&
+    maxWidth !== undefined &&
     firstLine !== _FONT_REFERENCE_GLYPH &&
     charWidthMetric
   ) {
@@ -136,7 +136,7 @@ export function render(
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  configOverride: TypographyConfig | null = null,
+  configOverride?: TypographyConfig,
 ): void {
   const { typographyConfig, colors } = getStore();
   const config = configOverride ?? typographyConfig;

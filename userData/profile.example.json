@@ -12,7 +12,7 @@
   },
   "editor": {
     "content": "Welcome to your custom workspace!",
-    "height": 260,
+    "heightFraction": 0.28,
     "fontSize": 20,
     "padX": 12,
     "padY": 12

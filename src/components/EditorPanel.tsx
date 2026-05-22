@@ -4,13 +4,13 @@ import {
   EDITOR_DEFAULTS,
   EDITOR_LETTER_SPACING,
   EDITOR_LINE_HEIGHT,
-  EDITOR_MAX_HEIGHT_PERCENTAGE,
+  MAX_EDITOR_HEIGHT_FRACTION,
 } from "../common/config";
 import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
 import { useStore } from "../common/store";
-import { parseNumber } from "../utils/parse";
+import { parseNumber, roundUp } from "../utils/parse";
 import {
   createSaveScheduler,
   saveEditorConfigState,
@@ -63,7 +63,15 @@ export default function EditorPanel() {
   const handleRef = useRef<HTMLDivElement>(null);
   const canvasWrapRef = useRef<HTMLElement | null>(null);
 
-  const [height, setHeight] = useState(editorConfig.height);
+  const getFractionFromHeight = (height: number) =>
+    roundUp(height / window.innerHeight, 3);
+
+  const getHeightFromFraction = (heightFraction: number) =>
+    Math.ceil(heightFraction * window.innerHeight);
+
+  const [height, setHeight] = useState(
+    getHeightFromFraction(editorConfig.heightFraction),
+  );
   const [fontSize, setFontSize] = useState(editorConfig.fontSize);
 
   // Drag state
@@ -156,8 +164,8 @@ export default function EditorPanel() {
       dragging.current = true;
       startY.current = event.clientY;
       startHeight.current = _getEditorHeight() ?? height;
-      startMaxHeight.current = Math.round(
-        window.innerHeight * EDITOR_MAX_HEIGHT_PERCENTAGE,
+      startMaxHeight.current = getHeightFromFraction(
+        MAX_EDITOR_HEIGHT_FRACTION,
       );
 
       document.body.style.userSelect = CSS_USER_SELECT.NONE;
@@ -167,13 +175,13 @@ export default function EditorPanel() {
   );
 
   const onResizeReset = useCallback(() => {
-    const defaultHeight = EDITOR_DEFAULTS.height;
+    const defaultHeight = getHeightFromFraction(EDITOR_DEFAULTS.heightFraction);
     const currentHeight = _getEditorHeight() ?? height;
     const newHeight =
       currentHeight === defaultHeight ? getEditorMinHeight() : defaultHeight;
 
     setHeight(newHeight);
-    setEditorConfig({ height: newHeight });
+    setEditorConfig({ heightFraction: getFractionFromHeight(newHeight) });
     _scheduleSave();
 
     setTimeout(() => adjustCanvas(), 0);
@@ -214,7 +222,9 @@ export default function EditorPanel() {
       document.body.style.userSelect = CSS_USER_SELECT.AUTO;
       handleRef.current?.classList.remove(CSS_CURSORS.DRAG);
 
-      setEditorConfig({ height: _getEditorHeight() ?? height });
+      setEditorConfig({
+        heightFraction: getFractionFromHeight(_getEditorHeight() ?? height),
+      });
       _scheduleSave();
     };
 

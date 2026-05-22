@@ -24,7 +24,7 @@ export interface TypographyConfig {
 
 export interface EditorConfig {
   cursorSelection: number[];
-  height: number;
+  heightFraction: number;
   content: string;
   fontSize: number;
 }

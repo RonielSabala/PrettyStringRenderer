@@ -78,7 +78,7 @@ export const useStore = create<AppState>((set, get) => ({
 
   editorConfig: {
     cursorSelection: [],
-    height: EDITOR_DEFAULTS.height,
+    heightFraction: EDITOR_DEFAULTS.heightFraction,
     content: EDITOR_DEFAULTS.content,
     fontSize: EDITOR_DEFAULTS.fontSize.value,
   },

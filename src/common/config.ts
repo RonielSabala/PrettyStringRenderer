@@ -58,12 +58,13 @@ export const TYPOGRAPHY_DEFAULTS = {
 
 export const EDITOR_LINE_HEIGHT = "auto";
 export const EDITOR_LETTER_SPACING = "auto";
-export const EDITOR_MAX_HEIGHT_PERCENTAGE = 0.8;
+export const MAX_EDITOR_HEIGHT_FRACTION = 0.8;
 
 const _editorDefaults = _userDefaults.editor ?? {};
 export const EDITOR_DEFAULTS = {
   content: _editorDefaults.content ?? _defaults.editor.content,
-  height: _editorDefaults.height ?? _defaults.editor.height,
+  heightFraction:
+    _editorDefaults.heightFraction ?? _defaults.editor.heightFraction,
   padX: _editorDefaults.padX ?? _defaults.editor.padX,
   padY: _editorDefaults.padY ?? _defaults.editor.padY,
   fontSize: {

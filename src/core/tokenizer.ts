@@ -278,7 +278,10 @@ export class Tokenizer {
       } else if (isIdentifierStart(char)) {
         const j = _consumeLine(line, i, lineWidth, isIdentifierPart);
         const k = _consumeLine(line, j, lineWidth, isSpace);
-        const isFunction = k < lineWidth && isFunctionStart(line[k]);
+        const isFunction =
+          k < lineWidth &&
+          (isFunctionStart(line[k]) || lineAnalysis.isPairCompleteAtIndex(k));
+
         addSlice(j, isFunction ? TOKENS.FUNCTION : TOKENS.VARIABLE);
       } else if (isCommentStart(char)) {
         consume(isCommentPart, TOKENS.COMMENT);

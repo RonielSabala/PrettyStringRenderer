@@ -36,6 +36,28 @@ export class LineAnalysis {
 
     return true;
   }
+
+  isPairCompleteAtIndex(idx: number): boolean {
+    if (this.bracketArmDepths[idx] === undefined) {
+      return false;
+    }
+
+    const seen = new Set<number>();
+    for (let i = idx; i < this.bracketArmDepths.length; i++) {
+      const depth = this.bracketArmDepths[i];
+      if (depth === undefined) {
+        continue;
+      }
+
+      if (seen.has(depth)) {
+        return true;
+      }
+
+      seen.add(depth);
+    }
+
+    return false;
+  }
 }
 
 export function lineHasBracketChars(line: string): boolean {

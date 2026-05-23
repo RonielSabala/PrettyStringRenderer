@@ -70,7 +70,10 @@ Access at `http://localhost:5173`. Use `Ctrl+C` to stop.
 
 ## Usage
 
-Start typing in the canvas editor to begin. See [SHORTCUTS.md](SHORTCUTS.md) for the full list of keyboard shortcuts and mouse controls.
+The app launches with a dynamic welcome animation to showcase its layout engine.
+
+- **Interrupt the animation:** Click anywhere inside the text editor or press <kbd>Esc</kbd> to skip the typing sequence and start working immediately.
+- **Shortcuts:** See [SHORTCUTS.md](SHORTCUTS.md) for the full list of keyboard shortcuts and mouse controls.
 
 ---
 
@@ -92,6 +95,9 @@ Create a local profile to override default settings:
 ```bash
 cp userData/profile.example.json userData/profile.json
 ```
+
+> [!TIP]
+> Customizing your settings automatically flags the workspace environment as active, permanently disabling the welcome animation loop on subsequent app launches.
 
 ---
 

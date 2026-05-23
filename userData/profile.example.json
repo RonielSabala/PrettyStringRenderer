@@ -4,15 +4,15 @@
     "fontVariantLigatures": "normal"
   },
   "typography": {
-    "fontSize": 90,
-    "lineHeight": 1,
-    "letterSpacing": 1,
+    "fontSize": 50,
+    "lineHeight": 1.15,
+    "letterSpacing": 0,
     "padX": 20,
     "padY": 20
   },
   "editor": {
-    "content": "Welcome to your custom workspace!",
-    "heightFraction": 0.28,
+    "content": "",
+    "heightFraction": 0.25,
     "fontSize": 20,
     "padX": 12,
     "padY": 12

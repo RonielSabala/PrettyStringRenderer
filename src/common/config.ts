@@ -1,12 +1,16 @@
 import _defaults from "../../userData/profile.example.json";
+import { isObjectEmpty } from "../utils/parse";
 import type { AppThemeType, ThemeColors } from "./types";
 
 const _userFile = import.meta.glob("../../userData/profile.json", {
   eager: true,
 }) as Record<string, { default: typeof _defaults }>;
+
 const _userDefaults =
   _userFile["../../userData/profile.json"]?.default ??
   ({} as Partial<typeof _defaults>);
+
+export const HAS_CUSTOM_PROFILE = !isObjectEmpty(_userDefaults);
 
 // App
 
@@ -19,6 +23,16 @@ export const APP_DEFAULT_THEME = (_userDefaults.app?.defaultTheme ??
 
 export const APP_FONT_VARIANT_LIGATURES =
   _userDefaults.app?.fontVariantLigatures ?? _defaults.app.fontVariantLigatures;
+
+// Welcome Animation
+
+export const WELCOME_ANIMATION_START_DELAY_MS = 300;
+export const WELCOME_NEXT_ANIMATION_DELAY_MS = 10000;
+export const WELCOME_DELETION_SPEED_MS = 100;
+export const WELCOME_DELETION_JITTER_MAX_MS = 20;
+export const WELCOME_BLINK_INTERVAL_MS = 550;
+export const WELCOME_TYPING_JITTER_MAX_MS = 12;
+export const WELCOME_CURSOR_CHAR = "▏";
 
 // Typography
 

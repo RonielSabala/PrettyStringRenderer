@@ -16,6 +16,7 @@ import {
   saveEditorConfigState,
 } from "../utils/persistence";
 import { toPx } from "../utils/resolution";
+import { useWelcomeAnimation } from "../welcome/useWelcomeAnimation";
 import "./EditorPanel.css";
 
 const _scheduleSave = createSaveScheduler(saveEditorConfigState);
@@ -92,7 +93,6 @@ export default function EditorPanel() {
       return;
     }
 
-    // Imperatively set value AFTER store is restored
     editor.value = editorConfig.content ?? EDITOR_DEFAULTS.content;
     editor.scrollTop = 0;
 
@@ -102,6 +102,9 @@ export default function EditorPanel() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Animate welcome message
+  const { cancelWelcomeAnimation } = useWelcomeAnimation();
 
   // Re-tokenize when content changes
   useEffect(() => {
@@ -126,13 +129,16 @@ export default function EditorPanel() {
   const handleContent = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const content = event.target.value;
+      cancelWelcomeAnimation();
       setEditorConfig({ content });
       _scheduleSave();
     },
-    [setEditorConfig],
+    [setEditorConfig, cancelWelcomeAnimation],
   );
 
   const handleCursorChange = useCallback(() => {
+    cancelWelcomeAnimation();
+
     const editor = editorRef.current;
     if (!editor) {
       return;
@@ -141,7 +147,7 @@ export default function EditorPanel() {
     const selection = [editor.selectionStart, editor.selectionEnd];
     setEditorConfig({ cursorSelection: selection });
     _scheduleSave();
-  }, [setEditorConfig]);
+  }, [setEditorConfig, cancelWelcomeAnimation]);
 
   const handleFontSize = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -246,13 +252,14 @@ export default function EditorPanel() {
         return;
       }
 
+      cancelWelcomeAnimation();
       event.preventDefault();
       canvasWrapRef.current?.focus();
     };
 
     document.addEventListener(EVENTS.KEY_DOWN, handler);
     return () => document.removeEventListener(EVENTS.KEY_DOWN, handler);
-  }, []);
+  }, [cancelWelcomeAnimation]);
 
   return (
     <>
@@ -308,6 +315,7 @@ export default function EditorPanel() {
           onChange={handleContent}
           onClick={handleCursorChange}
           onKeyUp={handleCursorChange}
+          onFocus={cancelWelcomeAnimation}
         />
       </div>
     </>

@@ -35,7 +35,7 @@ export const WELCOME_DATA = {
       variable: "f(x)",
       artLines: [
         "               x",
-        "f(x) = ──────────────────",
+        "f(x) = ─────────────────",
         "          2         2",
         "       cos (x) + sin (x)",
       ],

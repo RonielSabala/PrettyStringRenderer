@@ -70,7 +70,7 @@ export function generateWelcomeTokens(): WelcomeToken[] {
     },
     // Tips Block
     {
-      text: `${_LINE_START}Tips:${LINE_BREAK}${_LINE_START}${LINE_BREAK}`,
+      text: `${_LINE_START}Tips:${LINE_BREAK}`,
       delayMs: ANIMATION_DELAYS_MS.INSTANTANEOUS,
     },
     {

@@ -3,12 +3,13 @@ import {
   HAS_CUSTOM_PROFILE,
   LINE_BREAK,
   SAVE_TIMEOUT_MS,
-  WELCOME_ANIMATION_START_DELAY_MS,
   WELCOME_BLINK_INTERVAL_MS,
+  WELCOME_BLINKING_DURATION_MS,
   WELCOME_CURSOR_CHAR,
+  WELCOME_DELETE_LINE_MS,
   WELCOME_DELETION_JITTER_MAX_MS,
-  WELCOME_DELETION_SPEED_MS,
   WELCOME_NEXT_ANIMATION_DELAY_MS,
+  WELCOME_START_DELAY_MS,
   WELCOME_TYPING_JITTER_MAX_MS,
 } from "../common/config";
 import { useStore } from "../common/store";
@@ -200,7 +201,7 @@ export function useWelcomeAnimation() {
         setTextarea(textarea, true);
 
         const deleteDelay =
-          WELCOME_DELETION_SPEED_MS +
+          WELCOME_DELETE_LINE_MS +
           Math.floor(Math.random() * WELCOME_DELETION_JITTER_MAX_MS);
 
         activeTimerRef.current = setTimeout(deleteTick, deleteDelay);
@@ -209,7 +210,7 @@ export function useWelcomeAnimation() {
       deleteTick();
     };
 
-    const startBlinkingPhase = () => {
+    const startBlinkingPhase = (isInitial = false) => {
       if (isCancelledRef.current) {
         return;
       }
@@ -230,7 +231,10 @@ export function useWelcomeAnimation() {
         setTextarea(textarea, showCursor);
       }, WELCOME_BLINK_INTERVAL_MS);
 
-      // Schedule reset for next animation
+      const nextDelay = isInitial
+        ? WELCOME_BLINKING_DURATION_MS
+        : WELCOME_NEXT_ANIMATION_DELAY_MS;
+
       activeTimerRef.current = setTimeout(() => {
         if (isCancelledRef.current) {
           return;
@@ -240,12 +244,16 @@ export function useWelcomeAnimation() {
           clearInterval(blinkIntervalRef.current);
         }
 
-        startDeletionPhase();
-      }, WELCOME_NEXT_ANIMATION_DELAY_MS);
+        if (isInitial) {
+          runAnimationCycle();
+        } else {
+          startDeletionPhase();
+        }
+      }, nextDelay);
     };
 
     // Initial start
-    setTimeout(runAnimationCycle, WELCOME_ANIMATION_START_DELAY_MS);
+    setTimeout(() => startBlinkingPhase(true), WELCOME_START_DELAY_MS);
 
     // Cleanup on unmount
     return () => {

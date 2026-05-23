@@ -1,4 +1,5 @@
 import _defaults from "../../userData/keybindings.example.json";
+import { toTitle } from "../utils/parse";
 
 const _userFile = import.meta.glob("../../userData/keybindings.json", {
   eager: true,
@@ -69,4 +70,15 @@ export function matchesKeybinding(event: KeyEvent, bindingId: string): boolean {
     !!event.shiftKey === binding.shift &&
     !!event.altKey === binding.alt
   );
+}
+export function getFormattedKeybinding(bindingId: string): string {
+  const binding = _rawBindings[bindingId];
+  if (!binding) {
+    return "";
+  }
+
+  return binding
+    .split(BINDING_SEPARATOR)
+    .map((key) => `[${toTitle(key)}]`)
+    .join(` ${BINDING_SEPARATOR} `);
 }

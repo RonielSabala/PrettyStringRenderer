@@ -1,4 +1,5 @@
 import { LINE_BREAK } from "../common/config";
+import { getFormattedKeybinding } from "../common/keybindings";
 import { centerString, centerStringArray } from "../utils/parse";
 import { WELCOME_DATA } from "./data";
 
@@ -28,12 +29,20 @@ export function generateWelcomeTokens(): WelcomeToken[] {
   const rawHeading = getRandom(WELCOME_DATA.headings);
   const rawSubtitle = getRandom(WELCOME_DATA.subtitles);
   const rawFormula = getRandom(WELCOME_DATA.formulas);
-  const genericTip = getRandom(WELCOME_DATA.genericTips);
+
+  // Format tips
+  const genericTip = getRandom(WELCOME_DATA.genericTips).replace(
+    /\{\{([^}]+)\}\}/g,
+    (_, bindingId) => {
+      return getFormattedKeybinding(bindingId);
+    },
+  );
   const specificTip = getRandom(WELCOME_DATA.specificTips).replace(
     "{var}",
     rawFormula.variable,
   );
 
+  // Get header divider
   const longestHeaderLine = Math.max(rawHeading.length, rawSubtitle.length);
   const headerDivider =
     _LINE_START + _HEADER_DIVIDER_CHAR.repeat(longestHeaderLine);

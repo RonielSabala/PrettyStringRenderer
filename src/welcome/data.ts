@@ -15,10 +15,11 @@ export const WELCOME_DATA = {
   ],
   genericTips: [
     "Hold [Alt] + [Scroll] to zoom in and out.",
-    "Hold [Space] + Drag to pan across the canvas.",
-    "Mix different brackets to cycle through your palette.",
-    "Multiline arms automatically stretch to wrap tall logic.",
-    "Wrap logic in [ ] or ( ) to see automatic color shifting.",
+    "Hold {{canvas.panHold}} + Drag to pan across the canvas.",
+    "Ready to share? Press {{workspace.export}} to export your masterpiece.",
+    "Lost your equation on screen? Double-click the canvas to instantly reset your view.",
+    "Need more workspace? Double-click the editor's resize handle to instantly minimize it.",
+    "Press {{app.fullReload}} for a full workspace reset to clear your view and themes.",
   ],
   specificTips: [
     "Cut comments in half with \\ {var} # to highlight your art.",
@@ -28,8 +29,8 @@ export const WELCOME_DATA = {
   ],
   formulas: [
     {
-      variable: "f(x)",
-      artLines: ["f(x) = sin(x)"],
+      variable: "x",
+      artLines: [" ix", "e   = cos(x) + i · sin(x)"],
     },
     {
       variable: "f(x)",

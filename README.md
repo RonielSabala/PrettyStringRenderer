@@ -72,7 +72,7 @@ Access at `http://localhost:5173`. Use `Ctrl+C` to stop.
 
 The app launches with a dynamic welcome animation to showcase its layout engine.
 
-- **Interrupt the animation:** Click anywhere inside the text editor or press <kbd>Esc</kbd> to skip the typing sequence and start working immediately.
+- **Interrupt the animation:** Click anywhere inside the text editor or press <kbd>Esc</kbd> to stop the typing sequence and start working immediately.
 - **Shortcuts:** See [SHORTCUTS.md](SHORTCUTS.md) for the full list of keyboard shortcuts and mouse controls.
 
 ---

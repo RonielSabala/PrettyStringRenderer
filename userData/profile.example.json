@@ -22,7 +22,7 @@
     "height": 1080,
     "font": "Cascadia Code",
     "fontWeight": 400,
-    "fitToContent": false
+    "fitToContent": true
   },
   "export": {
     "defaultThemeFilename": "my-custom-theme",

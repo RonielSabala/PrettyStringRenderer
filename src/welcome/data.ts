@@ -1,8 +1,3 @@
-export interface WelcomeFormula {
-  variable: string;
-  artLines: string[];
-}
-
 export const WELCOME_DATA = {
   headings: [
     "Canvas initialized.",

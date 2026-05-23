@@ -35,7 +35,7 @@ export function useWelcomeAnimation() {
   const setTextarea = useCallback(
     (textarea: HTMLTextAreaElement | null, showCursor: boolean = false) => {
       const newContent =
-        rawContentRef.current + (showCursor ? WELCOME_CURSOR_CHAR : "");
+        rawContentRef.current + (showCursor ? WELCOME_CURSOR_CHAR : " ");
 
       if (textarea) {
         textarea.value = newContent;
@@ -94,12 +94,17 @@ export function useWelcomeAnimation() {
         return;
       }
 
-      rawContentRef.current = "";
-
-      let charIdx = 0;
-      let tokenIdx = 0;
-      const tokens = generateWelcomeTokens();
       const textarea = getTextarea();
+      const tokens = generateWelcomeTokens();
+
+      const currentText = rawContentRef.current;
+      const newText = tokens[0].text;
+      const shortest =
+        newText.length < currentText.length ? newText : currentText;
+
+      let tokenIdx = 0;
+      let charIdx = Math.max(0, shortest.length - 1);
+      rawContentRef.current = shortest.replace(LINE_BREAK, "");
 
       const typeTick = () => {
         if (isCancelledRef.current || pauseIfHidden(typeTick)) {
@@ -173,16 +178,24 @@ export function useWelcomeAnimation() {
           return;
         }
 
-        // If all text is gone, start the next typing cycle
-        if (rawContentRef.current === "") {
+        let currentContent = rawContentRef.current;
+
+        // Ignore last line break
+        if (currentContent.endsWith(LINE_BREAK)) {
+          currentContent = currentContent.slice(0, -LINE_BREAK.length);
+        }
+
+        const lastBreakIdx = currentContent.lastIndexOf(LINE_BREAK);
+        if (lastBreakIdx === -1) {
           runAnimationCycle();
           return;
         }
 
-        // Pop the bottom line off the string
-        const lines = rawContentRef.current.split(LINE_BREAK);
-        lines.pop();
-        rawContentRef.current = lines.join(LINE_BREAK);
+        // Remove bottom line
+        rawContentRef.current = currentContent.slice(
+          0,
+          lastBreakIdx + LINE_BREAK.length,
+        );
 
         setTextarea(textarea, true);
 

@@ -13,20 +13,13 @@ import {
   updateTextMetrics,
 } from "./renderer";
 
-// Private helpers
-
-function _getNormalizedDimension(n: number): string {
-  return toPx(Math.ceil(n));
-}
-
 function _calculateFitDimensions(): {
   width: number;
   height: number;
 } {
-  const config = getStore().typographyConfig;
-  const { tokenizer } = getStore();
+  const { typographyConfig: config, tokenizer } = getStore();
 
-  updateTextMetrics(config);
+  updateTextMetrics(config, tokenizer);
   return {
     width: Math.ceil(
       2 * config.padX + tokenizer.longestLine * charWidthMetric!,
@@ -37,8 +30,6 @@ function _calculateFitDimensions(): {
     ),
   };
 }
-
-// Canvas buffer
 
 export interface CanvasBuffer {
   redraw: (forceAdjust?: boolean) => void;
@@ -105,14 +96,12 @@ export function createBuffer(
       displayHeight = Math.min(availableHeight, displayWidth / aspectRatio);
     }
 
-    canvasElement.style.width = _getNormalizedDimension(displayWidth);
-    canvasElement.style.height = _getNormalizedDimension(displayHeight);
+    canvasElement.style.width = toPx(Math.ceil(displayWidth));
+    canvasElement.style.height = toPx(Math.ceil(displayHeight));
   }
 
   function redraw(forceAdjust = false, pixelScale?: number): void {
-    const { canvasConfig } = getStore();
-    const fitToContent = canvasConfig.fitToContent;
-
+    const fitToContent = getStore().canvasConfig.fitToContent;
     const { width, height } = fitToContent
       ? _calculateFitDimensions()
       : CANVAS_DEFAULTS;
@@ -131,8 +120,10 @@ export function createBuffer(
     if (sizeChanged) {
       _lastBufferWidth = bufferWidth;
       _lastBufferHeight = bufferHeight;
+
       canvasElement.width = bufferWidth;
       canvasElement.height = bufferHeight;
+
       ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
     }
 

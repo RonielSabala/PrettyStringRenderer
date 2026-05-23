@@ -6,6 +6,7 @@ import {
   type ThemeColor,
   type TypographyConfig,
 } from "../common/types";
+import { Tokenizer } from "../core/tokenizer";
 import { toPx } from "../utils/resolution";
 
 const _CONTEXT_TYPE = "2d";
@@ -37,7 +38,10 @@ function _setupContextFont(
   ctx.textRendering = config.textRendering;
 }
 
-export function updateTextMetrics(config: TypographyConfig): void {
+export function updateTextMetrics(
+  config: TypographyConfig,
+  tokenizer: Tokenizer,
+): void {
   const { fontSize, letterSpacing, textRendering } = config;
   const metricsChanged =
     fontSize !== _lastFontSize ||
@@ -53,10 +57,8 @@ export function updateTextMetrics(config: TypographyConfig): void {
     charWidthMetric = _measureCtx.measureText(_FONT_REFERENCE_GLYPH).width;
   }
 
-  const tokenizer = getStore().tokenizer;
-  const firstLine = tokenizer.lines[0] || _FONT_REFERENCE_GLYPH;
-
   // Measure ascent
+  const firstLine = tokenizer.lines[0] || _FONT_REFERENCE_GLYPH;
   if (metricsChanged || _lastMeasuredLine !== firstLine) {
     _lastMeasuredLine = firstLine;
     _ascentMetric = _measureCtx.measureText(firstLine).actualBoundingBoxAscent;
@@ -69,8 +71,8 @@ export function iterateTokens(
   config: TypographyConfig,
   onToken: (text: string, color: ThemeColor, x: number, y: number) => void,
 ): void {
-  updateTextMetrics(config);
   const tokenizer = getStore().tokenizer;
+  updateTextMetrics(config, tokenizer);
 
   const padX = config.padX;
   const padY = config.padY + _ascentMetric!;

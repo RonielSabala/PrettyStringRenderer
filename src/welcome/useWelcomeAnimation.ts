@@ -253,6 +253,8 @@ export function useWelcomeAnimation() {
     };
 
     // Initial start
+    const textarea = getTextarea();
+    setTextarea(textarea);
     setTimeout(() => startBlinkingPhase(true), WELCOME_START_DELAY_MS);
 
     // Cleanup on unmount

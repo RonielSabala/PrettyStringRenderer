@@ -16,13 +16,13 @@ export default function Header({ onExportClick }: Props) {
   const width = useStore((state) => state.canvasConfig.width);
   const height = useStore((state) => state.canvasConfig.height);
 
+  // Handlers
   const toggleAppTheme = () => {
     const next =
       appTheme === APP_THEMES.DARK ? APP_THEMES.LIGHT : APP_THEMES.DARK;
     setAppTheme(next);
     saveAppThemeState();
   };
-
   const handleReset = () => {
     clearState();
     location.reload();

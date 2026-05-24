@@ -18,8 +18,6 @@
   border-radius: var(--radius-10);
 }
 
-/* Reset button */
-
 #workspace-reset-btn {
   color: var(--text-accent);
   border-color: var(--danger);
@@ -32,8 +30,6 @@
   background: var(--danger);
 }
 
-/* Export button */
-
 #workspace-export-btn {
   color: var(--text-accent);
   border-color: var(--accent);
@@ -45,8 +41,6 @@
   border-color: var(--accent);
   background: var(--accent);
 }
-
-/* App theme button */
 
 #app-theme-btn {
   flex: 0;

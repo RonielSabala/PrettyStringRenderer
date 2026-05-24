@@ -12,7 +12,7 @@ import {
 import { CSS_CURSORS } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
-import { useStore, useStore as zustand } from "../common/store";
+import { getStore, useStore } from "../common/store";
 import {
   createSaveScheduler,
   saveCanvasConfigState,
@@ -189,7 +189,7 @@ export default function CanvasView() {
       return;
     }
 
-    const config = zustand.getState().canvasConfig;
+    const config = getStore().canvasConfig;
     const zoom = config.zoom;
     let { panX, panY } = config;
 
@@ -197,7 +197,7 @@ export default function CanvasView() {
     if (zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD && (panX !== 0 || panY !== 0)) {
       panX = 0;
       panY = 0;
-      zustand.getState().setCanvasConfig({ panX, panY });
+      getStore().setCanvasConfig({ panX, panY });
     }
 
     const transform = `translate(${toPx(panX)},${toPx(panY)}) scale(${zoom})`;
@@ -230,13 +230,13 @@ export default function CanvasView() {
       canvasRef.current,
       wrapRef.current,
       (width, height) => {
-        zustand.getState().setCanvasConfig({ width, height });
+        getStore().setCanvasConfig({ width, height });
         saveCanvasConfigState();
       },
     );
 
-    // Wire imperative functions into the store
-    zustand.setState({
+    // Wire imperative functions
+    useStore.setState({
       redraw: buffer.redraw,
       adjustCanvas: buffer.adjustCanvas,
       scheduleRedraw: buffer.scheduleRedraw,
@@ -267,7 +267,7 @@ export default function CanvasView() {
     return () => {
       buffer.destroy();
       resizeObserver.disconnect();
-      zustand.setState({
+      useStore.setState({
         redraw: () => {},
         adjustCanvas: () => {},
         scheduleRedraw: () => {},
@@ -278,14 +278,14 @@ export default function CanvasView() {
   // Pan helpers
 
   const handlePanX = useCallback((pan: number) => {
-    zustand.getState().setCanvasConfig({ panX: pan });
+    getStore().setCanvasConfig({ panX: pan });
     scheduleTransform();
     _scheduleSave();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handlePanY = useCallback((pan: number) => {
-    zustand.getState().setCanvasConfig({ panY: pan });
+    getStore().setCanvasConfig({ panY: pan });
     scheduleTransform();
     _scheduleSave();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -297,7 +297,7 @@ export default function CanvasView() {
     const rect = wrapRef.current!.getBoundingClientRect();
     const pivotX = event.clientX - (rect.left + rect.width / 2);
     const pivotY = event.clientY - (rect.top + rect.height / 2);
-    const { canvasConfig } = zustand.getState();
+    const { canvasConfig } = getStore();
 
     const oldZoom = canvasConfig.zoom;
     const zoomFactor =
@@ -308,19 +308,19 @@ export default function CanvasView() {
     );
 
     const appliedFactor = newZoom / oldZoom;
-    zustand.getState().setCanvasConfig({
+    getStore().setCanvasConfig({
       zoom: newZoom,
       panX: pivotX * (1 - appliedFactor) + canvasConfig.panX * appliedFactor,
       panY: pivotY * (1 - appliedFactor) + canvasConfig.panY * appliedFactor,
     });
 
     scheduleTransform();
-    zustand.getState().scheduleRedraw();
+    getStore().scheduleRedraw();
     _scheduleSave();
   };
 
   const resetZoom = () => {
-    const config = zustand.getState().canvasConfig;
+    const config = getStore().canvasConfig;
     if (
       config.zoom === CANVAS_DEFAULTS.zoom &&
       config.panX === 0 &&
@@ -331,7 +331,7 @@ export default function CanvasView() {
 
     setCanvasConfig({ zoom: CANVAS_DEFAULTS.zoom, panX: 0, panY: 0 });
     scheduleTransform();
-    zustand.getState().scheduleRedraw();
+    getStore().scheduleRedraw();
     _scheduleSave();
   };
 
@@ -348,18 +348,18 @@ export default function CanvasView() {
         return;
       }
 
-      const canvasConfig = zustand.getState().canvasConfig;
+      const canvasConfig = getStore().canvasConfig;
       if (canvasConfig.zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD) {
         return;
       }
 
       const panDelta = event.deltaY * CANVAS_PAN_SCROLL_SPEED;
       if (matchesKeybinding(event, "canvas.panXModifier")) {
-        zustand.getState().setCanvasConfig({
+        getStore().setCanvasConfig({
           panX: canvasConfig.panX - panDelta,
         });
       } else {
-        zustand.getState().setCanvasConfig({
+        getStore().setCanvasConfig({
           panY: canvasConfig.panY - panDelta,
         });
       }
@@ -369,7 +369,7 @@ export default function CanvasView() {
     };
 
     const onMouseDown = (event: MouseEvent) => {
-      const canvasConfig = zustand.getState().canvasConfig;
+      const canvasConfig = getStore().canvasConfig;
       if (
         canvasConfig.zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD ||
         (!spaceHeld.current && event.button !== 2)
@@ -392,7 +392,7 @@ export default function CanvasView() {
         return;
       }
 
-      zustand.getState().setCanvasConfig({
+      getStore().setCanvasConfig({
         panX: event.clientX - panStart.current.x,
         panY: event.clientY - panStart.current.y,
       });
@@ -418,7 +418,7 @@ export default function CanvasView() {
         spaceHeld.current ||
         document.activeElement === document.getElementById("editor") ||
         !matchesKeybinding(event, "canvas.panHold") ||
-        zustand.getState().canvasConfig.zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD
+        getStore().canvasConfig.zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD
       ) {
         return;
       }

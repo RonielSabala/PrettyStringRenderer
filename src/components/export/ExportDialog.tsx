@@ -233,12 +233,15 @@ export interface ExportDialogHandle {
 }
 
 export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
-  const typographyConfig = useStore((state) => state.typographyConfig);
-  const canvasConfig = useStore((state) => state.canvasConfig);
   const colors = useStore((state) => state.colors);
+  const canvasConfig = useStore((state) => state.canvasConfig);
+  const typographyConfig = useStore((state) => state.typographyConfig);
+
   const [isOpen, setIsOpen] = useState(false);
   const [isPNGModalOpen, setIsPNGModalOpen] = useState(false);
   const [isSVGModalOpen, setIsSVGModalOpen] = useState(false);
+
+  const { width, height } = canvasConfig;
 
   // Expose open/close methods
   useImperativeHandle(
@@ -291,7 +294,6 @@ export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
   // Keybindings
   useKeybinding("workspace.export", openDialog);
 
-  const { width, height } = canvasConfig;
   return (
     <>
       <Dialog isOpen={isOpen} title="Export" onClose={closeDialog}>

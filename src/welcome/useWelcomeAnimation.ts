@@ -12,7 +12,7 @@ import {
   WELCOME_START_DELAY_MS,
   WELCOME_TYPING_JITTER_MAX_MS,
 } from "../common/config";
-import { useStore } from "../common/store";
+import { getStore, useStore } from "../common/store";
 import { ANIMATION_DELAYS_MS, generateWelcomeTokens } from "./tokens_generator";
 
 export function useWelcomeAnimation() {
@@ -83,7 +83,7 @@ export function useWelcomeAnimation() {
     if (
       HAS_CUSTOM_PROFILE ||
       hasRunRef.current ||
-      useStore.getState().editorConfig.content
+      getStore().editorConfig.content
     ) {
       return;
     }

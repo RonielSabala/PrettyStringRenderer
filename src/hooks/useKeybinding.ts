@@ -3,14 +3,15 @@ import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
 
 interface KeybindingOptions {
-  preventDefault?: boolean;
   targetRef?: RefObject<HTMLElement | null>;
+  enabled?: boolean;
+  preventDefault?: boolean;
 }
 
 export function useKeybinding(
   bindingId: string,
   callback: (event: KeyboardEvent) => void,
-  { preventDefault = true, targetRef }: KeybindingOptions = {},
+  { targetRef, enabled = true, preventDefault = true }: KeybindingOptions = {},
 ) {
   const savedCallback = useRef(callback);
 
@@ -20,7 +21,7 @@ export function useKeybinding(
 
   useEffect(() => {
     const targetElement = targetRef?.current ?? document;
-    if (!targetElement) {
+    if (!enabled || !targetElement) {
       return;
     }
 
@@ -41,5 +42,5 @@ export function useKeybinding(
     return () => {
       targetElement.removeEventListener(EVENTS.KEY_DOWN, handler);
     };
-  }, [bindingId, preventDefault, targetRef]);
+  }, [bindingId, targetRef, enabled, preventDefault]);
 }

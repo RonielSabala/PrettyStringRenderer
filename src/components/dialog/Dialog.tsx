@@ -18,7 +18,9 @@ export default function Dialog({
   actions,
 }: Props) {
   // Keybindings
-  useKeybinding("dialog.close", onClose);
+  useKeybinding("dialog.close", onClose, {
+    enabled: isOpen,
+  });
 
   if (!isOpen) {
     return null;

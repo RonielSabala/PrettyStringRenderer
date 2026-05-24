@@ -3,7 +3,7 @@ import "./App.css";
 import { APP_DEFAULT_THEME } from "./common/config";
 import { EVENTS } from "./common/constants/events";
 import { useStore } from "./common/store";
-import CanvasView from "./components/CanvasView";
+import Canvas from "./components/canvas/Canvas";
 import EditorPanel from "./components/EditorPanel";
 import {
   ExportDialog,
@@ -75,7 +75,7 @@ export default function App() {
       </aside>
 
       <main id="app-workspace">
-        <CanvasView />
+        <Canvas />
         <EditorPanel />
       </main>
 

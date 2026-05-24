@@ -18,149 +18,10 @@ import {
   saveCanvasConfigState,
 } from "../utils/persistence";
 import { toPx } from "../utils/resolution";
-import "./CanvasView.css";
 
 const _scheduleSave = createSaveScheduler(saveCanvasConfigState);
 
-const MIN_THUMB_SIZE_FRACTION = 0.04;
-const SCROLLBAR_ORIENTATION = Object.freeze({
-  HORIZONTAL: "horizontal",
-  VERTICAL: "vertical",
-} as const);
-
-type ScrollbarOrientation =
-  (typeof SCROLLBAR_ORIENTATION)[keyof typeof SCROLLBAR_ORIENTATION];
-
-interface ScrollbarProps {
-  orientation: ScrollbarOrientation;
-  zoom: number;
-  displaySize: number;
-  viewportSize: number;
-  pan: number;
-  onPan: (pan: number) => void;
-}
-
-function CanvasScrollbar({
-  orientation,
-  zoom,
-  displaySize,
-  viewportSize,
-  pan,
-  onPan,
-}: ScrollbarProps) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
-  const dragStartState = useRef({ clientPos: 0, panAtDragStart: 0 });
-  const isHorizontal = orientation === SCROLLBAR_ORIENTATION.HORIZONTAL;
-
-  // Calculate dimensions
-  const scaledContentSize = zoom * displaySize;
-  const visiblePortionFraction = viewportSize / scaledContentSize;
-
-  // No scrollbar needed
-  if (visiblePortionFraction >= 1) {
-    return null;
-  }
-
-  // Calculate scrollbar proportions
-  const thumbSizeFraction = Math.max(
-    MIN_THUMB_SIZE_FRACTION,
-    visiblePortionFraction,
-  );
-  const maxPanDistance = (scaledContentSize - viewportSize) / 2;
-  const minPanDistance = -maxPanDistance;
-  const totalPanRange = maxPanDistance - minPanDistance;
-
-  // Calculate thumb position and size
-  const normalizedPan = (maxPanDistance - pan) / totalPanRange;
-  const thumbPositionFraction = normalizedPan * (1 - thumbSizeFraction);
-
-  const clampPanValue = (panValue: number) =>
-    Math.max(minPanDistance, Math.min(maxPanDistance, panValue));
-
-  const handleTrackClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!trackRef.current || isDragging.current) {
-      return;
-    }
-
-    const rect = trackRef.current.getBoundingClientRect();
-    const clickPosition = isHorizontal
-      ? (event.clientX - rect.left) / rect.width
-      : (event.clientY - rect.top) / rect.height;
-
-    const normalizedClickPos = Math.max(
-      0,
-      Math.min(1, clickPosition - thumbSizeFraction / 2),
-    );
-    const newPan =
-      maxPanDistance -
-      (normalizedClickPos / (1 - thumbSizeFraction)) * totalPanRange;
-
-    onPan(clampPanValue(newPan));
-  };
-
-  const handleThumbMouseDown = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    event.preventDefault();
-    isDragging.current = true;
-    dragStartState.current = {
-      clientPos: isHorizontal ? event.clientX : event.clientY,
-      panAtDragStart: pan,
-    };
-
-    const handleMouseMove = (mouseEvent: MouseEvent) => {
-      if (!trackRef.current) {
-        return;
-      }
-
-      const rect = trackRef.current.getBoundingClientRect();
-      const trackSize = isHorizontal ? rect.width : rect.height;
-      const dragDelta =
-        (isHorizontal ? mouseEvent.clientX : mouseEvent.clientY) -
-        dragStartState.current.clientPos;
-      const panDelta =
-        -(dragDelta / (trackSize * (1 - thumbSizeFraction))) * totalPanRange;
-
-      onPan(clampPanValue(dragStartState.current.panAtDragStart + panDelta));
-    };
-
-    const handleMouseUp = () => {
-      isDragging.current = false;
-      document.removeEventListener(EVENTS.MOUSE_MOVE, handleMouseMove);
-      document.removeEventListener(EVENTS.MOUSE_UP, handleMouseUp);
-    };
-
-    document.addEventListener(EVENTS.MOUSE_MOVE, handleMouseMove);
-    document.addEventListener(EVENTS.MOUSE_UP, handleMouseUp);
-  };
-
-  return (
-    <div
-      className={`canvas-scrollbar canvas-scrollbar-${orientation}`}
-      ref={trackRef}
-      onClick={handleTrackClick}
-    >
-      <div
-        className="canvas-scrollbar-thumb"
-        style={
-          isHorizontal
-            ? {
-                width: `${thumbSizeFraction * 100}%`,
-                left: `${thumbPositionFraction * 100}%`,
-              }
-            : {
-                height: `${thumbSizeFraction * 100}%`,
-                top: `${thumbPositionFraction * 100}%`,
-              }
-        }
-        onMouseDown={handleThumbMouseDown}
-        onClick={(event) => event.stopPropagation()}
-      />
-    </div>
-  );
-}
-
-export default function CanvasView() {
+export function useCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -513,26 +374,16 @@ export default function CanvasView() {
     };
   }, [zoom, backgroundColor]);
 
-  return (
-    <div id="canvas-wrap" ref={wrapRef} tabIndex={-1}>
-      <div id="canvas-inner" ref={innerRef} />
-      <canvas id="canvas" ref={canvasRef} />
-      <CanvasScrollbar
-        orientation={SCROLLBAR_ORIENTATION.HORIZONTAL}
-        zoom={zoom}
-        displaySize={canvasRenderSize.width}
-        viewportSize={viewportSize.width}
-        pan={panX}
-        onPan={handlePanX}
-      />
-      <CanvasScrollbar
-        orientation={SCROLLBAR_ORIENTATION.VERTICAL}
-        zoom={zoom}
-        displaySize={canvasRenderSize.height}
-        viewportSize={viewportSize.height}
-        pan={panY}
-        onPan={handlePanY}
-      />
-    </div>
-  );
+  return {
+    wrapRef,
+    innerRef,
+    canvasRef,
+    canvasRenderSize,
+    viewportSize,
+    zoom,
+    panX,
+    panY,
+    handlePanX,
+    handlePanY,
+  };
 }

@@ -9,7 +9,6 @@ import {
   MIN_EXPORT_PNG_SCALAR,
   PNG_EXTENSION,
 } from "../../common/config";
-import { useKeybinding } from "../../hooks/useKeybinding";
 import { parseNumber } from "../../utils/parse";
 import { createResolution, getScaledDimensions } from "../../utils/resolution";
 import {
@@ -64,12 +63,6 @@ export default function PNGExportModal({
       onExport(scalar, filename);
     }
   };
-
-  // Keybindings
-  useKeybinding("input.submit", () => onExport(scalar, filename), {
-    targetRef: scalarInputRef,
-  });
-  useKeybinding("input.cancel", onCancel, { targetRef: scalarInputRef });
 
   return (
     <Dialog
@@ -150,7 +143,6 @@ export default function PNGExportModal({
           placeholder={defaultFilename}
           onChange={setFilename}
           onSubmit={handleSubmit}
-          onCancel={onCancel}
         />
       </div>
     </Dialog>

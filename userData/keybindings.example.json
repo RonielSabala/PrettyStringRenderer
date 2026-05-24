@@ -6,7 +6,6 @@
   "canvas.panXModifier": "ctrl",
   "dialog.close": "escape",
   "input.submit": "enter",
-  "input.cancel": "escape",
   "themes.focus": "tab",
   "themes.import": "ctrl+i",
   "themes.export": "ctrl+shift+e",

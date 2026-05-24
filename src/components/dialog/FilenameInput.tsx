@@ -7,7 +7,6 @@ interface Props {
   placeholder: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
-  onCancel: () => void;
   autoFocus?: boolean;
 }
 
@@ -16,14 +15,12 @@ export default function FilenameInput({
   placeholder,
   onChange,
   onSubmit,
-  onCancel,
   autoFocus = false,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Keybindings
   useKeybinding("input.submit", onSubmit, { targetRef: inputRef });
-  useKeybinding("input.cancel", onCancel, { targetRef: inputRef });
 
   return (
     <div className="filename-input-container no-user-select">

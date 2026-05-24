@@ -8,8 +8,8 @@ import {
 } from "../common/config";
 import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
-import { matchesKeybinding } from "../common/keybindings";
 import { useStore } from "../common/store";
+import { useKeybinding } from "../hooks/useKeybinding";
 import { parseNumber, roundUp } from "../utils/parse";
 import {
   createSaveScheduler,
@@ -242,24 +242,11 @@ export default function EditorPanel() {
     };
   }, [adjustCanvas, setEditorConfig, height, getEditorMinHeight]);
 
-  // Canvas focus keybinding
-  useEffect(() => {
-    const handler = (event: Event) => {
-      if (
-        !(event instanceof KeyboardEvent) ||
-        !matchesKeybinding(event, "canvas.focus")
-      ) {
-        return;
-      }
-
-      cancelWelcomeAnimation();
-      event.preventDefault();
-      canvasWrapRef.current?.focus();
-    };
-
-    document.addEventListener(EVENTS.KEY_DOWN, handler);
-    return () => document.removeEventListener(EVENTS.KEY_DOWN, handler);
-  }, [cancelWelcomeAnimation]);
+  // Keybindings
+  useKeybinding("canvas.focus", () => {
+    cancelWelcomeAnimation();
+    canvasWrapRef.current?.focus();
+  });
 
   return (
     <>

@@ -8,10 +8,10 @@ import {
   THEMES_FILE_TYPE,
 } from "../../../common/config";
 import { EVENTS } from "../../../common/constants/events";
-import { matchesKeybinding } from "../../../common/keybindings";
 import { useStore } from "../../../common/store";
 import type { Theme } from "../../../common/types";
 import { THEME_KEYS } from "../../../common/types";
+import { useKeybinding } from "../../../hooks/useKeybinding";
 import { applyThemeColors } from "../../../utils/color_sync";
 import { isObjectEmpty } from "../../../utils/parse";
 import {
@@ -151,41 +151,16 @@ function useThemes() {
     setViewingTheme(theme);
   }, []);
 
-  // Global keybindings
-  useEffect(() => {
-    const handler = (event: Event) => {
-      if (!(event instanceof KeyboardEvent)) {
-        return;
-      }
-
-      if (matchesKeybinding(event, "themes.focus")) {
-        event.preventDefault();
-        activeItem.current?.focus();
-      } else if (matchesKeybinding(event, "themes.import")) {
-        event.preventDefault();
-        importThemes();
-      } else if (matchesKeybinding(event, "themes.export")) {
-        event.preventDefault();
-        exportTheme();
-      } else if (matchesKeybinding(event, "themes.delete")) {
-        event.preventDefault();
-        const active = themes.find((t) => t._name === activeThemeName);
-        if (active) {
-          deleteTheme(active);
-        }
-      }
-    };
-
-    document.addEventListener(EVENTS.KEY_DOWN, handler);
-    return () => document.removeEventListener(EVENTS.KEY_DOWN, handler);
-  }, [
-    activeItem,
-    importThemes,
-    exportTheme,
-    themes,
-    activeThemeName,
-    deleteTheme,
-  ]);
+  // Keybindings
+  useKeybinding("themes.focus", () => activeItem.current?.focus());
+  useKeybinding("themes.import", importThemes);
+  useKeybinding("themes.export", exportTheme);
+  useKeybinding("themes.delete", () => {
+    const active = themes.find((theme) => theme._name === activeThemeName);
+    if (active) {
+      deleteTheme(active);
+    }
+  });
 
   return {
     themes,

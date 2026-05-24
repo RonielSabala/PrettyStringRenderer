@@ -15,7 +15,7 @@ const _rawBindings: Record<string, string> = {
 const BINDING_SEPARATOR = "+";
 const MODIFIER_KEYS = ["ctrl", "shift", "alt"] as const;
 
-interface KeyEvent {
+interface KeybindingEvent {
   key: string;
   ctrlKey: boolean;
   shiftKey: boolean;
@@ -58,19 +58,24 @@ const _parsed: Readonly<Record<string, ParsedBinding>> = Object.freeze(
   ),
 );
 
-export function matchesKeybinding(event: KeyEvent, bindingId: string): boolean {
+export function matchesKeybinding(
+  event: Partial<KeybindingEvent>,
+  bindingId: string,
+): boolean {
   const binding = _parsed[bindingId];
   if (!binding) {
     return false;
   }
 
+  const key = event.key;
   return (
-    event.key.toLowerCase() === binding.key &&
+    (key === undefined || key.toLowerCase() === binding.key) &&
     !!event.ctrlKey === binding.ctrl &&
     !!event.shiftKey === binding.shift &&
     !!event.altKey === binding.alt
   );
 }
+
 export function getFormattedKeybinding(bindingId: string): string {
   const binding = _rawBindings[bindingId];
   if (!binding) {

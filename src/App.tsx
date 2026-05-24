@@ -11,7 +11,12 @@ import {
 } from "./components/export/ExportDialog";
 import Header from "./components/Header";
 import Sidebar from "./components/sidebar/Sidebar";
-import { restoreState, saveActiveElementIdState } from "./utils/persistence";
+import { useKeybinding } from "./hooks/useKeybinding";
+import {
+  clearState,
+  restoreState,
+  saveActiveElementIdState,
+} from "./utils/persistence";
 
 // Element IDs that should NOT restore focus after reload
 const FOCUS_EXCLUSIONS = new Set([
@@ -51,6 +56,12 @@ export default function App() {
     window.addEventListener(EVENTS.WINDOW_RELOAD, handler);
     return () => window.removeEventListener(EVENTS.WINDOW_RELOAD, handler);
   }, [setActiveElementId]);
+
+  // Keybindings
+  useKeybinding("app.fullReload", () => {
+    clearState();
+    location.reload();
+  });
 
   return (
     <div id="app">

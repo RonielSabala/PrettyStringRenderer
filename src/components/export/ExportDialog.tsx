@@ -1,7 +1,6 @@
 import {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useState,
   type ReactNode,
@@ -23,14 +22,13 @@ import {
   SVG_NS,
 } from "../../common/config";
 import { CSS_STYLE, CSS_TEXT_RENDERING } from "../../common/constants/css";
-import { EVENTS } from "../../common/constants/events";
-import { matchesKeybinding } from "../../common/keybindings";
 import { useStore } from "../../common/store";
 import type {
   CanvasConfig,
   ThemeColors,
   TypographyConfig,
 } from "../../common/types";
+import { useKeybinding } from "../../hooks/useKeybinding";
 import { roundUp } from "../../utils/parse";
 import { createResolution, getScaledDimensions } from "../../utils/resolution";
 import { Dialog } from "../dialog";
@@ -290,24 +288,8 @@ export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
     [canvasConfig, typographyConfig, colors],
   );
 
-  // Global keybindings
-  useEffect(() => {
-    const handler = (event: Event) => {
-      if (!(event instanceof KeyboardEvent)) {
-        return;
-      }
-
-      if (matchesKeybinding(event, "workspace.export")) {
-        event.preventDefault();
-        openDialog();
-      } else if (event.key === EVENTS.ESCAPE) {
-        closeDialog();
-      }
-    };
-
-    document.addEventListener(EVENTS.KEY_DOWN, handler);
-    return () => document.removeEventListener(EVENTS.KEY_DOWN, handler);
-  }, [openDialog, closeDialog]);
+  // Keybindings
+  useKeybinding("workspace.export", openDialog);
 
   const { width, height } = canvasConfig;
   return (

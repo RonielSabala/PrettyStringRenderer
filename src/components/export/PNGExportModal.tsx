@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FileEarmarkImage, X } from "react-bootstrap-icons";
 import {
   DEFAULT_EXPORT_IMAGE_FILENAME,
-  DEFAULT_PNG_SCALAR,
+  DEFAULT_EXPORT_PNG_SCALAR,
   EXPORT_PNG_PROMPT_SCALAR_EXAMPLES,
+  EXPORT_PNG_SCALAR_STEP,
+  MAX_EXPORT_PNG_SCALAR,
+  MIN_EXPORT_PNG_SCALAR,
   PNG_EXTENSION,
 } from "../../common/config";
-import { EVENTS } from "../../common/constants/events";
+import { useKeybinding } from "../../hooks/useKeybinding";
 import { parseNumber } from "../../utils/parse";
 import { createResolution, getScaledDimensions } from "../../utils/resolution";
 import {
@@ -34,7 +37,8 @@ export default function PNGExportModal({
   onExport,
   onCancel,
 }: Props) {
-  const [scalar, setScalar] = useState(DEFAULT_PNG_SCALAR);
+  const scalarInputRef = useRef<HTMLInputElement>(null);
+  const [scalar, setScalar] = useState(DEFAULT_EXPORT_PNG_SCALAR);
   const [filename, setFilename] = useState(defaultFilename);
 
   useEffect(() => {
@@ -60,6 +64,12 @@ export default function PNGExportModal({
       onExport(scalar, filename);
     }
   };
+
+  // Keybindings
+  useKeybinding("input.submit", () => onExport(scalar, filename), {
+    targetRef: scalarInputRef,
+  });
+  useKeybinding("input.cancel", onCancel, { targetRef: scalarInputRef });
 
   return (
     <Dialog
@@ -87,23 +97,20 @@ export default function PNGExportModal({
         <div className="png-export-scalar-input-group">
           <label htmlFor="png-scalar">Scale:</label>
           <input
+            ref={scalarInputRef}
             id="png-scalar"
             className="number-input png-export-scalar-input"
             type="number"
-            min="0.5"
-            max="10"
-            step="0.5"
+            min={MIN_EXPORT_PNG_SCALAR}
+            max={MAX_EXPORT_PNG_SCALAR}
+            step={EXPORT_PNG_SCALAR_STEP}
             value={scalar}
             onChange={(event) => {
-              const value = parseNumber(event.target.value, DEFAULT_PNG_SCALAR);
-              setScalar(Math.max(0.5, value));
-            }}
-            onKeyDown={(event) => {
-              if (event.key === EVENTS.ENTER) {
-                onExport(scalar, filename);
-              } else if (event.key === EVENTS.ESCAPE) {
-                onCancel();
-              }
+              const value = parseNumber(
+                event.target.value,
+                DEFAULT_EXPORT_PNG_SCALAR,
+              );
+              setScalar(Math.max(MIN_EXPORT_PNG_SCALAR, value));
             }}
           />
           <span className="png-export-scalar-unit"></span>

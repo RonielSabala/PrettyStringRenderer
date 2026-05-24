@@ -1,12 +1,17 @@
 {
   "app.fullReload": "ctrl+shift+r",
-  "workspace.export": "ctrl+m",
   "canvas.focus": "escape",
   "canvas.panHold": "space",
+  "canvas.zoomModifier": "alt",
+  "canvas.panXModifier": "ctrl",
+  "dialog.close": "escape",
+  "input.submit": "enter",
+  "input.cancel": "escape",
   "themes.focus": "tab",
   "themes.import": "ctrl+i",
   "themes.export": "ctrl+shift+e",
   "themes.delete": "ctrl+shift+backspace",
   "themes.navigateUp": "arrowup",
-  "themes.navigateDown": "arrowdown"
+  "themes.navigateDown": "arrowdown",
+  "workspace.export": "ctrl+m"
 }

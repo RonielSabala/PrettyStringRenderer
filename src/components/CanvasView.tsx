@@ -14,7 +14,6 @@ import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
 import { useStore, useStore as zustand } from "../common/store";
 import {
-  clearState,
   createSaveScheduler,
   saveCanvasConfigState,
 } from "../utils/persistence";
@@ -336,26 +335,26 @@ export default function CanvasView() {
     _scheduleSave();
   };
 
-  // Canvas event handlers
+  // Keybindings
   useEffect(() => {
     const wrap = wrapRef.current!;
 
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
-      const canvasConfig = zustand.getState().canvasConfig;
 
-      if (event.altKey) {
+      if (matchesKeybinding(event, "canvas.zoomModifier")) {
         applyZoom(event);
         _scheduleSave();
         return;
       }
 
+      const canvasConfig = zustand.getState().canvasConfig;
       if (canvasConfig.zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD) {
         return;
       }
 
       const panDelta = event.deltaY * CANVAS_PAN_SCROLL_SPEED;
-      if (event.ctrlKey) {
+      if (matchesKeybinding(event, "canvas.panXModifier")) {
         zustand.getState().setCanvasConfig({
           panX: canvasConfig.panX - panDelta,
         });
@@ -414,33 +413,23 @@ export default function CanvasView() {
       _scheduleSave();
     };
 
-    const onKeyDown = (event: Event) => {
-      if (!(event instanceof KeyboardEvent)) {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (
+        spaceHeld.current ||
+        document.activeElement === document.getElementById("editor") ||
+        !matchesKeybinding(event, "canvas.panHold") ||
+        zustand.getState().canvasConfig.zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD
+      ) {
         return;
       }
 
-      if (
-        !spaceHeld.current &&
-        document.activeElement !== document.getElementById("editor") &&
-        matchesKeybinding(event, "canvas.panHold") &&
-        zustand.getState().canvasConfig.zoom > CANVAS_CENTERING_ZOOM_THRESHOLD
-      ) {
-        event.preventDefault();
-        spaceHeld.current = true;
-        wrap.style.cursor = CSS_CURSORS.GRAB;
-      } else if (matchesKeybinding(event, "app.fullReload")) {
-        event.preventDefault();
-        clearState();
-        location.reload();
-      }
+      event.preventDefault();
+      spaceHeld.current = true;
+      wrap.style.cursor = CSS_CURSORS.GRAB;
     };
 
-    const onKeyUp = (event: Event) => {
-      if (
-        !spaceHeld.current ||
-        !(event instanceof KeyboardEvent) ||
-        !matchesKeybinding(event, "canvas.panHold")
-      ) {
+    const onKeyUp = (event: KeyboardEvent) => {
+      if (!spaceHeld.current || !matchesKeybinding(event, "canvas.panHold")) {
         return;
       }
 

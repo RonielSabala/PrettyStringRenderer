@@ -39,7 +39,7 @@ function FitToContentCheckbox({ id }: FitToContentProps) {
       checked={isChecked}
       onChange={(event) => {
         setCanvasConfig({ fitToContent: event.target.checked });
-        redraw(true);
+        redraw({ forceAdjust: true });
       }}
     />
   );

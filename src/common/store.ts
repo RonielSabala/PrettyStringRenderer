@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { RedrawOptions } from "../canvas/buffer";
 import { Tokenizer } from "../core/tokenizer";
 import {
   APP_DEFAULT_THEME,
@@ -28,13 +29,17 @@ interface AppState {
   activeThemeName: string;
   activeElementId: string;
   collapsedSections: CollapsedSections;
+
   // Configs
   typographyConfig: TypographyConfig;
   editorConfig: EditorConfig;
   canvasConfig: CanvasConfig;
-  // Engine
-  tokenizer: Tokenizer; // not persisted
+
+  // Engine (not persisted)
+  tokenizer: Tokenizer;
+
   // Actions
+
   setColors: (colors: Partial<ThemeColors>) => void;
   setThemes: (themes: ThemeColors[]) => void;
   setAppTheme: (appTheme: AppThemeType) => void;
@@ -49,12 +54,10 @@ interface AppState {
   tokenize: (text: string) => void;
   recolor: (changedKey?: string) => void;
 
-  redraw: (forceAdjust?: boolean) => void;
+  redraw: (options?: RedrawOptions) => void;
   adjustCanvas: () => void;
   scheduleRedraw: () => void;
 }
-
-// Store
 
 export const useStore = create<AppState>((set, get) => ({
   colors: {},

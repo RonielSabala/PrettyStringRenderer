@@ -31,8 +31,13 @@ function _calculateFitDimensions(): {
   };
 }
 
+export interface RedrawOptions {
+  pixelScale?: number;
+  forceAdjust?: boolean;
+}
+
 export interface CanvasBuffer {
-  redraw: (forceAdjust?: boolean) => void;
+  redraw: (options?: RedrawOptions) => void;
   scheduleRedraw: () => void;
   adjustCanvas: (pixelScale?: number) => void;
   destroy: () => void;
@@ -100,7 +105,10 @@ export function createBuffer(
     canvasElement.style.height = toPx(Math.ceil(displayHeight));
   }
 
-  function redraw(forceAdjust = false, pixelScale?: number): void {
+  function redraw({
+    pixelScale,
+    forceAdjust = false,
+  }: RedrawOptions = {}): void {
     const fitToContent = getStore().canvasConfig.fitToContent;
     const { width, height } = fitToContent
       ? _calculateFitDimensions()
@@ -153,7 +161,7 @@ export function createBuffer(
 
     destroy();
     _redrawTimer = setTimeout(
-      () => redraw(undefined, pixelScale),
+      () => redraw({ pixelScale }),
       CANVAS_REDRAW_TIMEOUT_MS,
     );
   }

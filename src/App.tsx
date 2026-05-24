@@ -25,9 +25,10 @@ const FOCUS_EXCLUSIONS = new Set([
   "workspace-export-btn",
 ]);
 
+// Set theme
 document.documentElement.dataset.theme = APP_DEFAULT_THEME;
 
-// Restore persisted state before any child component reads it
+// Restore persisted state
 restoreState();
 
 export default function App() {

@@ -46,8 +46,8 @@ export function useCanvasScrollbar({
   const normalizedPan = (maxPanDistance - pan) / totalPanRange;
   const thumbPositionFraction = normalizedPan * (1 - thumbSizeFraction);
 
-  const clampPanValue = (panValue: number) =>
-    Math.max(minPanDistance, Math.min(maxPanDistance, panValue));
+  const clampPan = (pan: number) =>
+    Math.max(minPanDistance, Math.min(maxPanDistance, pan));
 
   const handleTrackClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!trackRef.current || isDragging.current) {
@@ -67,12 +67,13 @@ export function useCanvasScrollbar({
       maxPanDistance -
       (normalizedClickPos / (1 - thumbSizeFraction)) * totalPanRange;
 
-    onPan(clampPanValue(newPan));
+    onPan(clampPan(newPan));
   };
 
   const handleThumbMouseDown = (event: React.MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
+
     isDragging.current = true;
     dragStartState.current = {
       clientPos: isHorizontal ? event.clientX : event.clientY,
@@ -89,10 +90,11 @@ export function useCanvasScrollbar({
       const dragDelta =
         (isHorizontal ? mouseEvent.clientX : mouseEvent.clientY) -
         dragStartState.current.clientPos;
+
       const panDelta =
         -(dragDelta / (trackSize * (1 - thumbSizeFraction))) * totalPanRange;
 
-      onPan(clampPanValue(dragStartState.current.panAtDragStart + panDelta));
+      onPan(clampPan(dragStartState.current.panAtDragStart + panDelta));
     };
 
     const handleMouseUp = () => {

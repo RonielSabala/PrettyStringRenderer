@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createBuffer } from "../canvas/buffer";
 import {
   APP_FONT_VARIANT_LIGATURES,
@@ -22,20 +22,20 @@ import { toPx } from "../utils/resolution";
 const _scheduleSave = createSaveScheduler(saveCanvasConfigState);
 
 export function useCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const zoom = useStore((state) => state.canvasConfig.zoom);
   const panX = useStore((state) => state.canvasConfig.panX);
   const panY = useStore((state) => state.canvasConfig.panY);
+  const backgroundColor = useStore((state) => state.colors.background);
+
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
   const [canvasRenderSize, setCanvasRenderSize] = useState({
     width: 0,
     height: 0,
   });
-  const backgroundColor = useStore((state) => state.colors.background);
-  const setCanvasConfig = useStore((state) => state.setCanvasConfig);
 
   // Imperative state
   const spaceHeld = useRef(false);
@@ -51,17 +51,20 @@ export function useCanvas() {
     }
 
     const config = getStore().canvasConfig;
-    const zoom = config.zoom;
-    let { panX, panY } = config;
+    const currentZoom = config.zoom;
+    let { panX: newPanX, panY: newPanY } = config;
 
     // Force centering
-    if (zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD && (panX !== 0 || panY !== 0)) {
-      panX = 0;
-      panY = 0;
-      getStore().setCanvasConfig({ panX, panY });
+    if (
+      currentZoom <= CANVAS_CENTERING_ZOOM_THRESHOLD &&
+      (newPanX !== 0 || newPanY !== 0)
+    ) {
+      newPanX = 0;
+      newPanY = 0;
+      getStore().setCanvasConfig({ panX: 0, panY: 0 });
     }
 
-    const transform = `translate(${toPx(panX)},${toPx(panY)}) scale(${zoom})`;
+    const transform = `translate(${toPx(newPanX)},${toPx(newPanY)}) scale(${currentZoom})`;
     canvasRef.current.style.transform = transform;
     innerRef.current.style.transform = transform;
   };
@@ -96,7 +99,7 @@ export function useCanvas() {
       },
     );
 
-    // Wire imperative functions
+    // Wire buffer functions
     useStore.setState({
       redraw: buffer.redraw,
       adjustCanvas: buffer.adjustCanvas,
@@ -136,31 +139,16 @@ export function useCanvas() {
     };
   }, []);
 
-  // Pan helpers
-
-  const handlePanX = useCallback((pan: number) => {
-    getStore().setCanvasConfig({ panX: pan });
-    scheduleTransform();
-    _scheduleSave();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handlePanY = useCallback((pan: number) => {
-    getStore().setCanvasConfig({ panY: pan });
-    scheduleTransform();
-    _scheduleSave();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // Zoom helpers
 
   const applyZoom = (event: WheelEvent) => {
     const rect = wrapRef.current!.getBoundingClientRect();
     const pivotX = event.clientX - (rect.left + rect.width / 2);
     const pivotY = event.clientY - (rect.top + rect.height / 2);
-    const { canvasConfig } = getStore();
 
+    const canvasConfig = getStore().canvasConfig;
     const oldZoom = canvasConfig.zoom;
+
     const zoomFactor =
       event.deltaY < 0 ? CANVAS_ZOOM_FACTOR : 1 / CANVAS_ZOOM_FACTOR;
     const newZoom = Math.max(
@@ -190,7 +178,11 @@ export function useCanvas() {
       return;
     }
 
-    setCanvasConfig({ zoom: CANVAS_DEFAULTS.zoom, panX: 0, panY: 0 });
+    getStore().setCanvasConfig({
+      zoom: CANVAS_DEFAULTS.zoom,
+      panX: 0,
+      panY: 0,
+    });
     scheduleTransform();
     getStore().scheduleRedraw();
     _scheduleSave();
@@ -373,6 +365,18 @@ export function useCanvas() {
       resizeObserver.disconnect();
     };
   }, [zoom, backgroundColor]);
+
+  // Pan helpers
+  const handlePanX = (pan: number) => {
+    getStore().setCanvasConfig({ panX: pan });
+    scheduleTransform();
+    _scheduleSave();
+  };
+  const handlePanY = (pan: number) => {
+    getStore().setCanvasConfig({ panY: pan });
+    scheduleTransform();
+    _scheduleSave();
+  };
 
   return {
     wrapRef,

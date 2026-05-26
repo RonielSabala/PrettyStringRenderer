@@ -9,7 +9,11 @@ import {
   CANVAS_PAN_SCROLL_SPEED,
   CANVAS_ZOOM_FACTOR,
 } from "../common/config";
-import { CSS_CURSORS } from "../common/constants/css";
+import {
+  CHECKER_COLORS,
+  CSS_BACKGROUND_IMAGE,
+  CSS_CURSORS,
+} from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
 import { getStore, useStore } from "../common/store";
@@ -320,7 +324,7 @@ export function useCanvas() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Keep background pattern size constant regardless of zoom
+  // Keep background pattern size constant and sync backgroundColor
   useEffect(() => {
     if (!innerRef.current || !canvasRef.current) {
       return;
@@ -332,28 +336,44 @@ export function useCanvas() {
       }
 
       const innerRefStyle = innerRef.current.style;
-      innerRefStyle.opacity = `${Number(!backgroundColor)}`;
       innerRefStyle.width = toPx(canvasRef.current.offsetWidth);
       innerRefStyle.height = toPx(canvasRef.current.offsetHeight);
     };
 
-    const updateBackgroundPattern = () => {
-      if (backgroundColor || !innerRef.current) {
+    const updateBackground = () => {
+      if (!innerRef.current) {
         return;
       }
 
-      const inverseZoom = 1 / zoom;
-      const scaledSize = `calc(var(--space-6) * ${inverseZoom})`;
-      const scaledOffset = `calc(var(--space-3) * ${inverseZoom})`;
-      const minusScaledOffset = `calc(${scaledOffset} * -1)`;
-
       const innerRefStyle = innerRef.current.style;
-      innerRefStyle.backgroundSize = `${scaledSize} ${scaledSize}`;
-      innerRefStyle.backgroundPosition = `0 0, 0 ${scaledOffset}, ${scaledOffset} ${minusScaledOffset}, ${minusScaledOffset} 0`;
+
+      if (backgroundColor) {
+        // Show solid color
+        innerRefStyle.backgroundColor = backgroundColor;
+        innerRefStyle.backgroundImage = CSS_BACKGROUND_IMAGE.NONE;
+      } else {
+        // Show checkerboard texture pattern
+        innerRefStyle.backgroundColor = CHECKER_COLORS.DARK;
+
+        const inverseZoom = 1 / zoom;
+        const scaledSize = `calc(var(--space-6) * ${inverseZoom})`;
+        const scaledOffset = `calc(var(--space-3) * ${inverseZoom})`;
+        const minusScaledOffset = `calc(${scaledOffset} * -1)`;
+
+        innerRefStyle.backgroundImage = `
+          linear-gradient(45deg, ${CHECKER_COLORS.LIGHT} 25%, transparent 25%),
+          linear-gradient(-45deg, ${CHECKER_COLORS.LIGHT} 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, ${CHECKER_COLORS.LIGHT} 75%),
+          linear-gradient(-45deg, transparent 75%, ${CHECKER_COLORS.LIGHT} 75%)
+        `;
+        innerRefStyle.backgroundSize = `${scaledSize} ${scaledSize}`;
+        innerRefStyle.backgroundPosition = `0 0, 0 ${scaledOffset}, ${scaledOffset} ${minusScaledOffset}, ${minusScaledOffset} 0`;
+      }
     };
 
     // Initial sync
-    updateBackgroundPattern();
+    updateBackground();
+    syncCanvasInnerSize();
 
     // Watch for canvas size changes
     const resizeObserver = new ResizeObserver(() => {

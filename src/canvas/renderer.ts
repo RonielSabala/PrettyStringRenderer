@@ -154,23 +154,11 @@ export function render(
   const config = options.configOverride ?? typographyConfig;
   const { fontSize, letterSpacing } = config;
 
+  const isBackgroundRemoved = !colors.background;
   const isSpeedOptimized =
     config.textRendering === CSS_TEXT_RENDERING.OPTIMIZE_SPEED;
 
-  const backgroundColor = colors.background;
-  const isBackgroundRemoved = !backgroundColor;
-
-  const setBackground = (x1: number, y1: number, x2: number, y2: number) => {
-    if (isBackgroundRemoved) {
-      ctx.clearRect(x1, y1, x2, y2);
-      return;
-    }
-
-    ctx.fillStyle = backgroundColor;
-    ctx.fillRect(x1, y1, x2, y2);
-  };
-
-  setBackground(0, 0, width, height);
+  ctx.clearRect(0, 0, width, height);
   _setupContextFont(ctx, config);
   iterateTokens(
     width,
@@ -178,9 +166,9 @@ export function render(
     config,
     (text, color, x, y) => {
       if (!color) {
-        if (!backgroundColor) {
+        if (isBackgroundRemoved) {
           // Clear text
-          setBackground(
+          ctx.clearRect(
             x,
             y - fontSize,
             ctx.measureText(text).width + letterSpacing,

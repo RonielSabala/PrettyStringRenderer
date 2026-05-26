@@ -22,18 +22,27 @@ interface Props {
   title: string;
   keys: TokenType[];
   defaultCollapsed?: boolean;
+  doRedraw?: boolean;
 }
 
-export function ColorSection({ title, keys, defaultCollapsed }: Props) {
+export function ColorSection({
+  title,
+  keys,
+  defaultCollapsed,
+  doRedraw = true,
+}: Props) {
   const colors = useStore((state) => state.colors);
   const redraw = useStore((state) => state.redraw);
   const handleChange = useCallback(
     (key: TokenType, value: ThemeColor) => {
       setColor(key, value);
-      redraw();
+      if (doRedraw) {
+        redraw();
+      }
+
       _scheduleSave();
     },
-    [redraw],
+    [doRedraw, redraw],
   );
 
   return (
@@ -111,6 +120,7 @@ export function CanvasColorSection() {
       title="Canvas Colors"
       keys={[TOKENS.BACKGROUND]}
       defaultCollapsed
+      doRedraw={false}
     />
   );
 }

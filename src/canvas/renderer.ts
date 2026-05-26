@@ -149,33 +149,19 @@ export function render(
   height: number,
   options: RenderOptions = {},
 ): void {
-  const { typographyConfig, colors } = getStore();
-
-  const config = options.configOverride ?? typographyConfig;
-  const { fontSize, letterSpacing } = config;
-
-  const isBackgroundRemoved = !colors.background;
+  const config = options.configOverride ?? getStore().typographyConfig;
   const isSpeedOptimized =
     config.textRendering === CSS_TEXT_RENDERING.OPTIMIZE_SPEED;
 
-  ctx.clearRect(0, 0, width, height);
   _setupContextFont(ctx, config);
+
+  ctx.clearRect(0, 0, width, height);
   iterateTokens(
     width,
     height,
     config,
     (text, color, x, y) => {
       if (!color) {
-        if (isBackgroundRemoved) {
-          // Clear text
-          ctx.clearRect(
-            x,
-            y - fontSize,
-            ctx.measureText(text).width + letterSpacing,
-            fontSize,
-          );
-        }
-
         return;
       }
 

@@ -11,6 +11,7 @@ import {
   getDrawingContext,
   render,
   updateTextMetrics,
+  type RenderRange,
 } from "./renderer";
 
 function _calculateFitDimensions(): {
@@ -32,6 +33,7 @@ function _calculateFitDimensions(): {
 }
 
 export interface RedrawOptions {
+  range?: RenderRange;
   pixelScale?: number;
   forceAdjust?: boolean;
 }
@@ -53,6 +55,8 @@ export function createBuffer(
   let _currentPixelScale = 1;
   let _redrawTimer: ReturnType<typeof setTimeout> | null = null;
 
+  let _lastWidth: number | null = null;
+  let _lastHeight: number | null = null;
   let _lastBufferWidth: number | null = null;
   let _lastBufferHeight: number | null = null;
 
@@ -105,27 +109,26 @@ export function createBuffer(
     canvasElement.style.height = toPx(Math.ceil(displayHeight));
   }
 
-  function redraw({
-    pixelScale,
-    forceAdjust = false,
-  }: RedrawOptions = {}): void {
+  function redraw(options: RedrawOptions = {}): void {
     const fitToContent = getStore().canvasConfig.fitToContent;
     const { width, height } = fitToContent
       ? _calculateFitDimensions()
       : CANVAS_DEFAULTS;
 
-    if (pixelScale === undefined) {
-      pixelScale = _getPixelScale(width, height);
-    }
-
+    const pixelScale = options.pixelScale ?? _getPixelScale(width, height);
     _currentPixelScale = pixelScale;
 
     const bufferWidth = pixelScale * width;
     const bufferHeight = pixelScale * height;
     const sizeChanged =
-      bufferWidth !== _lastBufferWidth || bufferHeight !== _lastBufferHeight;
+      width !== _lastWidth ||
+      height !== _lastHeight ||
+      bufferWidth !== _lastBufferWidth ||
+      bufferHeight !== _lastBufferHeight;
 
     if (sizeChanged) {
+      _lastWidth = width;
+      _lastHeight = height;
       _lastBufferWidth = bufferWidth;
       _lastBufferHeight = bufferHeight;
 
@@ -135,9 +138,9 @@ export function createBuffer(
       ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
     }
 
-    render(ctx, width, height);
+    render(ctx, width, height, { range: options.range });
 
-    if (forceAdjust || (sizeChanged && fitToContent)) {
+    if (options.forceAdjust || (sizeChanged && fitToContent)) {
       adjustCanvas(pixelScale);
       onDimensionsChange(width, height);
     }

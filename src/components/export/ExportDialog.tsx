@@ -82,7 +82,9 @@ function _exportPNG(
   offscreen.style.visibility = CSS_STYLE.HIDDEN;
   offscreen.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
-  render(getDrawingContext(offscreen), exportWidth, exportHeight, scaledConfig);
+  render(getDrawingContext(offscreen), exportWidth, exportHeight, {
+    configOverride: scaledConfig,
+  });
 
   offscreen.toBlob((blob) => {
     if (blob) {

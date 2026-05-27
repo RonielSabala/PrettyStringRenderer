@@ -98,14 +98,14 @@ export function useWelcomeAnimation() {
       const maxLineIdx = lines.length - 1;
 
       const newFirstLine = lines[0].text;
-      const oldFirstLine = rawContentRef.current;
+      const oldFirstLine = rawContentRef.current.replace(LINE_BREAK, "");
       const shortestLine =
         newFirstLine.length < oldFirstLine.length ? newFirstLine : oldFirstLine;
 
       let lineIdx = 0;
-      let charIdx = Math.max(0, shortestLine.length - 1);
+      let charIdx = Math.max(0, shortestLine.length);
 
-      rawContentRef.current = shortestLine.replace(LINE_BREAK, "");
+      rawContentRef.current = shortestLine;
 
       const typeTick = () => {
         if (_shouldPause(typeTick)) {

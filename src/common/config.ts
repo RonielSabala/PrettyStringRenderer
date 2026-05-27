@@ -15,6 +15,7 @@ export const HAS_CUSTOM_PROFILE = !isObjectEmpty(_userDefaults);
 // App
 
 export const LINE_BREAK = "\n";
+export const LINE_BREAK_LENGTH = LINE_BREAK.length;
 export const SAVE_TIMEOUT_MS = 200;
 export const MAX_HEX_INPUT_LENGTH = 7;
 

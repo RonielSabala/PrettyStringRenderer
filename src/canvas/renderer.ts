@@ -121,26 +121,36 @@ export function iterateTokens(
         continue;
       }
 
-      const isOutOfBound = col > maxCol + 1;
-      if (token.type !== TOKENS.BACKGROUND) {
-        const x = padX + currentCol * charWidth;
-        const tokenText = isOutOfBound
-          ? tokenValue.substring(0, maxCol - currentCol + 1)
-          : tokenValue;
+      // Calculate visible token part
+      const startOffset = Math.max(0, minCol - currentCol);
+      const endOffset = Math.min(tokenValue.length, maxCol - currentCol + 1);
 
-        onToken(tokenText, token.color, x, y);
+      if (token.type !== TOKENS.BACKGROUND) {
+        const visibleText = tokenValue.substring(startOffset, endOffset);
+        const x = padX + (currentCol + startOffset) * charWidth;
+
+        onToken(visibleText, token.color, x, y);
       }
 
-      if (isOutOfBound) {
+      if (endOffset <= startOffset) {
         break;
       }
     }
   }
 }
 
+export interface ClearRectOptions {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
 export interface RenderOptions {
   range?: RenderRange;
   configOverride?: TypographyConfig;
+  clearCanvas?: boolean;
+  clearRect?: ClearRectOptions;
 }
 
 export function render(
@@ -155,7 +165,17 @@ export function render(
 
   _setupContextFont(ctx, config);
 
-  ctx.clearRect(0, 0, width, height);
+  if (options.clearCanvas ?? true) {
+    const { x1, y1, x2, y2 } = options.clearRect ?? {
+      x1: 0,
+      y1: 0,
+      x2: width,
+      y2: height,
+    };
+
+    ctx.clearRect(x1, y1, x2 - x1, y2 - y1);
+  }
+
   iterateTokens(
     width,
     height,

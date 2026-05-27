@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import {
   HAS_CUSTOM_PROFILE,
   LINE_BREAK,
+  LINE_BREAK_LENGTH,
   SAVE_TIMEOUT_MS,
   WELCOME_BLINK_INTERVAL_MS,
   WELCOME_BLINKING_DURATION_MS,
@@ -13,7 +14,7 @@ import {
   WELCOME_TYPING_JITTER_MAX_MS,
 } from "../common/config";
 import { getStore, useStore } from "../common/store";
-import { ANIMATION_DELAYS_MS, generateWelcomeTokens } from "./tokens_generator";
+import { ANIMATION_DELAYS_MS, generateWelcomeLines } from "./tokens_generator";
 
 export function useWelcomeAnimation() {
   const setEditorConfig = useStore((state) => state.setEditorConfig);
@@ -21,39 +22,36 @@ export function useWelcomeAnimation() {
   const hasRunRef = useRef(false);
   const isCancelledRef = useRef(false);
 
-  // Timers
   const activeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const blinkIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Raw text without the cursor character
   const rawContentRef = useRef("");
 
   // Helpers
 
-  const getTextarea = () =>
+  const _getTextarea = () =>
     document.getElementById("editor") as HTMLTextAreaElement | null;
 
-  const setTextarea = useCallback(
+  const _setTextarea = useCallback(
     (textarea: HTMLTextAreaElement | null, showCursor: boolean = false) => {
-      const newContent =
+      const displayContent =
         rawContentRef.current + (showCursor ? WELCOME_CURSOR_CHAR : " ");
-
       if (textarea) {
-        textarea.value = newContent;
+        textarea.value = displayContent;
       }
 
-      setEditorConfig({ content: newContent });
+      setEditorConfig({ content: displayContent });
     },
     [setEditorConfig],
   );
 
-  const pauseIfHidden = (callback: () => void): boolean => {
+  const _shouldPause = (callback: () => void): boolean => {
     const isHidden = document.hidden;
     if (isHidden) {
       activeTimerRef.current = setTimeout(callback, SAVE_TIMEOUT_MS);
     }
 
-    return isHidden;
+    return isCancelledRef.current || isHidden;
   };
 
   // Handlers
@@ -72,12 +70,12 @@ export function useWelcomeAnimation() {
       clearInterval(blinkIntervalRef.current);
     }
 
-    // Strip cursor
-    const textarea = getTextarea();
+    // Clear cursor
+    const textarea = _getTextarea();
     if (textarea && textarea.value.endsWith(WELCOME_CURSOR_CHAR)) {
-      setTextarea(textarea);
+      _setTextarea(textarea);
     }
-  }, [setTextarea]);
+  }, [_setTextarea]);
 
   useEffect(() => {
     if (
@@ -90,124 +88,85 @@ export function useWelcomeAnimation() {
 
     hasRunRef.current = true;
 
-    const runAnimationCycle = () => {
+    const startTypingPhase = () => {
       if (isCancelledRef.current) {
         return;
       }
 
-      const textarea = getTextarea();
-      const tokens = generateWelcomeTokens();
+      const textarea = _getTextarea();
+      const lines = generateWelcomeLines();
+      const maxLineIdx = lines.length - 1;
 
-      const currentText = rawContentRef.current;
-      const newText = tokens[0].text;
-      const shortest =
-        newText.length < currentText.length ? newText : currentText;
+      const newFirstLine = lines[0].text;
+      const oldFirstLine = rawContentRef.current;
+      const shortestLine =
+        newFirstLine.length < oldFirstLine.length ? newFirstLine : oldFirstLine;
 
-      let tokenIdx = 0;
-      let charIdx = Math.max(0, shortest.length - 1);
-      rawContentRef.current = shortest.replace(LINE_BREAK, "");
+      let lineIdx = 0;
+      let charIdx = Math.max(0, shortestLine.length - 1);
+
+      rawContentRef.current = shortestLine.replace(LINE_BREAK, "");
 
       const typeTick = () => {
-        if (isCancelledRef.current || pauseIfHidden(typeTick)) {
+        if (_shouldPause(typeTick)) {
           return;
         }
 
-        if (tokenIdx >= tokens.length) {
+        // All lines were written
+        if (lineIdx > maxLineIdx) {
           startBlinkingPhase();
           return;
         }
 
-        const token = tokens[tokenIdx];
-        const tokenText = token.text;
-        let currentDelay = token.delayMs;
+        const currentLine = lines[lineIdx];
+        const lineText = currentLine.text;
+        const maxCharIdx = lineText.length - 1;
 
-        // Instant token handling
-        if (currentDelay === ANIMATION_DELAYS_MS.INSTANTANEOUS) {
-          rawContentRef.current += tokenText;
+        // Current line was written
+        if (charIdx > maxCharIdx) {
           charIdx = 0;
-          tokenIdx++;
+          lineIdx++;
 
-          setTextarea(textarea, true);
+          if (lineIdx <= maxLineIdx) {
+            rawContentRef.current += LINE_BREAK;
+          }
+
           typeTick();
           return;
         }
 
-        const tokenLength = tokenText.length;
-        if (charIdx >= tokenLength) {
-          charIdx = 0;
-          tokenIdx++;
-          typeTick();
-          return;
-        }
-
-        // Buffer all consecutive whitespaces
         let charsToAdd = "";
-        while (charIdx < tokenLength) {
-          const char = tokenText[charIdx];
-          charsToAdd += char;
-          charIdx++;
+        let charDelay = currentLine.charDelayMs;
 
-          if (char.trim() !== "") {
-            break;
+        if (charDelay === ANIMATION_DELAYS_MS.INSTANTANEOUS) {
+          charsToAdd += lineText;
+          charIdx = maxCharIdx + 1;
+        } else {
+          // Buffer consecutive whitespaces
+          while (charIdx <= maxCharIdx) {
+            const char = lineText[charIdx];
+            charsToAdd += char;
+            charIdx++;
+
+            if (char !== " ") {
+              break;
+            }
           }
         }
 
+        // Set content
         rawContentRef.current += charsToAdd;
-        setTextarea(textarea, true);
+        _setTextarea(textarea, true);
 
-        if (currentDelay === ANIMATION_DELAYS_MS.FAST) {
-          currentDelay += Math.floor(
-            Math.random() * WELCOME_TYPING_JITTER_MAX_MS,
-          );
+        // Schedule next tick
+        if (charDelay === ANIMATION_DELAYS_MS.FAST) {
+          charDelay += Math.floor(Math.random() * WELCOME_TYPING_JITTER_MAX_MS);
         }
 
-        activeTimerRef.current = setTimeout(typeTick, currentDelay);
+        activeTimerRef.current = setTimeout(typeTick, charDelay);
       };
 
       typeTick();
-    };
-
-    const startDeletionPhase = () => {
-      if (isCancelledRef.current) {
-        return;
-      }
-
-      const textarea = getTextarea();
-
-      const deleteTick = () => {
-        if (isCancelledRef.current || pauseIfHidden(deleteTick)) {
-          return;
-        }
-
-        let currentContent = rawContentRef.current;
-
-        // Ignore last line break
-        if (currentContent.endsWith(LINE_BREAK)) {
-          currentContent = currentContent.slice(0, -LINE_BREAK.length);
-        }
-
-        const lastBreakIdx = currentContent.lastIndexOf(LINE_BREAK);
-        if (lastBreakIdx === -1) {
-          runAnimationCycle();
-          return;
-        }
-
-        // Remove bottom line
-        rawContentRef.current = currentContent.slice(
-          0,
-          lastBreakIdx + LINE_BREAK.length,
-        );
-
-        setTextarea(textarea, true);
-
-        const deleteDelay =
-          WELCOME_DELETE_LINE_MS +
-          Math.floor(Math.random() * WELCOME_DELETION_JITTER_MAX_MS);
-
-        activeTimerRef.current = setTimeout(deleteTick, deleteDelay);
-      };
-
-      deleteTick();
     };
 
     const startBlinkingPhase = (isInitial = false) => {
@@ -216,10 +175,10 @@ export function useWelcomeAnimation() {
       }
 
       let showCursor = true;
-      const textarea = getTextarea();
+      const textarea = _getTextarea();
 
-      // Render first blink immediately
-      setTextarea(textarea, true);
+      // Show first blink immediately
+      _setTextarea(textarea, true);
 
       // Start blinking loop
       blinkIntervalRef.current = setInterval(() => {
@@ -228,42 +187,87 @@ export function useWelcomeAnimation() {
         }
 
         showCursor = !showCursor;
-        setTextarea(textarea, showCursor);
+        _setTextarea(textarea, showCursor);
       }, WELCOME_BLINK_INTERVAL_MS);
 
-      const nextDelay = isInitial
-        ? WELCOME_BLINKING_DURATION_MS
-        : WELCOME_NEXT_ANIMATION_DELAY_MS;
+      // Schedule next animation
+      activeTimerRef.current = setTimeout(
+        () => {
+          if (isCancelledRef.current) {
+            return;
+          }
 
-      activeTimerRef.current = setTimeout(() => {
-        if (isCancelledRef.current) {
+          if (blinkIntervalRef.current) {
+            clearInterval(blinkIntervalRef.current);
+          }
+
+          if (isInitial) {
+            startTypingPhase();
+          } else {
+            startDeletionPhase();
+          }
+        },
+        isInitial
+          ? WELCOME_BLINKING_DURATION_MS
+          : WELCOME_NEXT_ANIMATION_DELAY_MS,
+      );
+    };
+
+    const startDeletionPhase = () => {
+      if (isCancelledRef.current) {
+        return;
+      }
+
+      const textarea = _getTextarea();
+      const deleteTick = () => {
+        if (_shouldPause(deleteTick)) {
           return;
         }
 
-        if (blinkIntervalRef.current) {
-          clearInterval(blinkIntervalRef.current);
+        let currentContent = rawContentRef.current;
+
+        // Strip line break
+        if (currentContent.endsWith(LINE_BREAK)) {
+          currentContent = currentContent.slice(0, -LINE_BREAK_LENGTH);
         }
 
-        if (isInitial) {
-          runAnimationCycle();
-        } else {
-          startDeletionPhase();
+        // Leave first line for the next typing phase
+        const lastBreakIdx = currentContent.lastIndexOf(LINE_BREAK);
+        if (lastBreakIdx === -1) {
+          startTypingPhase();
+          return;
         }
-      }, nextDelay);
+
+        // Remove last line
+        rawContentRef.current = currentContent.slice(
+          0,
+          lastBreakIdx + LINE_BREAK_LENGTH,
+        );
+
+        _setTextarea(textarea, true);
+
+        // Schedule next tick
+        const delay =
+          WELCOME_DELETE_LINE_MS +
+          Math.floor(Math.random() * WELCOME_DELETION_JITTER_MAX_MS);
+
+        activeTimerRef.current = setTimeout(deleteTick, delay);
+      };
+
+      deleteTick();
     };
 
     // Initial start
-    const textarea = getTextarea();
-    setTextarea(textarea);
+    const textarea = _getTextarea();
+    _setTextarea(textarea);
     setTimeout(() => startBlinkingPhase(true), WELCOME_START_DELAY_MS);
 
-    // Cleanup on unmount
     return () => {
       if (activeTimerRef.current) {
         cancelWelcomeAnimation();
       }
     };
-  }, [setTextarea, cancelWelcomeAnimation]);
+  }, [_setTextarea, cancelWelcomeAnimation]);
 
   return { cancelWelcomeAnimation };
 }

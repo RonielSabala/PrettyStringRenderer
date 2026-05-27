@@ -1,4 +1,3 @@
-import { LINE_BREAK } from "../common/config";
 import { getFormattedKeybinding } from "../common/keybindings";
 import { centerString, centerStringArray } from "../utils/parse";
 import { WELCOME_DATA } from "./data";
@@ -20,12 +19,12 @@ export const ANIMATION_DELAYS_MS = Object.freeze({
 export type AnimationDelayType =
   (typeof ANIMATION_DELAYS_MS)[keyof typeof ANIMATION_DELAYS_MS];
 
-export interface WelcomeToken {
+export interface WelcomeLine {
   text: string;
-  delayMs: AnimationDelayType;
+  charDelayMs: AnimationDelayType;
 }
 
-export function generateWelcomeTokens(): WelcomeToken[] {
+export function generateWelcomeLines(): WelcomeLine[] {
   const rawHeading = getRandom(WELCOME_DATA.headings);
   const rawSubtitle = getRandom(WELCOME_DATA.subtitles);
   const rawFormula = getRandom(WELCOME_DATA.formulas);
@@ -47,48 +46,59 @@ export function generateWelcomeTokens(): WelcomeToken[] {
   const headerDivider =
     _LINE_START + _HEADER_DIVIDER_CHAR.repeat(longestHeaderLine);
 
-  // Center values
+  // Center lines
   const heading = centerString(rawHeading, longestHeaderLine);
   const subtitle = centerString(rawSubtitle, longestHeaderLine);
-  const formula = centerStringArray(rawFormula.artLines, longestHeaderLine)
-    .map((line) => _LINE_START_PAD + line)
-    .join(LINE_BREAK);
+
+  // Map formula lines
+  const formulaLines: WelcomeLine[] = centerStringArray(
+    rawFormula.artLines,
+    longestHeaderLine,
+  ).map((line) => ({
+    text: _LINE_START_PAD + line,
+    charDelayMs: ANIMATION_DELAYS_MS.SLOW,
+  }));
 
   return [
     // Header Block
     {
-      text: headerDivider + LINE_BREAK,
-      delayMs: ANIMATION_DELAYS_MS.SLOW,
+      text: headerDivider,
+      charDelayMs: ANIMATION_DELAYS_MS.SLOW,
     },
     {
-      text: `${_LINE_START}${heading}${LINE_BREAK}`,
-      delayMs: ANIMATION_DELAYS_MS.SLOW,
+      text: _LINE_START + heading,
+      charDelayMs: ANIMATION_DELAYS_MS.SLOW,
     },
     {
-      text: `${_LINE_START}${subtitle}${LINE_BREAK}`,
-      delayMs: ANIMATION_DELAYS_MS.FAST,
+      text: _LINE_START + subtitle,
+      charDelayMs: ANIMATION_DELAYS_MS.FAST,
     },
     {
-      text: headerDivider + LINE_BREAK + LINE_BREAK,
-      delayMs: ANIMATION_DELAYS_MS.INSTANTANEOUS,
+      text: headerDivider,
+      charDelayMs: ANIMATION_DELAYS_MS.INSTANTANEOUS,
+    },
+    {
+      text: "",
+      charDelayMs: ANIMATION_DELAYS_MS.INSTANTANEOUS,
     },
     // Formula Block
+    ...formulaLines,
     {
-      text: `${formula}${LINE_BREAK}${LINE_BREAK}`,
-      delayMs: ANIMATION_DELAYS_MS.SLOW,
+      text: "",
+      charDelayMs: ANIMATION_DELAYS_MS.INSTANTANEOUS,
     },
     // Tips Block
     {
-      text: `${_LINE_START}Tips:${LINE_BREAK}`,
-      delayMs: ANIMATION_DELAYS_MS.INSTANTANEOUS,
+      text: `${_LINE_START}Tips:`,
+      charDelayMs: ANIMATION_DELAYS_MS.INSTANTANEOUS,
     },
     {
-      text: `${_LINE_START}${_TIP_SEPARATOR}${genericTip}${LINE_BREAK}`,
-      delayMs: ANIMATION_DELAYS_MS.FAST,
+      text: _LINE_START + _TIP_SEPARATOR + genericTip,
+      charDelayMs: ANIMATION_DELAYS_MS.FAST,
     },
     {
-      text: `${_LINE_START}${_TIP_SEPARATOR}${specificTip}`,
-      delayMs: ANIMATION_DELAYS_MS.SLOW,
+      text: _LINE_START + _TIP_SEPARATOR + specificTip,
+      charDelayMs: ANIMATION_DELAYS_MS.SLOW,
     },
   ];
 }

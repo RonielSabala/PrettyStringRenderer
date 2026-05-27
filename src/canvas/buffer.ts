@@ -11,7 +11,7 @@ import {
   getDrawingContext,
   render,
   updateTextMetrics,
-  type RenderRange,
+  type RenderOptions,
 } from "./renderer";
 
 function _calculateFitDimensions(): {
@@ -33,9 +33,9 @@ function _calculateFitDimensions(): {
 }
 
 export interface RedrawOptions {
-  range?: RenderRange;
   pixelScale?: number;
   forceAdjust?: boolean;
+  renderOptions?: RenderOptions;
 }
 
 export interface CanvasBuffer {
@@ -126,6 +126,7 @@ export function createBuffer(
       bufferWidth !== _lastBufferWidth ||
       bufferHeight !== _lastBufferHeight;
 
+    let activeRenderOptions = options.renderOptions;
     if (sizeChanged) {
       _lastWidth = width;
       _lastHeight = height;
@@ -136,9 +137,14 @@ export function createBuffer(
       canvasElement.height = bufferHeight;
 
       ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
+
+      // Force full render
+      if (activeRenderOptions?.range) {
+        activeRenderOptions = { ...activeRenderOptions, range: undefined };
+      }
     }
 
-    render(ctx, width, height, { range: options.range });
+    render(ctx, width, height, activeRenderOptions);
 
     if (options.forceAdjust || (sizeChanged && fitToContent)) {
       adjustCanvas(pixelScale);

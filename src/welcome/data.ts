@@ -1,12 +1,22 @@
 export const WELCOME_DATA = {
   headings: [
+    "Renderer active.",
+    "Tokenizer ready.",
     "Canvas initialized.",
+    "Environment loaded.",
+    "Workspace prepared.",
+    "Layout engine ready.",
     "Your canvas is ready.",
+    "Initialization complete.",
     "Engine loaded successfully.",
-    "Welcome to the layout engine.",
-    "A blank slate for complex logic.",
   ],
   subtitles: [
+    "Start building.",
+    "Build your next layout.",
+    "Craft beautiful equations.",
+    "Shape your data with precision.",
+    "Forge dynamic layouts instantly.",
+    "Design complex structures easily.",
     "Input or edit formulas to begin creating.",
     "Type your equations to see them transform.",
     "Build complex structures to see them scale.",
@@ -24,10 +34,13 @@ export const WELCOME_DATA = {
     "Lost your equation on screen? [Double-Click] the canvas to reset your view.",
   ],
   specificTips: [
-    "Cut comments in half with \\ {subject} # to highlight your art.",
-    "Use \\ {subject} # as a building block for deeply nested equations.",
     "Try wrapping \\ {subject} # in a new bracket family.",
-    "Isolate \\ {subject} # to see syntax colors.",
+    "Isolate \\ {subject} # to see the tokenizer apply colors.",
+    "Use \\ {subject} # as a building block for deeply nested equations.",
+    "Use \\ {subject} # as the starting point to build a massive continued fraction.",
+    "Type multiple instances of \\ {subject} # on new lines to test rendering speed.",
+    "Place \\ {subject} # at the edge of the canvas to test the token clipping range.",
+    "Delete and re-type \\ {subject} # to see the performant canvas redraw in action.",
   ],
   formulas: [
     // Constants

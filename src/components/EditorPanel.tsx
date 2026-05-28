@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { type RenderRange } from "../canvas/renderer";
 import {
   APP_FONT_VARIANT_LIGATURES,
   EDITOR_DEFAULTS,
   EDITOR_LETTER_SPACING,
   EDITOR_LINE_HEIGHT,
+  LINE_BREAK,
   MAX_EDITOR_HEIGHT_FRACTION,
 } from "../common/config";
 import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
@@ -63,6 +65,8 @@ export default function EditorPanel() {
   const panelRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
   const canvasWrapRef = useRef<HTMLElement | null>(null);
+  const prevContentRef = useRef<string>("");
+  const prevRedrawRef = useRef(redraw);
 
   const getFractionFromHeight = (height: number) =>
     roundUp(height / window.innerHeight, 3);
@@ -103,13 +107,77 @@ export default function EditorPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Animate welcome message
+  // Start welcome animation
   const { cancelWelcomeAnimation } = useWelcomeAnimation();
 
   // Re-tokenize when content changes
   useEffect(() => {
-    tokenize(editorConfig.content);
-    redraw();
+    const currentContent = editorConfig.content;
+    const prevContent = prevContentRef.current;
+
+    const redrawChanged = redraw !== prevRedrawRef.current;
+    if (redrawChanged) {
+      prevContentRef.current = "";
+    }
+
+    // Identical content
+    if (prevContent === currentContent && !redrawChanged) {
+      return;
+    }
+
+    const prevLines = prevContent.split(LINE_BREAK);
+    const newLines = currentContent.split(LINE_BREAK);
+
+    const prevLength = prevLines.length;
+    const newLength = newLines.length;
+
+    // Detect which lines changed
+    let hasModifiedLines = false;
+    const ranges: RenderRange[] = [];
+
+    for (let lineIdx = 0; lineIdx < newLength; lineIdx++) {
+      if (lineIdx >= prevLength) {
+        hasModifiedLines = true;
+        break;
+      }
+
+      const prevLine = prevLines[lineIdx];
+      const newLine = newLines[lineIdx];
+
+      if (!newLine.startsWith(prevLine)) {
+        hasModifiedLines = true;
+        break;
+      }
+
+      if (prevLine.length === newLine.length) {
+        continue;
+      }
+
+      ranges.push({
+        minCol: prevLine.length,
+        minRow: lineIdx,
+        maxCol: newLine.length - 1,
+        maxRow: lineIdx,
+      });
+    }
+
+    tokenize(currentContent);
+
+    if (hasModifiedLines || ranges.length === 0) {
+      redraw();
+    } else {
+      for (const range of ranges) {
+        const renderOptions = {
+          range,
+          clearCanvas: false,
+        };
+
+        redraw({ renderOptions });
+      }
+    }
+
+    prevRedrawRef.current = redraw;
+    prevContentRef.current = currentContent;
   }, [editorConfig.content, tokenize, redraw]);
 
   // Helpers

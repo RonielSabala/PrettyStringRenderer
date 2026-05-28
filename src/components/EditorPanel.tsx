@@ -10,13 +10,13 @@ import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
 import { useStore } from "../common/store";
 import { useKeybinding } from "../hooks/useKeybinding";
+import { useWelcomeAnimation } from "../hooks/useWelcomeAnimation";
 import { parseNumber, roundUp } from "../utils/parse";
 import {
   createSaveScheduler,
   saveEditorConfigState,
 } from "../utils/persistence";
 import { toPx } from "../utils/resolution";
-import { useWelcomeAnimation } from "../welcome/useWelcomeAnimation";
 import "./EditorPanel.css";
 
 const _scheduleSave = createSaveScheduler(saveEditorConfigState);
@@ -103,7 +103,7 @@ export default function EditorPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Animate welcome message
+  // Start welcome animation
   const { cancelWelcomeAnimation } = useWelcomeAnimation();
 
   // Re-tokenize when content changes

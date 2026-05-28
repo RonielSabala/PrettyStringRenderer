@@ -14,7 +14,10 @@ import {
   WELCOME_TYPING_JITTER_MAX_MS,
 } from "../common/config";
 import { getStore, useStore } from "../common/store";
-import { ANIMATION_DELAYS_MS, generateWelcomeLines } from "./tokens_generator";
+import {
+  ANIMATION_DELAYS_MS,
+  generateWelcomeLines,
+} from "../welcome/tokens_generator";
 
 export function useWelcomeAnimation() {
   const setEditorConfig = useStore((state) => state.setEditorConfig);

@@ -98,7 +98,7 @@ export function generateWelcomeLines(): WelcomeLine[] {
     },
     {
       text: _LINE_START + _TIP_SEPARATOR + specificTip,
-      charDelayMs: ANIMATION_DELAYS_MS.SLOW,
+      charDelayMs: ANIMATION_DELAYS_MS.FAST,
     },
   ];
 }

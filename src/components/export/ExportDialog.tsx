@@ -55,6 +55,7 @@ function _download(blob: Blob, filename: string): void {
 function _exportPNG(
   canvasConfig: CanvasConfig,
   typographyConfig: TypographyConfig,
+  colors: ThemeColors,
   scalar: number,
   filename: string,
 ): void {
@@ -82,8 +83,16 @@ function _exportPNG(
   offscreen.style.visibility = CSS_STYLE.HIDDEN;
   offscreen.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
-  render(getDrawingContext(offscreen), exportWidth, exportHeight, {
+  const offscreenContext = getDrawingContext(offscreen);
+  const backgroundColor = colors.background;
+  if (backgroundColor) {
+    offscreenContext.fillStyle = backgroundColor;
+    offscreenContext.fillRect(0, 0, exportWidth, exportHeight);
+  }
+
+  render(offscreenContext, exportWidth, exportHeight, {
     configOverride: scaledConfig,
+    clearCanvas: !backgroundColor,
   });
 
   offscreen.toBlob((blob) => {
@@ -280,9 +289,9 @@ export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
   const handlePNGExport = useCallback(
     (scalar: number, filename: string) => {
       setIsPNGModalOpen(false);
-      _exportPNG(canvasConfig, typographyConfig, scalar, filename);
+      _exportPNG(canvasConfig, typographyConfig, colors, scalar, filename);
     },
-    [canvasConfig, typographyConfig],
+    [canvasConfig, typographyConfig, colors],
   );
 
   const handleSVGExport = useCallback(

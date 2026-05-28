@@ -24,51 +24,54 @@ export const WELCOME_DATA = {
     "Lost your equation on screen? [Double-Click] the canvas to reset your view.",
   ],
   specificTips: [
-    "Cut comments in half with \\ {var} # to highlight your art.",
-    "Use \\ {var} # as a building block for deeply nested equations.",
-    "Try wrapping \\ {var} # in a new bracket family.",
-    "Isolate \\ {var} # to see syntax colors.",
+    "Cut comments in half with \\ {subject} # to highlight your art.",
+    "Use \\ {subject} # as a building block for deeply nested equations.",
+    "Try wrapping \\ {subject} # in a new bracket family.",
+    "Isolate \\ {subject} # to see syntax colors.",
   ],
   formulas: [
     {
-      variable: "x",
+      subject: "sin(x)",
+      artLines: [
+        "               3     5     7",
+        "              x     x     x",
+        "sin(x) = x — ─── + ─── — ─── + ...",
+        "              3!    5!    7!",
+      ],
+    },
+    {
+      subject: "cos(x)",
+      artLines: [
+        "               2     4     6",
+        "              x     x     x",
+        "cos(x) = 1 — ─── + ─── — ─── + ...",
+        "              2!    4!    6!",
+      ],
+    },
+    {
+      subject: "x",
+      artLines: ["   2         2", "sin (x) + cos (x) = 1"],
+    },
+    {
+      subject: "θ",
+      artLines: ["             2         2", "cos(2θ) = cos (θ) — sin (θ)"],
+    },
+    {
+      subject: "x",
       artLines: [" ix", "e   = cos(x) + i * sin(x)"],
     },
     {
-      variable: "f(x)",
+      subject: "M",
       artLines: [
-        "               x",
-        "f(x) = ─────────────────",
-        "          2         2",
-        "       cos (x) + sin (x)",
+        "    ┌         ┐   ┌   ┐",
+        "    │ 1  0  0 │   │ x │",
+        "M = │ 0  1  0 │ * │ y │",
+        "    │ 0  0  1 │   │ z │",
+        "    └         ┘   └   ┘",
       ],
     },
     {
-      variable: "M",
-      artLines: [
-        "    ┌               ┐   ┌   ┐",
-        "    │ ┌           ┐ │   │ x │",
-        "    │ │  1  0  0  │ │   │   │",
-        "M = │ │  0  1  0  │ │ * │ y │",
-        "    │ │  0  0  1  │ │   │   │",
-        "    │ └           ┘ │   │ z │",
-        "    └               ┘   └   ┘",
-      ],
-    },
-    {
-      variable: "y",
-      artLines: [
-        "    ┌                       ┐",
-        "    │  /                 \\  │",
-        "    │  ▏        1        ▕  │",
-        "y = │  ▏ ─────────────── ▕  │",
-        "    │  ▏  √( 2π * σ^2 )  ▕  │",
-        "    │  \\                 /  │",
-        "    └                       ┘",
-      ],
-    },
-    {
-      variable: "φ",
+      subject: "φ",
       artLines: [
         "    /         1          \\",
         "    ▏ ────────────────── ▕",
@@ -80,7 +83,7 @@ export const WELCOME_DATA = {
       ],
     },
     {
-      variable: "ζ(s)",
+      subject: "ζ(s)",
       artLines: [
         "        s    s — 1       / πs \\",
         "ζ(s) = 2  · π      · sin ▏ ── ▕ Γ(1 — s) ζ(1 — s)",

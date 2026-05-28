@@ -37,8 +37,8 @@ export function generateWelcomeLines(): WelcomeLine[] {
     },
   );
   const specificTip = getRandom(WELCOME_DATA.specificTips).replace(
-    "{var}",
-    rawFormula.variable,
+    "{subject}",
+    rawFormula.subject,
   );
 
   // Get header divider

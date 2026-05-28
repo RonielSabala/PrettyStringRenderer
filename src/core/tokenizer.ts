@@ -47,8 +47,8 @@ export class Tokenizer {
   private _lineAnalysis: (LineAnalysis | undefined)[] = [];
   private _tokenizedLines: Token[][] = [];
 
-  maxLine: number = 0;
   linesCount: number = 0;
+  longestLine: number = 0;
 
   get lines(): string[] {
     return this._lines;
@@ -65,13 +65,13 @@ export class Tokenizer {
     const newLineAnalysis: (LineAnalysis | undefined)[] = new Array(height);
     const newTokenizedLines: Token[][] = new Array(height);
     const bracketsChanged = this._syncBrackets(newLines);
-    let maxLine = 0;
+    let longestLine = 0;
 
     for (let i = 0; i < height; i++) {
       const line = newLines[i];
       const prevTokens = this._tokenizedLines[i];
       const prevLineAnalysis = this._lineAnalysis[i];
-      maxLine = Math.max(maxLine, line.length);
+      longestLine = Math.max(longestLine, line.length);
 
       const lineChanged = bracketsChanged || this._lines[i] !== line;
       const reuseLineAnalysis = !lineChanged && prevLineAnalysis !== undefined;
@@ -93,7 +93,7 @@ export class Tokenizer {
       newLineAnalysis[i] = lineAnalysis;
     }
 
-    this.maxLine = maxLine;
+    this.longestLine = longestLine;
     this.linesCount = height;
 
     this._lines = newLines;
@@ -278,7 +278,10 @@ export class Tokenizer {
       } else if (isIdentifierStart(char)) {
         const j = _consumeLine(line, i, lineWidth, isIdentifierPart);
         const k = _consumeLine(line, j, lineWidth, isSpace);
-        const isFunction = k < lineWidth && isFunctionStart(line[k]);
+        const isFunction =
+          k < lineWidth &&
+          (isFunctionStart(line[k]) || lineAnalysis.isPairCompleteAtIndex(k));
+
         addSlice(j, isFunction ? TOKENS.FUNCTION : TOKENS.VARIABLE);
       } else if (isCommentStart(char)) {
         consume(isCommentPart, TOKENS.COMMENT);

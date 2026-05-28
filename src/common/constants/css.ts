@@ -27,3 +27,12 @@ export const CSS_TEXT_RENDERING = Object.freeze({
 
 export type CssTextRendering =
   (typeof CSS_TEXT_RENDERING)[keyof typeof CSS_TEXT_RENDERING];
+
+export const CSS_BACKGROUND_IMAGE = Object.freeze({
+  NONE: "none",
+} as const);
+
+export const CHECKER_COLORS = Object.freeze({
+  LIGHT: "#ffffff",
+  DARK: "#cccccc",
+} as const);

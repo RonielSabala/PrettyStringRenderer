@@ -1,0 +1,53 @@
+.canvas-scrollbar {
+  z-index: 10;
+  position: absolute;
+  background: transparent;
+  transition: background var(--scrollbar-transition-duration)
+    var(--scrollbar-transition-easing);
+}
+
+.canvas-scrollbar:hover,
+.canvas-scrollbar:active {
+  background: var(--surface-panel);
+}
+
+.canvas-scrollbar-horizontal {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--scrollbar-size);
+}
+
+.canvas-scrollbar-vertical {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--scrollbar-size);
+}
+
+.canvas-scrollbar-thumb {
+  opacity: 0.5;
+  position: absolute;
+  background: var(--text-muted);
+  transition:
+    opacity var(--scrollbar-transition-duration)
+      var(--scrollbar-transition-easing),
+    background var(--scrollbar-transition-duration)
+      var(--scrollbar-transition-easing);
+}
+
+.canvas-scrollbar-thumb:hover,
+.canvas-scrollbar-thumb:active {
+  opacity: 0.8;
+  background: var(--text-secondary);
+}
+
+.canvas-scrollbar-horizontal .canvas-scrollbar-thumb {
+  height: var(--scrollbar-size);
+  top: var(--scrollbar-thumb-padding);
+}
+
+.canvas-scrollbar-vertical .canvas-scrollbar-thumb {
+  width: var(--scrollbar-size);
+  left: var(--scrollbar-thumb-padding);
+}

@@ -4,13 +4,14 @@ import {
   EDITOR_DEFAULTS,
   EDITOR_LETTER_SPACING,
   EDITOR_LINE_HEIGHT,
-  EDITOR_MAX_HEIGHT_PERCENTAGE,
+  MAX_EDITOR_HEIGHT_FRACTION,
 } from "../common/config";
 import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
-import { matchesKeybinding } from "../common/keybindings";
 import { useStore } from "../common/store";
-import { parseNumber } from "../utils/parse";
+import { useKeybinding } from "../hooks/useKeybinding";
+import { useWelcomeAnimation } from "../hooks/useWelcomeAnimation";
+import { parseNumber, roundUp } from "../utils/parse";
 import {
   createSaveScheduler,
   saveEditorConfigState,
@@ -38,7 +39,7 @@ function FitToContentCheckbox({ id }: FitToContentProps) {
       checked={isChecked}
       onChange={(event) => {
         setCanvasConfig({ fitToContent: event.target.checked });
-        redraw(true);
+        redraw({ forceAdjust: true });
       }}
     />
   );
@@ -49,7 +50,7 @@ function EditorStatus() {
   return <>{`Zoom level: ${(zoom * 100).toFixed(0)}%`}</>;
 }
 
-// Main component
+// Editor component
 
 export default function EditorPanel() {
   const editorConfig = useStore((state) => state.editorConfig);
@@ -63,7 +64,15 @@ export default function EditorPanel() {
   const handleRef = useRef<HTMLDivElement>(null);
   const canvasWrapRef = useRef<HTMLElement | null>(null);
 
-  const [height, setHeight] = useState(editorConfig.height);
+  const getFractionFromHeight = (height: number) =>
+    roundUp(height / window.innerHeight, 3);
+
+  const getHeightFromFraction = (heightFraction: number) =>
+    Math.ceil(heightFraction * window.innerHeight);
+
+  const [height, setHeight] = useState(
+    getHeightFromFraction(editorConfig.heightFraction),
+  );
   const [fontSize, setFontSize] = useState(editorConfig.fontSize);
 
   // Drag state
@@ -84,7 +93,6 @@ export default function EditorPanel() {
       return;
     }
 
-    // Imperatively set value AFTER store is restored
     editor.value = editorConfig.content ?? EDITOR_DEFAULTS.content;
     editor.scrollTop = 0;
 
@@ -95,34 +103,42 @@ export default function EditorPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Start welcome animation
+  const { cancelWelcomeAnimation } = useWelcomeAnimation();
+
   // Re-tokenize when content changes
   useEffect(() => {
     tokenize(editorConfig.content);
     redraw();
   }, [editorConfig.content, tokenize, redraw]);
 
-  // Handlers
+  // Helpers
+
+  const getEditorMinHeight = useCallback(() => {
+    const element = document.getElementById("editor-header");
+    return element?.offsetHeight ?? height;
+  }, [height]);
 
   const _getEditorHeight = () => panelRef.current?.offsetHeight;
-
-  const _getEditorMinHeight = () => {
-    const element = document.getElementById("editor-header");
-    return element?.offsetHeight;
-  };
 
   const _getNormalizedHeight = (y: number) =>
     startHeight.current + (startY.current - y);
 
+  // Handlers
+
   const handleContent = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const content = event.target.value;
+      cancelWelcomeAnimation();
       setEditorConfig({ content });
       _scheduleSave();
     },
-    [setEditorConfig],
+    [setEditorConfig, cancelWelcomeAnimation],
   );
 
   const handleCursorChange = useCallback(() => {
+    cancelWelcomeAnimation();
+
     const editor = editorRef.current;
     if (!editor) {
       return;
@@ -131,7 +147,7 @@ export default function EditorPanel() {
     const selection = [editor.selectionStart, editor.selectionEnd];
     setEditorConfig({ cursorSelection: selection });
     _scheduleSave();
-  }, [setEditorConfig]);
+  }, [setEditorConfig, cancelWelcomeAnimation]);
 
   const handleFontSize = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,8 +170,8 @@ export default function EditorPanel() {
       dragging.current = true;
       startY.current = event.clientY;
       startHeight.current = _getEditorHeight() ?? height;
-      startMaxHeight.current = Math.round(
-        window.innerHeight * EDITOR_MAX_HEIGHT_PERCENTAGE,
+      startMaxHeight.current = getHeightFromFraction(
+        MAX_EDITOR_HEIGHT_FRACTION,
       );
 
       document.body.style.userSelect = CSS_USER_SELECT.NONE;
@@ -165,30 +181,26 @@ export default function EditorPanel() {
   );
 
   const onResizeReset = useCallback(() => {
-    const defaultHeight = EDITOR_DEFAULTS.height;
+    const defaultHeight = getHeightFromFraction(EDITOR_DEFAULTS.heightFraction);
     const currentHeight = _getEditorHeight() ?? height;
     const newHeight =
-      currentHeight === defaultHeight
-        ? (_getEditorMinHeight() ?? height)
-        : defaultHeight;
+      currentHeight === defaultHeight ? getEditorMinHeight() : defaultHeight;
 
     setHeight(newHeight);
-    setEditorConfig({ height: newHeight });
+    setEditorConfig({ heightFraction: getFractionFromHeight(newHeight) });
     _scheduleSave();
 
-    // Defer adjustCanvas call until after DOM update from state changes
     setTimeout(() => adjustCanvas(), 0);
-  }, [height, setEditorConfig, adjustCanvas]);
+  }, [height, getEditorMinHeight, setEditorConfig, adjustCanvas]);
 
   // Canvas mouse keybinding
-
   useEffect(() => {
     const onMouseMove = (event: MouseEvent) => {
       if (!dragging.current) {
         return;
       }
 
-      const minHeight = _getEditorMinHeight() ?? height;
+      const minHeight = getEditorMinHeight();
       const maxHeight = startMaxHeight.current;
 
       const currentHeight = _getEditorHeight() ?? 0;
@@ -216,7 +228,9 @@ export default function EditorPanel() {
       document.body.style.userSelect = CSS_USER_SELECT.AUTO;
       handleRef.current?.classList.remove(CSS_CURSORS.DRAG);
 
-      setEditorConfig({ height: _getEditorHeight() ?? height });
+      setEditorConfig({
+        heightFraction: getFractionFromHeight(_getEditorHeight() ?? height),
+      });
       _scheduleSave();
     };
 
@@ -226,26 +240,13 @@ export default function EditorPanel() {
       document.removeEventListener(EVENTS.MOUSE_MOVE, onMouseMove);
       document.removeEventListener(EVENTS.MOUSE_UP, onMouseUp);
     };
-  }, [adjustCanvas, setEditorConfig, height]);
+  }, [adjustCanvas, setEditorConfig, height, getEditorMinHeight]);
 
-  // Canvas focus keybinding
-
-  useEffect(() => {
-    const handler = (event: Event) => {
-      if (
-        !(event instanceof KeyboardEvent) ||
-        !matchesKeybinding(event, "canvas.focus")
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-      canvasWrapRef.current?.focus();
-    };
-
-    document.addEventListener(EVENTS.KEY_DOWN, handler);
-    return () => document.removeEventListener(EVENTS.KEY_DOWN, handler);
-  }, []);
+  // Keybindings
+  useKeybinding("canvas.focus", () => {
+    cancelWelcomeAnimation();
+    canvasWrapRef.current?.focus();
+  });
 
   return (
     <>
@@ -301,6 +302,7 @@ export default function EditorPanel() {
           onChange={handleContent}
           onClick={handleCursorChange}
           onKeyUp={handleCursorChange}
+          onFocus={cancelWelcomeAnimation}
         />
       </div>
     </>

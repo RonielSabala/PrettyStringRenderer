@@ -1,9 +1,8 @@
 import {
   CANVAS_DEFAULTS,
-  CANVAS_MAX_PIXEL_SCALE,
-  CANVAS_MIN_PIXEL_SCALE,
   CANVAS_REDRAW_TIMEOUT_MS,
   CANVAS_VIEWPORT_PADDING_PX,
+  MAX_CANVAS_BUFFER_PIXELS,
 } from "../common/config";
 import { getStore } from "../common/store";
 import { toPx } from "../utils/resolution";
@@ -12,40 +11,37 @@ import {
   getDrawingContext,
   render,
   updateTextMetrics,
+  type RenderOptions,
 } from "./renderer";
 
-// Private helpers
+function _calculateFitDimensions(): {
+  width: number;
+  height: number;
+} {
+  const { typographyConfig: config, tokenizer } = getStore();
 
-function _getPixelScale(): number {
-  const zoom = Math.ceil(getStore().canvasConfig.zoom);
-  return Math.min(
-    CANVAS_MAX_PIXEL_SCALE,
-    Math.max(CANVAS_MIN_PIXEL_SCALE, zoom),
-  );
-}
-
-function _getNormalizedDimension(n: number): string {
-  return toPx(Math.max(1, Math.round(n)));
-}
-
-function _calculateFitDimensions(): { width: number; height: number } {
-  const config = getStore().typographyConfig;
-  updateTextMetrics(config);
-
-  const { tokenizer } = getStore();
-  const lineHeight = config.fontSize * config.lineHeight;
+  updateTextMetrics(config, tokenizer);
   return {
-    width: Math.ceil(config.padX * 2 + tokenizer.maxLine * charWidthMetric!),
-    height: Math.ceil(config.padY * 2 + tokenizer.linesCount * lineHeight),
+    width: Math.ceil(
+      2 * config.padX + tokenizer.longestLine * charWidthMetric!,
+    ),
+    height: Math.ceil(
+      2 * config.padY +
+        tokenizer.linesCount * config.lineHeight * config.fontSize,
+    ),
   };
 }
 
-// Canvas buffer
+export interface RedrawOptions {
+  pixelScale?: number;
+  forceAdjust?: boolean;
+  renderOptions?: RenderOptions;
+}
 
 export interface CanvasBuffer {
-  redraw: (forceAdjust?: boolean) => void;
+  redraw: (options?: RedrawOptions) => void;
   scheduleRedraw: () => void;
-  adjustCanvas: (pixelScale?: number | null) => void;
+  adjustCanvas: (pixelScale?: number) => void;
   destroy: () => void;
 }
 
@@ -59,10 +55,27 @@ export function createBuffer(
   let _currentPixelScale = 1;
   let _redrawTimer: ReturnType<typeof setTimeout> | null = null;
 
+  let _lastWidth: number | null = null;
+  let _lastHeight: number | null = null;
   let _lastBufferWidth: number | null = null;
   let _lastBufferHeight: number | null = null;
 
-  function adjustCanvas(pixelScale: number | null = null): void {
+  function _getPixelScale(logicalWidth: number, logicalHeight: number): number {
+    const zoom = getStore().canvasConfig.zoom;
+    const displayScale = Math.min(
+      canvasElement.offsetWidth / logicalWidth || Infinity,
+      canvasElement.offsetHeight / logicalHeight,
+    );
+
+    const needed = Math.ceil(zoom * displayScale);
+    const maxByMemory = Math.floor(
+      Math.sqrt(MAX_CANVAS_BUFFER_PIXELS / (logicalWidth * logicalHeight)),
+    );
+
+    return Math.max(1, Math.min(needed, maxByMemory));
+  }
+
+  function adjustCanvas(pixelScale?: number): void {
     const availableWidth =
       canvasWrapElement.clientWidth - CANVAS_VIEWPORT_PADDING_PX;
     const availableHeight =
@@ -72,11 +85,14 @@ export function createBuffer(
     let displayHeight: number;
 
     if (getStore().canvasConfig.fitToContent) {
-      const pixelS = pixelScale ?? _getPixelScale();
-      const bufferWidth = canvasElement.width / pixelS;
-      const bufferHeight = canvasElement.height / pixelS;
+      if (pixelScale === undefined) {
+        const { width, height } = _calculateFitDimensions();
+        pixelScale = _getPixelScale(width, height);
+      }
+
+      const bufferWidth = canvasElement.width / pixelScale;
+      const bufferHeight = canvasElement.height / pixelScale;
       const scale = Math.min(
-        1,
         availableWidth / bufferWidth,
         availableHeight / bufferHeight,
       );
@@ -89,36 +105,48 @@ export function createBuffer(
       displayHeight = Math.min(availableHeight, displayWidth / aspectRatio);
     }
 
-    canvasElement.style.width = _getNormalizedDimension(displayWidth);
-    canvasElement.style.height = _getNormalizedDimension(displayHeight);
+    canvasElement.style.width = toPx(Math.ceil(displayWidth));
+    canvasElement.style.height = toPx(Math.ceil(displayHeight));
   }
 
-  function redraw(forceAdjust = false): void {
-    const { canvasConfig } = getStore();
-    const fitToContent = canvasConfig.fitToContent;
+  function redraw(options: RedrawOptions = {}): void {
+    const fitToContent = getStore().canvasConfig.fitToContent;
     const { width, height } = fitToContent
       ? _calculateFitDimensions()
       : CANVAS_DEFAULTS;
 
-    const pixelScale = _getPixelScale();
+    const pixelScale = options.pixelScale ?? _getPixelScale(width, height);
     _currentPixelScale = pixelScale;
 
     const bufferWidth = pixelScale * width;
     const bufferHeight = pixelScale * height;
     const sizeChanged =
-      bufferWidth !== _lastBufferWidth || bufferHeight !== _lastBufferHeight;
+      width !== _lastWidth ||
+      height !== _lastHeight ||
+      bufferWidth !== _lastBufferWidth ||
+      bufferHeight !== _lastBufferHeight;
 
+    let activeRenderOptions = options.renderOptions;
     if (sizeChanged) {
+      _lastWidth = width;
+      _lastHeight = height;
       _lastBufferWidth = bufferWidth;
       _lastBufferHeight = bufferHeight;
+
       canvasElement.width = bufferWidth;
       canvasElement.height = bufferHeight;
+
       ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
+
+      // Force full render
+      if (activeRenderOptions?.range) {
+        activeRenderOptions = { ...activeRenderOptions, range: undefined };
+      }
     }
 
-    render(ctx, width, height);
+    render(ctx, width, height, activeRenderOptions);
 
-    if (forceAdjust || (sizeChanged && fitToContent)) {
+    if (options.forceAdjust || (sizeChanged && fitToContent)) {
       adjustCanvas(pixelScale);
       onDimensionsChange(width, height);
     }
@@ -131,12 +159,20 @@ export function createBuffer(
   }
 
   function scheduleRedraw(): void {
-    if (_currentPixelScale === _getPixelScale()) {
+    const { width, height } = getStore().canvasConfig.fitToContent
+      ? _calculateFitDimensions()
+      : CANVAS_DEFAULTS;
+
+    const pixelScale = _getPixelScale(width, height);
+    if (pixelScale === _currentPixelScale) {
       return;
     }
 
     destroy();
-    _redrawTimer = setTimeout(redraw, CANVAS_REDRAW_TIMEOUT_MS);
+    _redrawTimer = setTimeout(
+      () => redraw({ pixelScale }),
+      CANVAS_REDRAW_TIMEOUT_MS,
+    );
   }
 
   return { redraw, scheduleRedraw, adjustCanvas, destroy };

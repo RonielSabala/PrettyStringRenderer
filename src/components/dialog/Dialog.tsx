@@ -1,4 +1,5 @@
 import { X } from "react-bootstrap-icons";
+import { useKeybinding } from "../../hooks/useKeybinding";
 import "./Dialog.css";
 
 interface Props {
@@ -16,6 +17,11 @@ export default function Dialog({
   children,
   actions,
 }: Props) {
+  // Keybindings
+  useKeybinding("dialog.close", onClose, {
+    enabled: isOpen,
+  });
+
   if (!isOpen) {
     return null;
   }

@@ -1,4 +1,5 @@
-import { EVENTS } from "../../common/constants/events";
+import { useRef } from "react";
+import { useKeybinding } from "../../hooks/useKeybinding";
 import "./FilenameInput.css";
 
 interface Props {
@@ -6,7 +7,6 @@ interface Props {
   placeholder: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
-  onCancel: () => void;
   autoFocus?: boolean;
 }
 
@@ -15,16 +15,12 @@ export default function FilenameInput({
   placeholder,
   onChange,
   onSubmit,
-  onCancel,
   autoFocus = false,
 }: Props) {
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === EVENTS.ENTER) {
-      onSubmit();
-    } else if (event.key === EVENTS.ESCAPE) {
-      onCancel();
-    }
-  };
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Keybindings
+  useKeybinding("input.submit", onSubmit, { targetRef: inputRef });
 
   return (
     <div className="filename-input-container no-user-select">
@@ -32,10 +28,10 @@ export default function FilenameInput({
         Filename:
       </label>
       <input
+        ref={inputRef}
         id="filename-input"
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         autoFocus={autoFocus}
         autoComplete="off"

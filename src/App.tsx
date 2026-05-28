@@ -3,7 +3,7 @@ import "./App.css";
 import { APP_DEFAULT_THEME } from "./common/config";
 import { EVENTS } from "./common/constants/events";
 import { useStore } from "./common/store";
-import CanvasView from "./components/CanvasView";
+import Canvas from "./components/canvas/Canvas";
 import EditorPanel from "./components/EditorPanel";
 import {
   ExportDialog,
@@ -11,7 +11,12 @@ import {
 } from "./components/export/ExportDialog";
 import Header from "./components/Header";
 import Sidebar from "./components/sidebar/Sidebar";
-import { restoreState, saveActiveElementIdState } from "./utils/persistence";
+import { useKeybinding } from "./hooks/useKeybinding";
+import {
+  clearState,
+  restoreState,
+  saveActiveElementIdState,
+} from "./utils/persistence";
 
 // Element IDs that should NOT restore focus after reload
 const FOCUS_EXCLUSIONS = new Set([
@@ -20,9 +25,10 @@ const FOCUS_EXCLUSIONS = new Set([
   "workspace-export-btn",
 ]);
 
+// Set theme
 document.documentElement.dataset.theme = APP_DEFAULT_THEME;
 
-// Restore persisted state before any child component reads it
+// Restore persisted state
 restoreState();
 
 export default function App() {
@@ -52,6 +58,12 @@ export default function App() {
     return () => window.removeEventListener(EVENTS.WINDOW_RELOAD, handler);
   }, [setActiveElementId]);
 
+  // Keybindings
+  useKeybinding("app.fullReload", () => {
+    clearState();
+    location.reload();
+  });
+
   return (
     <div id="app">
       <header id="app-header">
@@ -63,7 +75,7 @@ export default function App() {
       </aside>
 
       <main id="app-workspace">
-        <CanvasView />
+        <Canvas />
         <EditorPanel />
       </main>
 

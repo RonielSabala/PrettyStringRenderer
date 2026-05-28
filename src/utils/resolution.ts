@@ -9,11 +9,7 @@ export function createResolution(width: number, height: number): string {
 export function getScaledDimensions(
   width: number,
   height: number,
-  scalar: number | null = null,
+  scalar: number,
 ): [number, number] {
-  if (scalar !== null) {
-    return [Math.round(scalar * width), Math.round(scalar * height)];
-  }
-
-  return [width, height];
+  return [Math.round(scalar * width), Math.round(scalar * height)];
 }

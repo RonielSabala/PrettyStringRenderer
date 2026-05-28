@@ -59,7 +59,6 @@ export default function SVGExportModal({
         placeholder={defaultFilename}
         onChange={setFilename}
         onSubmit={handleSubmit}
-        onCancel={onCancel}
         autoFocus
       />
     </Dialog>

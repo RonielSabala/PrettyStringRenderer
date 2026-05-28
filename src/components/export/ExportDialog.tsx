@@ -1,7 +1,6 @@
 import {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useState,
   type ReactNode,
@@ -23,14 +22,13 @@ import {
   SVG_NS,
 } from "../../common/config";
 import { CSS_STYLE, CSS_TEXT_RENDERING } from "../../common/constants/css";
-import { EVENTS } from "../../common/constants/events";
-import { matchesKeybinding } from "../../common/keybindings";
 import { useStore } from "../../common/store";
 import type {
   CanvasConfig,
   ThemeColors,
   TypographyConfig,
 } from "../../common/types";
+import { useKeybinding } from "../../hooks/useKeybinding";
 import { roundUp } from "../../utils/parse";
 import { createResolution, getScaledDimensions } from "../../utils/resolution";
 import { Dialog } from "../dialog";
@@ -57,6 +55,7 @@ function _download(blob: Blob, filename: string): void {
 function _exportPNG(
   canvasConfig: CanvasConfig,
   typographyConfig: TypographyConfig,
+  colors: ThemeColors,
   scalar: number,
   filename: string,
 ): void {
@@ -84,7 +83,17 @@ function _exportPNG(
   offscreen.style.visibility = CSS_STYLE.HIDDEN;
   offscreen.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
-  render(getDrawingContext(offscreen), exportWidth, exportHeight, scaledConfig);
+  const offscreenContext = getDrawingContext(offscreen);
+  const backgroundColor = colors.background;
+  if (backgroundColor) {
+    offscreenContext.fillStyle = backgroundColor;
+    offscreenContext.fillRect(0, 0, exportWidth, exportHeight);
+  }
+
+  render(offscreenContext, exportWidth, exportHeight, {
+    configOverride: scaledConfig,
+    clearCanvas: !backgroundColor,
+  });
 
   offscreen.toBlob((blob) => {
     if (blob) {
@@ -235,12 +244,15 @@ export interface ExportDialogHandle {
 }
 
 export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
-  const typographyConfig = useStore((state) => state.typographyConfig);
-  const canvasConfig = useStore((state) => state.canvasConfig);
   const colors = useStore((state) => state.colors);
+  const canvasConfig = useStore((state) => state.canvasConfig);
+  const typographyConfig = useStore((state) => state.typographyConfig);
+
   const [isOpen, setIsOpen] = useState(false);
   const [isPNGModalOpen, setIsPNGModalOpen] = useState(false);
   const [isSVGModalOpen, setIsSVGModalOpen] = useState(false);
+
+  const { width, height } = canvasConfig;
 
   // Expose open/close methods
   useImperativeHandle(
@@ -277,9 +289,9 @@ export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
   const handlePNGExport = useCallback(
     (scalar: number, filename: string) => {
       setIsPNGModalOpen(false);
-      _exportPNG(canvasConfig, typographyConfig, scalar, filename);
+      _exportPNG(canvasConfig, typographyConfig, colors, scalar, filename);
     },
-    [canvasConfig, typographyConfig],
+    [canvasConfig, typographyConfig, colors],
   );
 
   const handleSVGExport = useCallback(
@@ -290,26 +302,9 @@ export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
     [canvasConfig, typographyConfig, colors],
   );
 
-  // Global keybindings
-  useEffect(() => {
-    const handler = (event: Event) => {
-      if (!(event instanceof KeyboardEvent)) {
-        return;
-      }
+  // Keybindings
+  useKeybinding("workspace.export", openDialog);
 
-      if (matchesKeybinding(event, "workspace.export")) {
-        event.preventDefault();
-        openDialog();
-      } else if (event.key === EVENTS.ESCAPE) {
-        closeDialog();
-      }
-    };
-
-    document.addEventListener(EVENTS.KEY_DOWN, handler);
-    return () => document.removeEventListener(EVENTS.KEY_DOWN, handler);
-  }, [openDialog, closeDialog]);
-
-  const { width, height } = canvasConfig;
   return (
     <>
       <Dialog isOpen={isOpen} title="Export" onClose={closeDialog}>

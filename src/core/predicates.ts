@@ -1,4 +1,5 @@
 import { ML_BRACKET_CHARS } from "./brackets/data";
+import { IDENTIFIER_SYMBOLS_SET } from "./identifiers";
 import { OPERATORS_SET } from "./operators";
 
 export const isSpace = (char: string): boolean => char === " " || char === "\t";
@@ -10,10 +11,10 @@ export const isDigit = (char: string): boolean => /[0-9]/.test(char);
 export const isOperator = (char: string): boolean => OPERATORS_SET.has(char);
 
 export const isIdentifierStart = (char: string): boolean =>
-  /[a-zA-Z_]/.test(char);
+  /[a-zA-Z_]/.test(char) || IDENTIFIER_SYMBOLS_SET.has(char);
 
 export const isIdentifierPart = (char: string): boolean =>
-  /[a-zA-Z0-9_]/.test(char);
+  /[a-zA-Z0-9_]/.test(char) || IDENTIFIER_SYMBOLS_SET.has(char);
 
 export const isFunctionStart = (char: string): boolean => char === "(";
 

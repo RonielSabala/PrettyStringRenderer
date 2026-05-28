@@ -54,7 +54,6 @@ export default function ThemeExportDialog({
         placeholder={defaultFilename + THEMES_EXTENSION}
         onChange={setFilename}
         onSubmit={handleSubmit}
-        onCancel={onCancel}
         autoFocus
       />
     </Dialog>

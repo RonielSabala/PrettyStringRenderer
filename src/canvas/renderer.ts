@@ -6,6 +6,7 @@ import {
   type ThemeColor,
   type TypographyConfig,
 } from "../common/types";
+import { Tokenizer } from "../core/tokenizer";
 import { toPx } from "../utils/resolution";
 
 const _CONTEXT_TYPE = "2d";
@@ -39,7 +40,7 @@ function _setupContextFont(
 
 export function updateTextMetrics(
   config: TypographyConfig,
-  maxWidth: number | null = null,
+  tokenizer: Tokenizer,
 ): void {
   const { fontSize, letterSpacing, textRendering } = config;
   const metricsChanged =
@@ -56,27 +57,19 @@ export function updateTextMetrics(
     charWidthMetric = _measureCtx.measureText(_FONT_REFERENCE_GLYPH).width;
   }
 
-  const { tokenizer } = getStore();
-  let firstLine = tokenizer.lines[0] || _FONT_REFERENCE_GLYPH;
-
-  // Optimize first line
-  if (
-    maxWidth !== null &&
-    firstLine !== _FONT_REFERENCE_GLYPH &&
-    charWidthMetric
-  ) {
-    const maxChars = Math.ceil(maxWidth / charWidthMetric);
-
-    if (firstLine.length > maxChars) {
-      firstLine = firstLine.slice(0, maxChars);
-    }
-  }
-
   // Measure ascent
+  const firstLine = tokenizer.lines[0] || _FONT_REFERENCE_GLYPH;
   if (metricsChanged || _lastMeasuredLine !== firstLine) {
     _lastMeasuredLine = firstLine;
     _ascentMetric = _measureCtx.measureText(firstLine).actualBoundingBoxAscent;
   }
+}
+
+export interface RenderRange {
+  minCol: number;
+  minRow: number;
+  maxCol: number;
+  maxRow: number;
 }
 
 export function iterateTokens(
@@ -84,97 +77,121 @@ export function iterateTokens(
   height: number,
   config: TypographyConfig,
   onToken: (text: string, color: ThemeColor, x: number, y: number) => void,
+  range?: RenderRange,
 ): void {
-  const padX = config.padX;
-  const maxWidth = width - padX;
-  const { tokenizer } = getStore();
-  updateTextMetrics(config, maxWidth);
+  const tokenizer = getStore().tokenizer;
+  updateTextMetrics(config, tokenizer);
 
-  const charWidth = charWidthMetric!;
+  const padX = config.padX;
   const padY = config.padY + _ascentMetric!;
+  const charWidth = charWidthMetric!;
   const lineHeight = config.fontSize * config.lineHeight;
 
   // Calculate visible bounds
-  const maxCol = Math.ceil(maxWidth / charWidth);
-  const maxRow = Math.min(
-    Math.ceil((height - padY) / lineHeight) + 1,
+  const highestCol = Math.min(
+    tokenizer.longestLine - 1,
+    Math.ceil((width - padX) / charWidth),
+  );
+  const highestRow = Math.min(
     tokenizer.linesCount - 1,
+    Math.ceil((height - padY) / lineHeight) + 1,
   );
 
-  if (maxRow < 0 || maxCol < 0) {
+  if (highestCol < 0 || highestRow < 0) {
     return;
   }
 
+  // Parse range
+  const maxCol = Math.max(0, Math.min(range?.maxCol ?? highestCol, highestCol));
+  const maxRow = Math.max(0, Math.min(range?.maxRow ?? highestRow, highestRow));
+  const minCol = Math.min(maxCol, Math.max(0, range?.minCol ?? 0));
+  const minRow = Math.min(maxRow, Math.max(0, range?.minRow ?? 0));
+
   const lines = tokenizer.tokenizedLines;
-  for (let row = 0; row <= maxRow; row++) {
-    let col = 0;
+  for (let row = minRow; row <= maxRow; row++) {
     const y = padY + row * lineHeight;
 
+    let col = 0;
     for (const token of lines[row]) {
-      const startCol = col;
+      const currentCol = col;
       const tokenValue = token.value;
 
       col += tokenValue.length;
-      if (token.type === TOKENS.BACKGROUND) {
+      if (col <= minCol) {
         continue;
       }
 
-      const x = padX + startCol * charWidth;
-      const tokenText =
-        col > maxCol ? tokenValue.substring(0, maxCol - startCol) : tokenValue;
+      // Calculate visible token part
+      const startOffset = Math.max(0, minCol - currentCol);
+      const endOffset = Math.min(tokenValue.length, maxCol - currentCol + 1);
 
-      onToken(tokenText, token.color, x, y);
+      if (token.type !== TOKENS.BACKGROUND) {
+        const visibleText = tokenValue.substring(startOffset, endOffset);
+        const x = padX + (currentCol + startOffset) * charWidth;
 
-      if (col > maxCol) {
+        onToken(visibleText, token.color, x, y);
+      }
+
+      if (endOffset <= startOffset) {
         break;
       }
     }
   }
 }
 
+export interface ClearRectOptions {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
+export interface RenderOptions {
+  range?: RenderRange;
+  configOverride?: TypographyConfig;
+  clearCanvas?: boolean;
+  clearRect?: ClearRectOptions;
+}
+
 export function render(
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  configOverride: TypographyConfig | null = null,
+  options: RenderOptions = {},
 ): void {
-  const { typographyConfig, colors } = getStore();
-  const config = configOverride ?? typographyConfig;
-  const { fontSize, letterSpacing } = config;
-
+  const config = options.configOverride ?? getStore().typographyConfig;
   const isSpeedOptimized =
     config.textRendering === CSS_TEXT_RENDERING.OPTIMIZE_SPEED;
 
-  // Background
-  const backgroundColor = colors.background;
-  if (backgroundColor) {
-    ctx.fillStyle = backgroundColor;
-    ctx.fillRect(0, 0, width, height);
-  } else {
-    ctx.clearRect(0, 0, width, height);
+  _setupContextFont(ctx, config);
+
+  if (options.clearCanvas ?? true) {
+    const { x1, y1, x2, y2 } = options.clearRect ?? {
+      x1: 0,
+      y1: 0,
+      x2: width,
+      y2: height,
+    };
+
+    ctx.clearRect(x1, y1, x2 - x1, y2 - y1);
   }
 
-  _setupContextFont(ctx, config);
-  iterateTokens(width, height, config, (text, color, x, y) => {
-    // Clear text
-    if (!color) {
-      if (!backgroundColor) {
-        ctx.clearRect(
-          x,
-          y - fontSize,
-          ctx.measureText(text).width + letterSpacing,
-          fontSize,
-        );
+  iterateTokens(
+    width,
+    height,
+    config,
+    (text, color, x, y) => {
+      if (!color) {
+        return;
       }
 
-      return;
-    }
-
-    ctx.fillStyle = color;
-    ctx.fillText(
-      text,
-      isSpeedOptimized ? x | 0 : x,
-      isSpeedOptimized ? y | 0 : y,
-    );
-  });
+      ctx.fillStyle = color;
+      ctx.fillText(
+        text,
+        isSpeedOptimized ? x | 0 : x,
+        isSpeedOptimized ? y | 0 : y,
+      );
+    },
+    options.range,
+  );
 }

@@ -81,10 +81,6 @@
   /* Borders */
   --color-border: #2d3343;
   --color-border-focus: #38bdf8;
-
-  /* Misc & Utilities */
-  --checker-light: #c8c8c8;
-  --checker-dark: #969696;
 }
 
 [data-theme="light"] {
@@ -102,8 +98,4 @@
   /* Borders */
   --color-border: #d0d7de;
   --color-border-focus: #0969da;
-
-  /* Misc & Utilities */
-  --checker-light: #e0e0e0;
-  --checker-dark: #b8b8b8;
 }

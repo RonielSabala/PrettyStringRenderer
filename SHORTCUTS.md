@@ -13,13 +13,15 @@
 
 ## Canvas
 
-| Action          | Shortcut / Input                             |
-| :-------------- | :------------------------------------------- |
-| **Focus**       | <kbd>Esc</kbd>                               |
-| **Zoom**        | <kbd>Alt</kbd> + `scroll-wheel`              |
-| **Pan**         | <kbd>Space</kbd> (or `right-click`) + `drag` |
-| **Reset View**  | `double-click` the canvas                    |
-| **Auto-Resize** | Toggle the **Fit to content** checkbox       |
+| Action               | Shortcut / Input                             |
+| :------------------- | :------------------------------------------- |
+| **Focus**            | <kbd>Esc</kbd>                               |
+| **Zoom**             | <kbd>Alt</kbd> + `scroll-wheel`              |
+| **Pan**              | <kbd>Space</kbd> (or `right-click`) + `drag` |
+| **Pan Vertically**   | `scroll-wheel`                               |
+| **Pan Horizontally** | <kbd>Ctrl</kbd> + `scroll-wheel`             |
+| **Reset View**       | `double-click` the canvas                    |
+| **Auto-Resize**      | Toggle the **Fit to content** checkbox       |
 
 ---
 
@@ -33,6 +35,15 @@
 | **Import**        | <kbd>Ctrl</kbd>+<kbd>I</kbd> or `click` the **Import themes** button; it can overwrite existing themes |
 | **Export**        | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> or `click` the **Export theme** button                   |
 | **Delete active** | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Backspace</kbd> or `click` a theme's **Trash** button            |
+
+---
+
+## Dialogs & Inputs
+
+| Action             | Shortcut / Input |
+| :----------------- | :--------------- |
+| **Submit / Save**  | <kbd>Enter</kbd> |
+| **Cancel / Close** | <kbd>Esc</kbd>   |
 
 ---
 

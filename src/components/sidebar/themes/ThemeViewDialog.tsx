@@ -16,10 +16,10 @@ export default function ThemeViewDialog({ theme, onClose }: Props) {
 
   const jsonString = JSON.stringify(theme, null, 2);
 
+  // Handlers
   const handleCopy = () => {
     navigator.clipboard.writeText(jsonString);
   };
-
   const handleDownload = () => {
     const url = urlFromObject(theme, THEME_BLOB_TYPE);
     const anchorElement = document.createElement("a");

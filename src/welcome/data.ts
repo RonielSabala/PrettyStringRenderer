@@ -30,6 +30,36 @@ export const WELCOME_DATA = {
     "Isolate \\ {subject} # to see syntax colors.",
   ],
   formulas: [
+    // Constants
+    {
+      subject: "π",
+      artLines: [
+        "     2   2   4   4   6   6",
+        "π =  ─ · ─ · ─ · ─ · ─ · ─ · ...",
+        "     1   3   3   5   5   7",
+      ],
+    },
+    {
+      subject: "e",
+      artLines: [
+        "         1     1     1     1",
+        "e = 1 + ─── + ─── + ─── + ─── + ...",
+        "         1!    2!    3!    4!",
+      ],
+    },
+    {
+      subject: "φ",
+      artLines: [
+        "            1         ",
+        "φ = ──────────────────",
+        "               1      ",
+        "     1 + ─────────────",
+        "                 1    ",
+        "          1 + ────────",
+        "               1 + ...",
+      ],
+    },
+    // Trigonometry
     {
       subject: "sin(x)",
       artLines: [
@@ -49,17 +79,35 @@ export const WELCOME_DATA = {
       ],
     },
     {
-      subject: "x",
-      artLines: ["   2         2", "sin (x) + cos (x) = 1"],
+      subject: "cos(2θ)",
+      artLines: ["             2         2", "cos(2θ) = cos (θ) — sin (θ)"],
     },
     {
-      subject: "θ",
-      artLines: ["             2         2", "cos(2θ) = cos (θ) — sin (θ)"],
+      subject: "x",
+      artLines: ["   2         2", "sin (x) + cos (x) = 1"],
     },
     {
       subject: "x",
       artLines: [" ix", "e   = cos(x) + i * sin(x)"],
     },
+    // Functions
+    {
+      subject: "ζ(s)",
+      artLines: [
+        "        s    s — 1       / πs \\",
+        "ζ(s) = 2  · π      · sin ▏ ── ▕ Γ(1 — s) ζ(1 — s)",
+        "                         \\  2 /",
+      ],
+    },
+    {
+      subject: "Γ(z)",
+      artLines: [
+        "                  π",
+        "Γ(z)Γ(1 — z) = ───────",
+        "               sin(πz)",
+      ],
+    },
+    // Miscellanea
     {
       subject: "M",
       artLines: [
@@ -68,26 +116,6 @@ export const WELCOME_DATA = {
         "M = │ 0  1  0 │ * │ y │",
         "    │ 0  0  1 │   │ z │",
         "    └         ┘   └   ┘",
-      ],
-    },
-    {
-      subject: "φ",
-      artLines: [
-        "    /         1          \\",
-        "    ▏ ────────────────── ▕",
-        "    ▏            1       ▕",
-        "φ = ▏  1 + ───────────── ▕",
-        "    ▏              1     ▕",
-        "    ▏       1 + ──────── ▕",
-        "    \\            1 + ... /",
-      ],
-    },
-    {
-      subject: "ζ(s)",
-      artLines: [
-        "        s    s — 1       / πs \\",
-        "ζ(s) = 2  · π      · sin ▏ ── ▕ Γ(1 — s) ζ(1 — s)",
-        "                         \\  2 /",
       ],
     },
   ],

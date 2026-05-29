@@ -33,6 +33,6 @@ export const CSS_BACKGROUND_IMAGE = Object.freeze({
 } as const);
 
 export const CHECKER_COLORS = Object.freeze({
-  LIGHT: "#ffffff",
-  DARK: "#cccccc",
+  LIGHT: "#fff",
+  DARK: "#ccc",
 } as const);

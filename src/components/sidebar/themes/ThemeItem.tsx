@@ -40,6 +40,8 @@ export const ThemeItem = forwardRef<HTMLDivElement, Props>(
       targetRef: localRef,
     });
 
+    const hasBackground = Boolean(theme.background);
+
     return (
       <div
         ref={setRefs}
@@ -63,10 +65,10 @@ export const ThemeItem = forwardRef<HTMLDivElement, Props>(
           </button>
 
           <div
-            className="theme-swatch"
+            className={`theme-swatch ${hasBackground ? "" : "no-swatch-border"}`}
             style={{ background: theme.background ?? CSS_STYLE.TRANSPARENT }}
           >
-            {!theme.background && <TransparentSwatchIcon />}
+            {!hasBackground && <TransparentSwatchIcon />}
           </div>
         </div>
       </div>

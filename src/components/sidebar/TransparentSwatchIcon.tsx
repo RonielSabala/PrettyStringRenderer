@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { CHECKER_COLORS } from "../../common/constants/css";
 
 export function TransparentSwatchIcon() {
   const patternId = useId();
@@ -18,8 +19,20 @@ export function TransparentSwatchIcon() {
           patternUnits="userSpaceOnUse"
           shapeRendering="crispEdges"
         >
-          <rect width="2" height="2" fill="white" opacity="0.2" />
-          <rect x="2" y="2" width="2" height="2" fill="white" opacity="0.15" />
+          <rect
+            width="2"
+            height="2"
+            fill={CHECKER_COLORS.LIGHT}
+            opacity="0.2"
+          />
+          <rect
+            x="2"
+            y="2"
+            width="2"
+            height="2"
+            fill={CHECKER_COLORS.LIGHT}
+            opacity="0.15"
+          />
         </pattern>
       </defs>
 

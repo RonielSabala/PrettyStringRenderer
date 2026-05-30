@@ -1,4 +1,5 @@
 import { EDITOR_DEFAULTS } from "../../common/config";
+import { DOM_IDS } from "../../common/constants/dom";
 import { useStore } from "../../common/store";
 import "./EditorHeader.css";
 
@@ -35,7 +36,7 @@ export function EditorHeader({
   onFontSizeChange,
 }: EditorHeaderProps) {
   return (
-    <div id="editor-header" className="no-user-select">
+    <div id={DOM_IDS.EDITOR_HEADER} className="no-user-select">
       <span id="editor-tab">Editor</span>
 
       <div className="editor-tab-container">

@@ -13,6 +13,7 @@ import {
   WELCOME_START_DELAY_MS,
   WELCOME_TYPING_JITTER_MAX_MS,
 } from "../common/config";
+import { DOM_IDS } from "../common/constants/dom";
 import { getStore, useStore } from "../common/store";
 import {
   ANIMATION_DELAYS_MS,
@@ -33,7 +34,9 @@ export function useWelcomeAnimation() {
   // Helpers
 
   const _getTextarea = () =>
-    document.getElementById("editor") as HTMLTextAreaElement | null;
+    document.getElementById(
+      DOM_IDS.EDITOR_TEXTAREA,
+    ) as HTMLTextAreaElement | null;
 
   const _setTextarea = useCallback(
     (textarea: HTMLTextAreaElement | null, showCursor: boolean = false) => {

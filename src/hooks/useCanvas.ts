@@ -14,6 +14,7 @@ import {
   CSS_BACKGROUND_IMAGE,
   CSS_CURSORS,
 } from "../common/constants/css";
+import { DOM_IDS } from "../common/constants/dom";
 import { EVENTS } from "../common/constants/events";
 import { matchesKeybinding } from "../common/keybindings";
 import { getStore, useStore } from "../common/store";
@@ -273,8 +274,9 @@ export function useCanvas() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (
         spaceHeld.current ||
-        document.activeElement === document.getElementById("editor") ||
         !matchesKeybinding(event, "canvas.panHold") ||
+        document.activeElement ===
+          document.getElementById(DOM_IDS.EDITOR_TEXTAREA) ||
         getStore().canvasConfig.zoom <= CANVAS_CENTERING_ZOOM_THRESHOLD
       ) {
         return;

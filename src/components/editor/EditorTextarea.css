@@ -1,4 +1,4 @@
-#editor {
+#editor-textarea {
   flex: 1;
   background: var(--surface-base);
   border: none;
@@ -11,10 +11,10 @@
   caret-color: var(--accent);
 }
 
-#editor:focus {
+#editor-textarea:focus {
   outline: none;
 }
 
-#editor::selection {
+#editor-textarea::selection {
   background: var(--accent-dim);
 }

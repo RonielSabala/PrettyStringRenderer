@@ -1,3 +1,4 @@
+import { DOM_IDS } from "../../common/constants/dom";
 import { useCanvas } from "../../hooks/useCanvas";
 import { SCROLLBAR_ORIENTATION } from "../../hooks/useCanvasScrollbar";
 import "./Canvas.css";
@@ -18,7 +19,7 @@ export default function Canvas() {
   } = useCanvas();
 
   return (
-    <div id="canvas-wrap" ref={wrapRef} tabIndex={-1}>
+    <div id={DOM_IDS.CANVAS_WRAP} ref={wrapRef} tabIndex={-1}>
       <div id="canvas-inner" ref={innerRef} />
       <canvas id="canvas" ref={canvasRef} />
       <CanvasScrollbar

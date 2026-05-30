@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EDITOR_DEFAULTS, MAX_EDITOR_HEIGHT_FRACTION } from "../common/config";
 import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
+import { DOM_IDS } from "../common/constants/dom";
 import { EVENTS } from "../common/constants/events";
 import { useStore } from "../common/store";
 import { useKeybinding } from "../hooks/useKeybinding";
@@ -49,7 +50,7 @@ export default function EditorPanel() {
 
   // Restore canvas wrap once on mount
   useEffect(() => {
-    canvasWrapRef.current = document.getElementById("canvas-wrap");
+    canvasWrapRef.current = document.getElementById(DOM_IDS.CANVAS_WRAP);
   }, []);
 
   // Initialize editor on mount
@@ -81,7 +82,7 @@ export default function EditorPanel() {
   // Helpers
 
   const getEditorMinHeight = useCallback(() => {
-    const element = document.getElementById("editor-header");
+    const element = document.getElementById(DOM_IDS.EDITOR_HEADER);
     return element?.offsetHeight ?? height;
   }, [height]);
 

@@ -1,10 +1,11 @@
 import { forwardRef } from "react";
 import {
-    APP_FONT_VARIANT_LIGATURES,
-    EDITOR_DEFAULTS,
-    EDITOR_LETTER_SPACING,
-    EDITOR_LINE_HEIGHT,
+  APP_FONT_VARIANT_LIGATURES,
+  EDITOR_DEFAULTS,
+  EDITOR_LETTER_SPACING,
+  EDITOR_LINE_HEIGHT,
 } from "../../common/config";
+import { DOM_IDS } from "../../common/constants/dom";
 import { toPx } from "../../utils/resolution";
 import "./EditorTextarea.css";
 
@@ -19,7 +20,7 @@ interface Props {
 export const EditorTextarea = forwardRef<HTMLTextAreaElement, Props>(
   ({ fontSize, onChange, onClick, onKeyUp, onFocus }, ref) => (
     <textarea
-      id="editor"
+      id={DOM_IDS.EDITOR_TEXTAREA}
       className="scroll-container"
       ref={ref}
       spellCheck={false}

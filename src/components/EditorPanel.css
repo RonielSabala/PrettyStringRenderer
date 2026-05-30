@@ -96,24 +96,3 @@
   letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
 }
-
-#editor {
-  flex: 1;
-  background: var(--surface-base);
-  border: none;
-  color: var(--text-primary);
-  resize: none;
-  white-space: pre;
-  overflow: auto;
-  tab-size: 2;
-  caret-shape: block;
-  caret-color: var(--accent);
-}
-
-#editor:focus {
-  outline: none;
-}
-
-#editor::selection {
-  background: var(--accent-dim);
-}

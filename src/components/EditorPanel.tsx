@@ -1,11 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  APP_FONT_VARIANT_LIGATURES,
-  EDITOR_DEFAULTS,
-  EDITOR_LETTER_SPACING,
-  EDITOR_LINE_HEIGHT,
-  MAX_EDITOR_HEIGHT_FRACTION,
-} from "../common/config";
+import { EDITOR_DEFAULTS, MAX_EDITOR_HEIGHT_FRACTION } from "../common/config";
 import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
 import { EVENTS } from "../common/constants/events";
 import { useStore } from "../common/store";
@@ -18,6 +12,7 @@ import {
 } from "../utils/persistence";
 import { toPx } from "../utils/resolution";
 import "./EditorPanel.css";
+import { EditorTextarea } from "./editor/EditorTextarea";
 
 const _scheduleSave = createSaveScheduler(saveEditorConfigState);
 
@@ -287,18 +282,9 @@ export default function EditorPanel() {
             <EditorStatus />
           </span>
         </div>
-        <textarea
-          id="editor"
-          className="scroll-container"
+        <EditorTextarea
           ref={editorRef}
-          spellCheck={false}
-          style={{
-            fontSize: toPx(fontSize),
-            lineHeight: EDITOR_LINE_HEIGHT,
-            letterSpacing: EDITOR_LETTER_SPACING,
-            fontVariantLigatures: APP_FONT_VARIANT_LIGATURES,
-            padding: `${toPx(EDITOR_DEFAULTS.padX)} ${toPx(EDITOR_DEFAULTS.padY)}`,
-          }}
+          fontSize={fontSize}
           onChange={handleContent}
           onClick={handleCursorChange}
           onKeyUp={handleCursorChange}

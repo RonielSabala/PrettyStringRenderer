@@ -12,6 +12,7 @@ import {
 } from "../utils/persistence";
 import { toPx } from "../utils/resolution";
 import "./EditorPanel.css";
+import { EditorResizeHandle } from "./editor/EditorResizeHandle";
 import { EditorTextarea } from "./editor/EditorTextarea";
 
 const _scheduleSave = createSaveScheduler(saveEditorConfigState);
@@ -245,8 +246,7 @@ export default function EditorPanel() {
 
   return (
     <>
-      <div
-        id="editor-resize-handle"
+      <EditorResizeHandle
         ref={handleRef}
         onMouseDown={onResizeStart}
         onDoubleClick={onResizeReset}

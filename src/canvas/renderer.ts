@@ -12,7 +12,7 @@ import { toPx } from "../utils/resolution";
 const _CONTEXT_TYPE = "2d";
 const _FONT_REFERENCE_GLYPH = "M";
 
-// Module-level measurement cache
+// Measurement cache
 let _lastFontSize = 0;
 let _lastLetterSpacing = 0;
 let _lastTextRendering = "";
@@ -21,13 +21,13 @@ let _lastMeasuredLine: string | null = null;
 let _ascentMetric: number | null = null;
 export let charWidthMetric: number | null = null;
 
-const _measureCtx = getDrawingContext(document.createElement("canvas"));
-
 export function getDrawingContext(
   canvas: HTMLCanvasElement,
 ): CanvasRenderingContext2D {
   return canvas.getContext(_CONTEXT_TYPE, { alpha: true })!;
 }
+
+const _measureCtx = getDrawingContext(document.createElement("canvas"));
 
 function _setupContextFont(
   ctx: CanvasRenderingContext2D,
@@ -65,7 +65,7 @@ export function updateTextMetrics(
   }
 }
 
-export interface RenderRange {
+interface RenderRange {
   minCol: number;
   minRow: number;
   maxCol: number;
@@ -94,7 +94,7 @@ export function iterateTokens(
   );
   const highestRow = Math.min(
     tokenizer.linesCount - 1,
-    Math.ceil((height - padY) / lineHeight) + 1,
+    Math.ceil((height - padY) / lineHeight),
   );
 
   if (highestCol < 0 || highestRow < 0) {
@@ -108,6 +108,7 @@ export function iterateTokens(
   const minRow = Math.min(maxRow, Math.max(0, range?.minRow ?? 0));
 
   const lines = tokenizer.tokenizedLines;
+
   for (let row = minRow; row <= maxRow; row++) {
     const y = padY + row * lineHeight;
 
@@ -125,21 +126,23 @@ export function iterateTokens(
       const startOffset = Math.max(0, minCol - currentCol);
       const endOffset = Math.min(tokenValue.length, maxCol - currentCol + 1);
 
-      if (token.type !== TOKENS.BACKGROUND) {
-        const visibleText = tokenValue.substring(startOffset, endOffset);
-        const x = padX + (currentCol + startOffset) * charWidth;
-
-        onToken(visibleText, token.color, x, y);
-      }
-
-      if (endOffset <= startOffset) {
+      if (startOffset >= endOffset) {
         break;
       }
+
+      if (token.type === TOKENS.BACKGROUND) {
+        continue;
+      }
+
+      const visibleText = tokenValue.substring(startOffset, endOffset);
+      const x = padX + (currentCol + startOffset) * charWidth;
+
+      onToken(visibleText, token.color, x, y);
     }
   }
 }
 
-export interface ClearRectOptions {
+interface ClearRectOptions {
   x1: number;
   y1: number;
   x2: number;

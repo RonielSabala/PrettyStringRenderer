@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowCounterclockwise, Eraser } from "react-bootstrap-icons";
 import { MAX_HEX_INPUT_LENGTH } from "../../../common/config";
-import { CSS_STYLE } from "../../../common/constants/css";
+import { CSS_VISIBILITY } from "../../../common/constants/css";
 import type { ThemeColor } from "../../../common/types";
 import "../SidebarRow.css";
 import { TransparentSwatchIcon } from "../TransparentSwatchIcon";
@@ -55,7 +55,7 @@ export default function ColorRow({ id, label, color, onChange }: Props) {
           <div className="swatch-container">
             <div
               className="swatch-preview"
-              style={{ background: color || CSS_STYLE.TRANSPARENT }}
+              style={{ background: color || CSS_VISIBILITY.TRANSPARENT }}
             >
               {!color && <TransparentSwatchIcon />}
             </div>

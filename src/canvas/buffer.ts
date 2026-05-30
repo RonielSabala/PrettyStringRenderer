@@ -14,6 +14,8 @@ import {
   type RenderOptions,
 } from "./renderer";
 
+// Private helpers
+
 function _calculateFitDimensions(): {
   width: number;
   height: number;
@@ -32,13 +34,15 @@ function _calculateFitDimensions(): {
   };
 }
 
+// Buffer
+
 export interface RedrawOptions {
   pixelScale?: number;
   forceAdjust?: boolean;
   renderOptions?: RenderOptions;
 }
 
-export interface CanvasBuffer {
+interface CanvasBuffer {
   redraw: (options?: RedrawOptions) => void;
   scheduleRedraw: () => void;
   adjustCanvas: (pixelScale?: number) => void;

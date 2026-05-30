@@ -21,7 +21,7 @@ import {
   SVG_EXTENSION,
   SVG_NS,
 } from "../../common/config";
-import { CSS_STYLE, CSS_TEXT_RENDERING } from "../../common/constants/css";
+import { CSS_TEXT_RENDERING, CSS_VISIBILITY } from "../../common/constants/css";
 import { useStore } from "../../common/store";
 import type {
   CanvasConfig,
@@ -80,7 +80,7 @@ function _exportPNG(
   document.body.appendChild(offscreen);
   offscreen.width = exportWidth;
   offscreen.height = exportHeight;
-  offscreen.style.visibility = CSS_STYLE.HIDDEN;
+  offscreen.style.visibility = CSS_VISIBILITY.HIDDEN;
   offscreen.style.fontVariantLigatures = APP_FONT_VARIANT_LIGATURES;
 
   const offscreenContext = getDrawingContext(offscreen);

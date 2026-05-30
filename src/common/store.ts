@@ -35,7 +35,7 @@ interface AppState {
   editorConfig: EditorConfig;
   canvasConfig: CanvasConfig;
 
-  // Engine (not persisted)
+  // Engine
   tokenizer: Tokenizer;
 
   // Actions
@@ -78,14 +78,12 @@ export const useStore = create<AppState>((set, get) => ({
         ? CSS_TEXT_RENDERING.OPTIMIZE_SPEED
         : CSS_TEXT_RENDERING.OPTIMIZE_LEGIBILITY,
   },
-
   editorConfig: {
     cursorSelection: [],
     heightFraction: EDITOR_DEFAULTS.heightFraction,
     content: EDITOR_DEFAULTS.content,
     fontSize: EDITOR_DEFAULTS.fontSize.value,
   },
-
   canvasConfig: {
     zoom: CANVAS_DEFAULTS.zoom,
     panX: CANVAS_DEFAULTS.panX,
@@ -107,11 +105,13 @@ export const useStore = create<AppState>((set, get) => ({
       },
     }));
   },
+
   setThemes: (themes) => set({ themes }),
   setAppTheme: (appTheme) => {
     document.documentElement.dataset.theme = appTheme;
     set({ appTheme });
   },
+
   setActiveThemeName: (name) => set({ activeThemeName: name }),
   setActiveElementId: (id) => set({ activeElementId: id }),
   setCollapsedSections: (sections) => set({ collapsedSections: sections }),
@@ -120,10 +120,8 @@ export const useStore = create<AppState>((set, get) => ({
     set((state) => ({
       typographyConfig: { ...state.typographyConfig, ...config },
     })),
-
   setEditorConfig: (config) =>
     set((state) => ({ editorConfig: { ...state.editorConfig, ...config } })),
-
   setCanvasConfig: (config) =>
     set((state) => ({ canvasConfig: { ...state.canvasConfig, ...config } })),
 
@@ -131,7 +129,6 @@ export const useStore = create<AppState>((set, get) => ({
     const { colors, tokenizer } = get();
     tokenizer.tokenize(text, colors);
   },
-
   recolor: (changedKey?: string) => {
     const { colors, tokenizer } = get();
     tokenizer.recolor(colors, changedKey);

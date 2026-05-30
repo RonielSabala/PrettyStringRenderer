@@ -1,6 +1,6 @@
 import { forwardRef, useRef } from "react";
 import { Trash } from "react-bootstrap-icons";
-import { CSS_STYLE } from "../../../common/constants/css";
+import { CSS_VISIBILITY } from "../../../common/constants/css";
 import type { Theme } from "../../../common/types";
 import { useKeybinding } from "../../../hooks/useKeybinding";
 import { titleToKebab } from "../../../utils/parse";
@@ -66,7 +66,9 @@ export const ThemeItem = forwardRef<HTMLDivElement, Props>(
 
           <div
             className={`theme-swatch ${hasBackground ? "" : "no-swatch-border"}`}
-            style={{ background: theme.background ?? CSS_STYLE.TRANSPARENT }}
+            style={{
+              background: theme.background ?? CSS_VISIBILITY.TRANSPARENT,
+            }}
           >
             {!hasBackground && <TransparentSwatchIcon />}
           </div>

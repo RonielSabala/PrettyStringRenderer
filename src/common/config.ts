@@ -25,8 +25,7 @@ export const APP_DEFAULT_THEME = (_userDefaults.app?.defaultTheme ??
 export const APP_FONT_VARIANT_LIGATURES =
   _userDefaults.app?.fontVariantLigatures ?? _defaults.app.fontVariantLigatures;
 
-// Welcome Animation
-
+// Welcome
 export const WELCOME_CURSOR_CHAR = "▏";
 export const WELCOME_BLINK_INTERVAL_MS = 530;
 export const WELCOME_START_DELAY_MS = 500;
@@ -37,7 +36,6 @@ export const WELCOME_DELETION_JITTER_MAX_MS = 20;
 export const WELCOME_NEXT_ANIMATION_DELAY_MS = 15000;
 
 // Typography
-
 const _typographyDefaults = _userDefaults.typography ?? {};
 export const TYPOGRAPHY_DEFAULTS = {
   fontSize: {
@@ -136,7 +134,6 @@ export const DEFAULT_EXPORT_IMAGE_FILENAME =
   _exportDefaults.defaultImageFilename ?? _defaults.export.defaultImageFilename;
 
 // Themes
-
 export const THEMES_EXTENSION = ".json";
 export const THEMES_FILE_TYPE = "file";
 export const THEME_BLOB_TYPE = { type: "application/json" } as const;

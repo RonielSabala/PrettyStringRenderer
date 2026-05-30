@@ -1,4 +1,4 @@
-export const CSS_STYLE = Object.freeze({
+export const CSS_VISIBILITY = Object.freeze({
   HIDDEN: "hidden",
   TRANSPARENT: "transparent",
 } as const);

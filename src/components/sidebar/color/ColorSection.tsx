@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { DEFAULT_THEME } from "../../../common/config";
-import { useStore } from "../../../common/store";
+import { getStore, useStore } from "../../../common/store";
 import { TOKENS, type ThemeColor, type TokenType } from "../../../common/types";
-import { setColor } from "../../../utils/color_sync";
 import { toTitle } from "../../../utils/parse";
 import {
   createSaveScheduler,
@@ -12,6 +11,16 @@ import SidebarSection from "../SidebarSection";
 import ColorRow from "./ColorRow";
 
 const _scheduleSave = createSaveScheduler(saveColorsState);
+
+// Private helpers
+
+function _setColor(
+  themeKey: TokenType,
+  themeValue: ThemeColor | ThemeColor[],
+): void {
+  getStore().setColors({ [themeKey]: themeValue });
+  getStore().recolor(themeKey);
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { bracket, background, ...syntaxColors } = DEFAULT_THEME;
@@ -35,7 +44,7 @@ export function ColorSection({
   const redraw = useStore((state) => state.redraw);
   const handleChange = useCallback(
     (key: TokenType, value: ThemeColor) => {
-      setColor(key, value);
+      _setColor(key, value);
       if (doRedraw) {
         redraw();
       }
@@ -72,11 +81,11 @@ export function BracketColorSection() {
           return;
         }
 
-        setColor(TOKENS.BRACKET, [value]);
+        _setColor(TOKENS.BRACKET, [value]);
       } else {
         const next = [...brackets] as ThemeColor[];
         next[i] = value;
-        setColor(TOKENS.BRACKET, next);
+        _setColor(TOKENS.BRACKET, next);
       }
 
       redraw();

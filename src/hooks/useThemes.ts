@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   DEFAULT_EXPORT_THEME_FILENAME,
   DEFAULT_THEME,
@@ -7,10 +7,9 @@ import {
   THEMES_FILE_TYPE,
 } from "../common/config";
 import { EVENTS } from "../common/constants/events";
-import { useStore } from "../common/store";
-import { type Theme, THEME_KEYS } from "../common/types";
+import { getStore, useStore } from "../common/store";
+import { type Theme, THEME_KEYS, type ThemeColors } from "../common/types";
 import { useKeybinding } from "../hooks/useKeybinding";
-import { applyThemeColors } from "../utils/color_sync";
 import { isObjectEmpty } from "../utils/parse";
 import {
   createSaveScheduler,
@@ -23,32 +22,37 @@ import { revokeAfter, urlFromObject } from "../utils/url";
 const _scheduleSave = createSaveScheduler(saveColorsState);
 const _scheduleThemeNameSave = createSaveScheduler(saveActiveThemeNameState);
 
+// Private helpers
+
+function _applyThemeColors(theme: Partial<ThemeColors>): void {
+  getStore().setColors(theme);
+  getStore().recolor();
+}
+
 export function useThemes() {
   const colors = useStore((state) => state.colors);
   const themes = useStore((state) => state.themes) as Theme[];
   const activeThemeName = useStore((state) => state.activeThemeName);
   const activeItem = useRef<HTMLDivElement | null>(null);
-  const [isExporting, setIsExporting] = useState(false);
-  const [exportFilename, setExportFilename] = useState<string | null>(null);
-  const [viewingTheme, setViewingTheme] = useState<Theme | null>(null);
 
   const setThemes = useStore((state) => state.setThemes);
   const setActiveName = useStore((state) => state.setActiveThemeName);
   const redraw = useStore((state) => state.redraw);
 
-  // Apply initial colors on mount
-  useEffect(() => {
-    if (isObjectEmpty(colors)) {
-      applyThemeColors(DEFAULT_THEME);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportFilename, setExportFilename] = useState<string | null>(null);
+  const [viewingTheme, setViewingTheme] = useState<Theme | null>(null);
+
+  // Apply initial colors
+  if (isObjectEmpty(colors)) {
+    _applyThemeColors(DEFAULT_THEME);
+  }
 
   // Theme functions
 
   const applyTheme = useCallback(
     (theme: Theme) => {
-      applyThemeColors(
+      _applyThemeColors(
         Object.fromEntries(THEME_KEYS.map((key) => [key, theme[key]])),
       );
 

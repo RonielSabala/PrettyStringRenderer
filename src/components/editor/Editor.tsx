@@ -1,4 +1,10 @@
+import { useMemo } from "react";
 import { useEditor } from "../../hooks/useEditor";
+import { useResizeHandle } from "../../hooks/useResizeHandle";
+import {
+  createSaveScheduler,
+  saveEditorConfigState,
+} from "../../utils/persistence";
 import { toPx } from "../../utils/resolution";
 import "./Editor.css";
 import { EditorHeader } from "./EditorHeader";
@@ -6,19 +12,32 @@ import { EditorResizeHandle } from "./EditorResizeHandle";
 import { EditorTextarea } from "./EditorTextarea";
 
 export default function Editor() {
+  const scheduleSave = useMemo(
+    () => createSaveScheduler(saveEditorConfigState),
+    [],
+  );
+
   const {
-    resizeHandleRef,
-    onResizeStart,
-    onResizeReset,
-    panelRef,
     height,
+    setHeight,
+    setHeightFraction,
+    getHeightFromFraction,
     fontSize,
     handleFontSize,
     textareaRef,
     handleContent,
     handleCursorChange,
     cancelWelcomeAnimation,
-  } = useEditor();
+  } = useEditor({ scheduleSave });
+
+  const { resizeHandleRef, onResizeStart, onResizeReset, panelRef } =
+    useResizeHandle({
+      height,
+      setHeight,
+      setHeightFraction,
+      getHeightFromFraction,
+      scheduleSave,
+    });
 
   return (
     <>

@@ -1,11 +1,11 @@
-import { useEditor } from "../hooks/useEditor";
-import { toPx } from "../utils/resolution";
-import "./EditorPanel.css";
-import { EditorHeader } from "./editor/EditorHeader";
-import { EditorResizeHandle } from "./editor/EditorResizeHandle";
-import { EditorTextarea } from "./editor/EditorTextarea";
+import { useEditor } from "../../hooks/useEditor";
+import { toPx } from "../../utils/resolution";
+import "./Editor.css";
+import { EditorHeader } from "./EditorHeader";
+import { EditorResizeHandle } from "./EditorResizeHandle";
+import { EditorTextarea } from "./EditorTextarea";
 
-export default function EditorPanel() {
+export default function Editor() {
   const {
     resizeHandleRef,
     onResizeStart,

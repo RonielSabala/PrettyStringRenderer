@@ -1,7 +1,7 @@
 import "./App.css";
 import { APP_DEFAULT_THEME } from "./common/config";
 import Canvas from "./components/canvas/Canvas";
-import EditorPanel from "./components/EditorPanel";
+import Editor from "./components/editor/Editor";
 import { ExportDialog } from "./components/export/ExportDialog";
 import Header from "./components/Header";
 import Sidebar from "./components/sidebar/Sidebar";
@@ -29,7 +29,7 @@ export default function App() {
 
       <main id="app-workspace">
         <Canvas />
-        <EditorPanel />
+        <Editor />
       </main>
 
       <ExportDialog ref={exportDialogRef} />

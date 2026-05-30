@@ -1,0 +1,70 @@
+#editor-header {
+  background: var(--surface-panel);
+  border-top: var(--border-standard);
+  height: var(--editor-header-height);
+  padding: 0 var(--space-6);
+  gap: var(--space-7);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+#editor-tab {
+  padding: 0 var(--space-2);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: var(--text-sm-tight);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  position: relative;
+}
+
+#editor-tab::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--space-1);
+  background: var(--accent);
+  border-radius: var(--radius-1) var(--radius-1) 0 0;
+}
+
+.editor-tab-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+#editor-font-label,
+#editor-fit-label {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  transition: color 0.1s;
+}
+
+#editor-font-label:hover,
+#editor-fit-label:hover {
+  color: var(--text-secondary);
+}
+
+#editor-fit-label {
+  cursor: pointer;
+}
+
+#editor-fit-to-content {
+  cursor: pointer;
+  width: var(--space-6);
+  height: var(--space-6);
+  accent-color: var(--accent);
+}
+
+#editor-status {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-left: auto;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}

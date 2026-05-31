@@ -116,13 +116,15 @@ export function useThemes() {
       setThemes(next);
       saveThemesState();
 
-      if (next.length > 0) {
-        applyTheme(next.at(-1)!);
+      if (next.length === 0 || activeThemeName !== "") {
+        return;
       }
+
+      applyTheme(next.at(-1)!);
     });
 
     inputElement.click();
-  }, [themes, setThemes, applyTheme]);
+  }, [themes, setThemes, activeThemeName, applyTheme]);
 
   const exportTheme = useCallback(() => {
     setExportFilename(activeThemeName || DEFAULT_EXPORT_THEME_FILENAME);

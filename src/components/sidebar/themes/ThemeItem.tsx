@@ -1,19 +1,16 @@
-import { forwardRef, useRef } from "react";
+import { forwardRef } from "react";
 import { Trash } from "react-bootstrap-icons";
 import { CSS_VISIBILITY } from "../../../common/constants/css";
-import type { Theme } from "../../../common/types";
-import { useKeybinding } from "../../../hooks/useKeybinding";
+import {
+  useThemeItem,
+  type UseThemeItemProps,
+} from "../../../hooks/useThemeItem";
 import { titleToKebab } from "../../../utils/parse";
 import { TransparentSwatchIcon } from "../TransparentSwatchIcon";
 import "./ThemeItem.css";
 
-interface Props {
-  theme: Theme;
+interface Props extends UseThemeItemProps {
   isActive: boolean;
-  onApply: (theme: Theme) => void;
-  onDelete: (theme: Theme) => void;
-  onShow: (theme: Theme) => void;
-  onNavigate: (upDirection: boolean) => void;
 }
 
 export const ThemeItem = forwardRef<HTMLDivElement, Props>(
@@ -21,10 +18,24 @@ export const ThemeItem = forwardRef<HTMLDivElement, Props>(
     { theme, isActive, onApply, onDelete, onShow, onNavigate },
     forwardedRef,
   ) => {
-    const localRef = useRef<HTMLDivElement>(null);
+    const {
+      localRef,
+      handleClick,
+      handleDoubleClick,
+      handleDelete,
+      hasBackground,
+    } = useThemeItem({
+      theme,
+      onApply,
+      onDelete,
+      onShow,
+      onNavigate,
+    });
 
+    // Merge refs
     const setRefs = (element: HTMLDivElement | null) => {
       localRef.current = element;
+
       if (typeof forwardedRef === "function") {
         forwardedRef(element);
       } else if (forwardedRef) {
@@ -32,35 +43,18 @@ export const ThemeItem = forwardRef<HTMLDivElement, Props>(
       }
     };
 
-    // Keybindings
-    useKeybinding("themes.navigateUp", () => onNavigate(true), {
-      targetRef: localRef,
-    });
-    useKeybinding("themes.navigateDown", () => onNavigate(false), {
-      targetRef: localRef,
-    });
-
-    const hasBackground = Boolean(theme.background);
-
     return (
       <div
         ref={setRefs}
         id={`theme-item-${titleToKebab(theme._name)}`}
         className={`action-btn theme-item${isActive ? " active" : ""}`}
         tabIndex={0}
-        onClick={() => onApply(theme)}
-        onDoubleClick={() => onShow(theme)}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
       >
         <span className="theme-name">{theme._name}</span>
-
         <div className="theme-item-controls">
-          <button
-            className="app-btn theme-delete-btn"
-            onClick={(event) => {
-              event.stopPropagation();
-              onDelete(theme);
-            }}
-          >
+          <button className="app-btn theme-delete-btn" onClick={handleDelete}>
             <Trash className="app-icon" />
           </button>
 

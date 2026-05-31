@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
 import { THEMES_EXTENSION } from "../../../common/config";
+import {
+  useThemeExportDialog,
+  type UseThemeExportDialogProps,
+} from "../../../hooks/useThemeExportDialog";
 import {
   Dialog,
   FilenameInput,
@@ -7,10 +10,7 @@ import {
   SecondaryButton,
 } from "../../dialog";
 
-interface Props {
-  isOpen: boolean;
-  defaultFilename: string | null;
-  onExport: (filename: string) => void;
+interface Props extends UseThemeExportDialogProps {
   onCancel: () => void;
 }
 
@@ -20,20 +20,11 @@ export default function ThemeExportDialog({
   onExport,
   onCancel,
 }: Props) {
-  const [filename, setFilename] = useState(defaultFilename || "");
-
-  useEffect(() => {
-    if (isOpen && defaultFilename) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setFilename(defaultFilename + THEMES_EXTENSION);
-    }
-  }, [isOpen, defaultFilename]);
-
-  const handleSubmit = () => {
-    if (filename.trim()) {
-      onExport(filename);
-    }
-  };
+  const { filename, setFilename, handleSubmit } = useThemeExportDialog({
+    isOpen,
+    defaultFilename,
+    onExport,
+  });
 
   return (
     <Dialog

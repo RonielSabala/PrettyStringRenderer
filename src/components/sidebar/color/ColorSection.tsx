@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { DEFAULT_THEME } from "../../../common/config";
 import { getStore, useStore } from "../../../common/store";
 import { TOKENS, type ThemeColor, type TokenType } from "../../../common/types";
@@ -43,17 +42,14 @@ export function ColorSection({
   const colors = useStore((state) => state.colors);
   const redraw = useStore((state) => state.redraw);
 
-  const handleChange = useCallback(
-    (key: TokenType, value: ThemeColor) => {
-      _setColor(key, value);
-      if (doRedraw) {
-        redraw();
-      }
+  const handleChange = (key: TokenType, value: ThemeColor) => {
+    _setColor(key, value);
+    if (doRedraw) {
+      redraw();
+    }
 
-      _scheduleSave();
-    },
-    [doRedraw, redraw],
-  );
+    _scheduleSave();
+  };
 
   return (
     <SidebarSection title={title} defaultCollapsed={defaultCollapsed}>
@@ -76,38 +72,35 @@ export function BracketColorSection() {
   const redraw = useStore((state) => state.redraw);
   const brackets = useStore((state) => state.colors.bracket);
 
-  const handleChange = useCallback(
-    (i: number, value: ThemeColor) => {
-      if (!brackets) {
-        if (!value) {
-          return;
-        }
-
-        _setColor(TOKENS.BRACKET, [value]);
-      } else {
-        const next = [...brackets] as ThemeColor[];
-        next[i] = value;
-        _setColor(TOKENS.BRACKET, next);
+  const handleChange = (idx: number, value: ThemeColor) => {
+    if (!brackets) {
+      if (!value) {
+        return;
       }
 
-      redraw();
-      _scheduleSave();
-    },
-    [redraw, brackets],
-  );
+      _setColor(TOKENS.BRACKET, [value]);
+    } else {
+      const next = [...brackets] as ThemeColor[];
+      next[idx] = value;
+      _setColor(TOKENS.BRACKET, next);
+    }
+
+    redraw();
+    _scheduleSave();
+  };
 
   return (
     <SidebarSection title="Bracket Colors" defaultCollapsed>
       {!brackets || brackets.length === 0 ? (
         <p>No bracket colors to show.</p>
       ) : (
-        brackets.map((color, i) => (
+        brackets.map((color, idx) => (
           <ColorRow
-            key={i}
-            id={`bracket-${i}`}
-            label={`Level ${i + 1}`}
+            key={idx}
+            id={`bracket-${idx}`}
+            label={`Level ${idx + 1}`}
             color={color}
-            onChange={(value) => handleChange(i, value)}
+            onChange={(value) => handleChange(idx, value)}
           />
         ))
       )}

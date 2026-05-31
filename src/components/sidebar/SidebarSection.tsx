@@ -1,14 +1,13 @@
 import { type ReactNode } from "react";
 import { ChevronDown } from "react-bootstrap-icons";
-import { useStore } from "../../common/store";
-import { titleToKebab } from "../../utils/parse";
-import { saveCollapsedSectionsState } from "../../utils/persistence";
+import {
+  useSidebarSection,
+  type UseSidebarSectionProps,
+} from "../../hooks/useSidebarSection";
 import "./SidebarSection.css";
 
-interface Props {
-  title: string;
+interface Props extends UseSidebarSectionProps {
   children: ReactNode;
-  defaultCollapsed?: boolean;
 }
 
 export default function SidebarSection({
@@ -16,19 +15,10 @@ export default function SidebarSection({
   children,
   defaultCollapsed = false,
 }: Props) {
-  const sectionId = titleToKebab(title);
-  const isCollapsed = useStore(
-    (state) => state.collapsedSections[sectionId] ?? defaultCollapsed,
-  );
-
-  const setCollapsed = useStore((state) => state.setCollapsedSections);
-  const collapsedSections = useStore((state) => state.collapsedSections);
-
-  const toggleCollapse = () => {
-    const next = { ...collapsedSections, [sectionId]: !isCollapsed };
-    setCollapsed(next);
-    saveCollapsedSectionsState();
-  };
+  const { sectionId, isCollapsed, toggleCollapse } = useSidebarSection({
+    title,
+    defaultCollapsed,
+  });
 
   return (
     <div id={`sidebar-section-${sectionId}`} className="sidebar-section">

@@ -1,14 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { FileEarmarkImage, X } from "react-bootstrap-icons";
 import {
-  DEFAULT_EXPORT_IMAGE_FILENAME,
   DEFAULT_EXPORT_PNG_SCALAR,
   EXPORT_PNG_PROMPT_SCALAR_EXAMPLES,
   EXPORT_PNG_SCALAR_STEP,
   MAX_EXPORT_PNG_SCALAR,
   MIN_EXPORT_PNG_SCALAR,
-  PNG_EXTENSION,
 } from "../../common/config";
+import { usePNGExportModal } from "../../hooks/usePNGExportModal";
 import { parseNumber } from "../../utils/parse";
 import { createResolution, getScaledDimensions } from "../../utils/resolution";
 import {
@@ -19,7 +18,106 @@ import {
 } from "../dialog";
 import "./PNGExportModal.css";
 
-interface Props {
+// Sub-components
+
+interface ScalarInputGroupProps {
+  scalar: number;
+  setScalar: Dispatch<SetStateAction<number>>;
+}
+
+function ScalarInputGroup({ scalar, setScalar }: ScalarInputGroupProps) {
+  return (
+    <div id="scalar-input-group">
+      <label htmlFor="png-scalar">Scale:</label>
+      <input
+        id="png-scalar"
+        className="number-input png-export-scalar-input"
+        type="number"
+        min={MIN_EXPORT_PNG_SCALAR}
+        max={MAX_EXPORT_PNG_SCALAR}
+        step={EXPORT_PNG_SCALAR_STEP}
+        value={scalar}
+        onChange={(event) => {
+          const value = parseNumber(
+            event.target.value,
+            DEFAULT_EXPORT_PNG_SCALAR,
+          );
+          setScalar(Math.max(MIN_EXPORT_PNG_SCALAR, value));
+        }}
+      />
+    </div>
+  );
+}
+
+interface ScalarPreviewButtonProps {
+  defaultScalar: number;
+  scalar: number;
+  setScalar: Dispatch<SetStateAction<number>>;
+  resolution: string;
+}
+
+function ScalarPreviewButton({
+  defaultScalar,
+  scalar,
+  setScalar,
+  resolution,
+}: ScalarPreviewButtonProps) {
+  return (
+    <button
+      className={`static-action-btn png-export-preview-btn ${scalar === defaultScalar ? "active" : ""}`}
+      onClick={() => setScalar(defaultScalar)}
+    >
+      <span className="btn-preview-label">
+        {defaultScalar}
+        <X />
+      </span>
+      <span className="png-export-preview-resolution">{resolution}</span>
+    </button>
+  );
+}
+
+interface ScalarPreviewGroupProps {
+  canvasWidth: number;
+  canvasHeight: number;
+  scalar: number;
+  setScalar: Dispatch<SetStateAction<number>>;
+}
+
+function ScalarPreviewGroup({
+  canvasWidth,
+  canvasHeight,
+  scalar,
+  setScalar,
+}: ScalarPreviewGroupProps) {
+  return (
+    <div id="scalar-preview-group">
+      <p id="preview-label">Preview:</p>
+      <div id="preview-items">
+        {EXPORT_PNG_PROMPT_SCALAR_EXAMPLES.map((scalarExample) => {
+          const [width, height] = getScaledDimensions(
+            canvasWidth,
+            canvasHeight,
+            scalarExample,
+          );
+
+          return (
+            <ScalarPreviewButton
+              key={scalarExample}
+              defaultScalar={scalarExample}
+              scalar={scalar}
+              setScalar={setScalar}
+              resolution={createResolution(width, height)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Main Component
+
+interface PNGExportModalProps {
   isOpen: boolean;
   canvasWidth: number;
   canvasHeight: number;
@@ -35,34 +133,15 @@ export default function PNGExportModal({
   defaultFilename,
   onExport,
   onCancel,
-}: Props) {
-  const scalarInputRef = useRef<HTMLInputElement>(null);
-  const [scalar, setScalar] = useState(DEFAULT_EXPORT_PNG_SCALAR);
-  const [filename, setFilename] = useState(defaultFilename);
-
-  useEffect(() => {
-    if (!isOpen || !defaultFilename) {
-      return;
-    }
-
-    const [exportWidth, exportHeight] = getScaledDimensions(
+}: PNGExportModalProps) {
+  const { scalar, setScalar, filename, setFilename, handleSubmit } =
+    usePNGExportModal({
+      isOpen,
       canvasWidth,
       canvasHeight,
-      scalar,
-    );
-    const resolution = createResolution(exportWidth, exportHeight);
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setFilename(
-      `${DEFAULT_EXPORT_IMAGE_FILENAME}-${resolution}${PNG_EXTENSION}`,
-    );
-  }, [isOpen, defaultFilename, canvasWidth, canvasHeight, scalar]);
-
-  const handleSubmit = () => {
-    if (filename.trim()) {
-      onExport(scalar, filename);
-    }
-  };
+      defaultFilename,
+      onExport,
+    });
 
   return (
     <Dialog
@@ -83,60 +162,17 @@ export default function PNGExportModal({
         </>
       }
     >
-      <p className="png-export-modal-description no-user-select">
+      <p id="png-export-modal-description" className="no-user-select">
         Choose a scale factor for the export:
       </p>
-      <div className="png-export-scalar-section no-user-select">
-        <div className="png-export-scalar-input-group">
-          <label htmlFor="png-scalar">Scale:</label>
-          <input
-            ref={scalarInputRef}
-            id="png-scalar"
-            className="number-input png-export-scalar-input"
-            type="number"
-            min={MIN_EXPORT_PNG_SCALAR}
-            max={MAX_EXPORT_PNG_SCALAR}
-            step={EXPORT_PNG_SCALAR_STEP}
-            value={scalar}
-            onChange={(event) => {
-              const value = parseNumber(
-                event.target.value,
-                DEFAULT_EXPORT_PNG_SCALAR,
-              );
-              setScalar(Math.max(MIN_EXPORT_PNG_SCALAR, value));
-            }}
-          />
-          <span className="png-export-scalar-unit"></span>
-        </div>
-
-        <div className="png-export-scalar-preview">
-          <p className="png-export-preview-label">Preview:</p>
-          <div className="png-export-preview-items">
-            {EXPORT_PNG_PROMPT_SCALAR_EXAMPLES.map((scalarExample) => {
-              const [width, height] = getScaledDimensions(
-                canvasWidth,
-                canvasHeight,
-                scalarExample,
-              );
-              const resolution = createResolution(width, height);
-              return (
-                <button
-                  key={scalarExample}
-                  className={`static-action-btn png-export-preview-btn ${scalar === scalarExample ? "active" : ""}`}
-                  onClick={() => setScalar(scalarExample)}
-                >
-                  <span className="png-export-preview-label">
-                    {scalarExample}
-                    <X />
-                  </span>
-                  <span className="png-export-preview-resolution">
-                    {resolution}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      <div id="png-export-body" className="no-user-select">
+        <ScalarInputGroup scalar={scalar} setScalar={setScalar} />
+        <ScalarPreviewGroup
+          canvasWidth={canvasWidth}
+          canvasHeight={canvasHeight}
+          scalar={scalar}
+          setScalar={setScalar}
+        />
 
         <FilenameInput
           value={filename}

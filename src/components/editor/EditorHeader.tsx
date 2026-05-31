@@ -3,6 +3,8 @@ import { DOM_IDS } from "../../common/constants/dom";
 import { useStore } from "../../common/store";
 import "./EditorHeader.css";
 
+// Sub-components
+
 interface EditorHeaderProps {
   fontSize: number;
   onFontSizeChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -30,6 +32,8 @@ function EditorStatus() {
   const zoom = useStore((state) => state.canvasConfig.zoom);
   return <>{`Zoom level: ${(zoom * 100).toFixed(0)}%`}</>;
 }
+
+// Main Component
 
 export function EditorHeader({
   fontSize,

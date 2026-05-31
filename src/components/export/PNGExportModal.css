@@ -1,22 +1,22 @@
-.png-export-modal-description {
+#png-export-modal-description {
   font-size: var(--text-md);
   color: var(--text-secondary);
   margin-bottom: var(--space-8);
 }
 
-.png-export-scalar-section {
+#png-export-body {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
 }
 
-.png-export-scalar-input-group {
+#scalar-input-group {
   display: flex;
   align-items: center;
   gap: var(--space-4);
 }
 
-.png-export-scalar-input-group label {
+#scalar-input-group label {
   font-size: var(--text-md);
   color: var(--text-secondary);
 }
@@ -25,24 +25,19 @@
   padding: var(--space-3) var(--space-4);
 }
 
-.png-export-scalar-unit {
-  font-size: var(--text-md);
-  color: var(--text-secondary);
-}
-
-.png-export-scalar-preview {
+#scalar-preview-group {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
-.png-export-preview-label {
+#preview-label {
   font-size: var(--text-sm);
   color: var(--text-secondary);
   font-weight: 500;
 }
 
-.png-export-preview-items {
+#preview-items {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
@@ -61,7 +56,7 @@
   background: var(--accent-dim);
 }
 
-.png-export-preview-btn .png-export-preview-label {
+.btn-preview-label {
   font-size: var(--text-sm);
   color: var(--text-primary);
 }

@@ -42,6 +42,7 @@ export function ColorSection({
 }: Props) {
   const colors = useStore((state) => state.colors);
   const redraw = useStore((state) => state.redraw);
+
   const handleChange = useCallback(
     (key: TokenType, value: ThemeColor) => {
       _setColor(key, value);
@@ -74,6 +75,7 @@ export function ColorSection({
 export function BracketColorSection() {
   const redraw = useStore((state) => state.redraw);
   const brackets = useStore((state) => state.colors.bracket);
+
   const handleChange = useCallback(
     (i: number, value: ThemeColor) => {
       if (!brackets) {

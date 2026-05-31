@@ -1,30 +1,14 @@
-import { useCallback } from "react";
 import { TYPOGRAPHY_DEFAULTS } from "../../../common/config";
 import { useStore } from "../../../common/store";
 import type { InputRange, TypographyConfig } from "../../../common/types";
+import { useTypographySection } from "../../../hooks/useTypographySection";
 import { camelToKebab, camelToTitle } from "../../../utils/parse";
-import {
-  createSaveScheduler,
-  saveTypographyConfigState,
-} from "../../../utils/persistence";
 import SidebarSection from "../SidebarSection";
 import NumberRow from "./NumberRow";
 
-const _scheduleSave = createSaveScheduler(saveTypographyConfigState);
-
 export default function TypographySection() {
   const config = useStore((state) => state.typographyConfig);
-  const setConfig = useStore((state) => state.setTypographyConfig);
-  const redraw = useStore((state) => state.redraw);
-
-  const handleChange = useCallback(
-    (key: keyof TypographyConfig, value: number) => {
-      setConfig({ [key]: value } as Partial<TypographyConfig>);
-      redraw();
-      _scheduleSave();
-    },
-    [setConfig, redraw],
-  );
+  const handleChange = useTypographySection();
 
   return (
     <SidebarSection title="Typography">

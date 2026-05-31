@@ -1,13 +1,10 @@
+import type { InputRange } from "../../../common/types";
 import "../SidebarRow.css";
 import "./NumberRow.css";
 
-interface Props {
+interface Props extends InputRange {
   id: string;
   label: string;
-  value: number;
-  min: number;
-  max: number;
-  step?: number;
   onChange: (value: number) => void;
 }
 

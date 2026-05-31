@@ -8,7 +8,7 @@ export interface InputRange {
   value: number;
   min: number;
   max: number;
-  step: number | undefined;
+  step?: number;
 }
 
 // Configs

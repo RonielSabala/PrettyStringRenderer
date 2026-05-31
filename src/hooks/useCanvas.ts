@@ -31,9 +31,7 @@ export function useCanvas() {
   const innerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const zoom = useStore((state) => state.canvasConfig.zoom);
-  const panX = useStore((state) => state.canvasConfig.panX);
-  const panY = useStore((state) => state.canvasConfig.panY);
+  const { zoom, panX, panY } = useStore((state) => state.canvasConfig);
   const backgroundColor = useStore((state) => state.colors.background);
 
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
@@ -349,28 +347,30 @@ export function useCanvas() {
 
       const innerRefStyle = innerRef.current.style;
 
+      // Show solid color
       if (backgroundColor) {
-        // Show solid color
         innerRefStyle.backgroundColor = backgroundColor;
         innerRefStyle.backgroundImage = CSS_BACKGROUND_IMAGE.NONE;
-      } else {
-        // Show checkerboard texture pattern
-        innerRefStyle.backgroundColor = CHECKER_COLORS.DARK;
+        return;
+      }
 
-        const inverseZoom = 1 / zoom;
-        const scaledSize = `calc(var(--space-6) * ${inverseZoom})`;
-        const scaledOffset = `calc(var(--space-3) * ${inverseZoom})`;
-        const minusScaledOffset = `calc(${scaledOffset} * -1)`;
+      // Show checkerboard texture pattern
 
-        innerRefStyle.backgroundImage = `
+      innerRefStyle.backgroundColor = CHECKER_COLORS.DARK;
+
+      const inverseZoom = 1 / zoom;
+      const scaledSize = `calc(var(--space-6) * ${inverseZoom})`;
+      const scaledOffset = `calc(var(--space-3) * ${inverseZoom})`;
+      const minusScaledOffset = `calc(${scaledOffset} * -1)`;
+
+      innerRefStyle.backgroundImage = `
           linear-gradient(45deg, ${CHECKER_COLORS.LIGHT} 25%, transparent 25%),
           linear-gradient(-45deg, ${CHECKER_COLORS.LIGHT} 25%, transparent 25%),
           linear-gradient(45deg, transparent 75%, ${CHECKER_COLORS.LIGHT} 75%),
           linear-gradient(-45deg, transparent 75%, ${CHECKER_COLORS.LIGHT} 75%)
         `;
-        innerRefStyle.backgroundSize = `${scaledSize} ${scaledSize}`;
-        innerRefStyle.backgroundPosition = `0 0, 0 ${scaledOffset}, ${scaledOffset} ${minusScaledOffset}, ${minusScaledOffset} 0`;
-      }
+      innerRefStyle.backgroundSize = `${scaledSize} ${scaledSize}`;
+      innerRefStyle.backgroundPosition = `0 0, 0 ${scaledOffset}, ${scaledOffset} ${minusScaledOffset}, ${minusScaledOffset} 0`;
     };
 
     // Initial sync

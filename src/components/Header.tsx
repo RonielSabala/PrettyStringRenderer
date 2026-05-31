@@ -1,4 +1,5 @@
 import { ArrowClockwise, Download, Moon, Sun } from "react-bootstrap-icons";
+import { useStore } from "../common/store";
 import { APP_THEMES } from "../common/types";
 import { useHeader } from "../hooks/useHeader";
 import { roundUp } from "../utils/parse";
@@ -10,7 +11,8 @@ interface Props {
 }
 
 export default function Header({ onExportClick }: Props) {
-  const { handleReset, toggleAppTheme, appTheme, width, height } = useHeader();
+  const { width, height } = useStore((state) => state.canvasConfig);
+  const { handleReset, toggleAppTheme, appTheme } = useHeader();
 
   return (
     <>

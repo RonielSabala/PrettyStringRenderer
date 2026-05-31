@@ -45,9 +45,7 @@ function ExportFormatButton({
 // Main Component
 
 export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
-  const width = useStore((state) => state.canvasConfig.width);
-  const height = useStore((state) => state.canvasConfig.height);
-
+  const { width, height } = useStore((state) => state.canvasConfig);
   const {
     isOpen,
     isPNGModalOpen,
@@ -108,5 +106,3 @@ export const ExportDialog = forwardRef<ExportDialogHandle>((_, ref) => {
     </>
   );
 });
-
-export default ExportDialog;

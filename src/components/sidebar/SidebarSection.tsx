@@ -20,11 +20,12 @@ export default function SidebarSection({
   const isCollapsed = useStore(
     (state) => state.collapsedSections[sectionId] ?? defaultCollapsed,
   );
+
   const setCollapsed = useStore((state) => state.setCollapsedSections);
-  const allSections = useStore((state) => state.collapsedSections);
+  const collapsedSections = useStore((state) => state.collapsedSections);
 
   const toggleCollapse = () => {
-    const next = { ...allSections, [sectionId]: !isCollapsed };
+    const next = { ...collapsedSections, [sectionId]: !isCollapsed };
     setCollapsed(next);
     saveCollapsedSectionsState();
   };

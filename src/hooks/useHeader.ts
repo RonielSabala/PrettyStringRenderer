@@ -5,8 +5,6 @@ import { clearState, saveAppThemeState } from "../utils/persistence";
 export function useHeader() {
   const appTheme = useStore((state) => state.appTheme);
   const setAppTheme = useStore((state) => state.setAppTheme);
-  const width = useStore((state) => state.canvasConfig.width);
-  const height = useStore((state) => state.canvasConfig.height);
 
   // Handlers
 
@@ -22,5 +20,5 @@ export function useHeader() {
     location.reload();
   };
 
-  return { handleReset, toggleAppTheme, appTheme, width, height };
+  return { handleReset, toggleAppTheme, appTheme };
 }

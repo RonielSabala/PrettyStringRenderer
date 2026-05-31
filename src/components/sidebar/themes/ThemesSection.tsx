@@ -11,7 +11,7 @@ export default function ThemesSection() {
   const {
     themes,
     activeThemeName,
-    activeItem,
+    activeThemeItemRef,
     applyTheme,
     deleteTheme,
     showInModal,
@@ -41,7 +41,7 @@ export default function ThemesSection() {
           themes.map((theme, index) => (
             <ThemeItem
               key={theme._name}
-              ref={theme._name === activeThemeName ? activeItem : null}
+              ref={theme._name === activeThemeName ? activeThemeItemRef : null}
               theme={theme}
               isActive={theme._name === activeThemeName}
               onApply={applyTheme}

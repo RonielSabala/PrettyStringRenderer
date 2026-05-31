@@ -33,11 +33,12 @@ export function useThemes() {
   const colors = useStore((state) => state.colors);
   const themes = useStore((state) => state.themes) as Theme[];
   const activeThemeName = useStore((state) => state.activeThemeName);
-  const activeItem = useRef<HTMLDivElement | null>(null);
 
-  const setThemes = useStore((state) => state.setThemes);
-  const setActiveName = useStore((state) => state.setActiveThemeName);
   const redraw = useStore((state) => state.redraw);
+  const setThemes = useStore((state) => state.setThemes);
+  const setActiveThemeName = useStore((state) => state.setActiveThemeName);
+
+  const activeThemeItemRef = useRef<HTMLDivElement | null>(null);
 
   const [isExporting, setIsExporting] = useState(false);
   const [exportFilename, setExportFilename] = useState<string | null>(null);
@@ -56,15 +57,15 @@ export function useThemes() {
         Object.fromEntries(THEME_KEYS.map((key) => [key, theme[key]])),
       );
 
-      setActiveName(theme._name);
+      setActiveThemeName(theme._name);
       _scheduleThemeNameSave();
       _scheduleSave();
       redraw();
 
       // Focus active item after render
-      requestAnimationFrame(() => activeItem.current?.focus());
+      requestAnimationFrame(() => activeThemeItemRef.current?.focus());
     },
-    [setActiveName, redraw],
+    [setActiveThemeName, redraw],
   );
 
   const deleteTheme = useCallback(
@@ -148,7 +149,7 @@ export function useThemes() {
   }, []);
 
   // Keybindings
-  useKeybinding("themes.focus", () => activeItem.current?.focus());
+  useKeybinding("themes.focus", () => activeThemeItemRef.current?.focus());
   useKeybinding("themes.import", importThemes);
   useKeybinding("themes.export", exportTheme);
   useKeybinding("themes.delete", () => {
@@ -161,7 +162,7 @@ export function useThemes() {
   return {
     themes,
     activeThemeName,
-    activeItem,
+    activeThemeItemRef,
     applyTheme,
     deleteTheme,
     showInModal,

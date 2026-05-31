@@ -16,6 +16,7 @@ export default function TypographySection() {
   const config = useStore((state) => state.typographyConfig);
   const setConfig = useStore((state) => state.setTypographyConfig);
   const redraw = useStore((state) => state.redraw);
+
   const handleChange = useCallback(
     (key: keyof TypographyConfig, value: number) => {
       setConfig({ [key]: value } as Partial<TypographyConfig>);

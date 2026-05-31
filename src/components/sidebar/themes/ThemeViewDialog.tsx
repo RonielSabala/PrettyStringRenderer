@@ -1,33 +1,23 @@
-import { THEME_BLOB_TYPE, THEMES_EXTENSION } from "../../../common/config";
-import type { Theme } from "../../../common/types";
-import { revokeAfter, urlFromObject } from "../../../utils/url";
+import { THEMES_EXTENSION } from "../../../common/config";
+import {
+  useThemeViewDialog,
+  type UseThemeViewDialogProps,
+} from "../../../hooks/useThemeViewDialog";
 import { Dialog, PrimaryButton, SecondaryButton } from "../../dialog";
 import "./ThemeViewDialog.css";
 
-interface Props {
-  theme: Theme | null;
+interface Props extends UseThemeViewDialogProps {
   onClose: () => void;
 }
 
 export default function ThemeViewDialog({ theme, onClose }: Props) {
+  const { handleCopy, handleDownload, jsonString } = useThemeViewDialog({
+    theme,
+  });
+
   if (!theme) {
     return null;
   }
-
-  const jsonString = JSON.stringify(theme, null, 2);
-
-  // Handlers
-  const handleCopy = () => {
-    navigator.clipboard.writeText(jsonString);
-  };
-  const handleDownload = () => {
-    const url = urlFromObject(theme, THEME_BLOB_TYPE);
-    const anchorElement = document.createElement("a");
-    anchorElement.href = url;
-    anchorElement.download = `${theme._name}${THEMES_EXTENSION}`;
-    anchorElement.click();
-    revokeAfter(url);
-  };
 
   return (
     <Dialog

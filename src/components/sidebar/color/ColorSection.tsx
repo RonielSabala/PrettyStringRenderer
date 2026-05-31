@@ -1,36 +1,24 @@
 import { DEFAULT_THEME } from "../../../common/config";
-import { getStore, useStore } from "../../../common/store";
+import { useStore } from "../../../common/store";
 import { TOKENS, type ThemeColor, type TokenType } from "../../../common/types";
-import { toTitle } from "../../../utils/parse";
 import {
-  createSaveScheduler,
-  saveColorsState,
-} from "../../../utils/persistence";
+  useBracketColorSection,
+  useColorSection,
+  type UseColorSectionProps,
+} from "../../../hooks/useColorSection";
+import { toTitle } from "../../../utils/parse";
 import SidebarSection from "../SidebarSection";
 import ColorRow from "./ColorRow";
-
-const _scheduleSave = createSaveScheduler(saveColorsState);
-
-// Private helpers
-
-function _setColor(
-  themeKey: TokenType,
-  themeValue: ThemeColor | ThemeColor[],
-): void {
-  getStore().setColors({ [themeKey]: themeValue });
-  getStore().recolor(themeKey);
-}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { bracket, background, ...syntaxColors } = DEFAULT_THEME;
 
 // Generic color section
 
-interface Props {
+interface Props extends UseColorSectionProps {
   title: string;
   keys: TokenType[];
   defaultCollapsed?: boolean;
-  doRedraw?: boolean;
 }
 
 export function ColorSection({
@@ -40,16 +28,7 @@ export function ColorSection({
   doRedraw = true,
 }: Props) {
   const colors = useStore((state) => state.colors);
-  const redraw = useStore((state) => state.redraw);
-
-  const handleChange = (key: TokenType, value: ThemeColor) => {
-    _setColor(key, value);
-    if (doRedraw) {
-      redraw();
-    }
-
-    _scheduleSave();
-  };
+  const { handleChange } = useColorSection({ doRedraw });
 
   return (
     <SidebarSection title={title} defaultCollapsed={defaultCollapsed}>
@@ -69,25 +48,7 @@ export function ColorSection({
 // Pre-configured instances
 
 export function BracketColorSection() {
-  const redraw = useStore((state) => state.redraw);
-  const brackets = useStore((state) => state.colors.bracket);
-
-  const handleChange = (idx: number, value: ThemeColor) => {
-    if (!brackets) {
-      if (!value) {
-        return;
-      }
-
-      _setColor(TOKENS.BRACKET, [value]);
-    } else {
-      const next = [...brackets] as ThemeColor[];
-      next[idx] = value;
-      _setColor(TOKENS.BRACKET, next);
-    }
-
-    redraw();
-    _scheduleSave();
-  };
+  const { brackets, handleChange } = useBracketColorSection();
 
   return (
     <SidebarSection title="Bracket Colors" defaultCollapsed>

@@ -61,7 +61,7 @@ pnpm install
 ### Run Locally
 
 ```bash
-pnpm run dev
+pnpm dev
 ```
 
 Access at `http://localhost:5173`. Use `Ctrl+C` to stop.
@@ -79,7 +79,7 @@ The app launches with a dynamic welcome animation to showcase its layout engine.
 
 ## Export Options
 
-| format  | details                                                                                                                                            |
+| format  | detail                                                                                                                                             |
 | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **PNG** | Raster export with custom scale multipliers (e.g., `0.5`, `1`, `2`)                                                                                |
 | **SVG** | Vector export where tokens are grouped by color. Fonts are embedded as attributes, making files fully editable in Figma, Illustrator, or Inkscape. |

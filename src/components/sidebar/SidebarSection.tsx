@@ -3,7 +3,7 @@ import { ChevronDown } from "react-bootstrap-icons";
 import {
   useSidebarSection,
   type UseSidebarSectionProps,
-} from "../../hooks/useSidebarSection";
+} from "../../hooks/sidebar/useSidebarSection";
 import "./SidebarSection.css";
 
 interface Props extends UseSidebarSectionProps {

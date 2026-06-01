@@ -9,7 +9,7 @@ import { useStore } from "../../common/store";
 import {
   useExportDialog,
   type ExportDialogHandle,
-} from "../../hooks/useExportDialog";
+} from "../../hooks/export/useExportDialog";
 import { getFilename } from "../../utils/exporters";
 import { Dialog } from "../dialog";
 import "./ExportDialog.css";

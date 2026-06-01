@@ -5,7 +5,7 @@ import {
   useBracketColorSection,
   useColorSection,
   type UseColorSectionProps,
-} from "../../../hooks/useColorSection";
+} from "../../../hooks/sidebar/color/useColorSection";
 import { toTitle } from "../../../utils/parse";
 import SidebarSection from "../SidebarSection";
 import ColorRow from "./ColorRow";

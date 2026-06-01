@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { ThemeColor } from "../common/types";
+import type { ThemeColor } from "../../../common/types";
 
 export interface UseColorRowProps {
   color: ThemeColor;

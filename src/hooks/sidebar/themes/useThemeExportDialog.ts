@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { THEMES_EXTENSION } from "../common/config";
+import { THEMES_EXTENSION } from "../../../common/config";
 
 export interface UseThemeExportDialogProps {
   isOpen: boolean;

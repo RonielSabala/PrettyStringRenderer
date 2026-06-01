@@ -4,7 +4,7 @@ import { CSS_VISIBILITY } from "../../../common/constants/css";
 import {
   useThemeItem,
   type UseThemeItemProps,
-} from "../../../hooks/useThemeItem";
+} from "../../../hooks/sidebar/themes/useThemeItem";
 import { titleToKebab } from "../../../utils/parse";
 import { TransparentSwatchIcon } from "../TransparentSwatchIcon";
 import "./ThemeItem.css";

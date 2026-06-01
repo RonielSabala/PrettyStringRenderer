@@ -2,7 +2,7 @@ import { THEMES_EXTENSION } from "../../../common/config";
 import {
   useThemeExportDialog,
   type UseThemeExportDialogProps,
-} from "../../../hooks/useThemeExportDialog";
+} from "../../../hooks/sidebar/themes/useThemeExportDialog";
 import {
   Dialog,
   FilenameInput,

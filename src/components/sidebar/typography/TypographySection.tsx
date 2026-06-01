@@ -1,7 +1,7 @@
 import { TYPOGRAPHY_DEFAULTS } from "../../../common/config";
 import { useStore } from "../../../common/store";
 import type { InputRange, TypographyConfig } from "../../../common/types";
-import { useTypographySection } from "../../../hooks/useTypographySection";
+import { useTypographySection } from "../../../hooks/sidebar/useTypographySection";
 import { camelToKebab, camelToTitle } from "../../../utils/parse";
 import SidebarSection from "../SidebarSection";
 import NumberRow from "./NumberRow";

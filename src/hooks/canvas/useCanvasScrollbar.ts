@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { EVENTS } from "../common/constants/events";
+import { EVENTS } from "../../common/constants/events";
 
 const MIN_THUMB_SIZE_FRACTION = 0.04;
 

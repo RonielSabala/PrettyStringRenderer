@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { EVENTS } from "../common/constants/events";
 import { useStore } from "../common/store";
-import { type ExportDialogHandle } from "../hooks/useExportDialog";
+import { type ExportDialogHandle } from "../hooks/export/useExportDialog";
 import { clearState, saveActiveElementIdState } from "../utils/persistence";
 import { useKeybinding } from "./useKeybinding";
 

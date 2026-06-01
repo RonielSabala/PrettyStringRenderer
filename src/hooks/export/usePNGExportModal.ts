@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-    DEFAULT_EXPORT_IMAGE_FILENAME,
-    DEFAULT_EXPORT_PNG_SCALAR,
-    PNG_EXTENSION,
-} from "../common/config";
-import { createResolution, getScaledDimensions } from "../utils/resolution";
+  DEFAULT_EXPORT_IMAGE_FILENAME,
+  DEFAULT_EXPORT_PNG_SCALAR,
+  PNG_EXTENSION,
+} from "../../common/config";
+import { createResolution, getScaledDimensions } from "../../utils/resolution";
 
 interface UsePNGExportModalProps {
   isOpen: boolean;

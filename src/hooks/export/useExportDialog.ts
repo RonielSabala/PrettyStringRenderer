@@ -1,7 +1,7 @@
 import { useCallback, useImperativeHandle, useState } from "react";
-import { useStore } from "../common/store";
-import { exportPNG, exportSVG } from "../utils/exporters";
-import { useKeybinding } from "./useKeybinding";
+import { useStore } from "../../common/store";
+import { exportPNG, exportSVG } from "../../utils/exporters";
+import { useKeybinding } from "../useKeybinding";
 
 export interface ExportDialogHandle {
   open: () => void;

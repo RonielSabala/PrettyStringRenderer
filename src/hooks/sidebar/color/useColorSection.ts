@@ -1,6 +1,9 @@
-import { getStore, useStore } from "../common/store";
-import { TOKENS, type ThemeColor, type TokenType } from "../common/types";
-import { createSaveScheduler, saveColorsState } from "../utils/persistence";
+import { getStore, useStore } from "../../../common/store";
+import { TOKENS, type ThemeColor, type TokenType } from "../../../common/types";
+import {
+  createSaveScheduler,
+  saveColorsState,
+} from "../../../utils/persistence";
 
 // Private helpers
 

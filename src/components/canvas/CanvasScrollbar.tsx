@@ -1,7 +1,7 @@
 import {
   useCanvasScrollbar,
   type ScrollbarProps,
-} from "../../hooks/useCanvasScrollbar";
+} from "../../hooks/canvas/useCanvasScrollbar";
 import "./CanvasScrollbar.css";
 
 export default function CanvasScrollbar(props: ScrollbarProps) {

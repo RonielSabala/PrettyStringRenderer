@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useEditor } from "../../hooks/useEditor";
-import { useResizeHandle } from "../../hooks/useResizeHandle";
+import { useEditor } from "../../hooks/editor/useEditor";
+import { useResizeHandle } from "../../hooks/editor/useResizeHandle";
 import {
   createSaveScheduler,
   saveEditorConfigState,

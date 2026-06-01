@@ -1,6 +1,6 @@
-import { useStore } from "../common/store";
-import { titleToKebab } from "../utils/parse";
-import { saveCollapsedSectionsState } from "../utils/persistence";
+import { useStore } from "../../common/store";
+import { titleToKebab } from "../../utils/parse";
+import { saveCollapsedSectionsState } from "../../utils/persistence";
 
 export interface UseSidebarSectionProps {
   title: string;

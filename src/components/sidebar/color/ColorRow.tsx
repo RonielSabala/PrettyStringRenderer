@@ -1,7 +1,10 @@
 import { ArrowCounterclockwise, Eraser } from "react-bootstrap-icons";
 import { MAX_HEX_INPUT_LENGTH } from "../../../common/config";
 import { CSS_VISIBILITY } from "../../../common/constants/css";
-import { useColorRow, type UseColorRowProps } from "../../../hooks/useColorRow";
+import {
+  useColorRow,
+  type UseColorRowProps,
+} from "../../../hooks/sidebar/color/useColorRow";
 import "../SidebarRow.css";
 import { TransparentSwatchIcon } from "../TransparentSwatchIcon";
 import "./ColorRow.css";

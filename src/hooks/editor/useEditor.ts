@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { EDITOR_DEFAULTS } from "../common/config";
-import { DOM_IDS } from "../common/constants/dom";
-import { useStore } from "../common/store";
-import { useKeybinding } from "../hooks/useKeybinding";
-import { useWelcomeAnimation } from "../hooks/useWelcomeAnimation";
-import { parseNumber, roundUp } from "../utils/parse";
+import { EDITOR_DEFAULTS } from "../../common/config";
+import { DOM_IDS } from "../../common/constants/dom";
+import { useStore } from "../../common/store";
+import { useKeybinding } from "../../hooks/useKeybinding";
+import { useWelcomeAnimation } from "../../hooks/useWelcomeAnimation";
+import { parseNumber, roundUp } from "../../utils/parse";
 
 interface Props {
   scheduleSave: () => void;

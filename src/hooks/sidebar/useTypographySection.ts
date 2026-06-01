@@ -1,9 +1,9 @@
-import { useStore } from "../common/store";
-import type { TypographyConfig } from "../common/types";
+import { useStore } from "../../common/store";
+import type { TypographyConfig } from "../../common/types";
 import {
   createSaveScheduler,
   saveTypographyConfigState,
-} from "../utils/persistence";
+} from "../../utils/persistence";
 
 const _scheduleSave = createSaveScheduler(saveTypographyConfigState);
 

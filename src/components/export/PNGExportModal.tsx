@@ -7,7 +7,7 @@ import {
   MAX_EXPORT_PNG_SCALAR,
   MIN_EXPORT_PNG_SCALAR,
 } from "../../common/config";
-import { usePNGExportModal } from "../../hooks/usePNGExportModal";
+import { usePNGExportModal } from "../../hooks/export/usePNGExportModal";
 import { parseNumber } from "../../utils/parse";
 import { createResolution, getScaledDimensions } from "../../utils/resolution";
 import {

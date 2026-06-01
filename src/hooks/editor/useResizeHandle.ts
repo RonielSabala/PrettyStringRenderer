@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useRef } from "react";
-import { EDITOR_DEFAULTS, MAX_EDITOR_HEIGHT_FRACTION } from "../common/config";
-import { CSS_CURSORS, CSS_USER_SELECT } from "../common/constants/css";
-import { DOM_IDS } from "../common/constants/dom";
-import { EVENTS } from "../common/constants/events";
-import { useStore } from "../common/store";
+import {
+  EDITOR_DEFAULTS,
+  MAX_EDITOR_HEIGHT_FRACTION,
+} from "../../common/config";
+import { CSS_CURSORS, CSS_USER_SELECT } from "../../common/constants/css";
+import { DOM_IDS } from "../../common/constants/dom";
+import { EVENTS } from "../../common/constants/events";
+import { useStore } from "../../common/store";
 
 interface Props {
   height: number;

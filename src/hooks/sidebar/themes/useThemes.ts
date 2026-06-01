@@ -5,19 +5,23 @@ import {
   THEME_BLOB_TYPE,
   THEMES_EXTENSION,
   THEMES_FILE_TYPE,
-} from "../common/config";
-import { EVENTS } from "../common/constants/events";
-import { getStore, useStore } from "../common/store";
-import { type Theme, THEME_KEYS, type ThemeColors } from "../common/types";
-import { useKeybinding } from "../hooks/useKeybinding";
-import { isObjectEmpty } from "../utils/parse";
+} from "../../../common/config";
+import { EVENTS } from "../../../common/constants/events";
+import { getStore, useStore } from "../../../common/store";
+import {
+  type Theme,
+  THEME_KEYS,
+  type ThemeColors,
+} from "../../../common/types";
+import { isObjectEmpty } from "../../../utils/parse";
 import {
   createSaveScheduler,
   saveActiveThemeNameState,
   saveColorsState,
   saveThemesState,
-} from "../utils/persistence";
-import { revokeAfter, urlFromObject } from "../utils/url";
+} from "../../../utils/persistence";
+import { revokeAfter, urlFromObject } from "../../../utils/url";
+import { useKeybinding } from "../../useKeybinding";
 
 const _scheduleSave = createSaveScheduler(saveColorsState);
 const _scheduleThemeNameSave = createSaveScheduler(saveActiveThemeNameState);

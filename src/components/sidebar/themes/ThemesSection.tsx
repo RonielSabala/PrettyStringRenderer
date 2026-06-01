@@ -1,5 +1,5 @@
 import { FolderX } from "react-bootstrap-icons";
-import { useThemes } from "../../../hooks/useThemes";
+import { useThemes } from "../../../hooks/sidebar/themes/useThemes";
 import SidebarSection from "../SidebarSection";
 import ThemeActions from "./ThemeActions";
 import ThemeExportDialog from "./ThemeExportDialog";

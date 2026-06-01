@@ -2,7 +2,7 @@ import { THEMES_EXTENSION } from "../../../common/config";
 import {
   useThemeViewDialog,
   type UseThemeViewDialogProps,
-} from "../../../hooks/useThemeViewDialog";
+} from "../../../hooks/sidebar/themes/useThemeViewDialog";
 import { Dialog, PrimaryButton, SecondaryButton } from "../../dialog";
 import "./ThemeViewDialog.css";
 

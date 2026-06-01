@@ -1,6 +1,6 @@
 import { DOM_IDS } from "../../common/constants/dom";
-import { useCanvas } from "../../hooks/useCanvas";
-import { SCROLLBAR_ORIENTATION } from "../../hooks/useCanvasScrollbar";
+import { useCanvas } from "../../hooks/canvas/useCanvas";
+import { SCROLLBAR_ORIENTATION } from "../../hooks/canvas/useCanvasScrollbar";
 import "./Canvas.css";
 import CanvasScrollbar from "./CanvasScrollbar";
 

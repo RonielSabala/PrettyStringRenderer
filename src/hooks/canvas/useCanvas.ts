@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { createBuffer } from "../canvas/buffer";
+import { createBuffer } from "../../canvas/buffer";
 import {
   APP_FONT_VARIANT_LIGATURES,
   CANVAS_CENTERING_ZOOM_THRESHOLD,
@@ -8,21 +8,21 @@ import {
   CANVAS_MIN_ZOOM,
   CANVAS_PAN_SCROLL_SPEED,
   CANVAS_ZOOM_FACTOR,
-} from "../common/config";
+} from "../../common/config";
 import {
   CHECKER_COLORS,
   CSS_BACKGROUND_IMAGE,
   CSS_CURSORS,
-} from "../common/constants/css";
-import { DOM_IDS } from "../common/constants/dom";
-import { EVENTS } from "../common/constants/events";
-import { matchesKeybinding } from "../common/keybindings";
-import { getStore, useStore } from "../common/store";
+} from "../../common/constants/css";
+import { DOM_IDS } from "../../common/constants/dom";
+import { EVENTS } from "../../common/constants/events";
+import { matchesKeybinding } from "../../common/keybindings";
+import { getStore, useStore } from "../../common/store";
 import {
   createSaveScheduler,
   saveCanvasConfigState,
-} from "../utils/persistence";
-import { toPx } from "../utils/resolution";
+} from "../../utils/persistence";
+import { toPx } from "../../utils/resolution";
 
 const _scheduleSave = createSaveScheduler(saveCanvasConfigState);
 

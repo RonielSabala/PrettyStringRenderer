@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import type { Theme } from "../common/types";
-import { useKeybinding } from "./useKeybinding";
+import type { Theme } from "../../../common/types";
+import { useKeybinding } from "../../useKeybinding";
 
 export interface UseThemeItemProps {
   theme: Theme;

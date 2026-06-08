@@ -16,7 +16,7 @@ export default function Header({ onExportClick }: Props) {
 
   return (
     <>
-      <span className="header-title">Pretty String Renderer</span>
+      <span className="header-title">PrettyStringRenderer</span>
       <button
         id="workspace-reset-btn"
         className="action-btn"
